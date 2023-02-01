@@ -2,7 +2,7 @@
     font-family: 'Inter-Regular';
     src: url('../fonts/Inter-Regular.eot');
     src: url('../fonts/Inter-Regular.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/Inter-Regular.woff') format('woff'),
+        url('../fonts/Inter-Regular.ttf') format('ttf'),
         url('../fonts/Inter-Regular.ttf') format('truetype'),
         url('../fonts/Inter-Regular.svg#Inter-Regular') format('svg');
     font-weight: 300;
@@ -92,6 +92,7 @@ button.btn.btn-primary.login-btn {
     line-height: 19px;
     text-transform: uppercase;
 }
+
 ul.social-media {
     list-style: none;
     padding: 0;
@@ -124,7 +125,14 @@ a.signup {
     line-height: 19px;
     text-transform: uppercase;
 }
-
+.register-form {
+    max-width: 750px;
+    width: 100%;
+    border: 1px solid #00A14C;
+    border-radius: 10px;
+    padding: 30px;
+    margin: 20px auto;
+}
 .navbar-dark .navbar-nav .nav-link {
     font-style: normal;
     font-weight: 400;
@@ -195,6 +203,11 @@ button.btn.btn-primary.dropdown-toggle.profileBtn::after {
     font-size: 20px;
     line-height: 24px;
     color: #000000;
+}
+.btns-wrap button.btn.btn-primary, .btns-wrap a.signup {
+    width: 115px;
+    margin: 0 5px;
+    text-transform: capitalize;
 }
 .gridCheck {
     margin-right: 90px;

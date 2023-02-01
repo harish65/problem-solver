@@ -4,22 +4,33 @@ namespace App\Http\Controllers\Adult;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\BaseController as BaseController;
 use App\Models\Problem;
 use Auth;
 
-class ProblemController extends Controller
+class ProblemController extends BaseController
 {
+    public function __construct()
+    {
+        $this->middleware(['auth']);
+    }
     //problem
-    public function adultProblem(){   
-        
+    public function adultProblem(Request $request){  
         
         $problems = Problem::orderBy("id", "desc")
             -> where("user_id", Auth::user() -> id)
             -> get();
-        
-        return view("adult.problem.index", [
-            "problems" => $problems,
-        ]);
+            
+            if ($request->is('api/*')) {
+                $success['projects'] = $problems;
+                $success['token'] = $request->header('Authorization');
+                return $this->sendResponse($success,'Reviewer Response');
+            }else{
+                return view("adult.problem.index", [
+                    "problems" => $problems,
+                ]);
+            }
+       
     }
 
     public function createProblem(Request $request){

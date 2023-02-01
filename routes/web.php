@@ -64,7 +64,7 @@ Route::group(['as' => 'project.', 'prefix' => 'project'], function () {
 Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
     Route::post('/login', [\App\Http\Controllers\Adult\LoginController::class, 'postLogin'])->name('login');
     Route::get('/login', [\App\Http\Controllers\Adult\LoginController::class, 'getLogin'])->name('login');
-    Route::get('/dashborad', [\App\Http\Controllers\Adult\ProblemController::class, 'adultProblem'])->name('dashborad');
+    Route::get('/dashborad', [\App\Http\Controllers\Adult\ProjectController::class, 'index'])->name('dashborad');
     Route::get('/getlogout', [\App\Http\Controllers\Adult\LoginController::class, 'getlogout'])->name('getlogout');
 });
 // Admin Solution 

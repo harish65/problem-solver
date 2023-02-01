@@ -98,4 +98,49 @@ class LoginController extends BaseController
     }
 
 
+    // public function register(Request $request){
+    //     $validator = Validator::make($request->all(), [
+    //         'first_name'    => 'required',
+    //         'last_name'     => 'required',
+    //         'email'         => 'required|email|unique:users',
+    //         'password'      => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x]).*$/|max:20',
+    //     ],[
+    //         'password.regex' => 'The password must be one capital, one number',
+    //     ]);
+   
+    //     if($validator->fails()){
+    //         return $this->sendError('Validation Error.', $validator->errors());       
+    //     }
+
+    //     $timezone = Carbon::now($request->timezone);
+
+    //     $input = $request->all();
+    //     $input['password'] = bcrypt($input['password']);
+    //     $input['local_time_with_timezone'] = $timezone->format('Y-m-d H:i:s P');
+    //     $input['ip_address'] = request()->ip();
+
+    //     $user = User::create($input);
+
+    //     $company = new Company;
+    //     $company->user_id = $user->id;
+    //     $company->save();
+
+    //     $checkRole = new RoleAssignedToUser;
+    //     $checkRole->user_id = $user->id;
+    //     $checkRole->role_id = 4;
+    //     $checkRole->save();
+
+    //     $success['user'] =  $user;
+    //     $success['token'] =  $user->createToken('MyApp')->accessToken;
+
+    //     // if($request->ajax()) {
+    //     //     return 'yes';
+    //     // }else{
+    //     //     return 'no';
+    //     //     return back()->with('flash_success', 'Password Updated');
+    //     // }
+   
+    //     return $this->sendResponse($success, 'User register successfully.');
+    // }
+
 }

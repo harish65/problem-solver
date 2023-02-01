@@ -64,7 +64,6 @@ class ProblemController extends BaseController
                 }
                 $file = time().'.'.$request -> updateProblemFile -> extension();
                 $request -> updateProblemFile -> move(public_path('assets-new/problem/'), $file);
-
                 $mime = mime_content_type(public_path('assets-new/problem/' . $file));
                 if(strstr($mime, "video/")){
                     $type = 1;

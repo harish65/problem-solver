@@ -56,7 +56,7 @@ class LoginController extends BaseController
         if($user = User::where(['email' => $request->email])->first() ) {
                 if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){                    
                     $success['user'] =  $user;
-                    $success['token'] = $user->createToken('API Token')->plainTextToken;
+                    $success['token'] = $user->createToken('Solver')->accessToken;
                     return $this->sendResponse($success, 'User login successfully.');
                 } else { 
                     return $this->sendError('Error.', ['error'=> 'Email and Password is Invalid.']);
