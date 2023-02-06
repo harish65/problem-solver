@@ -1,215 +1,183 @@
-@extends('layouts.admin')
-@section('title', 'Verification Type Manage | Admin')
+@extends('admin.layouts.master')
+@section('title', 'Admin | Verification')
 
 @section('content')
-<div class="min-height-200px">
-    <div class="page-header">
-        <div class="row">
-            <div class="col-md-6 col-sm-12">
-                <div class="title">
-                    <h4>Verification Type Manage</h4>
-                </div>
-                <nav aria-label="breadcrumb" role="navigation">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ url("adminHome") }}">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Verification Type Manage</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
+<div class="container">
+
+    <div class="row spl-row">
+        <h4>Verification Type</h4>
     </div>
-    <div class="pd-20 bg-white border-radius-4 box-shadow mb-30">
-        <div class="row">
-            <div class="col-md-6 col-sm-12">
-                <button class="btn btn-success" id="createVerificationTypeBtn">Create</button>
-            </div>
-            <div class="col-md-6 col-sm-12">
-                <input type="text" class="form-control" id="search" placeholder="Search">
-            </div>
-        </div>
-        <div id="mainContainer" class="pd-20 mb-30"></div>
-        <div class="loader" id="loader">Loading...</div>
+
+    <div class="row spl-row">
+        <table class="table slp-tbl" id="myTable">
+        
+            <thead>
+                <tr>
+                  
+                    <th>Name</th>
+                    <th>Creator Name</th>
+                    <th>1st Field</th>
+                    <th>2st Field</th>
+                    <th>3rd Field</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            @if($types)
+                    @foreach ($types  as $type)
+                    <tr>
+                        <td>{{ $type->name }}</td>
+                        <td>{{ __('Admin') }}</td>
+                        <td>{{ $type->first_field }}</td>
+                        <td>{{ $type->second_field }}</td>
+                        <td>{{ $type->third_field }}</td>
+                        
+                        <td>
+                            <a href="javaScript:Void(0)"  data-href="{{ route('problem.delete') }}"  data-id="{{ $type-> id }}" class="delProblemBtn" title="Delete" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20"></a>
+                            &nbsp;
+                            <a href="javaScript:Void(0)"  class="editProblemBtn"  
+                                                                            data-id="{{ $type->id }}" 
+                                                                            data-name="{{ $type->name }}"
+                                                                            data-firts_field ="{{ $type->first_field }}"
+                                                                            data-second_field ="{{ $type->second_field }}"
+                                                                            data-third_field ="{{ $type->third_field }}"
+                                                                            title="Edit"><img src="{{ url('/') }}/assets-new/images/editIcon.png" width="15" height="20"></a>
+                        </td>
+                    </tr>
+                    
+                @endforeach
+                @else
+                    <tr>
+                        <td>No record found</td>
+                        <td>No record found</td>
+                        <td>No record found</td>
+                        <td>No record found</td>
+                    </tr>
+              @endif
+            </tbody>
+            
+        </table>
     </div>
 </div>
-
-<form method="POST" action="{{ url("createAdminVerificationType") }}" class="modal fade" id="createAdminVerificationTypeModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" enctype="multipart/form-data">
-    @csrf
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Create Verification type</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <input type="text" name="name" class="form-control" placeholder="Name">
-                    @error('name')
-                        <span class="text-danger" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        <script>
-                            $(document).ready(function(){
-                                $("#createAdminVerificationTypeModal").modal("show");
-                            })
-                        </script>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <input type="text" name="key" class="form-control" placeholder="1st Field">
-                    @error('key')
-                        <span class="text-danger" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        <script>
-                            $(document).ready(function(){
-                                $("#createAdminVerificationTypeModal").modal("show");
-                            })
-                        </script>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <input type="text" name="val" class="form-control" placeholder="2nd Field">
-                    @error('val')
-                        <span class="text-danger" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        <script>
-                            $(document).ready(function(){
-                                $("#createAdminVerificationTypeModal").modal("show");
-                            })
-                        </script>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <input type="text" name="vals" class="form-control" placeholder="3rd Field">
-                    @error('vals')
-                        <span class="text-danger" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        <script>
-                            $(document).ready(function(){
-                                $("#createAdminVerificationTypeModal").modal("show");
-                            })
-                        </script>
-                    @enderror
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</form>
-
-<form method="POST" action="{{ url("updateAdminVerificationType") }}" class="modal fade" id="updateAdminVerificationTypeModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" enctype="multipart/form-data">
-    @csrf
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Update Verification type</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" name="updateVerificationTypeId" id="updateVerificationTypeId">
-                <div class="form-group">
-                    <input type="text" name="updateVerificationTypeName" class="form-control" id="updateVerificationTypeName" placeholder="Name">
-                    @error('updateVerificationTypeName')
-                        <span class="text-danger" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        <script>
-                            $(document).ready(function(){
-                                $("#updateAdminVerificationTypeModal").modal("show");
-                            })
-                        </script>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <input type="text" name="updateVerificationTypeKey" class="form-control" id="updateVerificationTypeKey" placeholder="1st Field">
-                    @error('updateVerificationTypeKey')
-                        <span class="text-danger" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        <script>
-                            $(document).ready(function(){
-                                $("#updateAdminVerificationTypeModal").modal("show");
-                            })
-                        </script>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <input type="text" name="updateVerificationTypeVal" class="form-control" id="updateVerificationTypeVal" placeholder="2nd Field">
-                    @error('updateVerificationTypeVal')
-                        <span class="text-danger" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        <script>
-                            $(document).ready(function(){
-                                $("#updateAdminVerificationTypeModal").modal("show");
-                            })
-                        </script>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <input type="text" name="updateVerificationTypeVals" class="form-control" id="updateVerificationTypeVals" placeholder="3rd Field">
-                    @error('updateVerificationTypeVals')
-                        <span class="text-danger" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        <script>
-                            $(document).ready(function(){
-                                $("#updateAdminVerificationTypeModal").modal("show");
-                            })
-                        </script>
-                    @enderror
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</form>
-
-<form method="POST" action="{{ url("delAminVerificationType") }}" id="delAdminVerificationTypeModal">
-    <input type="hidden" name="id" id="delAdminVerificationTypeId">
-    @csrf
-</form>
+@include('admin.verificationType.modal.add-verification-type')
+@endsection
+@section('css')
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+@endsection
+@section('scripts')
+<script src="{{ asset('assets-new/js/dataTables.buttons.min.js')}}"></script>
 <script>
-    $(document).ready(function(){
-        $("#createVerificationTypeBtn").click(function(){
-            $("#createAdminVerificationTypeModal").modal("show");
-        })
-        let timeoutID = null;
-
-        getAdminVerificationType(1, $("#search").val());
-
-        $('#search').keyup(function(e) {
-            clearTimeout(timeoutID);
-            const value = e.target.value
-            timeoutID = setTimeout(() => getAdminVerificationType(1, $("#search").val()), 500)
-        });
-    });
-
-    function getAdminVerificationType(page, search){
-        $("#mainContainer").css("display", "none");
-        $("#loader").css("display", "block");
-        $.ajax({
-            method: "get",
-            url: "getAdminVerificationType",
-            data: {
-                page: page,
-                search: search
-            },
-            success: function(response){
-                $("#mainContainer").html(response);
-                $("#mainContainer").css("display", "block");
-                $("#loader").css("display", "none");
+$(document).ready( function () {
+    $('#myTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text: '<i class="fa fa-plus"></i>Add new verification type',
+                className : 'btn btn-success',
+                attr:  {
+                        title: 'Add VerificationType',
+                        id: 'add-verification-model',
+                        
+                }
             }
-        })
-    }
+        ]
+    });
+});
+
+$(document).on('click','#add-verification-model',function(){
+    $('#addVerificationTypeModal').modal('toggle')
+})
+</script>
+<script>
+    $(document).on('click','#btnSave',function(e){
+		e.preventDefault();
+		var fd = new FormData($('#addVerificationTypeModal')[0]);
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+		$.ajax({
+			url: "{{ route('verificationtype.store')}}",
+			data: fd,
+			processData: false,
+			contentType: false,
+			dataType: 'json',
+			type: 'POST',
+			beforeSend: function(){
+                $('#btnSave').attr('disabled',true);
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+			},
+			error: function (xhr, status, error) {
+                $('#btnSave').attr('disabled',false);
+                $('#btnSave').html('Save');
+				$.each(xhr.responseJSON.data, function (key, item) {
+					toastr.error(item);
+				});
+			},
+			success: function (response){
+                if(response.success == false)
+                {
+					$('#btnSave').attr('disabled',false);
+					$('#btnSave').html('Save');
+                    var errors = response.data;
+                    $.each( errors, function( key, value ) {
+						toastr.error(value)
+					});
+					} else { 
+                    toastr.success(response.message);
+                    window.location.href = "{{route('verificationtype.index')}}";
+				}
+			}
+		});
+	});
+
+    $(document).on('click','.editProblemBtn' , function(){
+        var $this = $(this);
+        $('#id').val($this.attr('data-id'))
+        $('#updateVerificationTypeName').val($this.attr('data-name'))
+        $('#first_field').val($this.attr('data-firts_field'))
+        $('#second_field').val($this.attr('data-second_field'))
+        $('#third_field').val($this.attr('data-third_field'))
+        $('#addVerificationTypeModal').modal('toggle')
+    })
+</script>
+<script>    
+    $('#myTable').on('click', '.delProblemBtn', function(e){
+          e.preventDefault();
+          var r = confirm("Are you sure to delete");
+          if (r == false) {
+              return false;
+          }
+          var id = $(this).attr('data-id')
+          $.ajaxSetup({
+                headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                });      
+          $.ajax({
+                url: "{{route('verificationtype.delete')}}",
+                data:{id :  id},         
+               
+                type: 'POST',           
+                error: function (xhr, status, error) {
+                    $.each(xhr.responseJSON.data, function (key, item) {
+                        toastr.error(item);
+                    });
+                },
+                success: function (response){
+                    if(response.success == false)
+                    {
+                        var errors = response.data;
+                        $.each( errors, function( key, value ) {
+                            toastr.error(value)
+                        });
+                    } else {
+                        toastr.success('Verification type deleted successfully!');
+                        window.location.href = "{{route('verificationtype.index')}}";
+                    }
+                }
+            });
+      });
 </script>
 @endsection
-

@@ -70,26 +70,12 @@ class RegisterController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());       
         }
         try{
-            $file = null;
-            if($request->hasFile('avatar')){
-                $validator = Validator::make ( $request->all(),[
-                    'avatar' => 'required|mimes:png,jpg,jpeg,avi,mp4,mpeg|:2048',
-                ]);
-                    if($validator->fails()){
-                        return $this->sendError('Validation Error.', $validator->errors());       
-                    }
-                    $file = time().'.'.$request -> avatar -> extension();
-                    $request -> avatar -> move(public_path('assets-new/avatar/'), $file);
-                    $mime = mime_content_type(public_path('assets-new/avatar/' . $file));
-                }
-                
                 $user = User::create([
                     'name' => $request->first_name. ' ' . $request->last_name,
                     'first_name' => $request->first_name,                    
                     'last_name' => $request->last_name,
                     'email' => $request->email,
                     'phone_number'  => $request->phone_number, 
-                    'avatar' => $file,
                     'role' => $request->role,                   
                     'password' => Hash::make($request->password),
                 ]);

@@ -7,17 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class VerificationType extends Model
 {
+    protected $table = "verification_type";
     use HasFactory;
 
-    public function user(){
-        return $this->belongsTo(User::class);
-    }
+    // public function user(){
+    //     return $this->belongsTo(User::class);
+    // }
 
-    public function verification(){
-        return $this->hasMany(Verification::class);
-    }
+    // public function verification(){
+    //     return $this->hasMany(Verification::class);
+    // }
 
-    public function verification_type_text(){
-        return $this->hasMany(VerificationTypeText::class);
-    }
+    // public function verification_type_text(){
+    //     return $this->hasMany(VerificationTypeText::class);
+    // }
 }

@@ -29,12 +29,7 @@
         </div>  
         <div class="dropdown">
           <button type="button" class="btn btn-primary dropdown-toggle profileBtn" data-toggle="dropdown">
-            @if(Auth::user()->avatar != '')
-            <img src="{{ url('/').'/assets-new/avatar/'.Auth::user()->avatar }}" width="50" height="50" style="border-radius:50%" alt="profile Image"/>
-            @else
             <img src="{{ url('/') }}/assets-new/images/profileImg.png" alt="profile Image"/>
-            @endif
-            
           </button>
           <div class="dropdown-menu">
             <a class="dropdown-item" href="#"><i class="fa fa-user"></i>Profile</a>

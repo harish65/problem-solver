@@ -36,12 +36,10 @@ class UserController extends BaseController
     }
 
     public function edit($id){
-        $user = User::where("id", $id)
-            -> first();
-
-        return view("admin.user.editAdminUser", [
-            "user" => $user,
-        ]);
+        $user = User::where("id", $id)-> first();
+        $user->personal_info = json_decode($user->personal_info);
+        $user->social_media_links	 = json_decode($user->social_media_links);
+        return view("admin.user.editAdminUser", ["user" => $user]);
     }
 
         public function store(Request $request){        
@@ -152,5 +150,80 @@ class UserController extends BaseController
 
         return redirect()->route('admin.permissions.index');
     }
+     /**
+     * Update User personal info
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
 
+    public function updateUserPersonalInfo(Request $request , $id){
+        $validator = Validator::make ( $request->all(),[
+            'name' => 'required|max:255',
+            'title' => 'required| max:255',
+            'email' => 'required| max:255',
+            'date_of_birth' => 'required',
+            'gender' => 'required',
+            'country' => 'required',
+            'state' => 'required',
+            'postal_code' => 'required',
+            'phone_number' => 'required',
+            'address' => 'required' 
+        ]);
+
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+
+        try{
+            $user = User::find($id);
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->phone_number = $request->phone_number;
+            $user->personal_info = json_encode($request->all());
+            $user->save();
+            $success['user'] =  $user;
+            return $this->sendResponse($success, 'User updated successfully.');
+        }catch(Exception $e){
+            return $this->sendError('Error.', ['error'=> 'Something went wrong!']);
+        }
+
+    }
+
+     /**
+     * Update User personal info
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
+     public function updateUserSocialInfo(Request $request , $id){
+        $validator = Validator::make ( $request->all(),[
+            'fb_url' => 'required|url',
+            'twitter_url' => 'required|url',
+            'linked_url' => 'required|url',
+            'instagram_url' => 'required|url',
+            'dribble_url' => 'required|url',
+            'dropbox_url' => 'required|url',
+            'google_plus_url' => 'required|url',
+            'pinterest_url' => 'required|url',
+            'skype_url' => 'required|url',
+            'vine_url' => 'required|url' 
+        ]);
+
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+
+        try{
+            $user = User::find($id);
+            $user->social_media_links = json_encode($request->all());
+            $user->save();
+            $success['user'] =  $user;
+            return $this->sendResponse($success, 'Links updated successfully.');
+        }catch(Exception $e){
+            return $this->sendError('Error.', ['error'=> 'Something went wrong!']);
+        }
+
+    }
 }

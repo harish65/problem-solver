@@ -42,6 +42,8 @@ Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
         Route::get("view/{id}", [\App\Http\Controllers\Admin\UserController::class, 'view']) -> name("view");
         Route::get("edit/{id}", [\App\Http\Controllers\Admin\UserController::class, 'edit']) -> name("edit");
         Route::post("update/{id}", [\App\Http\Controllers\Admin\UserController::class, 'update'])->name("update");
+        Route::post("updateInfo/{id}", [\App\Http\Controllers\Admin\UserController::class, 'updateUserPersonalInfo'])->name("updateInfo");
+        Route::post("updateUserSocialInfo/{id}", [\App\Http\Controllers\Admin\UserController::class, 'updateUserSocialInfo'])->name("updateUserSocialInfo");
         Route::get("delete/{id}", [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name("delete");
         Route::post("store", [\App\Http\Controllers\Admin\UserController::class, 'store'])->name("store");
         Route::get("add", [\App\Http\Controllers\Admin\UserController::class, 'create'])->name("add");
@@ -64,16 +66,16 @@ Route::group(['as' => 'project.', 'prefix' => 'project'], function () {
 Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
     Route::post('/login', [\App\Http\Controllers\Adult\LoginController::class, 'postLogin'])->name('login');
     Route::get('/login', [\App\Http\Controllers\Adult\LoginController::class, 'getLogin'])->name('login');
-    Route::get('/dashborad', [\App\Http\Controllers\Adult\ProjectController::class, 'index'])->name('dashborad');
+    Route::get('/dashborad', [\App\Http\Controllers\Adult\ProblemController::class, 'adultProblem'])->name('dashborad');
     Route::get('/getlogout', [\App\Http\Controllers\Adult\LoginController::class, 'getlogout'])->name('getlogout');
 });
 // Admin Solution 
-Route::group(['as' => 'adminSolution.', 'prefix' => 'adminSolution'], function () {
+Route::group(['as' => 'solution.', 'prefix' => 'solution'], function () {
         Route::group(['middleware' => ['auth' , 'admin']], function () {
             Route::get("index", [\App\Http\Controllers\Admin\SolutionController::class, 'index'])->name('index');
             // Route::get("getAdminSolution", [\App\Http\Controllers\Admin\SolutionController::class, "getAdminSolution"])->name('adminSolutions');
             Route::post("update", [\App\Http\Controllers\Admin\SolutionController::class, 'update'])->name('update');
-            Route::post("delAdminSolution", [\App\Http\Controllers\Admin\SolutionController::class, "delAdminSolution"]);
+            Route::post("delete", [\App\Http\Controllers\Admin\SolutionController::class, "delete"])->name('delete');
     });
 });
 ///Roles and permissions Routes
@@ -97,18 +99,25 @@ Route::get("getAdminUser", [\App\Http\Controllers\Admin\UserController::class, '
 
 Route::post("delAdminUser", [\App\Http\Controllers\Admin\UserController::class, 'delAdminUser']) -> middleware("auth", "admin");
 ///problem
-Route::get("adminProblem", [\App\Http\Controllers\Admin\ProblemController::class, 'adminProblem']) -> middleware("auth", "admin") -> name("adminProblem");
-Route::get("getAdminProblem", [\App\Http\Controllers\Admin\ProblemController::class, 'getAdminProblem']) -> middleware("auth", "admin");
-Route::post("updateAdminProblem", [\App\Http\Controllers\Admin\ProblemController::class, 'update']) -> middleware("auth", "admin")->name("updateAdminProblem");
-Route::post("delAdminProblem", [\App\Http\Controllers\Admin\ProblemController::class, "delAdminProblem"]) -> middleware("auth", "admin")->name('delAdminProblem');
 
+Route::group(['as' => 'problem.', 'prefix' => 'problem'], function () {
+    Route::group(['middleware' => ['auth' , 'admin']], function () {
+        Route::get("index", [\App\Http\Controllers\Admin\ProblemController::class, 'index'])->name("index");        
+        Route::post("upadte", [\App\Http\Controllers\Admin\ProblemController::class, 'update'])->name("update");
+        Route::post("delete", [\App\Http\Controllers\Admin\ProblemController::class, "delete"])->name('delete');
+    });
+
+});
 ///solution type
-Route::get("adminSolutionType", [\App\Http\Controllers\Admin\SolutionTypeController::class, 'adminSolutionType']) -> middleware("auth", "admin") -> name("adminSolutionType");
-Route::post("createAdminSolutionType", [\App\Http\Controllers\Admin\SolutionTypeController::class, 'createAdminSolutionType']) -> middleware("auth", "admin");
-Route::get("getAdminSolutionType", [\App\Http\Controllers\Admin\SolutionTypeController::class, 'getAdminSolutionType']) -> middleware("auth", "admin");
-Route::post("updateAdminSolutionType", [\App\Http\Controllers\Admin\SolutionTypeController::class, 'updateAdminSolutionType']) -> middleware("auth", "admin");
-Route::post("delAminSolutionType", [\App\Http\Controllers\Admin\SolutionTypeController::class, 'delAminSolutionType']) -> middleware("auth", "admin");
-
+Route::group(['as' => 'solution.', 'prefix' => 'solution'], function () {
+    Route::group(['middleware' => ['auth' , 'admin']], function () {
+            Route::get("adminSolutionType", [\App\Http\Controllers\Admin\SolutionTypeController::class, 'adminSolutionType']) -> name("adminSolutionType");
+            Route::post("createAdminSolutionType", [\App\Http\Controllers\Admin\SolutionTypeController::class, 'createAdminSolutionType'])->name('create');
+            Route::get("getAdminSolutionType", [\App\Http\Controllers\Admin\SolutionTypeController::class, 'getAdminSolutionType']) -> middleware("auth", "admin");
+            Route::post("updateAdminSolutionType", [\App\Http\Controllers\Admin\SolutionTypeController::class, 'updateAdminSolutionType']) -> middleware("auth", "admin");
+            Route::post("delAminSolutionType", [\App\Http\Controllers\Admin\SolutionTypeController::class, 'delAminSolutionType']) -> middleware("auth", "admin");
+    });
+});
 ///solution
 
 
@@ -117,19 +126,28 @@ Route::get("adminSolFunction", [\App\Http\Controllers\Admin\SolutionFunctionCont
 Route::get("getAdminSolFunction", [\App\Http\Controllers\Admin\SolutionFunctionController::class, 'getAdminSolFunction']) -> middleware("auth", "admin");
 Route::post("updateAdminSolFunction", [\App\Http\Controllers\Admin\SolutionFunctionController::class, 'updateAdminSolFunction']) -> middleware("auth", "admin");
 ///verification type
-Route::get("adminVerificationType", [\App\Http\Controllers\Admin\VerificationTypeController::class, 'adminVerificationType']) -> middleware("auth", "admin") -> name("adminVerificationType");
-Route::get("getAdminVerificationType", [\App\Http\Controllers\Admin\VerificationTypeController::class, 'getAdminVerificationType']) -> middleware("auth", "admin");
-Route::post("createAdminVerificationType", [\App\Http\Controllers\Admin\VerificationTypeController::class, 'createAdminVerificationType']) -> middleware("auth", "admin");
-Route::post("updateAdminVerificationType", [\App\Http\Controllers\Admin\VerificationTypeController::class, 'updateAdminVerificationType']) -> middleware("auth", "admin");
-Route::post("delAminVerificationType", [\App\Http\Controllers\Admin\VerificationTypeController::class, 'delAminVerificationType']) -> middleware("auth", "admin");
 
+Route::group(['as' => 'verificationtype.', 'prefix' => 'verificationtype'], function () {
+    Route::group(['middleware' => ['auth' , 'admin']], function () {
+        Route::get("index", [\App\Http\Controllers\Admin\VerificationTypeController::class, 'index'])->name("index");
+        Route::post("store", [\App\Http\Controllers\Admin\VerificationTypeController::class, 'store'])->name("store");
+        Route::post("delete", [\App\Http\Controllers\Admin\VerificationTypeController::class, 'delete'])->name("delete");
+    });
+});
 ///verification type text
-Route::get("adminVerificationTypeText", [\App\Http\Controllers\Admin\VerificationTypeTextController::class, 'adminVerificationTypeText']) -> middleware("auth", "admin")-> name("adminVerificationTypeText");
-Route::post("createAdminVerificationTypeText", [\App\Http\Controllers\Admin\VerificationTypeTextController::class, 'createAdminVerificationTypeText']) -> middleware("auth", "admin");
-Route::get("getAdminVerificationTypeText", [\App\Http\Controllers\Admin\VerificationTypeTextController::class, 'getAdminVerificationTypeText']) -> middleware("auth", "admin");
-Route::post("updateAdminVerificationTypeText", [\App\Http\Controllers\Admin\VerificationTypeTextController::class, 'updateAdminVerificationTypeText']) -> middleware("auth", "admin");
-Route::post("delAminVerificationTypeText", [\App\Http\Controllers\Admin\VerificationTypeTextController::class, 'delAminVerificationTypeText']) -> middleware("auth", "admin");
 
+Route::group(['as' => 'verificationtypetext.', 'prefix' => 'verificationtypetext'], function () {
+    Route::group(['middleware' => ['auth' , 'admin']], function () {
+            Route::get("index", [\App\Http\Controllers\Admin\VerificationTypeTextController::class, 'index'])-> name("index");
+            Route::post("store", [\App\Http\Controllers\Admin\VerificationTypeTextController::class, 'store'])->name("store");
+    });Route::post("delete", [\App\Http\Controllers\Admin\VerificationTypeTextController::class, 'delete'])->name("delete");
+});
+
+Route::group(['as' => 'solutionfunction.', 'prefix' => 'solutionfunction'], function () {
+    Route::group(['middleware' => ['auth' , 'admin']], function () {
+        Route::get("index", [\App\Http\Controllers\Admin\SolutionFunctionController::class, 'index'])-> name("index");
+    });
+});    
 //adult
 ///home
 Route::get("adultHome", [\App\Http\Controllers\Adult\HomeController::class, 'adultHome']) -> middleware("auth", "adult") -> name("adultProblem");

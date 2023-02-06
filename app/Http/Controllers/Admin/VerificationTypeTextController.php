@@ -7,72 +7,49 @@ use Illuminate\Http\Request;
 use App\Models\VerificationType;
 use App\Models\VerificationTypeText;
 use Auth;
-
-class VerificationTypeTextController extends Controller
+use App\Http\Controllers\BaseController as BaseController;
+use Validator;
+use DB;
+class VerificationTypeTextController extends BaseController
 {
     //verification type text
-    public function adminVerificationTypeText(){
-        $verificationTypes = VerificationType::orderBy("id", "asc")
-            -> get();
+    public function index(){
+       
+        $verificationTypetext = DB::table('verification_type_texts')
+                                ->join('verification_type', 'verification_type_texts.verification_type_id', '=', 'verification_type.id')
+                                ->select('verification_type_texts.*', 'verification_type.name as verification_type_name')
+                                ->get();
 
-        return view('admin.verificationTypeText.index', [
-            "verificationTypes" => $verificationTypes,
-        ]);
+        // echo "<pre>";print_r($verificationTypetext);die;
+        $verificationTypes = VerificationType::orderBy("id", "asc")-> get();
+        return view('admin.verificationTypeText.index', compact('verificationTypetext' , 'verificationTypes'));
     }
-
-    public function createAdminVerificationTypeText(Request $request){
-        $request->validate([
-            'name' => 'required|max:255',
+    public function store(Request $request){
+        
+        $validator = Validator::make ( $request->all(),[
+                'name' => 'required|max:255'
         ]);
-
-        $text = new VerificationTypeText();
-        $text -> user_id = Auth::user() -> id;
-        $text -> name = $request -> name;
-        $text -> verification_type_id = $request -> verification_type_id;
-        $text -> save();
-
-        return back() -> with("success", "Verification type text has been created successfully.");
-    }
-
-    public function getAdminVerificationTypeText(Request $request){
-        $search = $request -> search;
-        $page = $request -> page;
-
-        if($search == ""){
-            $types = VerificationTypeText::orderBy("id", "desc")
-                -> paginate(10);
-        }else{
-            $types = VerificationTypeText::where("name", "like", '%' . $search . "%")
-                // -> orWhere("key", "like", '%' . $search . "%")
-                -> orderBy("id", 'desc')
-                -> paginate(10);
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
         }
-
-        return view("admin.verificationTypeText.getAdminVerificationTypeText", [
-            "types" => $types,
-        ]);
+        try{            
+            $insert = DB::table('verification_type_texts')->updateOrInsert(['id'=> $request->id],
+                        [
+                        'user_id' => Auth::user()->id,
+                        'name'=> $request->name,                                       
+                        'verification_type_id' =>  $request->verification_type_id                                        
+                        ]);
+            $success['type'] =  $insert;
+            return $this->sendResponse($success, 'Record saved successfully.');
+        }catch(Exception $e){
+            return $this->sendError('Error.', ['error'=> $e->getMessage()]);
+        }
     }
+    
 
-    public function updateAdminVerificationTypeText(Request $request){
-        $request->validate([
-            'updateVerificationTypeTextVerificationTypeId' => 'required|max:255',
-            'updateVerificationTypeTextName' => 'required|max:255',
-        ]);
-
-        VerificationTypeText::where("id", $request -> updateVerificationTypeTextId)
-            -> update([
-                "user_id" => Auth::user() -> id,
-                "verification_type_id" => $request -> updateVerificationTypeTextVerificationTypeId,
-                "name" => $request -> updateVerificationTypeTextName,
-            ]);
-
-        return back() -> with("success", "Verification type text has been updated successfully.");      
-    }
-
-    public function delAminVerificationTypeText(Request $request){
-        VerificationTypeText::where("id", $request -> id)
-            -> delete();
-
-        return back() -> with("success", "Verification type text has been deleted successfully.");     
+    public function delete(Request $request){
+        $delete = VerificationTypeText::where("id", $request -> id)->delete();
+        $success['delete'] =  $delete;
+        return $this->sendResponse($success, 'Record deleted successfully.');    
     }
 }
