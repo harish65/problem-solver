@@ -6,76 +6,48 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\VerificationType;
 use Auth;
-
-class VerificationTypeController extends Controller
+use App\Http\Controllers\BaseController as BaseController;
+use Validator;
+use DB;
+class VerificationTypeController extends BaseController
 {
     //verification type
-    public function adminVerificationType(){
-        return view("admin.verificationType.index");
+    public function index(){
+        $types = VerificationType::orderBy("id", "desc")->get();
+        return view("admin.verificationType.index" , compact('types'));
     }
 
-    public function getAdminVerificationType(Request $request){
-        $search = $request -> search;
-        $page = $request -> page;
 
-        if($search == ""){
-            $types = VerificationType::orderBy("id", "desc")
-                -> paginate(10);
-        }else{
-            $types = VerificationType::where("name", "like", '%' . $search . "%")
-                -> orWhere("key", "like", '%' . $search . "%")
-                -> orWhere("val", "like", '%' . $search . "%")
-                -> orWhere("vals", "like", '%' . $search . "%")
-                -> orderBy("id", 'desc')
-                -> paginate(10);
+
+    public function store(Request $request){
+        
+        $validator = Validator::make ( $request->all(),[
+                'name' => 'required|max:255'
+        ]);
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
         }
-
-        return view("admin.verificationType.getAdminVerificationType", [
-            "types" => $types,
-        ]);
+        try{
+            
+            $insert = DB::table('verification_type')->updateOrInsert(['id'=> $request->id],
+                                        [
+                                        'user_id' => Auth::user()->id,
+                                        'name'=> $request->name,                                       
+                                        'first_field' =>  $request->first_field,
+                                        'second_field'=> $request->second_field, 
+                                        'third_field' =>  $request->third_field
+                                        ]);
+            $success['type'] =  $insert;
+            return $this->sendResponse($success, 'Verifivcation type created successfully.');
+        }catch(Exception $e){
+            return $this->sendError('Error.', ['error'=> $e->getMessage()]);
+        }
     }
 
-    public function createAdminVerificationType(Request $request){
-        $request->validate([
-            'name' => 'required|max:255',
-            'key' => 'required|max:255',
-            'val' => 'required|max:255',
-        ]);
 
-        $type = new VerificationType();
-        $type -> user_id = Auth::user() -> id;
-        $type -> name = $request -> name;
-        $type -> key = $request -> key;
-        $type -> val = $request -> val;
-        $type -> vals = $request -> vals;
-        $type -> save();
-
-        return back() -> with("success", "Verification type has been created successfully.");
-    }
-
-    public function updateAdminVerificationType(Request $request){
-        $request->validate([
-            'updateVerificationTypeName' => 'required|max:255',
-            'updateVerificationTypeKey' => 'required|max:255',
-            'updateVerificationTypeVal' => 'required|max:255',
-        ]);
-
-        VerificationType::where("id", $request -> updateVerificationTypeId)
-            -> update([
-                "user_id" => Auth::user() -> id,
-                "name" => $request -> updateVerificationTypeName,
-                "key" => $request -> updateVerificationTypeKey,
-                "val" => $request -> updateVerificationTypeVal,
-                "vals" => $request -> updateVerificationTypeVals,
-            ]);
-
-        return back() -> with("success", "Verification type has been updated successfully.");      
-    }
-
-    public function delAminVerificationType(Request $request){
-        VerificationType::where("id", $request -> id)
-            -> delete();
-
-        return back() -> with("success", "Verification type has been deleted successfully.");     
+    public function delete(Request $request){
+        $delete = VerificationType::where("id", $request -> id)-> delete();
+        $success['delete'] =  $delete;
+        return $this->sendResponse($success, 'Verifivcation type deleted successfully.');     
     }
 }

@@ -13,6 +13,11 @@ use Auth;
 
 class SolutionFunctionController extends Controller
 {
+
+
+    public function index(){
+        return view('admin.solutionfunction.index');
+    }
     //solution function
     public function adminSolFunction(){
         $problems = Problem::orderBy("id", "asc")

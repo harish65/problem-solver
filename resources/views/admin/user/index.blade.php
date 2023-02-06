@@ -8,7 +8,7 @@
 <div class="container">
 
     <div class="row spl-row">
-        <h4>Problem Manage</h4>
+        <h4>User Manage</h4>
     </div>
 
     <div class="row spl-row">
@@ -26,8 +26,8 @@
                             <tr>
                                 <td>
                                     <span class="user-icon">
-                                        @if($user -> avatar !='')
-                                            <img class="mCS_img_loaded" src="{{ asset("assets-new/avatar/" . $user -> avatar ) }}" alt="User Image" width="60"  height="60">
+                                        @if($user -> avatar)
+                                            <img class="mCS_img_loaded" src="{{ asset("assets/vendors/images/avatar/" . $user -> avatar ) }}" width="60"  height="60">
                                             @else
                                             <img class="mCS_img_loaded" src="{{ asset("assets/img/person.jpg" ) }}" width="60"  height="60">
                                         @endif

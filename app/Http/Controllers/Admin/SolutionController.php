@@ -11,6 +11,7 @@ use App\Models\Setting;
 use App\Models\Problem;
 use Auth;
 use DB;
+use Validator;
 
 class SolutionController extends BaseController
 {
@@ -20,42 +21,43 @@ class SolutionController extends BaseController
             ->leftJoin('problems', 'solutions.problem_id', '=', 'problems.id')
             ->leftJoin('solution_types' , 'solutions.solution_type_id' , '=' , 'solution_types.id')
             ->leftJoin('users' , 'solutions.user_id' , '=' , 'users.id')
-            ->select('solutions.id as solutions_id','solutions.file', 'solutions.name as solution','problems.name as problem', 'solution_types.name as solution_type', 'users.name as creator')
+            ->select('solutions.id as solutions_id','solutions.file', 'solutions.problem_id as problem_id','solutions.solution_type_id', 'solutions.name as solution','solutions.type', 'problems.name as problem','solution_types.name as solution_type', 'users.name as creator')
             ->get();
         $problems = Problem::all();
         $solutionTypes = SolutionType::all();
+        // echo "<pre>";print_r($solutions);die;
         return view("admin.solution.index" , compact('solutions','problems' ,'solutionTypes'));
     }
 
-    public function getAdminSolution(Request $request){
-        $search = $request -> search;
+    // public function getAdminSolution(Request $request){
+    //     $search = $request -> search;
 
-        if($search == ""){
-            $solutions = Solution::orderBy("id", "desc")
-                -> paginate(5);
-        }else{
-            $users = User::where("name", "like", "%" . $search . "%")
-                -> orWhere("email", "like", "%" . $search . "%")
-                -> select("id")
-                -> get();
+    //     if($search == ""){
+    //         $solutions = Solution::orderBy("id", "desc")
+    //             -> paginate(5);
+    //     }else{
+    //         $users = User::where("name", "like", "%" . $search . "%")
+    //             -> orWhere("email", "like", "%" . $search . "%")
+    //             -> select("id")
+    //             -> get();
 
-            $problems = Problem::where("name", "like", "%" . $search . "%")
-                -> select("id")
-                -> get();
+    //         $problems = Problem::where("name", "like", "%" . $search . "%")
+    //             -> select("id")
+    //             -> get();
                 
-            $solutions = Solution::orderBy("id", "desc")
-                -> where(function($q) use($search, $users){
-                    $q -> where("name", "like", "%" . $search . "%");
-                    $q -> orWhereIn("user_id", $users);
-                    $q -> orWhereIn("problem_id", $problems);
-                })
-                -> paginate(5);
-        }
+    //         $solutions = Solution::orderBy("id", "desc")
+    //             -> where(function($q) use($search, $users){
+    //                 $q -> where("name", "like", "%" . $search . "%");
+    //                 $q -> orWhereIn("user_id", $users);
+    //                 $q -> orWhereIn("problem_id", $problems);
+    //             })
+    //             -> paginate(5);
+    //     }
 
-        return view("admin.solution.getAdminSolution", [
-            "solutions" => $solutions,
-        ]);
-    }
+    //     return view("admin.solution.getAdminSolution", [
+    //         "solutions" => $solutions,
+    //     ]);
+    // }
 
     public function update(Request $request){
         $defaultType = Solution::where("id", $request -> updateSolutionId)
@@ -66,6 +68,7 @@ class SolutionController extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
+        
         try{
             $solutions = Solution::where("id", $request -> updateSolutionId)
                             -> update([
@@ -73,7 +76,7 @@ class SolutionController extends BaseController
                                 "problem_id" => $request -> updateSolutionProblemId,
                                 "solution_type_id" => $request -> updateSolutionTypeId,
                                 "type" => $request -> updateSolutionType,
-                                "state" => $request -> updateSolutionState,
+                                "state" => 1
                             ]);
 
             if($request -> updateSolutionType == 0){
@@ -119,9 +122,9 @@ class SolutionController extends BaseController
                 $request -> validate([
                     'updateSolutionFileLink' => 'required|url',
                 ]);
-
                $solutions =  Solution::where("id", $request -> updateSolutionId)
                             -> update([
+                                'id' => $request -> updateSolutionId,
                                 "type" => $request -> updateSolutionType,
                                 "file" => $request -> updateSolutionFileLink,
                             ]);
@@ -134,7 +137,7 @@ class SolutionController extends BaseController
         }
     }
 
-    public function delAdminSolution(Request $request){
+    public function delete(Request $request){
         Solution::where("id", $request -> id)
             -> delete();
 

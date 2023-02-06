@@ -26,7 +26,7 @@
                         <td>{{ $problem->name }}</td>
                         <td>{{ __('Admin')}}</td>
                         <td>
-                            <a href="javaScript:Void(0)"  data-href="{{ route('delAdminProblem') }}"  data-id="{{ $problem -> id }}" class="delProblemBtn" title="Delete" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20"></a>
+                            <a href="javaScript:Void(0)"  data-href="{{ route('problem.delete') }}"  data-id="{{ $problem -> id }}" class="delProblemBtn" title="Delete" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20"></a>
                             &nbsp;
                             <a href="javaScript:Void(0)" class="editProblemBtn"  data-id="{{ $problem -> id }}"
                                                                                     data-type="{{ $problem -> type }}"
@@ -153,7 +153,7 @@ $(document).ready( function () {
         });
         
         $.ajax({
-            url: "{{route('updateAdminProblem')}}",
+            url: "{{route('problem.update')}}",
             data: fd,
             processData: false,
             contentType: false,
@@ -181,7 +181,7 @@ $(document).ready( function () {
                   });
               } else {
                   toastr.success('Problem updated successfully!');
-                  window.location.href = "{{route('adminProblem')}}";
+                  window.location.href = "{{route('problem.index')}}";
               }
             }
         });
@@ -201,7 +201,7 @@ $(document).ready( function () {
                         }
                 });      
           $.ajax({
-                url: "{{route('delAdminProblem')}}",
+                url: "{{route('problem.delete')}}",
                 data:{id :  id},         
                
                 type: 'POST',           
@@ -219,7 +219,7 @@ $(document).ready( function () {
                         });
                     } else {
                         toastr.success('Problem deleted successfully!');
-                        window.location.href = "{{route('adminProblem')}}";
+                        window.location.href = "{{route('problem.index')}}";
                     }
                 }
             });

@@ -440,39 +440,36 @@
                             <!-- Setting Tab start -->
                             <div class="tab-pane fade height-100-p" id="setting" role="tabpanel">
                                 <div class="profile-setting">
-                                    <form>
+                                    <form method="post" id="personal_info_form">
                                         <ul class="profile-edit-list row">
                                             <li class="weight-500 col-md-6">
-                                                <h4 class="text-blue h5 mb-20">Edit Your Personal
-                                                    Setting</h4>
+                                                <h4 class="text-blue h5 mb-20">Edit Your Personal Setting</h4>
                                                 <div class="form-group">
                                                     <label>Full Name</label>
-                                                    <input class="form-control form-control-lg" type="text">
+                                                    <input class="form-control form-control-lg" value="{{ @$user->name }}" name="name" type="text">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Title</label>
-                                                    <input class="form-control form-control-lg" type="text">
+                                                    <input class="form-control form-control-lg"  value="{{ @$user->personal_info->title }}" name="title" type="text">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Email</label>
-                                                    <input class="form-control form-control-lg" type="email">
+                                                    <input class="form-control form-control-lg"  value="{{ @$user->email }}" name="email" type="email">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Date of birth</label>
-                                                    <input class="form-control form-control-lg date-picker" type="date">
+                                                    <input class="form-control form-control-lg date-picker" value="{{ @$user->personal_info->date_of_birth }}"  name="date_of_birth" type="date">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Gender</label>
                                                     <div class="d-flex">
                                                         <div class="custom-control custom-radio mb-5 mr-20">
-                                                            <input type="radio" id="customRadio4" name="customRadio"
-                                                                class="custom-control-input">
+                                                            <input type="radio" id="customRadio4" name="gender" {{ (@$user->personal_info->gender == 'male') ? 'checked':'' }} value="male" class="custom-control-input">
                                                             <label class="custom-control-label weight-400"
                                                                 for="customRadio4">Male</label>
                                                         </div>
                                                         <div class="custom-control custom-radio mb-5">
-                                                            <input type="radio" id="customRadio5" name="customRadio"
-                                                                class="custom-control-input">
+                                                            <input type="radio" id="customRadio5"  name="gender" {{ (@$user->personal_info->gender == 'female') ? 'checked':'' }} value="female" class="custom-control-input">
                                                             <label class="custom-control-label weight-400"
                                                                 for="customRadio5">Female</label>
                                                         </div>
@@ -480,110 +477,88 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Country</label>
-                                                    <select class="selectpicker form-control form-control-lg"
-                                                        data-style="btn-outline-secondary btn-lg" title="Not Chosen">
-                                                        <option>United States</option>
-                                                        <option>India</option>
-                                                        <option>United Kingdom</option>
+                                                    <select class="selectpicker form-control form-control-lg"  name="country" data-style="btn-outline-secondary btn-lg" title="Not Chosen">
+                                                        <option value='US' value="{{ (isset($user->personal_info->country ) && $user->personal_info->country == 'US') ? 'selected':'' }}">United States</option>
+                                                        <option valeu='IN' value="{{ (isset($user->personal_info->country ) && $user->personal_info->country == 'IN') ? 'selected':'' }}">India</option>
+                                                        <option value='UK' value="{{ (isset($user->personal_info->country ) && $user->personal_info->country == 'UK') ? 'selected':'' }}">United Kingdom</option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>State/Province/Region</label>
-                                                    <input class="form-control form-control-lg" type="text">
+                                                    <input class="form-control form-control-lg" value="{{ @$user->personal_info->state }}"  name="state" type="text">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Postal Code</label>
-                                                    <input class="form-control form-control-lg" type="text">
+                                                    <input class="form-control form-control-lg" name="postal_code" value="{{ @$user->personal_info->postal_code }}"  type="text">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Phone Number</label>
-                                                    <input class="form-control form-control-lg" type="text">
+                                                    <input class="form-control form-control-lg" value="{{ @$user->phone_number }}" name="phone_number" type="text">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Address</label>
-                                                    <textarea class="form-control"></textarea>
+                                                    <textarea class="form-control"  name="address" >{{ @$user->personal_info->address }}</textarea>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label>Visa Card Number</label>
-                                                    <input class="form-control form-control-lg" type="text">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Paypal ID</label>
-                                                    <input class="form-control form-control-lg" type="text">
-                                                </div>
-                                                <!-- <div class="form-group">
-                                                    <div class="custom-control custom-checkbox mb-5">
-                                                        <input type="checkbox" class="custom-control-input"
-                                                            id="customCheck1-1">
-                                                        <label class="custom-control-label weight-400"
-                                                            for="customCheck1-1">I agree to receive
-                                                            notification emails</label>
-                                                    </div>
-                                                </div> -->
+                                               
+                                                
+                                               
                                                 <div class="form-group mb-0">
-                                                    <input type="submit" class="btn btn-success"
-                                                        value="Update Information">
+                                                    <button type="button" class="btn btn-success" id="personal_info" value="Update Information">Update Information</button>
                                                 </div>
+                                            </form>
                                             </li>
+
                                             <li class="weight-500 col-md-6">
+                                            <form method="post" id="social_links_form">
                                                 <h4 class="text-blue h5 mb-20">Edit Social Media links
                                                 </h4>
                                                 <div class="form-group">
                                                     <label>Facebook URL:</label>
-                                                    <input class="form-control form-control-lg" type="text"
-                                                        placeholder="Paste your link here">
+                                                    <input class="form-control form-control-lg" value="{{ @$user->social_media_links->fb_url }}" type="text" name="fb_url" placeholder="Paste your link here">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Twitter URL:</label>
-                                                    <input class="form-control form-control-lg" type="text"
-                                                        placeholder="Paste your link here">
+                                                    <input class="form-control form-control-lg" value="{{ @$user->social_media_links->twitter_url }}" type="text" name="twitter_url" placeholder="Paste your link here">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Linkedin URL:</label>
-                                                    <input class="form-control form-control-lg" type="text"
-                                                        placeholder="Paste your link here">
+                                                    <input class="form-control form-control-lg" type="text" value="{{ @$user->social_media_links->linked_url }}" name="linked_url" placeholder="Paste your link here">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Instagram URL:</label>
-                                                    <input class="form-control form-control-lg" type="text"
-                                                        placeholder="Paste your link here">
+                                                    <input class="form-control form-control-lg" type="text" name="instagram_url" value="{{ @$user->social_media_links->instagram_url }}" placeholder="Paste your link here">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Dribbble URL:</label>
-                                                    <input class="form-control form-control-lg" type="text"
-                                                        placeholder="Paste your link here">
+                                                    <input class="form-control form-control-lg" type="text" name="dribble_url" value="{{ @$user->social_media_links->dribble_url }}" placeholder="Paste your link here">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Dropbox URL:</label>
-                                                    <input class="form-control form-control-lg" type="text"
-                                                        placeholder="Paste your link here">
+                                                    <input class="form-control form-control-lg" type="text" name="dropbox_url" value="{{ @$user->social_media_links->dropbox_url }}" placeholder="Paste your link here">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Google-plus URL:</label>
-                                                    <input class="form-control form-control-lg" type="text"
-                                                        placeholder="Paste your link here">
+                                                    <input class="form-control form-control-lg" type="text" name="google_plus_url" value="{{ @$user->social_media_links->google_plus_url }}" placeholder="Paste your link here">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Pinterest URL:</label>
-                                                    <input class="form-control form-control-lg" type="text"
-                                                        placeholder="Paste your link here">
+                                                    <input class="form-control form-control-lg" type="text" name="pinterest_url" value="{{ @$user->social_media_links->pinterest_url }}" placeholder="Paste your link here">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Skype URL:</label>
-                                                    <input class="form-control form-control-lg" type="text"
-                                                        placeholder="Paste your link here">
+                                                    <input class="form-control form-control-lg" type="text" name="skype_url" value="{{ @$user->social_media_links->skype_url }}" placeholder="Paste your link here">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Vine URL:</label>
-                                                    <input class="form-control form-control-lg" type="text"
-                                                        placeholder="Paste your link here">
+                                                    <input class="form-control form-control-lg" type="text" name="vine_url" value="{{ @$user->social_media_links->vine_url }}" placeholder="Paste your link here">
                                                 </div>
                                                 <div class="form-group mb-0">
-                                                    <input type="submit" class="btn btn-success" value="Save & Update">
+                                                    <button type="button" class="btn btn-success" id="social_links" value="">Save & Update</button>
                                                 </div>
                                             </li>
+                                            </form>
                                         </ul>
-                                    </form>
+                                    
                                 </div>
                             </div>
                             <!-- Setting Tab End -->
@@ -628,5 +603,96 @@
             $("#changeAvatarImg").attr("src", tmppath)
         })
     })
+</script>
+<script>
+     $(document).on('click','#personal_info',function(e){
+        e.preventDefault();
+        var fd = new FormData($('#personal_info_form')[0]);
+        $.ajaxSetup({
+        headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+        });
+        
+        $.ajax({
+            url: "{{route('user.updateInfo' , @$user->id)}}",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            type: 'POST',
+            beforeSend: function(){
+              $('#personal_info').attr('disabled',true);
+              $('#personal_info').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#personal_info').attr('disabled',false);
+                $('#personal_info').html('Upadte Information');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response){
+              if(response.success == false)
+              {
+                  $('#personal_info').attr('disabled',false);
+                  $('#personal_info').html('Login');
+                  var errors = response.data;
+                  $.each( errors, function( key, value ) {
+                      toastr.error(value)
+                  });
+              } else {
+                    toastr.success('Problem updated successfully!');
+                    window.location.reload(true)
+
+              }
+            }
+        });
+    });
+
+
+    $(document).on('click','#social_links',function(e){
+        e.preventDefault();
+        var fd = new FormData($('#social_links_form')[0]);
+        $.ajaxSetup({
+        headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+        });
+        
+        $.ajax({
+            url: "{{route('user.updateUserSocialInfo' , @$user->id)}}",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            type: 'POST',
+            beforeSend: function(){
+              $('#social_links').attr('disabled',true);
+              $('#social_links').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#social_links').attr('disabled',false);
+                $('#social_links').html('Save & Update');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response){
+              if(response.success == false)
+              {
+                  $('#social_links').attr('disabled',false);
+                  $('#social_links').html('Save & Update');
+                  var errors = response.data;
+                  $.each( errors, function( key, value ) {
+                      toastr.error(value)
+                  });
+              } else {
+                  toastr.success('Record updated successfully!');
+                  window.location.reload(true)
+              }
+            }
+        });
+    });
 </script>
 @endsection

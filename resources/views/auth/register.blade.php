@@ -16,11 +16,12 @@
                    
                 </div>
                 <div class="upload-btn">
-                  <button type="button">                  
+                  <button type="button">
+                  
                     <span>Upload File</span>
                   </button>
                 </div>
-                <input accept="image/*" name="avatar" type="file" id="files" class="d-none"/>
+                <input accept="image/*" type="file" id="files" class="d-none"/>
               </div>
             </div>
             <div class="col-7">
@@ -59,7 +60,7 @@
             </button>
           </div>
           <div class="btns-wrap d-flex justify-content-center mt-5 mb-5">
-            <button type="button" class="btn btn-primary login-btn">Login</button>
+            <button type="button" class="btn btn-primary login-btn"><a href="{{ route('login') }}">Login</a></button>
             <button type="button" class="btn btn-primary login-btn reagister">Sign Up</button>
           </div>
         </form>
@@ -78,9 +79,7 @@
         $('#image').attr('src' , src);
       })
     
-      $('.login-btn').on('click',function(){
-        window.location.href = '{{ route("login")}}';
-      })
+
 
   $(document).on('click','.reagister', function(e){
     
