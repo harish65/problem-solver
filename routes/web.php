@@ -22,7 +22,7 @@ Auth::routes();
 Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
 
     Route::get("index", [\App\Http\Controllers\Admin\ProjectController::class, 'index']) ->name("index");
-    Route::get('/login', [\App\Http\Controllers\Admin\LoginController::class, 'getLogin'])->name('login');
+    Route::get('/', [\App\Http\Controllers\Admin\LoginController::class, 'getLogin'])->name('login');
     Route::post('/login', [\App\Http\Controllers\Admin\LoginController::class, 'postLogin'])->name('login');
     Route::get('/getlogout', [\App\Http\Controllers\Admin\LoginController::class, 'getlogout'])->name('getlogout');
         
@@ -37,8 +37,11 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
         Route::delete('/destroy', [\App\Http\Controllers\Admin\PermissionsController::class , 'destroy'])->name('destroy');
     }); 
 });
+
+
 Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
     Route::group(['middleware' => ['auth' , 'admin']], function () {
+        Route::get("/", [\App\Http\Controllers\Admin\UserController::class, 'adminUser'])->name('index'); 
         Route::get("view/{id}", [\App\Http\Controllers\Admin\UserController::class, 'view']) -> name("view");
         Route::get("edit/{id}", [\App\Http\Controllers\Admin\UserController::class, 'edit']) -> name("edit");
         Route::post("update/{id}", [\App\Http\Controllers\Admin\UserController::class, 'update'])->name("update");
@@ -60,13 +63,21 @@ Route::group(['as' => 'project.', 'prefix' => 'project'], function () {
         Route::post("/store", [\App\Http\Controllers\Admin\ProjectController::class, 'store'])->name("store");
     });  
 });
+
+Route::group(['as' => 'category.', 'prefix' => 'category'], function () {
+    Route::group(['middleware' => ['auth' , 'admin']], function () {
+        Route::get("/", [\App\Http\Controllers\Admin\ProblemCategoryController::class, 'index'])->name('index');
+        Route::post("/add", [\App\Http\Controllers\Admin\ProblemCategoryController::class, 'store'])->name('add');
+        Route::get("/delete", [\App\Http\Controllers\Admin\ProblemCategoryController::class, 'destroy'])->name('delete');
+    });  
+});
 // Super Admin Routes End
 
-// User Logins
+// Adult User Logins
 Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
     Route::post('/login', [\App\Http\Controllers\Adult\LoginController::class, 'postLogin'])->name('login');
     Route::get('/login', [\App\Http\Controllers\Adult\LoginController::class, 'getLogin'])->name('login');
-    Route::get('/dashborad', [\App\Http\Controllers\Adult\ProblemController::class, 'adultProblem'])->name('dashborad');
+    Route::get('/dashborad', [\App\Http\Controllers\Adult\ProjectController::class, 'index'])->name('dashborad')-> middleware("auth", "adult");;
     Route::get('/getlogout', [\App\Http\Controllers\Adult\LoginController::class, 'getlogout'])->name('getlogout');
 });
 // Admin Solution 
@@ -88,16 +99,7 @@ Route::post("updateProfile", [\App\Http\Controllers\ProfileController::class, 'u
 Route::get("adminErr", [\App\Http\Controllers\ErrController::class, 'adminErr']) -> name("adminErr");///adult err
 Route::get("adultErr", [\App\Http\Controllers\ErrController::class, 'adultErr']) -> name("adultErr");///child err
 Route::get("childErr", [\App\Http\Controllers\ErrController::class, 'childErr']) -> name("childErr");//admin
-///home
-// Route::get("adminHome", [\App\Http\Controllers\Admin\HomeController::class, 'adminHome']) -> middleware("auth", "admin") -> name("adminHome");
 
-///user
-Route::get("adminUser", [\App\Http\Controllers\Admin\UserController::class, 'adminUser']) -> middleware("auth", "admin") -> name("adminUser");
-Route::get("getAdminUser", [\App\Http\Controllers\Admin\UserController::class, 'getAdminUser']) -> middleware("auth", "admin");
-
-
-
-Route::post("delAdminUser", [\App\Http\Controllers\Admin\UserController::class, 'delAdminUser']) -> middleware("auth", "admin");
 ///problem
 
 Route::group(['as' => 'problem.', 'prefix' => 'problem'], function () {
@@ -150,6 +152,15 @@ Route::group(['as' => 'solutionfunction.', 'prefix' => 'solutionfunction'], func
 });    
 //adult
 ///home
+Route::group(['as' => 'project.', 'prefix' => 'project'], function () {
+    Route::group(['middleware' => ['auth' , 'adult']], function () {
+        Route::get("/store", [\App\Http\Controllers\Adult\ProjectController::class, 'store'])-> name("store");
+    });
+});    
+
+
+
+
 Route::get("adultHome", [\App\Http\Controllers\Adult\HomeController::class, 'adultHome']) -> middleware("auth", "adult") -> name("adultProblem");
 
 ////problem

@@ -56,9 +56,7 @@
 </div>
 @include('admin.verificationTypeText.modal.verification-type-text',[$verificationTypes])
 @endsection
-@section('css')
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-@endsection
+
 @section('scripts')
 <script src="{{ asset('assets-new/js/dataTables.buttons.min.js')}}"></script>
 <script>

@@ -38,6 +38,15 @@
                         <input type="text" name="updateProblemName" id="updateProblemName" class="form-control" placeholder="Name">
                         
                     </div>
+                    <div class="form-group">
+                        <select class="form-control" name="category_id" id="category_id">
+                            <option value="">Choose Category..</option>
+                            @foreach($cat as $cate)
+                                <option value="{{ $cate->id}}">{{ $cate->name }}</option>
+                            @endforeach
+                        </select>
+                        
+                    </div>
                 
                 </div>
                 <div class="modal-footer">

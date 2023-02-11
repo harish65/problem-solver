@@ -24,21 +24,18 @@
                 @foreach ($solutions as $solution)
                 <tr>
                     <td>
-                        @if($solution -> file == null)
-                        <div class="fileFieldAdmin"></div>
-                        @else
-                            @if($solution -> type == 0)
-                                @if(strlen($solution -> file) < 15)
-                                    <img src="{{ asset("assets-new/solution/" . $solution -> file) }}" class="w-50 fileFieldAdmin">
-                                @endif
-                                @elseif($solution -> type == 1)
-                                    <video width="400" controls="controls" preload="metadata" class="w-50 fileFieldAdmin" preload="metadata">
-                                        <source src="{{ asset("assets-new/solution/" . $solution -> file) }}#t=0.1" type="video/mp4">
-                                    </video>
-                                @elseif($solution -> type == 2)
-                                    <img src="{{ "http://img.youtube.com/vi/" . explode("=", explode("watch?", $solution -> file)[1])[1] . "/0.jpg" }}" class="w-50 fileFieldAdmin">
-                            @endif
-                        @endif
+                    @if($solution -> type == 0)
+									@if(strlen($solution -> file) < 15)
+										<img src="{{ asset("assets-new/solution/" . $solution -> file) }}" width="420" height="315">
+									@endif
+                        @elseif($solution -> type == 1)
+									<video controls="controls" preload="metadata" width="420" height="315" preload="metadata">
+										<source src="{{ asset("assets-new/solution/" . $solution -> file) }}#t=0.1" type="video/mp4">
+									</video>
+								@elseif($solution -> type == 2)
+                                <iframe width="420" height="315" src="https://www.youtube.com/watch?v=Vhn2RkoWTgw" frameborder="0" allowfullscreen></iframe>
+
+								@endif
                     </td>
                     <td>{{ $solution->solution }}</td>
                     <td>{{ $solution->problem }}</td>
