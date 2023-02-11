@@ -17,9 +17,7 @@
         @yield("content")
     </div>
 
-
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-<!-- <script src="{{ asset('assets-new/js/jquery.slim.min.js') }}"></script> -->
 <script src="{{ asset('assets-new/js/popper.min.js') }}"></script>
 <script src="{{ asset('assets-new/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('assets-new/toastar/toastr.min.js') }}"></script>
