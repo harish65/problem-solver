@@ -5,8 +5,7 @@
 <div class='login'>
     <div class="container">
         <div class="login-form" >
-            <div class="logo-wrap">
-                <!-- <img src="{{ URL::to('/') }}/assets-new/images/logo.png" alt="logo"/> -->
+            <div class="logo-wrap">                
                 <img src="{{ URL::to('/') }}/assets/img/logos/new-logo-01.svg" width="300" height="300" alt="logo"/>
             </div>
             <form method="POST" id="login-form">
@@ -48,6 +47,7 @@
 @section('scripts')
 <script type="text/javascript">
     $(document).on('click','#btnLogin',function(e){
+        
         e.preventDefault();
         var fd = new FormData($('#login-form')[0]);
         $.ajax({

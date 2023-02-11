@@ -34,6 +34,7 @@ class LoginController extends BaseController
      */
     public function getLogin()
     {
+       
         return view('auth.login');
     }
 
@@ -87,11 +88,8 @@ class LoginController extends BaseController
         
     public function getlogout()
     {
-        // \Auth::guard('users')->logout();
-        // Auth::user()->logout();
         Auth()->logout();
-        // toastr()->success('Logged out successfully!');
-        return redirect()->route('user.login')->with(['success' => 'user logged out successfully']);
+        return redirect()->route('login')->with(['success' => 'user logged out successfully']);
     }
 
 

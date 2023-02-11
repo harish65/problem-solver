@@ -46,6 +46,7 @@ class LoginController extends BaseController
     }
     public function showLoginForm()
     {
+        
         return view('auth.login');
     }
     
