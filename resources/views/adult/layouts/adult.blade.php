@@ -20,7 +20,7 @@
     </div>
 
 
-<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script src="{{ asset('assets-new/js/popper.min.js') }}"></script>
 <script src="{{ asset('assets-new/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('assets-new/toastar/toastr.min.js') }}"></script>
