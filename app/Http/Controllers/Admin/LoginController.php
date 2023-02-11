@@ -32,11 +32,10 @@ class LoginController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    // public function getLogin()
-    // {
-       
-    //     return view('admin.login');
-    // }
+    public function getLogin()
+    {
+        return view('admin.login');
+    }
 
     /**
      * Validate the specified resource.
