@@ -90,9 +90,9 @@ Route::group(['as' => 'solution.', 'prefix' => 'solution'], function () {
     });
 });
 ///Roles and permissions Routes
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get("profile", [\App\Http\Controllers\ProfileController::class, 'profile']) -> name("profile") -> middleware("auth");
-Route::post("updateProfile", [\App\Http\Controllers\ProfileController::class, 'updateProfile']) -> middleware("auth");
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get("profile", [\App\Http\Controllers\ProfileController::class, 'profile']) -> name("profile") -> middleware("auth");
+// Route::post("updateProfile", [\App\Http\Controllers\ProfileController::class, 'updateProfile']) -> middleware("auth");
 
 //error
 ///admin err
@@ -161,56 +161,56 @@ Route::group(['as' => 'project.', 'prefix' => 'project'], function () {
 
 
 
-Route::get("adultHome", [\App\Http\Controllers\Adult\HomeController::class, 'adultHome']) -> middleware("auth", "adult") -> name("adultProblem");
+// Route::get("adultHome", [\App\Http\Controllers\Adult\HomeController::class, 'adultHome']) -> middleware("auth", "adult") -> name("adultProblem");
 
-////problem
-Route::get("adultProblem", [\App\Http\Controllers\Adult\ProblemController::class, 'adultProblem']) -> middleware("auth", "adult") -> name("adultProblem");
-Route::post("createProblem", [\App\Http\Controllers\Adult\ProblemController::class, 'createProblem']) -> middleware("auth", "adult");
-Route::post("updateProblem", [\App\Http\Controllers\Adult\ProblemController::class, 'updateProblem']) -> middleware("auth", "adult");
-Route::post("delProblem", [\App\Http\Controllers\Adult\ProblemController::class, 'delProblem']) -> middleware("auth", "adult");
+// ////problem
+// Route::get("adultProblem", [\App\Http\Controllers\Adult\ProblemController::class, 'adultProblem']) -> middleware("auth", "adult") -> name("adultProblem");
+// Route::post("createProblem", [\App\Http\Controllers\Adult\ProblemController::class, 'createProblem']) -> middleware("auth", "adult");
+// Route::post("updateProblem", [\App\Http\Controllers\Adult\ProblemController::class, 'updateProblem']) -> middleware("auth", "adult");
+// Route::post("delProblem", [\App\Http\Controllers\Adult\ProblemController::class, 'delProblem']) -> middleware("auth", "adult");
 
-////solution
-Route::get("adultSolution", [\App\Http\Controllers\Adult\SolutionController::class, 'adultSolution']) -> middleware("auth", "adult") -> name("adultSolution");
-Route::post("createSolution", [\App\Http\Controllers\Adult\SolutionController::class, 'createSolution']) -> middleware("auth", "adult");
-Route::post("updateSolution", [\App\Http\Controllers\Adult\SolutionController::class, 'updateSolution']) -> middleware("auth", "adult");
-Route::post("delSolution", [\App\Http\Controllers\Adult\SolutionController::class, 'delSolution']) -> middleware("auth", "adult");
+// ////solution
+// Route::get("adultSolution", [\App\Http\Controllers\Adult\SolutionController::class, 'adultSolution']) -> middleware("auth", "adult") -> name("adultSolution");
+// Route::post("createSolution", [\App\Http\Controllers\Adult\SolutionController::class, 'createSolution']) -> middleware("auth", "adult");
+// Route::post("updateSolution", [\App\Http\Controllers\Adult\SolutionController::class, 'updateSolution']) -> middleware("auth", "adult");
+// Route::post("delSolution", [\App\Http\Controllers\Adult\SolutionController::class, 'delSolution']) -> middleware("auth", "adult");
 
-////solution function
-Route::get("adultSolFunction", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'adultSolFunction']) -> middleware("auth", "adult") -> name("adultSolFunction");
-Route::get("getSolutionPerProblem", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'getSolutionPerProblem']) -> middleware("auth", "adult");
-Route::post("createSolFunction", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'createSolFunction']) -> middleware("auth", "adult");
-Route::get("getSolutionPerProblemForUpdate", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'getSolutionPerProblemForUpdate']) -> middleware("auth", "adult");
-Route::post("updateSolFunction", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'updateSolFunction']) -> middleware("auth", "adult");
-Route::post("delSolFunction", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'delSolFunction']) -> middleware("auth", "adult");
+// ////solution function
+// Route::get("adultSolFunction", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'adultSolFunction']) -> middleware("auth", "adult") -> name("adultSolFunction");
+// Route::get("getSolutionPerProblem", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'getSolutionPerProblem']) -> middleware("auth", "adult");
+// Route::post("createSolFunction", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'createSolFunction']) -> middleware("auth", "adult");
+// Route::get("getSolutionPerProblemForUpdate", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'getSolutionPerProblemForUpdate']) -> middleware("auth", "adult");
+// Route::post("updateSolFunction", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'updateSolFunction']) -> middleware("auth", "adult");
+// Route::post("delSolFunction", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'delSolFunction']) -> middleware("auth", "adult");
 
-////verification
-Route::get("adultVerification", [\App\Http\Controllers\Adult\VerificationController::class, 'adultVerification']) -> middleware("auth", "adult") -> name("adultVerification");
-Route::post("createVerification", [\App\Http\Controllers\Adult\VerificationController::class, 'createVerification']) -> middleware("auth", "adult");
-Route::post("createVerificationByPlus", [\App\Http\Controllers\Adult\VerificationController::class, 'createVerificationByPlus']) -> middleware("auth", "adult");
-Route::post("updateVerification", [\App\Http\Controllers\Adult\VerificationController::class, 'updateVerification']) -> middleware("auth", "adult");
-Route::post("delVerification", [\App\Http\Controllers\Adult\VerificationController::class, 'delVerification']) -> middleware("auth", "adult");
-Route::post("delVerifications", [\App\Http\Controllers\Adult\VerificationController::class, 'delVerifications']) -> middleware("auth", "adult");
-Route::get("getSolFunctionPerProblem", [\App\Http\Controllers\Adult\VerificationController::class, 'getSolFunctionPerProblem']) -> middleware("auth", "adult");
-Route::get("getSolFunctionPerSolution", [\App\Http\Controllers\Adult\VerificationController::class, 'getSolFunctionPerSolution']) -> middleware("auth", "adult");
-Route::post("updateVerificationType", [\App\Http\Controllers\Adult\VerificationController::class, "updateVerificationType"]) -> middleware("auth", "adult");
-Route::get("getProblemPerSolFunction", [\App\Http\Controllers\Adult\VerificationController::class, 'getProblemPerSolFunction']) -> middleware("auth", "adult");
-Route::get("getSolutionPerSolFunction", [\App\Http\Controllers\Adult\VerificationController::class, 'getSolutionPerSolFunction']) -> middleware("auth", "adult");
-Route::get("getVerificationTypeTextPerType", [\App\Http\Controllers\Adult\VerificationController::class, 'getVerificationTypeTextPerType']) -> middleware("auth", "adult");
-Route::post('updateVerifications', [\App\Http\Controllers\Adult\VerificationController::class, 'updateVerifications']) -> middleware("auth", "adult");
+// ////verification
+// Route::get("adultVerification", [\App\Http\Controllers\Adult\VerificationController::class, 'adultVerification']) -> middleware("auth", "adult") -> name("adultVerification");
+// Route::post("createVerification", [\App\Http\Controllers\Adult\VerificationController::class, 'createVerification']) -> middleware("auth", "adult");
+// Route::post("createVerificationByPlus", [\App\Http\Controllers\Adult\VerificationController::class, 'createVerificationByPlus']) -> middleware("auth", "adult");
+// Route::post("updateVerification", [\App\Http\Controllers\Adult\VerificationController::class, 'updateVerification']) -> middleware("auth", "adult");
+// Route::post("delVerification", [\App\Http\Controllers\Adult\VerificationController::class, 'delVerification']) -> middleware("auth", "adult");
+// Route::post("delVerifications", [\App\Http\Controllers\Adult\VerificationController::class, 'delVerifications']) -> middleware("auth", "adult");
+// Route::get("getSolFunctionPerProblem", [\App\Http\Controllers\Adult\VerificationController::class, 'getSolFunctionPerProblem']) -> middleware("auth", "adult");
+// Route::get("getSolFunctionPerSolution", [\App\Http\Controllers\Adult\VerificationController::class, 'getSolFunctionPerSolution']) -> middleware("auth", "adult");
+// Route::post("updateVerificationType", [\App\Http\Controllers\Adult\VerificationController::class, "updateVerificationType"]) -> middleware("auth", "adult");
+// Route::get("getProblemPerSolFunction", [\App\Http\Controllers\Adult\VerificationController::class, 'getProblemPerSolFunction']) -> middleware("auth", "adult");
+// Route::get("getSolutionPerSolFunction", [\App\Http\Controllers\Adult\VerificationController::class, 'getSolutionPerSolFunction']) -> middleware("auth", "adult");
+// Route::get("getVerificationTypeTextPerType", [\App\Http\Controllers\Adult\VerificationController::class, 'getVerificationTypeTextPerType']) -> middleware("auth", "adult");
+// Route::post('updateVerifications', [\App\Http\Controllers\Adult\VerificationController::class, 'updateVerifications']) -> middleware("auth", "adult");
 
-///about
+// ///about
 
-///share
+// ///share
 
-///quiz
+// ///quiz
 
-///setting
-Route::get("adultSetting", [\App\Http\Controllers\Adult\SettingController::class, 'adultSetting']) -> middleware("auth", "adult") -> name("adultSetting");
+// ///setting
+// Route::get("adultSetting", [\App\Http\Controllers\Adult\SettingController::class, 'adultSetting']) -> middleware("auth", "adult") -> name("adultSetting");
 
-Route::get("settingAdminSingleSoultin", [\App\Http\Controllers\Adult\SettingController::class, 'settingAdminSingleSoultin']) -> middleware("auth", "adult");
+// Route::get("settingAdminSingleSoultin", [\App\Http\Controllers\Adult\SettingController::class, 'settingAdminSingleSoultin']) -> middleware("auth", "adult");
 
-//child
-///home
-Route::get("childHome", [\App\Http\Controllers\Child\HomeController::class, 'childHome']) -> middleware('auth', 'child') -> name("childHome");
+// //child
+// ///home
+// Route::get("childHome", [\App\Http\Controllers\Child\HomeController::class, 'childHome']) -> middleware('auth', 'child') -> name("childHome");
 
-Route::get("project", [\App\Http\Controllers\Project\ProjectController::class, 'index']) -> middleware('auth') -> name("project");
+// Route::get("project", [\App\Http\Controllers\Project\ProjectController::class, 'index']) -> middleware('auth') -> name("project");

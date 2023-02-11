@@ -18,7 +18,8 @@ class ProjectController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {        
+    {    
+       
         $project = DB::table('projects')
                     ->leftJoin('problems', 'projects.id', '=', 'problems.project_id')
                     ->select('projects.*', 'problems.id as problem_id', 'problems.name as problem')
