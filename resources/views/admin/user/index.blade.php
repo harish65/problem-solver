@@ -1,5 +1,5 @@
 @extends('admin.layouts.master')
-@section('title', 'User Manage | Admin')
+@section('title', 'Manage User | Admin')
 
 @section('content')
 
@@ -8,7 +8,7 @@
 <div class="container">
 
     <div class="row spl-row">
-        <h4>User Manage</h4>
+        <h4>Manage User</h4>
     </div>
 
     <div class="row spl-row">
@@ -98,7 +98,8 @@ $(document).ready( function () {
           var href = $(this).attr('href');
           $.get( href, function( data ) {
               toastr.success(data.message);
-              window.location.href = "{{route('adminUser')}}";
+              
+              window.location.href = "{{route('user.index')}}";
               // $('#dataTableExample').DataTable().ajax.reload();
           });
       });

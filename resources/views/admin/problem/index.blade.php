@@ -1,11 +1,11 @@
 @extends('admin.layouts.master')
-@section('title', 'Problem Manage | Admin')
+@section('title', 'Manage Problem | Admin')
 
 @section('content')
 <div class="container">
 
     <div class="row spl-row">
-        <h4>Problem Manage</h4>
+        <h4>Manage Problem</h4>
     </div>
 
     <div class="row spl-row">
@@ -14,6 +14,7 @@
                 <tr>
                     <th>File</th>
                     <th>Name</th>
+                    <th>Category</th>
                     <th>Creator</th>
                     <th>Opertaion</th>
                 </tr>
@@ -22,8 +23,22 @@
                
                     @foreach ($problems  as $problem)
                     <tr>
-                        <td><img src="{{ asset('/assets-new/problem/'.$problem->file) }}" width="241"  height="152"></td>
+                        <td>
+                        @if($problem -> type == 0)
+									@if(strlen($problem -> file) < 15)
+										<img src="{{ asset("assets-new/problem/" . $problem -> file) }}" width="420" height="315">
+									@endif
+								@elseif($problem -> type == 1)
+									<video controls="controls" preload="metadata" width="420" height="315" preload="metadata">
+										<source src="{{ asset("assets-new/problem/" . $problem -> file) }}#t=0.1" type="video/mp4">
+									</video>
+								@elseif($problem -> type == 2)
+									    <iframe src="{{ $problem -> file }}" width="420" height="315"> </iframe>
+								@endif
+                            
+                        </td>
                         <td>{{ $problem->name }}</td>
+                        <td>{{ $problem->problem_categories_name }}</td>
                         <td>{{ __('Admin')}}</td>
                         <td>
                             <a href="javaScript:Void(0)"  data-href="{{ route('problem.delete') }}"  data-id="{{ $problem -> id }}" class="delProblemBtn" title="Delete" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20"></a>
@@ -31,6 +46,7 @@
                             <a href="javaScript:Void(0)" class="editProblemBtn"  data-id="{{ $problem -> id }}"
                                                                                     data-type="{{ $problem -> type }}"
                                                                                     data-file="{{ $problem -> file }}"
+                                                                                    data-cat="{{ $problem -> problem_categories_id }}"
                             data-name="{{ $problem -> name }}"  title="Delete"><img src="{{ url('/') }}/assets-new/images/editIcon.png" width="15" height="20"></a>
                         </td>
                     </tr>
@@ -42,7 +58,7 @@
     </div>
 </div>
 
-@include('admin.problem.modal.update-problem')
+@include('admin.problem.modal.update-problem',[$cat])
 @endsection
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
@@ -66,7 +82,7 @@ $(document).ready( function () {
 </script>
 <script>
      $('.dropify').dropify();
-    $(".updateProblemType").change(function(){
+        $(".updateProblemType").change(function(){
             var type = $(this).val();
 
             if(type == 0){
@@ -85,9 +101,8 @@ $(document).ready( function () {
      $(".editProblemBtn").click(function(){
        
         $("#updateProblemId").val($(this).data("id"));
-
         $("#updateProblemName").val($(this).data("name"));
-        $("#updateProblemName").val($(this).data("name"));
+        $('#category_id').val($(this).attr('data-cat'))
 
         if($(this).data("type") == 2){
             $("#updateProblemType").val("2");
@@ -125,21 +140,7 @@ $(document).ready( function () {
         $("#updateProblemModal").modal("show");
     });
 
-    // $(".delProblemBtn").click(function(){
-    //     var id = $(this).data("id");
-
-    //     swal({
-    //         icon: 'warning',
-    //         title: 'Warning',
-    //         text: 'Do you want to delete?',
-    //         buttons: true
-    //     }).then(function(value) {
-    //         if(value.value === true) {
-    //             $("#delAdminProblemId").val(id);
-    //             $("#delAdminProblemModal").submit();
-    //         }
-    //     });
-    // })
+    
 </script>
 
 <script>

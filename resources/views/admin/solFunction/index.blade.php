@@ -7,12 +7,12 @@
         <div class="row">
             <div class="col-md-6 col-sm-12">
                 <div class="title">
-                    <h4>Solution Function Manage</h4>
+                    <h4>Manage Solution Function </h4>
                 </div>
                 <nav aria-label="breadcrumb" role="navigation">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ url("adminHome") }}">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Solution Manage Manage</li>
+                        <li class="breadcrumb-item active" aria-current="page"> Manage Solution Function</li>
                     </ol>
                 </nav>
             </div>

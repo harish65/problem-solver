@@ -10,42 +10,19 @@ use App\Models\Problem;
 use App\Http\Controllers\BaseController as BaseController;
 use Auth;
 use Validator;
+use DB;
 
 
 class ProblemController extends BaseController
 {
     //problem
     public function index(){
-        $problems = Problem::all();
-        return view("admin.problem.index",compact('problems'));
-    }
+        $cat = DB::table('problem_categories')->get();
+        $problems = DB::table('problems')  ->leftJoin('problem_categories', 'problems.category_id', '=', 'problem_categories.id')
+                    ->select('problems.*' , 'problem_categories.name as problem_categories_name' , 'problem_categories.id as problem_categories_id')
+                    ->get();
 
-
-
-   
-    public function getAdminProblem(Request $request){
-        $search = $request -> search;
-
-        if($search == ""){
-            $problems = Problem::orderBy("id", "desc")
-                -> paginate(5);
-        }else{
-            $users = User::where("name", "like", "%" . $search . "%")
-                -> orWhere("email", "like", "%" . $search . "%")
-                -> select("id")
-                -> get();
-                
-            $problems = Problem::orderBy("id", "desc")
-                -> where(function($q) use($search, $users){
-                    $q -> where("name", "like", "%" . $search . "%");
-                    $q -> orWhereIn("user_id", $users);
-                })
-                -> paginate(5);
-        }
-
-        return view("admin.problem.getAdminProblem", [
-            "problems" => $problems,
-        ]);
+        return view("admin.problem.index",compact('problems','cat'));
     }
 
 
@@ -53,11 +30,12 @@ class ProblemController extends BaseController
         $defaultType = Problem::where("id", $request -> updateProblemId)
                             -> value("type");
         if($request -> updateProblemType == 0){
-            // echo "<pre>";print_r($request->all());die;
+            
             if($request->hasFile('updateProblemFile')){
                 
                 $validator = Validator::make ( $request->all(),[
                     'updateProblemFile' => 'required|mimes:png,jpg,jpeg,avi,mp4,mpeg|:2048',
+                    'category_id' => 'required',
                 ]);
                 if($validator->fails()){
                     return $this->sendError('Validation Error.', $validator->errors());       
@@ -74,13 +52,15 @@ class ProblemController extends BaseController
 
                 $problem  = Problem::where("id", $request -> updateProblemId)-> update([
                         "file" => $file,
-                        "type" => $type
+                        "type" => $type,
+                        "category_id" => $request -> category_id
                     ]);
 
             }else{
                 $problem = Problem::where("id", $request -> updateProblemId)
                     -> update([
                         "type" => 0,
+                        "category_id" => $request -> category_id
                     ]);
             }
 
@@ -88,6 +68,7 @@ class ProblemController extends BaseController
                 $problem = Problem::where("id", $request -> updateProblemId)
                     -> update([
                         "type" => 1,
+                        "category_id" => $request -> category_id
                     ]);
             }
             if($problem){
@@ -100,6 +81,7 @@ class ProblemController extends BaseController
             $validator = Validator::make ( $request->all(),[
                     'updateProblemName' => 'required|max:255',
                     'updateProblemFileLink' => 'required|url',  
+                    'category_id' => 'required',
                 ]);
             if($validator->fails()){
                 return $this->sendError('Validation Error.', $validator->errors());       
@@ -109,6 +91,7 @@ class ProblemController extends BaseController
                             -> update([
                                 "type" => $request -> updateProblemType,
                                 "file" => $request -> updateProblemFileLink,
+                                "category_id" => $request -> category_id
                             ]);
                 $success['problem'] =  $problem;
                 return $this->sendResponse($success, 'Problem updated successfully.');              

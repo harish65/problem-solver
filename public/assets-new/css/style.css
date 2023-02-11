@@ -510,3 +510,11 @@ ul.feelFree li img {
 .table td{
     vertical-align: middle;
 }
+.form-check-label{
+    position: relative;
+    right: 40px;
+}
+.add-project-btn{
+    position: relative;
+    bottom: 40%;
+}

@@ -17,14 +17,12 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-
 Route::post('/login', [\App\Http\Controllers\Adult\LoginController::class, 'postLogin'])->name('login');
+Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'register'])->name('register');
+Route::middleware('auth:api')->group( function () {
+    Route::get('/dashborad', [\App\Http\Controllers\Adult\ProjectController::class, 'index'])->name('dashborad');
+    Route::post('/create-project', [\App\Http\Controllers\Adult\ProjectController::class, 'store'])->name('create-project');
+    Route::post('/delete-project', [\App\Http\Controllers\Adult\ProjectController::class, 'destroy'])->name('delete-project');
+});
 
-
-Route::get('/dashborad', [\App\Http\Controllers\Adult\ProblemController::class, 'adultProblem'])->name('dashborad');
-Route::get('/getlogout', [\App\Http\Controllers\Adult\LoginController::class, 'getlogout'])->name('getlogout');
-Route::get("adultProblem", [\App\Http\Controllers\Adult\ProblemController::class, 'adultProblem']) -> middleware("auth", "adult") -> name("adultProblem");
-Route::post("createProblem", [\App\Http\Controllers\Adult\ProblemController::class, 'createProblem']) -> middleware("auth", "adult");
-Route::post("updateProblem", [\App\Http\Controllers\Adult\ProblemController::class, 'updateProblem']) -> middleware("auth", "adult");
-Route::post("delProblem", [\App\Http\Controllers\Adult\ProblemController::class, 'delProblem']) -> middleware("auth", "adult");
 

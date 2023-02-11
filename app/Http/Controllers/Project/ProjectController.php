@@ -22,7 +22,20 @@ class ProjectController extends BaseController
      */
     public function index()
     {
-        return view ('project.index');
+        $project = DB::table('projects')
+                    ->leftJoin('problems', 'projects.id', '=', 'problems.project_id')
+                    ->select('projects.*', 'problems.id as problem_id', 'problems.name as problem')
+                    ->orderBy("id", "desc")
+                    ->get();
+                    if ($request->is('api/*')) {
+                            $success['projects'] = $project;
+                            $success['token'] = $request->header('Authorization');
+                            return $this->sendResponse($success,'Reviewer Response');
+                    }else{
+                        return view("adult.project.index", ["project" => $project]);
+                    }
+
+        // return view ('project.index');
     }
 
     /**

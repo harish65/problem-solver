@@ -14,4 +14,5 @@
 	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/dataTables.bootstrap4.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/toastr.min.css') }}">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 	@yield('css')

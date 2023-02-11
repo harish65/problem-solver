@@ -54,14 +54,17 @@ class LoginController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());       
         }        
         if($user = User::where(['email' => $request->email])->first() ) {
+              if($user->role != 1){  
                 if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){                    
                     $success['user'] =  $user;
-                    $success['token'] = $user->createToken('API Token')->plainTextToken;
+                    $success['token'] = $user->createToken('Solver')->accessToken;
                     return $this->sendResponse($success, 'User login successfully.');
                 } else { 
                     return $this->sendError('Error.', ['error'=> 'Email and Password is Invalid.']);
                 } 
-            
+              }else{
+                return $this->sendError('Error.', ['error'=> 'Permission denied for this account.']);
+              }
         } else { 
             return $this->sendError('Error.', ['error'=> 'Email and Password is Invalid.']);
         }  

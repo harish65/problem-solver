@@ -40,27 +40,27 @@
     <div class="container">
       <div class="row">
         @foreach ($problems as $item)
-			<div class="col">
-			<div class="projectBlock text-center">
-				<h2>Project 1</h2>
-				<div class="projectList">
-				<h3>Problem</h3>
-				<p class="redText">Dirty Oil</p>
-				</div>
-				<div class="projectList">
-				<h3>Solution</h3>
-				<p class="greenText">New Oil</p>
-				</div>
-				<div class="projectList">
-				<p class="date">12:12:2022</p>
-				<ul>
-					<li><a href="#"><img src="{{ url('/') }}/assets-new/images/editIcon.png" alt=""/></a></li>
-					<li><a href="#"><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" alt=""/></a></li>
-					<li><a href="#"><img src="{{ url('/') }}/assets-new/images/uploadIcon.png" alt=""/></a></li>
-				</ul>
-				</div>
-			</div>
-			</div>
+        <div class="col">
+        <div class="projectBlock text-center">
+          <h2>Project 1</h2>
+          <div class="projectList">
+          <h3>Problem</h3>
+          <p class="redText">Dirty Oil</p>
+          </div>
+          <div class="projectList">
+          <h3>Solution</h3>
+          <p class="greenText">New Oil</p>
+          </div>
+          <div class="projectList">
+          <p class="date">12:12:2022</p>
+          <ul>
+            <li><a href="#"><img src="{{ url('/') }}/assets-new/images/editIcon.png" alt=""/></a></li>
+            <li><a href="#"><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" alt=""/></a></li>
+            <li><a href="#"><img src="{{ url('/') }}/assets-new/images/uploadIcon.png" alt=""/></a></li>
+          </ul>
+          </div>
+        </div>
+        </div>
 		@endforeach
         <div class="col">
           <div class="projectBlock projectAdd text-center">
@@ -127,14 +127,14 @@
   <div class="modal fade addprojectModal" id="addprojectModal">
     <div class="modal-dialog">
       <div class="modal-content close-btn">
-        <div class="crossBtn" style="text-end">
+        <div class="crossBtn">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <!-- Modal Header -->
 
         
         <div class="modal-header">
-          <h4 class="modal-title">Add new project</h4>
+          <h4 class="modal-title">Add new proaaject</h4>
           
         </div>
         
