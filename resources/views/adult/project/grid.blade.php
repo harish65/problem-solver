@@ -4,22 +4,30 @@
             @foreach ($project as $item)
             <div class="col">
                 <div class="projectBlock text-center">
-                    <h2>{{ $item->name }}</h2>
+                    
+                        <h2>{{ $item->name }}</h2>
+                        <?php 
+                            $parameters = ['problem_id'=> $item->problem_id , 'project_id' => $item->id];
+                            $parameter =  Crypt::encrypt($parameters);
+                        ?>
+                        <a href="{{ route("adult.problem",@$parameter) }}" class="grid-p-l">
+                            <div class="projectList">
+                                <h3>Problem</h3>
+                                
+                                <p class="redText">{{ ($item->problem != '') ? $item->problem : 'N/A' }}</p>
+                            </div>
+                            <div class="projectList">
+                                <h3>Solution</h3>
+                                <p class="greenText">New Oil</p>
+                            </div>
+                        </a>
                     <div class="projectList">
-                        <h3>Problem</h3>
-                        <p class="redText">{{ ($item->problem != '') ? $item->problem : 'N/A' }}</p>
-                    </div>
-                    <div class="projectList">
-                        <h3>Solution</h3>
-                        <p class="greenText">New Oil</p>
-                    </div>
-                    <div class="projectList">
-                        <p class="date">12:12:2022</p>
+                        <p class="date">{{ date("d/m/Y" , strtotime($item->created_at))}}</p>
                         <ul>
-                            <li><a href="#"><img src="{{ url('/') }}/assets-new/images/editIcon.png" alt="" /></a></li>
-                            <li><a href="#"><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" alt="" /></a>
+                            <li><a href="javaScript:void(0)" class="editBtn" data-id="{{ $item->id }}" data-title="{{ $item->name }}"><img src="{{ url('/') }}/assets-new/images/editIcon.png" alt="" /></a></li>
+                            <li><a href="javaScript:void(0)" class="deleteBtn" data-id="{{ $item->id }}" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" alt="" /></a>
                             </li>
-                            <li><a href="#"><img src="{{ url('/') }}/assets-new/images/uploadIcon.png" alt="" /></a>
+                            <li><a href="javaScript:void(0)" class="shareBtn" data-id="{{ $item->id }}"><img src="{{ url('/') }}/assets-new/images/uploadIcon.png" alt="" /></a>
                             </li>
                         </ul>
                     </div>

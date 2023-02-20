@@ -7,6 +7,7 @@ use App\Http\Controllers\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\Models\Problem;
 use App\Models\Project;
+use Illuminate\Support\Facades\Crypt;
 use Auth;
 use Validator;
 use DB;
@@ -19,7 +20,6 @@ class ProjectController extends BaseController
      */
     public function index(Request $request)
     {    
-       
         $project = DB::table('projects')
                     ->leftJoin('problems', 'projects.id', '=', 'problems.project_id')
                     ->select('projects.*', 'problems.id as problem_id', 'problems.name as problem')
@@ -105,7 +105,7 @@ class ProjectController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        
     }
 
     /**
@@ -117,7 +117,9 @@ class ProjectController extends BaseController
     public function destroy(Request $request)
     {
         try{
+            
             $project  = DB::table('projects')->where('id', $request->input('id'))->delete();
+            DB::table('problems')->where('project_id', $request->input('id'))->delete();
             if($project){
                 $success['project'] =  $project;
                 $success['token'] = $request->header('Authorization');

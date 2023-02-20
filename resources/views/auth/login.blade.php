@@ -79,7 +79,7 @@
                   });
               } else {
                   toastr.success('User login successfully!');
-                  window.location.href = "{{route('user.dashborad')}}";
+                  window.location.href = "{{route('adult.dashboard')}}";
               }
             }
         });
