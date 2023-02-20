@@ -4,9 +4,7 @@
       <div class="row">
       <div class="col-md-8">
         <div class="footerlogo">
-          <a href="dashboard.html">
-            <img src="{{ url('/') }}/assets-new/images/footerLogo.png" alt="Footer Logo"/>
-          </a>
+                <a class="navbar-brand" href="{{ route('adult.dashboard')}}"><img src="{{ URL::to('/') }}/assets/img/logos/new-logo-01.svg" width="200" height="100" alt="logo"/></a>
           <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim</p>
           <ul class="socialMedia">
             <li><a href="#"><img src="{{ url('/') }}/assets-new/images/facebookIcon.png" alt=""/></a></li>

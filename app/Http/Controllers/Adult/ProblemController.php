@@ -5,132 +5,131 @@ namespace App\Http\Controllers\Adult;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Problem;
+use Illuminate\Support\Facades\Crypt;
+use App\Http\Controllers\BaseController as BaseController;
 use Auth;
+use DB;
+use Validator;
 
-class ProblemController extends Controller
+class ProblemController extends BaseController
 {
-    //problem
-    public function adultProblem(){   
-        
-        
-        $problems = Problem::orderBy("id", "desc")
-            -> where("user_id", Auth::user() -> id)
-            -> get();
-        
-        return view("adult.problem.index", [
-            "problems" => $problems,
-        ]);
-    }
-
-    public function createProblem(Request $request){
-        $problem = new Problem();
-        $problem -> user_id = Auth::user() -> id;
-        // $problem -> solve_type = $request -> solve_type;
-
-        if($request -> name){
-            $request->validate([
-                'name' => 'required|max:255',
-            ]);
-            $problem -> name = $request -> name;
-            $problem -> type = $request -> type;
-        }
-
-        if($request -> type == 0){
-            if($request->hasFile('file')){
-                $request -> validate([
-                    'file' => 'required|mimes:png,jpg,jpeg,avi,mp4,mpeg|:2048',
-                ]);
-                $file = time().'.'.$request -> file -> extension();
-                $request -> file -> move(public_path('assets/problem/'), $file);
-
-                $mime = mime_content_type(public_path('assets/problem/' . $file));
-                if(strstr($mime, "video/")){
-                    $problem -> type = 1;
-                }else if(strstr($mime, "image/")){
-                    $problem -> type = 0;
-                }
-    
-    
-                $problem -> file = $file;
+   
+    public function index($id = null){
+        $params = Crypt::decrypt($id);
+        $problemID = $params['problem_id'];
+        $projectID = $params['project_id'];        
+        $cat = DB::table('problem_categories')->get();
+        $problemID = Crypt::decrypt($id);
+            $problem =  DB::table('problems')->where('id','=',$problemID)->first();
+           
+            if($problem){
+                    return view ('adult.problem.problem',compact('problem','cat','projectID'));
+                }else{
+                    $problem = null;
+                    return view ('adult.problem.problem',compact('problem','cat','projectID'));
             }
-        }elseif($request -> type == 2){
-            $problem -> type = $request -> type;
-            $problem -> file = $request -> link;
-        }
         
-        $problem -> save();
-
-        return back() -> with("success", "Problem has been created successfully.");
     }
 
-    public function updateProblem(Request $request){
-        $defaultType = Problem::where("id", $request -> updateProblemId)
-                -> value("type");
-
-        $request->validate([
-            'updateProblemName' => 'required|max:255',
+    
+    public function store(Request $request){
+        
+        $validator = Validator::make ( $request->all(),[
+            'updateProblemName' => 'required',
+            'category_id' => 'required',
+            'project_id' => 'required'
         ]);
-
-        Problem::where("id", $request -> updateProblemId)
-            -> update([
-                "user_id" => Auth::user() -> id,
-                "name" => $request -> updateProblemName,
-                "type" => $request -> updateProblemType,
-                // "solve_type" => $request -> updateProblemSolveType,
-            ]);
-
-        if($request -> updateProblemType == 0){
-            if($request->hasFile('updateProblemFile')){
-                $request -> validate([
-                    'updateProblemFile' => 'required|mimes:png,jpg,jpeg,avi,mp4,mpeg|:2048',
-                ]);
-                $file = time().'.'.$request -> updateProblemFile -> extension();
-                $request -> updateProblemFile -> move(public_path('assets/problem/'), $file);
-
-                $mime = mime_content_type(public_path('assets/problem/' . $file));
-                if(strstr($mime, "video/")){
-                    $type = 1;
-                }else if(strstr($mime, "image/")){
-                    $type = 0;
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        try{
+            $project_id = Crypt::decrypt($request->input('project_id'));
+            if($request -> updateProblemType == 0){
+                $file = null;
+                $type = null;
+                if($request->hasFile('updateProblemFile')){
+                    $file = time().'.'.$request -> updateProblemFile -> extension();
+                    $request -> updateProblemFile -> move(public_path('assets-new/problem/'), $file);
+                    $mime = mime_content_type(public_path('assets-new/problem/' . $file));
+                    if(strstr($mime, "video/")){
+                        $type = 1;
+                    }else if(strstr($mime, "image/")){
+                        $type = 0;
+                    }
                 }
+                $insert = DB::table('problems')->updateOrInsert(['id'=> $request->id],
+                        [
+                            'user_id' => Auth::user()->id,
+                            'project_id' => $project_id,
+                            'category_id' => $request ->category_id,
+                            'name' => $request -> updateProblemName,
+                            'file' => $file,
+                            'type' => $type,
+                            'created_at' => date('Y-m-d h:i:s')
+                ]);
+            }elseif($request->updateProblemType == 2){
+                $validator = Validator::make ( $request->all(),[
+                    'updateProblemFileLink' => 'required|url',  
+                    'category_id' => 'required',
+                ]);
+            if($validator->fails()){
+                return $this->sendError('Validation Error.', $validator->errors());       
+            }
 
-                Problem::where("id", $request -> updateProblemId)
-                    -> update([
-                        "file" => $file,
-                        "type" => $type
-                    ]);
+            $insert = DB::table('problems')->updateOrInsert(['id'=> $request->id],
+                [
+                'user_id' => Auth::user()->id,
+                'project_id' => $project_id,
+                'category_id' => $request ->category_id,
+                'name' => $request -> updateProblemName,
+                "type" => $request->updateProblemType,
+                'file' =>  $request -> updateProblemFileLink,
+                'created_at' => date('Y-m-d h:i:s')
+                ]);
+        }
+            $problem = DB::table('problems')
+                                            -> where('project_id','=',$project_id)
+                                            ->first();
+            $parameter = ['problem_id'=> $problem->id , 'project_id'=>$project_id];                                
+            $success['type'] =  $insert;
+            $success['params'] = $params = Crypt::encrypt($parameter);
+            return $this->sendResponse($success, 'Problem saved successfully.');
+        }catch(Exception $e){
+            return $this->sendError('Error.', ['error'=> $e->getMessage()]);
+        }
+    }
+
+
+    public function updateValidation(Request $request){
+        $params = Crypt::decrypt($request->input('data'));
+        $problemID = $params['problem_id'];
+        $projectID = $params['project_id'];       
+        $update = DB::table('problems')->where("id",'=' ,$problemID)->where("project_id",'=' ,$projectID)-> update([
+           'validation' => $request->input('value')
+        ]);
+        if($update){
+            return true;
+        }
+    }
+
+    public function delete(Request $request){
+        try{
+            //check if solution exist
+            $solution  =  DB::table('solutions')->where('problem_id', $request->input('id'))->first();
+            if(isset($solution->id)){
+                return $this->sendError('Error.', ['error'=> "Problem can't' be deleted. Used for other purpose."]);
+            }
+            $problem  =  DB::table('problems')->where('id', $request->input('id'))->delete(); 
+            if($problem){
+                $success['problem'] =  $problem;
+                $success['token'] = $request->header('Authorization');
+                return $this->sendResponse($success, 'Problem deleted successfully.');  
             }else{
-                Problem::where("id", $request -> updateProblemId)
-                    -> update([
-                        "type" => 0,
-                    ]);
+                return $this->sendError('Error.', ['error'=> 'Problem not exist!']);
+            }           
+            
+            }catch(Exception $e){
+                return $this->sendError('Error.', ['error'=> $e->getMessage()]);
             }
-
-            if($defaultType == 1){
-                Problem::where("id", $request -> updateProblemId)
-                    -> update([
-                        "type" => 1,
-                    ]);
-            }
-        }elseif($request -> updateProblemType == 2){
-            $request -> validate([
-                'updateProblemFileLink' => 'required|url',
-            ]);
-
-            Problem::where("id", $request -> updateProblemId)
-                -> update([
-                    "type" => $request -> updateProblemType,
-                    "file" => $request -> updateProblemFileLink,
-                ]);
-        }
-
-        return back() -> with("success", "Problem has been updated successfully.");
-    }
-
-    public function delProblem(Request $request){
-        Problem::where("id", $request -> id)
-            -> delete();
-
-        return back() -> with("success", "Problem has been deleted successfully.");
     }
 }

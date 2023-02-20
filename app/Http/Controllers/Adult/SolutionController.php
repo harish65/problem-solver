@@ -12,6 +12,14 @@ use Auth;
 
 class SolutionController extends Controller
 {
+
+    public function index(){
+        return view('adult.solution.index');
+    }
+
+
+
+
     //solution
     public function adultSolution(){
         $problems = Problem::orderBy("id", "asc")

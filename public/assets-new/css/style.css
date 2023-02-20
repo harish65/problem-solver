@@ -569,3 +569,17 @@ button.btn.btn-primary.login-btn a {
     text-align: center;
     margin-bottom: 30px;
 }
+.spl-row-second h4 {
+    padding-bottom: 2%;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 29px;
+    color: #000000;
+    margin-top: 2.8%;
+    
+}
+.swal-button{
+    background-color:#00A14C !important;
+    border-color: #00A14C !important;
+}
