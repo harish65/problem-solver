@@ -55,7 +55,7 @@
         });
         
         $.ajax({
-            url: "{{route('project.store')}}",
+            url: "{{route('adult.store')}}",
             data: fd,
             processData: false,
             contentType: false,
@@ -82,8 +82,8 @@
                       toastr.error(value)
                   });
               } else {
-                  toastr.success('Record created successfully!');
-                  window.location.href = "{{route('user.dashborad')}}";
+                  toastr.success('Record saved successfully!');
+                  window.location.href = "{{route('adult.dashboard')}}";
               }
             }
         });
@@ -102,6 +102,51 @@
   })
 </script>
 
+<script>
+  $(document).on('click' , '.editBtn' , function(){
+       $('#project_id').val($(this).attr('data-id'))
+       $('#name').val($(this).attr('data-title'))
+       $('#addprojectModal').modal('toggle')
+  })
+</script>
+<script>
+  $(document).on('click', '.deleteBtn', function(e){
+         e.preventDefault();
+         var r = confirm("Are you sure to delete");
+         if (r == false) {
+             return false;
+         }
+         var id = $(this).attr('data-id')
+         $.ajaxSetup({
+               headers: {
+                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                       }
+               });      
+         $.ajax({
+               url: "{{route('adult.delete')}}",
+               data:{id :  id},         
+              
+               type: 'post',           
+               error: function (xhr, status, error) {
+                   $.each(xhr.responseJSON.data, function (key, item) {
+                       toastr.error(item);
+                   });
+               },
+               success: function (response){
+                   if(response.success == false)
+                   {
+                       var errors = response.data;
+                       $.each( errors, function( key, value ) {
+                           toastr.error(value)
+                       });
+                   } else {
+                       toastr.success('Problem deleted successfully!');
+                       window.location.href = "{{route('adult.dashboard')}}";
+                   }
+               }
+           });
+     });
+</script>
 
 @endsection
 
