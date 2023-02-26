@@ -10,7 +10,7 @@
                             $parameters = ['problem_id'=> $item->problem_id , 'project_id' => $item->id];
                             $parameter =  Crypt::encrypt($parameters);
                         ?>
-                        <a href="{{ route("adult.problem",@$parameter) }}" class="grid-p-l">
+                        <a href="{{ route("adult.problem",@$parameter) }}" data-params="{{ $parameter }}" class="project-grid">
                             <div class="projectList">
                                 <h3>Problem</h3>
                                 

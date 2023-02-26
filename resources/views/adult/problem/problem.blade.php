@@ -24,6 +24,14 @@
             <div class="projectBlock text-center">
               <h2>Problem</h2>
               <div class="projectList text-center"> 
+
+                        <?php 
+                            $parameters = ['problem_id'=> $problem->id , 'project_id' => $projectID];
+                            $parameter =  Crypt::encrypt($parameters);
+                        ?>
+                <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
+                <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
+                <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
                 <!-- <img style="border-radius: 5px;" class="mx-auto" src="{{ asset('/assets-new/problem/'.$problem->file) }}" width="300" height="320"> -->
                 @if($problem -> type == 0)
 									@if(strlen($problem -> file) < 15)
@@ -71,9 +79,9 @@
             <div class="form-check">
                 <label class="form-check-label">
                 <?php 
-                            $parameters = ['problem_id'=> $problem->id , 'project_id' => $problem->project_id];
-                            $parameter =  Crypt::encrypt($parameters);
-                        ?>
+                    $parameters = ['problem_id'=> $problem->id , 'project_id' => $problem->project_id];
+                    $parameter =  Crypt::encrypt($parameters);
+                ?>
                 <input type="radio" {{ ($problem->validation == '0') ? 'checked' : ''}} value="0" data-id="{{ $parameter  }}" class="form-check-input validation" name="optradio">Yes, I have performed analysis to identify the problem correctly
                 </label>
             </div>
@@ -109,6 +117,7 @@
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
 
 <script>
+    
     $('.dropify').dropify();
     $(".updateProblemType").change(function(){
             var type = $(this).val();
@@ -117,10 +126,12 @@
                 $("#updateProblemType").val("0");
                 $("#updateProblemFileType").css("display", "block");
                 $("#updateProblemLinkType").css("display", "none");
+               
             }else if(type == 2){
                 $("#updateProblemType").val("2");
                 $("#updateProblemFileType").css("display", "none");
                 $("#updateProblemLinkType").css("display", "block");
+                
             }
         });
     $(document).on('click','#btnUpadteProblem',function(e){
@@ -214,7 +225,7 @@
 </script>
 <script>
     $(".editProblemBtn").click(function(){
-      
+        
        $("#updateProblemId").val($(this).data("id"));
        $("#updateProblemName").val($(this).data("name"));
        $('#category_id').val($(this).attr('data-cat'))
@@ -273,10 +284,39 @@
             }
 
         })
-
-
-
    })
-   
+$('.nav-problem').click(function(){
+    $(this).attr('href' , '');
+    localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));       
+    $(this).attr('href' ,$('#problem_nav').attr('href'))
+})
+$('.nav-solution').click(function(){
+    $(this).attr('href' , '');
+    localStorage.setItem("sol", $('#solution_nav').attr('href'));   
+    $(this).attr('href' ,$('#solution_nav').attr('href'))
+})
+$('.nav-solution-func').click(function(){
+    $(this).attr('href' , '');
+    localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
+    $(this).attr('href' ,$('#solution_fun_nav').attr('href'))
+})
+
+
+$('.dashboard').click(function(){
+    //Solution
+    $('.nav-solution').attr('href' , '');
+    localStorage.setItem("sol", $('#solution_nav').attr('href'));   
+    $('.nav-solution').attr('href' ,$('#solution_nav').attr('href'))
+    //Problem
+    $('.nav-problem').attr('href' , '');
+    localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));       
+    $('.nav-problem').attr('href' ,$('#problem_nav').attr('href'))
+    //Sol fun
+    $('.nav-solution-func').attr('href' , '');
+    localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
+    $('.nav-solution-func').attr('href' ,$('#solution_fun_nav').attr('href'))
+
+})
+
 </script>
 @endsection

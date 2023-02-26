@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Adult;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use App\Http\Controllers\BaseController as BaseController;
 use App\Models\Problem;
 use App\Models\Solution;
 use App\Models\SolutionType;
@@ -11,35 +13,49 @@ use App\Models\SolutionFunction;
 use App\Models\Setting;
 use Auth;
 
-class SolutionFunctionController extends Controller
+class SolutionFunctionController extends BaseController
 {
     //solution function
-    public function adultSolFunction(){
-        $solFunctions = SolutionFunction::orderBy("id", "desc")
-            -> where('user_id', Auth::user() -> id)
-            -> get();
+    public function index($params = null){
+        $params = Crypt::decrypt($params);
+        
+        $problem_id = $params['problem_id']; 
+       
+        $solution = Solution::orderBy("id", "desc")
+                        -> where('user_id', Auth::user() -> id)
+                        -> where('problem_id' , $problem_id)
+                        -> first();
+       
+            
+                    $solFunctions = SolutionFunction::orderBy("id", "desc")
+                        -> where('user_id', Auth::user() -> id)
+                        -> where('problem_id' , $problem_id)
+                        -> first();
+                    
+                    $problems = Problem::orderBy("id", "asc")
+                        -> where("user_id", Auth::user() -> id)
+                        -> get();
 
-        $problems = Problem::orderBy("id", "asc")
-            -> where("user_id", Auth::user() -> id)
-            -> get();
+                    // $solutionTypes = SolutionType::orderBy("id", "asc")
+                    //     -> get();
 
-        // $solutionTypes = SolutionType::orderBy("id", "asc")
-        //     -> get();
+                    $solutions = Solution::orderBy("id", "desc")
+                        -> where("user_id", Auth::user() -> id)
+                        -> where("problem_id", $problems[0] -> id)
+                        -> get();
 
-        $solutions = Solution::orderBy("id", "desc")
-            -> where("user_id", Auth::user() -> id)
-            -> where("problem_id", $problems[0] -> id)
-            -> get();
+                    $setting = Setting::get();
 
-        $setting = Setting::get();
-
-        return view("adult.solFunction.index", [
-            "solFunctions" => $solFunctions,
-            "problems" => $problems,
-            // "solutionTypes" => $solutionTypes,
-            "solutions" => $solutions,
-            // "setting" => $setting,
-        ]);
+                    return view("adult.solFunction.solutionfunction", [
+                        "solFunctions" => $solFunctions,
+                        "problems" => $problems,
+                        // "solutionTypes" => $solutionTypes,
+                        "solutions" => $solutions,
+                        // "setting" => $setting,
+                    ]);
+        // }else{
+        //     return back() -> with("error", "Solution Function has been created successfully.");
+        // }
     }
 
     public function getSolutionPerProblem(Request $request){

@@ -1,36 +1,73 @@
 $(function (){
-    $(document).on('click','.nav-problem',function(){
-        if($(this).attr('href') ==  ''){       
+    $(document).on('click','.nav-problem',function(e){ 
+        if($(this).attr('href') == 'undefined'){
+            $(this).attr('href' ,'') 
+            swalMessage();
+            return false;
+        }
+        if(!$(this).attr('href')){
             swalMessage();
         }
     })
-    $(document).on('click','.grid-p-l',function(){
+
+    $(document).on('click','.project-grid',function(){
+        if($(this).attr('href') == 'undefined'){
+            $(this).attr('href','') 
+            swalMessage();
+            return false;
+        }
+
         localStorage.setItem("selected_problem", $(this).attr('href'));
-        $('.nav-problem').attr('href' , $(this).attr('href'))
+        $('#nav-problem').attr('href' , $(this).attr('href'))
     })
+
+
+    $(document).on('click','.nav-solution',function(){ 
+        
+        if($(this).attr('href') == 'undefined'){
+            $(this).attr('href','') 
+            swalMessage();
+            return false;
+        }
+        if(!$(this).attr('href')){
+            swalMessage();
+        }
+    })
+
+    $(document).on('click','.nav-solution-func',function(){ 
+        if($(this).attr('href') == 'undefined'){
+            $(this).attr('href','') 
+            swalMessage();
+            return false;
+        }
+        if(!$(this).attr('href')){
+            swalMessage();
+        }
+    })
+
+   
+   
 }) //END
 
 $(document).ready(function(){
-    var href = localStorage.getItem("selected_problem");
-    $('.nav-problem').attr('href' , href)
+    var hrefp = localStorage.getItem("selected_problem");
+        if(typeof hrefp !== 'undefined'){
+            $('#nav-problem').attr('href' , hrefp)
+        }
+    
+
+    var hrefs = localStorage.getItem("sol");
+    if(typeof hrefs !== 'undefined'){
+        $('#nav-solution').attr('href' , hrefs)
+    }
+    var hrefsolfun = localStorage.getItem("sol-fun");
+    if(typeof hrefsolfun !== 'undefined'){
+            $('.nav-solution-func').attr('href' , hrefsolfun)
+    }
+
 })
 
-
-
-//////////Solution/////////////
-
-$(function (){
-    $(document).on('click','.nav-sol',function(){
-        if($(this).attr('href') ==  ''){       
-            swalMessage();
-        }
-    })
-    $(document).on('click','.grid-p-l',function(){
-        localStorage.setItem("selected_sol", $(this).attr('href'));
-        $('.nav-sol').attr('href' , $(this).attr('href'))
-    })
-}) //END
-
+    
 function swalMessage(){
     swal({
         title: "Please select project first", 
@@ -44,3 +81,4 @@ function swalMessage(){
 function logout(){
     localStorage.clear();
 }
+
