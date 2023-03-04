@@ -56,7 +56,7 @@ class LoginController extends BaseController
         }
         
         if($user = User::where(['email' => $request->email])->first() ) {
-
+            if($user->role == 1){  
             // $checkRole = RoleAssignedToUser::where('user_id' , $user->id)->first();
             // if (!empty($checkRole) && $checkRole->role_id == 1) {
                 if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
@@ -68,6 +68,9 @@ class LoginController extends BaseController
             // } else {
             //     return $this->sendError('Error.', ['error'=> 'Invalid Login.']);
             // }
+            }else{
+                return $this->sendError('Error.', ['error'=> "Invalid user role!."]);
+            }
         } else { 
             return $this->sendError('Error.', ['error'=> 'Email and Password is Invalid.']);
         }  

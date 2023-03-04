@@ -69,6 +69,7 @@
                 });
             },
             success: function (response){
+                localStorage.clear();
               if(response.success == false)
               {
                   $('#btnLogin').attr('disabled',false);
@@ -78,7 +79,9 @@
                       toastr.error(value)
                   });
               } else {
+                
                   toastr.success('User login successfully!');
+                 
                   window.location.href = "{{route('adult.dashboard')}}";
               }
             }

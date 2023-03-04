@@ -62,7 +62,7 @@ class ProjectController extends BaseController
                 
                 $insert = DB::table('projects')->updateOrInsert(['id'=> $request->id],
                                             [
-                                            'created_by' => Auth::user()->id,
+                                            'user_id' => Auth::user()->id,
                                             'name'=> $request->name,                                       
                                             'created_at' => date('Y-m-d H:i:s'),
                                             ]);
@@ -117,9 +117,21 @@ class ProjectController extends BaseController
     public function destroy(Request $request)
     {
         try{
-            
             $project  = DB::table('projects')->where('id', $request->input('id'))->delete();
-            DB::table('problems')->where('project_id', $request->input('id'))->delete();
+            $problem = DB::table('problems')->where('project_id', $request->input('id'))->first();
+
+            if(isset($problem->id)){
+                $solution = DB::table('solutions')->where('problem_id', $problem->id)->first();  
+                DB::table('problems')->where('project_id',$problem->id)->delete();
+                    if(isset($solution->id)){
+                        $solution_funct = DB::table('solution_functions')->where('solution_id', $solution->id)->first(); 
+                        DB::table('solutions')->where('project_id',$solution->id)->delete();
+                            if(isset($solution_funct->id)){
+                                DB::table('solution_functions')->where('project_id',$solution_funct->id)->delete();
+                            }
+                    }
+            }
+            
             if($project){
                 $success['project'] =  $project;
                 $success['token'] = $request->header('Authorization');

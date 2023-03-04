@@ -16,8 +16,8 @@ class VerificationTypeTextController extends BaseController
     public function index(){
        
         $verificationTypetext = DB::table('verification_type_texts')
-                                ->join('verification_type', 'verification_type_texts.verification_type_id', '=', 'verification_type.id')
-                                ->select('verification_type_texts.*', 'verification_type.name as verification_type_name')
+                                ->join('verification_types', 'verification_type_texts.verification_type_id', '=', 'verification_types.id')
+                                ->select('verification_type_texts.*', 'verification_types.name as verification_type_name')
                                 ->get();
 
         // echo "<pre>";print_r($verificationTypetext);die;

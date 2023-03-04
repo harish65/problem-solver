@@ -17,12 +17,11 @@ class CreateSolutionFunctionsTable extends Migration
             $table->id();
             $table->string('type')->default("0");
             $table->string('file');
-            $table->unsignedBigInteger('problem_id')->nullable()->unsigned();
-            $table->foreign('problem_id')->references('id')->on('problems');
-            $table->unsignedBigInteger('solution_id')->nullable()->unsigned();
-            $table->foreign('solution_id')->references('id')->on('solutions');
-            $table->unsignedBigInteger('user_id')->nullable()->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('problem_id')->nullable()->unsigned();            
+            $table->integer('solution_id')->nullable()->unsigned();          
+            $table->integer('user_id')->nullable()->unsigned();
+            $table->enum('validation_first', ['0', '1'])->default("0");
+            $table->enum('validation_second', ['0', '1'])->default("0");            
             $table->string('name');
             $table->timestamps();
         });

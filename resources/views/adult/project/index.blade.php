@@ -148,6 +148,22 @@
      });
 </script>
 
+  <script>
+    $('.project-grid').on('click',function(){
+        var url = "{{ route('adult.solution') }}" + "/" +$(this).attr('data-params') ;
+        localStorage.setItem("sol",url);
+        var href = localStorage.getItem("sol");
+        $('.nav-solution').attr('href' , href)
+
+        var url_fun = "{{ route('adult.solution-func') }}" + "/" +$(this).attr('data-params') ;
+        localStorage.setItem("sol-fun",url_fun);
+
+        
+        var hrefsolfun = localStorage.getItem("sol-fun");
+        $('.nav-solution-func').attr('href' , hrefsolfun)
+    })
+</script>
+
 @endsection
 
 

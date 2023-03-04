@@ -164,7 +164,19 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
 
 
         //Route Solution
-        Route::get("/solution", [\App\Http\Controllers\Adult\SolutionController::class, 'index'])-> name("solution");
+        Route::get("/solution/{id?}", [\App\Http\Controllers\Adult\SolutionController::class, 'index'])-> name("solution");
+        Route::post("/store-solution", [\App\Http\Controllers\Adult\SolutionController::class, 'store'])-> name("store-solution");
+        Route::post("/delete-solution", [\App\Http\Controllers\Adult\SolutionController::class, 'delete'])-> name("delete-solution");
+        Route::post('/sol-validation', [\App\Http\Controllers\Adult\SolutionController::class, 'updateValidation'])->name('sol-validation');
+        
+        
+        //Route Solution Function
+        Route::get("/solution-func/{id?}", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'index'])-> name("solution-func");
+        Route::post("/store-solution-func", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'store'])-> name("store-solution-func");
+        Route::post("/update-solution-func", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'update'])-> name("update-solution-func");
+        Route::post("/delete-solution-func", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'delete'])-> name("delete-solution-func");
+        Route::post('/solution-func-validation', [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'updateValidation'])->name('solution-func-validation');
+
 
     });
 });  

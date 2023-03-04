@@ -29,7 +29,7 @@ class VerificationTypeController extends BaseController
         }
         try{
             
-            $insert = DB::table('verification_type')->updateOrInsert(['id'=> $request->id],
+            $insert = DB::table('verification_types')->updateOrInsert(['id'=> $request->id],
                                         [
                                         'user_id' => Auth::user()->id,
                                         'name'=> $request->name,                                       

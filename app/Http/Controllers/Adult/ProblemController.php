@@ -56,17 +56,27 @@ class ProblemController extends BaseController
                     }else if(strstr($mime, "image/")){
                         $type = 0;
                     }
+                    $insert = DB::table('problems')->updateOrInsert(['id'=> $request->id],
+                    [
+                        'user_id' => Auth::user()->id,
+                        'project_id' => $project_id,
+                        'category_id' => $request ->category_id,
+                        'name' => $request -> updateProblemName,
+                        'file' => $file,
+                        'type' => $type,
+                        'created_at' => date('Y-m-d h:i:s')
+                    ]);
+                }else{
+                    $insert = DB::table('problems')->updateOrInsert(['id'=> $request->id],
+                    [
+                        'user_id' => Auth::user()->id,
+                        'project_id' => $project_id,
+                        'category_id' => $request ->category_id,
+                        'name' => $request -> updateProblemName,
+                        'created_at' => date('Y-m-d h:i:s')
+                    ]);
                 }
-                $insert = DB::table('problems')->updateOrInsert(['id'=> $request->id],
-                        [
-                            'user_id' => Auth::user()->id,
-                            'project_id' => $project_id,
-                            'category_id' => $request ->category_id,
-                            'name' => $request -> updateProblemName,
-                            'file' => $file,
-                            'type' => $type,
-                            'created_at' => date('Y-m-d h:i:s')
-                ]);
+               
             }elseif($request->updateProblemType == 2){
                 $validator = Validator::make ( $request->all(),[
                     'updateProblemFileLink' => 'required|url',  
@@ -90,9 +100,9 @@ class ProblemController extends BaseController
             $problem = DB::table('problems')
                                             -> where('project_id','=',$project_id)
                                             ->first();
-            $parameter = ['problem_id'=> $problem->id , 'project_id'=>$project_id];                                
-            $success['type'] =  $insert;
-            $success['params'] = $params = Crypt::encrypt($parameter);
+                                    $parameter = ['problem_id'=> $problem->id , 'project_id'=>$project_id];                                
+                                    $success['type'] =  $insert;
+                                    $success['params'] = $params = Crypt::encrypt($parameter);
             return $this->sendResponse($success, 'Problem saved successfully.');
         }catch(Exception $e){
             return $this->sendError('Error.', ['error'=> $e->getMessage()]);

@@ -21,7 +21,7 @@
                     <span>Upload File</span>
                   </button>
                 </div>
-                <input accept="image/*" type="file" id="files" class="d-none"/>
+                <input accept="image/*" name="avatar" type="file" id="files" class="d-none"/>
               </div>
             </div>
             <div class="col-7">
