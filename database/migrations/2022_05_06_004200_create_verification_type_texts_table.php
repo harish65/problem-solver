@@ -15,8 +15,8 @@ class CreateVerificationTypeTextsTable extends Migration
     {
         Schema::create('verification_type_texts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('verification_type_id')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();            
+            $table->integer('verification_type_id')->nullable();
+            $table->integer('user_id')->nullable();            
             $table->mediumText('name');
             $table->timestamps();
         });
