@@ -34,7 +34,6 @@ class LoginController extends BaseController
      */
     public function getLogin()
     {
-       
         return view('admin.login');
     }
 
