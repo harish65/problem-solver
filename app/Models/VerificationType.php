@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class VerificationType extends Model
 {
-    protected $table = "verification_type";
+    protected $table = "verification_types";
     use HasFactory;
 
     // public function user(){

@@ -1,6 +1,6 @@
 <div class="modal fade" id="updateSolFunctionModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" enctype="multipart/form-data">
 
-<form method="POST" >
+<form method="POST" id="updateFormSolFunctionModal" >
         @csrf
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -46,6 +46,9 @@
                     <div class="form-group">
                         <select class="custom-select" name="updateSolFunctionSolutionId" id="updateSolFunctionSolutionSelect">
                             <option value="">Solution *</option>
+                            @foreach ($solutions as $item)
+                                <option value="{{ $item -> id }}">Solution: {{ $item -> name }}</option>
+                            @endforeach
                         </select>
                         
                     </div>
@@ -63,8 +66,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button class="btn btn-success">Save changes</button>
+                    <button type="button"  class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="sol-function" class="btn btn-success">Save changes</button>
                 </div>
             </div>
         </div>

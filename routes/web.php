@@ -173,6 +173,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         //Route Solution Function
         Route::get("/solution-func/{id?}", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'index'])-> name("solution-func");
         Route::post("/store-solution-func", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'store'])-> name("store-solution-func");
+        Route::post("/update-solution-func", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'update'])-> name("update-solution-func");
         Route::post("/delete-solution-func", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'delete'])-> name("delete-solution-func");
         Route::post('/solution-func-validation', [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'updateValidation'])->name('solution-func-validation');
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Adult;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -19,8 +19,6 @@ class VerificationTypeTextController extends BaseController
                                 ->join('verification_types', 'verification_type_texts.verification_type_id', '=', 'verification_types.id')
                                 ->select('verification_type_texts.*', 'verification_types.name as verification_type_name')
                                 ->get();
-
-        // echo "<pre>";print_r($verificationTypetext);die;
         $verificationTypes = VerificationType::orderBy("id", "asc")-> get();
         return view('admin.verificationTypeText.index', compact('verificationTypetext' , 'verificationTypes'));
     }
