@@ -11,10 +11,11 @@
                     <input type="hidden" name="id" id="id">
                     <!-- <input type="hidden" name="solutionType" id="solutionType"> -->
                     <?php 
-                           
                             $parameter =  Crypt::encrypt($problem_id);
+                            $project_id =  Crypt::encrypt($project_id);
                         ?>
                     <input type="hidden" name="problem_id" id="problem_id" value="{{ $parameter }}">
+                    <input type="hidden" name="project_id" id="project_id" value="{{ $project_id }}">
 
                     <div class="form-group">
                         <div class="row">
@@ -41,16 +42,16 @@
                     
                     </div>
                     <div class="form-group">
-                        <input type="text" name="problem" id="problem" class="form-control" placeholder="Problem *">
+                        <input type="text" name="problem" id="problem"  value="{{ $problem_name }}" class="form-control" placeholder="Problem *">
                         
                     </div>
                     <div class="form-group">
-                        <input type="text" name="solutionName" id="solutionName" class="form-control" placeholder="Name">
+                        <input type="text" name="solutionName" id="solutionName" class="form-control" placeholder="Solution Name">
                         
                     </div>
                     <div class="form-group">
-                       <select class="form-control" id="solution_type" name="solution_type_id">
-                        <option value="">Type *</option>
+                       <select class="form-control form-select" id="solution_type" name="solution_type_id">
+                        <option value="">Transition Phrase *</option>
                         <option value="1">Option one</option>
                         <option value="2">Option two</option>
                         <option value="3">Option three</option>

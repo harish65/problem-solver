@@ -18,7 +18,7 @@
                             </div>
                             <div class="projectList">
                                 <h3>Solution</h3>
-                                <p class="greenText">New Oil</p>
+                                <p class="greenText">{{ ($item->solution_name != '') ? $item->solution_name : 'N/A' }}</p>
                             </div>
                         </a>
                     <div class="projectList">

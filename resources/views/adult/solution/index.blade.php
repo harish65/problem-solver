@@ -10,8 +10,8 @@
     <div class="row spl-row-second">
         <h4>TITLE FOR EXPLANTION</h4>
     </div>
-    <div class="row banner">
-        <img src="{{ asset('/assets-new/images/solution-banner.png') }}" width="666px" height="250px" >
+    <div class="banner text-center">
+        <img src="{{ asset('/assets-new/images/solution-banner.png') }}" width="666px" height="213px" >
     </div>
     
         <div class="row pt-5">
@@ -20,11 +20,12 @@
             </p>
         </div>
 @if(isset($problem->id))
-    <div class="row pt-5">
-        <div class="col-md-4">
+    <div class="conditionBlock">
+        <div class="blockProblem">
             <div class="projectBlock text-center">
               <h2>Problem</h2>
               <div class="projectList text-center"> 
+                <div class="imgWrp">
                         <?php 
                             $parameters = ['problem_id'=> $problem->id , 'project_id' => $problem->project_id];
                             $parameter =  Crypt::encrypt($parameters);
@@ -35,7 +36,7 @@
                 
                             @if($problem -> problem_type == 0)
                                     @if(strlen($problem -> problem_file) < 15)
-									    <img class="mx-auto aaa" src="{{ asset("assets-new/problem/" . $problem -> problem_file) }}" width="300" height="320">
+									    <img class="mx-auto aaa" src="{{ asset("assets-new/problem/" . $problem -> problem_file) }}" width="100%" height="128px">
                                     @endif
                             @elseif($problem -> problem_type == 1)
 									<video class="mx-auto" controls="controls" preload="metadata" width="300" height="320" preload="metadata">
@@ -44,23 +45,28 @@
                             @elseif($problem -> problem_type == 2)
 									    <iframe class="mx-auto" src="{{ $problem -> problem_file }}"width="300" height="320"> </iframe>
                             @endif
+                    </div>
                 <p class="redText">{{ $problem->problem_name }}</p>
               </div>
               <div class="projectList">
                 <p class="date">{{ date('d/m/Y' , strtotime($problem->problem_created_at))}}</p>
-                
+                <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
               </div>
             </div>
           </div>
-          <div class="long-arrow-right"></div>
-          <div class="col-md-4">
+          <div class="long-arrow">
+            <!-- add arrow Image over here -->
+            <img src="{{ asset('assets-new/images/arrowRight.png')}}">
+            <!-- add arrow Image over here -->
+          </div>
+          <div class="blockProblem">
             <div class="projectBlock text-center">
               <h2>Solution</h2>
               <div class="projectList text-center"> 
-                
+              <div class="imgWrp">
                 @if($problem -> type == 0)
 									@if(strlen($problem -> file) < 15)
-										<img class="mx-auto" src="{{ asset("assets-new/solution/" . $problem -> file) }}" width="300" height="320">
+										<img class="mx-auto" src="{{ asset("assets-new/solution/" . $problem -> file) }}" width="100%" height="128px">
 									@endif
 								@elseif($problem -> type == 1)
 									<video class="mx-auto" controls="controls" preload="metadata" width="300" height="320" preload="metadata">
@@ -69,6 +75,7 @@
 								@elseif($problem -> type == 2)
 									    <iframe class="mx-auto" src="{{ $problem -> file }}"width="300" height="320"> </iframe>
 								@endif 
+              </div>
                 <p class="redText">{{ $problem->name }}</p>
               </div>
               <div class="projectList">
@@ -205,6 +212,20 @@
     transform: rotate(-45deg) translate(15px, 4px);
     left: 0;
     top: 0;
+}
+.conditionBlock {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.blockProblem {
+    width: 215px;
+}
+.imgWrp {
+    margin: 0 15px 15px;
+}
+.imgWrp img {
+    border-radius: 10px;
 }
 </style>
 @endsection

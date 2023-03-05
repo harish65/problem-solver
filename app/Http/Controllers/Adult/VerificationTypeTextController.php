@@ -20,7 +20,7 @@ class VerificationTypeTextController extends BaseController
                                 ->select('verification_type_texts.*', 'verification_types.name as verification_type_name')
                                 ->get();
         $verificationTypes = VerificationType::orderBy("id", "asc")-> get();
-        return view('admin.verificationTypeText.index', compact('verificationTypetext' , 'verificationTypes'));
+        return view('adult.verificationTypeText.index', compact('verificationTypetext' , 'verificationTypes'));
     }
     public function store(Request $request){
         

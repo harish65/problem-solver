@@ -137,7 +137,8 @@ Route::group(['as' => 'verificationtypetext.', 'prefix' => 'verificationtypetext
     Route::group(['middleware' => ['auth' , 'admin']], function () {
             Route::get("index", [\App\Http\Controllers\Admin\VerificationTypeTextController::class, 'index'])-> name("index");
             Route::post("store", [\App\Http\Controllers\Admin\VerificationTypeTextController::class, 'store'])->name("store");
-    });Route::post("delete", [\App\Http\Controllers\Admin\VerificationTypeTextController::class, 'delete'])->name("delete");
+    });
+    Route::post("delete", [\App\Http\Controllers\Admin\VerificationTypeTextController::class, 'delete'])->name("delete");
 });
 
 Route::group(['as' => 'solutionfunction.', 'prefix' => 'solutionfunction'], function () {
@@ -177,7 +178,22 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::post("/delete-solution-func", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'delete'])-> name("delete-solution-func");
         Route::post('/solution-func-validation', [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'updateValidation'])->name('solution-func-validation');
 
+        // Verification type  
+        Route::get("vfrindex", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'index'])->name("vfrindex");
+        Route::post("vfrstore", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'store'])->name("vfrstore");
+        Route::post("vfrdelete", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'delete'])->name("vfrdelete");
+        // Verification type text
+        Route::get("vrftindex", [\App\Http\Controllers\Adult\VerificationTypeTextController::class, 'index'])-> name("vrftindex");
+        Route::post("vrftstore", [\App\Http\Controllers\Adult\VerificationTypeTextController::class, 'store'])->name("vrftstore");
+        Route::post("vrftdelete", [\App\Http\Controllers\Adult\VerificationTypeTextController::class, 'delete'])->name("vrftdelete");
+        // Solution Type
+        Route::get("stindex", [\App\Http\Controllers\Adult\SolutionTypeController::class, 'index'])-> name("stindex");
+        Route::post("ststore", [\App\Http\Controllers\Adult\SolutionTypeController::class, 'store'])->name("ststore");
+        Route::post("stdelete", [\App\Http\Controllers\Adult\SolutionTypeController::class, 'delete'])->name("stdelete");
+        // Solution function Type
+        Route::get("sftindex", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'index'])-> name("sftindex");
+        Route::post("sftstore", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'store'])->name("sftstore");
+        Route::post("sftdelete", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'delete'])->name("sftdelete");
 
-    });
-});  
-
+    });  
+});

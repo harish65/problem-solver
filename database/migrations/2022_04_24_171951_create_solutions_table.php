@@ -17,8 +17,9 @@ class CreateSolutionsTable extends Migration
             $table->id();
             $table->string('type')->default("0");
             $table->string('file');
-            $table->integer('user_id')->nullable();           
-            $table->integer('problem_id')->nullable();           
+            $table->integer('user_id')->nullable(); 
+            $table->integer('project_id')->nullable();                   
+            $table->integer('problem_id')->nullable();              
             $table->integer('solution_type_id')->nullable();           
             $table->string('name');
             $table->string('state')->default("1");

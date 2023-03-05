@@ -22,7 +22,7 @@
                             <?php $parameter= Crypt::encrypt($item->problem_id);?>
                             <td><a class="grid-p-l" href="{{ route("adult.problem" ,@$parameter) }}" >{{ $item->name }}</a></td>
                             <td style="color:red">{{ ($item->problem != '') ? $item->problem : 'N/A' }}</td>
-                            <td style="color:#00A14C">{{ __('Solution') }}</td>
+                            <td style="color:#00A14C">{{ ($item->solution_name != '') ? $item->solution_name : 'N/A' }}</td>
                             <td>
                                 <a href="javaScript:void(0)" class="editBtn" data-id="{{ $item->id }}" data-title="{{ $item->name }}"><img src="{{ url('/') }}/assets-new/images/editIcon.png" alt="" /></a>
                                 <a href="javaScript:void(0)" class="deleteBtn" data-id="{{ $item->id }}"><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" alt="" /></a>

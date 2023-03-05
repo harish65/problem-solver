@@ -209,13 +209,13 @@
     @else
     <div class="row" style="margin-bottom: 10%;">
         <div class="col-md-6 align-middle">
-            <button class="btn btn-success" data-toggle="modal" data-target="#updateSolFunctionModal" type="button" id="add-solution-function">Add Solution Function</button>
+            <button class="btn btn-success" data-toggle="modal" data-target="#updateSolFunctionModal" type="button" id="add-solution-function">Identity Solution Function</button>
         </div>
     </div>
     @endif
     
 </div>
-@include('adult.solFunction.modal.add-sol-func')
+@include('adult.solFunction.modal.add-sol-func',[$project_id , $problem_id , $solution_id])
 @endsection
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
@@ -246,11 +246,9 @@ $(".dropify").dropify();
      $(document).on('click','#sol-function',function(e){       
        e.preventDefault();
        var urlSolfunction =  null;
-        if($(this).val() == 'update'){
-             urlSolfunction = "{{route('adult.update-solution-func')}}" 
-        }else{
+       
             urlSolfunction = "{{route('adult.store-solution-func')}}" 
-        }
+      
        
        if($('#updateSolFunctionProblemId').val() == ''){
             toastr.error('In order to identify a solution for a problem, the problem must exist.  In order to identify a solution for a problem, the problem must be identified.  Since the problem is not identified, then the solution for that problem cannot be identified.  Please, use the problem identification to identify the problem first before identifying the solution for that problem.');

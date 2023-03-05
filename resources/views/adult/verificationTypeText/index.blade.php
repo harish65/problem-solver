@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+@extends('adult.layouts.adult')
 @section('title', 'Admin | Verification')
 
 @section('content')
@@ -91,7 +91,7 @@ $(document).on('click','#add-verification-model',function(){
                 }
             });
 		$.ajax({
-			url: "{{ route('verificationtypetext.store')}}",
+			url: "{{ route('adult.vrftstore')}}",
 			data: fd,
 			processData: false,
 			contentType: false,
@@ -119,7 +119,7 @@ $(document).on('click','#add-verification-model',function(){
 					});
 					} else { 
                     toastr.success(response.message);
-                    window.location.href = "{{route('verificationtypetext.index')}}";
+                    window.location.href = "{{route('adult.vrftindex')}}";
 				}
 			}
 		});
@@ -147,7 +147,7 @@ $(document).on('click','#add-verification-model',function(){
                         }
                 });      
           $.ajax({
-                url: "{{route('verificationtypetext.delete')}}",
+                url: "{{route('adult.vrftdelete')}}",
                 data:{id :  id},         
                
                 type: 'POST',           
@@ -165,7 +165,7 @@ $(document).on('click','#add-verification-model',function(){
                         });
                     } else {
                         toastr.success('Verification type deleted successfully!');
-                        window.location.href = "{{route('verificationtypetext.index')}}";
+                        window.location.href = "{{route('adult.vrftindex')}}";
                     }
                 }
             });
