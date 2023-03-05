@@ -13,14 +13,14 @@ class VerificationTypeController extends BaseController
 {
     //verification type
     public function index(){
+        
         $types = VerificationType::orderBy("id", "desc")->get();
-        return view("admin.verificationType.index" , compact('types'));
+        return view("adult.verificationType.index" , compact('types'));
     }
 
 
 
     public function store(Request $request){
-        
         $validator = Validator::make ( $request->all(),[
                 'name' => 'required|max:255'
         ]);
@@ -46,8 +46,10 @@ class VerificationTypeController extends BaseController
 
 
     public function delete(Request $request){
+
         $delete = VerificationType::where("id", $request -> id)-> delete();
         $success['delete'] =  $delete;
         return $this->sendResponse($success, 'Verifivcation type deleted successfully.');     
     }
 }
+?>

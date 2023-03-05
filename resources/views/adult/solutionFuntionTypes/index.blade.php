@@ -1,16 +1,16 @@
 @extends('adult.layouts.adult')
-@section('title', 'Adult | Verification')
+@section('title', 'Adult | Solution Types')
 
 @section('content')
 <div class="container">
 
     <div class="row spl-row">
-        <h4>Verification Type</h4>
+        <h4>Solution Function Type</h4>
     </div>
 
     <div class="row spl-row">
         <div class="text-end">
-            <button type="button" data-toggle="modal" data-target="#addVerificationTypeModal" class="btn btn-success">Add New Verification Type</button>
+            <button type="button" data-toggle="modal" data-target="#addSolutionTypeModal" class="btn btn-success">Add New Solution Type</button>
         </div>
         <table class="table slp-tbl" id="myTable">
         
@@ -19,31 +19,22 @@
                   
                     <th>Name</th>
                     <th>Creator Name</th>
-                    <th>1st Field</th>
-                    <th>2st Field</th>
-                    <th>3rd Field</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-            @if($types)
-                    @foreach ($types  as $type)
+            @if($solutionTypes)
+                    @foreach ($solutionTypes  as $type)
                     <tr>
                         <td>{{ $type->name }}</td>
                         <td>{{ Auth::user()->name }} </td>
-                        <td>{{ $type->first_field }}</td>
-                        <td>{{ $type->second_field }}</td>
-                        <td>{{ $type->third_field }}</td>
-                        
+
                         <td>
                             <a href="javaScript:Void(0)"  data-href="{{ route('problem.delete') }}"  data-id="{{ $type-> id }}" class="delProblemBtn" title="Delete" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20"></a>
                             &nbsp;
                             <a href="javaScript:Void(0)"  class="editProblemBtn"  
                                                                             data-id="{{ $type->id }}" 
-                                                                            data-name="{{ $type->name }}"
-                                                                            data-firts_field ="{{ $type->first_field }}"
-                                                                            data-second_field ="{{ $type->second_field }}"
-                                                                            data-third_field ="{{ $type->third_field }}"
+                                                                            data-name="{{ $type->name }}"                                                                            
                                                                             title="Edit"><img src="{{ url('/') }}/assets-new/images/editIcon.png" width="15" height="20"></a>
                         </td>
                     </tr>
@@ -62,7 +53,7 @@
         </table>
     </div>
 </div>
-@include('adult.verificationType.modal.add-verification-type')
+@include('adult.solutionFuntionTypes.modal.add-sol-fun-type')
 @endsection
 @section('css')
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
@@ -94,14 +85,14 @@ $(document).on('click','#add-verification-model',function(){
 <script>
     $(document).on('click','#btnSave',function(e){
 		e.preventDefault();
-		var fd = new FormData($('#addVerificationTypeModal')[0]);
+		var fd = new FormData($('#addSolutionTypeModal')[0]);
         $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
 		$.ajax({
-			url: "{{ route('adult.vfrstore')}}",
+			url: "{{ route('adult.sftstore')}}",
 			data: fd,
 			processData: false,
 			contentType: false,
@@ -129,7 +120,7 @@ $(document).on('click','#add-verification-model',function(){
 					});
 					} else { 
                     toastr.success(response.message);
-                    window.location.href = "{{route('adult.vfrindex')}}";
+                    window.location.href = "{{route('adult.sftindex')}}";
 				}
 			}
 		});
@@ -138,11 +129,8 @@ $(document).on('click','#add-verification-model',function(){
     $(document).on('click','.editProblemBtn' , function(){
         var $this = $(this);
         $('#id').val($this.attr('data-id'))
-        $('#updateVerificationTypeName').val($this.attr('data-name'))
-        $('#first_field').val($this.attr('data-firts_field'))
-        $('#second_field').val($this.attr('data-second_field'))
-        $('#third_field').val($this.attr('data-third_field'))
-        $('#addVerificationTypeModal').modal('toggle')
+        $('#solutionTypeName').val($this.attr('data-name'))
+        $('#addSolutionTypeModal').modal('toggle')
     })
 </script>
 <script>    
@@ -159,7 +147,7 @@ $(document).on('click','#add-verification-model',function(){
                         }
                 });      
           $.ajax({
-                url: "{{route('adult.vfrdelete')}}",
+                url: "{{route('adult.sftdelete')}}",
                 data:{id :  id},         
                
                 type: 'POST',           
@@ -177,7 +165,7 @@ $(document).on('click','#add-verification-model',function(){
                         });
                     } else {
                         toastr.success('Verification type deleted successfully!');
-                        window.location.href = "{{route('adult.vfrindex')}}";
+                        window.location.href = "{{route('adult.sftindex')}}";
                     }
                 }
             });

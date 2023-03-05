@@ -8,7 +8,17 @@
                     <h4 class="modal-title">Add Solution Function</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
+                <?php 
+               
+                            $problem_id =  Crypt::encrypt($problem_id);
+                            $project_id =  Crypt::encrypt($project_id);
+                            $solution_id =  Crypt::encrypt($solution_id);
+                        ?>
                 <div class="modal-body">
+
+                <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                <input type="hidden" name="project_id" value="{{ $project_id }}">
+                <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
                     <input type="hidden" name="updateSolFunctionId" id="updateSolFunctionId">
                     <input type="hidden" name="updateSolFunctionType" id="updateSolFunctionType">
                     <div class="form-group">
@@ -36,29 +46,20 @@
 						
 					</div>
                     <div class="form-group">
-                        <select class="custom-select" name="updateSolFunctionProblemId" id="updateSolFunctionProblemId">
-                            <option value="">Problem *</option>
-                            @foreach ($problems as $item)
-                                <option value="{{ $item -> id }}">Problem: {{ $item -> name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <select class="custom-select" name="updateSolFunctionSolutionId" id="updateSolFunctionSolutionSelect">
-                            <option value="">Solution *</option>
-                            @foreach ($solutions as $item)
-                                <option value="{{ $item -> id }}">Solution: {{ $item -> name }}</option>
-                            @endforeach
-                        </select>
+
+                    <input type="text"  value="{{ $solutionProblemName }}" name="updateSolFunctionProblemId"  class="form-control" placeholder="Problem Name">
                         
                     </div>
                     <div class="form-group">
-                        <input type="text" name="updateSolFunctionName" class="form-control" id="updateSolFunctionName" placeholder="Name *" required>
+                    <input type="text"  value="{{ $solutionName }}" name="updateSolFunctionSolutionId"  class="form-control" placeholder="Problem Name">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="updateSolFunctionName" class="form-control" id="updateSolFunctionName" placeholder="Solution Function Name *" required>
                         
                     </div>
                     <div class="form-group">
                         <select class="custom-select" name="updateSolFunctionTypeId" id="updateSolFunctionTypeId">
-                            <option value="">Type *</option>
+                            <option value="">Transition Phrase *</option>
 							<option value="1">Problem is solved by solution from solution function</option>
 							<option value="2">Problem is substituted by solution from solution function</option>
 							<option value="3">Problem is replaced by solution through solution function</option>

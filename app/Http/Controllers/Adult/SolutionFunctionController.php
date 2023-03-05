@@ -21,22 +21,16 @@ class SolutionFunctionController extends BaseController
     public function index($params = null){
         $params = Crypt::decrypt($params);         
         $problem_id = $params['problem_id'];
-        if(isset($params['solution_id'])){
-            $solution_id = $params['solution_id'];
-        }else{
-            $solution_id = DB::table('solutions')->select('id')->where('problem_id', $problem_id)->first();
-            $solution_id = $solution_id->id;
-        }
-        // echo"<pre>";print_r();die;
-                
-            $problems = Problem::orderBy("id", "asc")
-                        -> where("user_id", Auth::user() -> id)
-                        ->where('id' , $problem_id)
-                        -> get();
-            $solutions = Solution::orderBy("id", "desc")
-                        -> where("user_id", Auth::user() -> id)
-                        -> where("problem_id", $params['problem_id'])
-                        -> get();
+            $solution_id = DB::table('solutions')
+                    ->join('problems' , 'solutions.problem_id' , '=' , 'problems.id')
+                    ->select('solutions.*' , 'problems.name as problem_name')
+                    ->where('solutions.problem_id', $problem_id)->first();
+                    
+            $solutionID = $solution_id->id;
+            $solutionName =  $solution_id->name;
+            $solutionProblemName =  $solution_id->problem_name;
+            $project_id =  $solution_id->project_id;        
+          
 
             $solFunctions = DB::table('solution_functions')
                         ->join('problems' , 'solution_functions.problem_id' , 'problems.id')
@@ -44,14 +38,16 @@ class SolutionFunctionController extends BaseController
                         ->select('solution_functions.*' , 'solutions.name as solution_name','solutions.file as solution_file','solutions.created_at as solution_created','solutions.type as solution_type',
                                                          'problems.name as problem_name','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at')
                         ->where('solution_functions.problem_id','=' ,$problem_id )
-                        ->where('solution_functions.solution_id','=' ,$solution_id )
+                        ->where('solution_functions.solution_id','=' ,$solutionID )
                         ->first();
             // echo"<pre>";print_r($solFunctions);die;
             return view("adult.solFunction.solutionfunction", [
                         "solFunctions" => $solFunctions,
-                        "problems" => $problems,
-                        "solutions" => $solutions,
-                        
+                        "solutionName" => $solutionName,
+                        "solutionProblemName" => $solutionProblemName,
+                        'project_id' => $project_id,
+                        'problem_id' => $problem_id,
+                        'solution_id' => $solutionID,
                     ]);
         
     }
@@ -71,7 +67,7 @@ class SolutionFunctionController extends BaseController
 
     public function store(Request $request){
 
-        // echo "<pre>";print_r($request->all());die;
+        
         $validator = Validator::make ( $request->all(),[
             'updateSolFunctionName' => 'required|max:255',
             "updateSolFunctionSolutionId" => 'required',
@@ -79,75 +75,16 @@ class SolutionFunctionController extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
-try{
-        $solFunction = new SolutionFunction();
-        $solFunction -> user_id = Auth::user() -> id;
-        $solFunction -> name = $request -> updateSolFunctionName;
-        $solFunction -> problem_id = $request -> updateSolFunctionProblemId;
-        $solFunction -> solution_id = $request -> updateSolFunctionSolutionId;
-        $solFunction -> solution_function_type_id = $request -> updateSolFunctionTypeId;
-
-        if($request -> type == 0){
-            if($request->hasFile('updateSolFunctionFile')){
-                $validator = Validator::make ( $request->all(),[
-                    'updateSolFunctionFile' => 'required|mimes:png,jpg,jpeg,avi,mp4,mpeg|:2048',
-                ]);
-                if($validator->fails()){
-                    return $this->sendError('Validation Error.', $validator->errors());       
-                }
-                $file = time().'.'.$request -> updateSolFunctionFile -> extension();
-                $request -> updateSolFunctionFile -> move(public_path('assets-new/solFunction/'), $file);
-
-                $mime = mime_content_type(public_path('assets-new/solFunction/' . $file));
-                if(strstr($mime, "video/")){
-                    $solFunction -> type = 1;
-                }else if(strstr($mime, "image/")){
-                    $solFunction -> type = 0;
-                }
-                $solFunction -> file = $file;
-            }
-
-
-        }elseif($request -> type == 2){
-            $solFunction -> type = $request -> type;
-            $solFunction -> file = $request -> link;
-        }
-        $solFunction -> save();
-        if($solFunction->id){
-            $parameter = ['solution_function' => $solFunction->id,'solution_id' => $request->updateSolFunctionSolutionId ,  'problem_id' => $request->updateSolFunctionProblemId];
-            $success['type'] =  $solFunction;
-            $success['params'] = $params = Crypt::encrypt($parameter);
-            return $this->sendResponse($success, 'Solution Function has been created successfully.');            
-        }else{
-            return $this->sendError('Error.', ['error'=> 'Something went wrong.']);
-        }
-    }catch(Exception $e){
-        return $this->sendError('Error.', ['error'=> $e->getMessage()]);
-    }
-        
-    }
-
-    public function update(Request $request){
-       
-        $defaultType = SolutionFunction::where("id", $request -> updateSolFunctionId)
-            -> value("type");
-
-            $validator = Validator::make ( $request->all(),[
-                            'updateSolFunctionName' => 'required|max:255',
-                            'updateSolFunctionSolutionId' => 'required|max:255',
-                        ]);
-            if($validator->fails()){
-                return $this->sendError('Validation Error.', $validator->errors());       
-            }
-
-        try{    
-            
-                if($request -> updateSolFunctionType == 0){
-                    if($request->hasFile('updateSolFunctionFile')){
+        try{
+                $problem_id = Crypt::decrypt($request->input('problem_id'));    
+                $project_id = Crypt::decrypt($request->input('project_id')); 
+                $solution_id = Crypt::decrypt($request->input('solution_id'));      
+                    // echo "<pre>";print_r($request->all());die;
+                    if($request -> updateSolFunctionType == 0){
+                        if($request->hasFile('updateSolFunctionFile')){
                             $validator = Validator::make ( $request->all(),[
                                 'updateSolFunctionFile' => 'required|mimes:png,jpg,jpeg,avi,mp4,mpeg|:2048',
                             ]);
-
                             if($validator->fails()){
                                 return $this->sendError('Validation Error.', $validator->errors());       
                             }
@@ -160,51 +97,63 @@ try{
                             }else if(strstr($mime, "image/")){
                                 $type = 0;
                             }
-                            $solution = SolutionFunction::where("id", $request -> updateSolFunctionId)
-                                        -> update([
-                                            "name" => $request -> updateSolFunctionName,
-                                            "problem_id" => $request -> updateSolFunctionProblemId,
-                                            "solution_id" => $request -> updateSolFunctionSolutionId,
-                                            "type" => $request -> updateSolFunctionType,
-                                            "solution_function_type_id" => $request -> updateSolFunctionTypeId,
-                                            "user_id" => Auth::user() -> id,
-                                            "file" => $file,
-                                            "type" => $type
-                                        ]);
-
-                        }else{
-                            $solution = SolutionFunction::where("id", $request -> updateSolFunctionId)
-                                        -> update([
-                                            "name" => $request -> updateSolFunctionName,
-                                            "problem_id" => $request -> updateSolFunctionProblemId,
-                                            "solution_id" => $request -> updateSolFunctionSolutionId,
-                                            "type" => $request -> updateSolFunctionType,
-                                            "solution_function_type_id" => $request -> updateSolFunctionTypeId,
-                                            "user_id" => Auth::user() -> id,
-                                        ]);
-            
-                        }
-                    }elseif($request -> updateSolFunctionType == 2){
-                        $request -> validate([
-                            'updateSolFunctionFileLink' => 'required|url',
-                        ]);
-
-                        SolutionFunction::where("id", $request -> updateSolFunctionId)
-                            -> update([
-                                "type" => $request -> updateSolFunctionType,
-                                "file" => $request -> updateSolFunctionFileLink,
+                            
+                          
+                            $insert = DB::table('solution_functions')->updateOrInsert(['id'=> $request->updateSolFunctionId],[                    
+                                'type' => $type,
+                                'file' => $file,                    
+                                'project_id' => $project_id,
+                                'problem_id' => $problem_id,
+                                'solution_id' => $solution_id,
+                                'user_id' => Auth::user()->id,
+                                'name' => $request ->updateSolFunctionName,
+                                'solution_function_type_id' => $request -> updateSolFunctionTypeId,
+                                'created_at' => date('Y-m-d h:i:s')
                             ]);
-                    }
+                            
+                        }else{
+                            $insert = DB::table('solution_functions')->updateOrInsert(['id'=> $request->updateSolFunctionId],[
+                                'user_id' => Auth::user()->id,                                  
+                                'project_id' => $project_id,
+                                'solution_id' => $solution_id,
+                                'problem_id' => $problem_id,
+                                'name' => $request ->updateSolFunctionName,                                
+                                'solution_function_type_id' => $request -> updateSolFunctionTypeId,
+                                'created_at' => date('Y-m-d h:i:s')
+                            ]);
+                        }
 
-            $parameter = ['solution_function' => $request -> updateSolFunctionId,'solution_id' => $request->updateSolFunctionSolutionId ,  'problem_id' => $request->updateSolFunctionProblemId];
-            $success['type'] =  $solution;
-            $success['params'] = $params = Crypt::encrypt($parameter);
-            return $this->sendResponse($success, 'Solution Function has been created successfully.');  
-        }catch(Exception $e){
-            return $this->sendError('Error.', ['error'=> $e->getMessage()]);
-        }
+
+                    }elseif($request -> type == 2){
+                                $insert = DB::table('solution_functions')->updateOrInsert(['id'=> $request->updateSolFunctionId],[
+                                    'user_id' => Auth::user()->id,
+                                    'file' => $request->updateSolFunctionFileLink,
+                                    'project_id' => $project_id,
+                                    'solution_id' => $solution_id,
+                                    'problem_id' => $problem_id,
+                                    'name' => $request ->updateSolFunctionName,
+                                    // 'state' => 1,
+                                    'solution_function_type_id' => $request -> updateSolFunctionTypeId,
+                                    'created_at' => date('Y-m-d h:i:s')
+                                ]);
+                    }
+                
+                    if($insert){
+                        $solutionfunctionID = DB::table('solution_functions')->select('id')->where('solution_id' , '=' , $solution_id)->first();
+                        $parameter = ['solution_id' => $solution_id ,  'problem_id' => $problem_id , 'solution_func_id' => $solutionfunctionID->id  , 'project_id'=>$project_id ];
+                        $success['type'] =  $solutionfunctionID;
+                        $success['params'] = $params = Crypt::encrypt($parameter);
+                        return $this->sendResponse($success, 'Solution Function has been created successfully.');            
+                    }else{
+                        return $this->sendError('Error.', ['error'=> 'Something went wrong.']);
+                    }
+                }catch(Exception $e){
+                    return $this->sendError('Error.', ['error'=> $e->getMessage()]);
+                }
         
     }
+
+    
 
     public function delete(Request $request){
         $solutionFunction  = SolutionFunction::where("id", $request -> id)-> delete();

@@ -10,9 +10,10 @@
     <div class="row spl-row-second">
         <h4>TITLE FOR EXPLANTION</h4>
     </div>
-    <div class="row banner">
-        <img src="{{ asset('/assets-new/problem/problem.png') }}" width="666px" height="250px" >
+     <div class="banner text-center">
+        <img src="{{ asset('/assets-new/problem/problem.png') }}" width="666px" height="213px" >
     </div>
+
     <div class="row pt-5">
         <p>
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit
@@ -110,6 +111,9 @@
 <style>
     .delProblemBtn{
         cursor: pointer;
+    }
+    p.redText {
+        margin-top: 10px;
     }
 </style>
 @endsection

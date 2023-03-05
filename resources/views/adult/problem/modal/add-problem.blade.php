@@ -38,12 +38,12 @@
                     
                     </div>
                     <div class="form-group">
-                        <input type="text" name="updateProblemName" id="updateProblemName" class="form-control" placeholder="Name">
+                        <input type="text" name="updateProblemName" id="updateProblemName" class="form-control" placeholder="Actual Problem">
                         
                     </div>
                     <div class="form-group">
-                        <select class="form-control" name="category_id" id="category_id">
-                            <option value="">Choose Category..</option>
+                        <select class="form-control form-select" name="category_id" id="category_id">
+                            <option value="">Choose a problem by  Category..</option>
                             @foreach($cat as $cate)
                                 <option value="{{ $cate->id}}">{{ $cate->name }}</option>
                             @endforeach
