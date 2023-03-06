@@ -9,11 +9,12 @@
     </div>
 
     <div class="row spl-row">
+    <div class="text-end">
+        <button type="button" data-toggle="modal" data-target="#verificationTypeTextModal" class="btn btn-success">Add New Verification Type Text</button>
+    </div>
         <table class="table slp-tbl" id="myTable">
-        
             <thead>
-                <tr>
-                  
+                <tr>                  
                     <th>Verification Type</th>
                     <th>Verification Type Text</th>
                     <th>Creator</th>                    

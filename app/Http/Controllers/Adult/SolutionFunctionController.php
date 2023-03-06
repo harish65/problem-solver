@@ -35,7 +35,8 @@ class SolutionFunctionController extends BaseController
             $solFunctions = DB::table('solution_functions')
                         ->join('problems' , 'solution_functions.problem_id' , 'problems.id')
                         ->join('solutions' , 'solution_functions.solution_id' , 'solutions.id')
-                        ->select('solution_functions.*' , 'solutions.name as solution_name','solutions.file as solution_file','solutions.created_at as solution_created','solutions.type as solution_type',
+                        ->join('solution_function_types' , 'solution_functions.solution_function_type_id' , 'solution_function_types.id')
+                        ->select('solution_functions.*' , 'solution_function_types.first_arr', 'solution_function_types.second_arr','solutions.name as solution_name','solutions.file as solution_file','solutions.created_at as solution_created','solutions.type as solution_type',
                                                          'problems.name as problem_name','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at')
                         ->where('solution_functions.problem_id','=' ,$problem_id )
                         ->where('solution_functions.solution_id','=' ,$solutionID )
@@ -53,18 +54,7 @@ class SolutionFunctionController extends BaseController
     }
 
 
-    public function getSolutionPerProblemForUpdate(Request $request){
-        $solutions = Solution::orderBy("id", "desc")
-            -> where("user_id", Auth::user() -> id)
-            -> where("problem_id", $request -> problem_id)
-            -> get();
-
-        return view("adult.solFunction.getSolutionPerProblemForUpdate", [
-            "solutions" => $solutions,
-            "solution_id" => $request -> solution_id,
-        ]);
-    }
-
+   
     public function store(Request $request){
 
         
@@ -164,5 +154,17 @@ class SolutionFunctionController extends BaseController
             return $this->sendError('Error.', ['error'=> 'Something wrong please try later!']);
         }
         
+ 
+    }
+
+    public function updateValidation(Request $request){
+        // echo "<pre>";print_r($request->all());die;
+        $column = ($request->input('name') == 'optradio_firts')   ? 'validation_first' : 'validation_second';        
+        $update = DB::table('solution_functions')->where("id",'=' ,$request->input('data'))-> update([
+            $column => $request->input('value')
+        ]);
+        if($update){
+            return true;
+        }
     }
 }

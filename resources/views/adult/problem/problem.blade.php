@@ -20,8 +20,8 @@
         </p>
     </div>
     @if($problem != null)
-    <div class="row pt-5">
-        <div class="col-md-4">
+    <div class="conditionBlock">
+        <div class="blockProblem">
             <div class="projectBlock text-center">
               <h2>Problem</h2>
               <div class="projectList text-center"> 
@@ -33,18 +33,19 @@
                 <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
                 <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
                 <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                <!-- <img style="border-radius: 5px;" class="mx-auto" src="{{ asset('/assets-new/problem/'.$problem->file) }}" width="300" height="320"> -->
-                @if($problem -> type == 0)
+                <div class="imgWrp">
+                                @if($problem -> type == 0)
 									@if(strlen($problem -> file) < 15)
-										<img class="mx-auto" src="{{ asset("assets-new/problem/" . $problem -> file) }}" width="300" height="320">
+										<img class="mx-auto" src="{{ asset("assets-new/problem/" . $problem -> file) }}" width="100%" height="128px">
 									@endif
 								@elseif($problem -> type == 1)
-									<video class="mx-auto" controls="controls" preload="metadata" width="300" height="320" preload="metadata">
+									<video class="mx-auto" controls="controls" preload="metadata" width="100%" height="128px" preload="metadata">
 										<source src="{{ asset("assets-new/problem/" . $problem -> file) }}#t=0.1" type="video/mp4">
 									</video>
 								@elseif($problem -> type == 2)
-									    <iframe class="mx-auto" src="{{ $problem -> file }}"width="300" height="320"> </iframe>
+									    <iframe class="mx-auto" src="{{ $problem -> file }}" width="100%" height="128px"> </iframe>
 								@endif
+                </div>
                 <p class="redText">{{ $problem->name }}</p>
               </div>
               <div class="projectList">
@@ -115,6 +116,11 @@
     p.redText {
         margin-top: 10px;
     }
+</style>
+<style>
+    .delProblemBtn{
+        cursor: pointer;
+    }    
 </style>
 @endsection
 @section('scripts')

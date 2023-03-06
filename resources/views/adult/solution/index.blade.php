@@ -19,6 +19,13 @@
                 Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit
             </p>
         </div>
+                        <?php 
+                            $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
+                            $parameter =  Crypt::encrypt($parameters);
+                        ?>
+                            <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
+                            <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
+                            <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
 @if(isset($problem->id))
     <div class="conditionBlock">
         <div class="blockProblem">
@@ -26,13 +33,7 @@
               <h2>Problem</h2>
               <div class="projectList text-center"> 
                 <div class="imgWrp">
-                        <?php 
-                            $parameters = ['problem_id'=> $problem->id , 'project_id' => $problem->project_id];
-                            $parameter =  Crypt::encrypt($parameters);
-                        ?>
-                            <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                            <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                            <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
+                        
                 
                             @if($problem -> problem_type == 0)
                                     @if(strlen($problem -> problem_file) < 15)
@@ -54,8 +55,8 @@
               </div>
             </div>
           </div>
-          <div class="long-arrow">
-            <!-- add arrow Image over here -->
+          <div class="long-arrow">            
+                <p style="position:relative; top:35px;left:25px;">{{ $problem->output_slug }}</p>
             <img src="{{ asset('assets-new/images/arrowRight.png')}}">
             <!-- add arrow Image over here -->
           </div>
@@ -69,11 +70,11 @@
 										<img class="mx-auto" src="{{ asset("assets-new/solution/" . $problem -> file) }}" width="100%" height="128px">
 									@endif
 								@elseif($problem -> type == 1)
-									<video class="mx-auto" controls="controls" preload="metadata" width="300" height="320" preload="metadata">
+									<video class="mx-auto" controls="controls" preload="metadata" width="100%" height="128px" preload="metadata">
 										<source src="{{ asset("assets-new/solution/" . $problem -> file) }}#t=0.1" type="video/mp4">
 									</video>
 								@elseif($problem -> type == 2)
-									    <iframe class="mx-auto" src="{{ $problem -> file }}"width="300" height="320"> </iframe>
+									    <iframe class="mx-auto" src="{{ $problem -> file }}" width="100%" height="128px"> </iframe>
 								@endif 
               </div>
                 <p class="redText">{{ $problem->name }}</p>
@@ -107,6 +108,30 @@
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit
         </p>
     </div>
+    <div class="row">
+        <div class="row-title">
+            <h5>Problem and Solution Identification</h5>
+        </div>
+        <div class="row-table">
+            <table class="table slp-tbl text-center">
+                <thead>
+                    <th>Problem</th>
+                    <th>Solution</th>
+                </thead>
+                <tbody>
+                   
+                    <tr>
+                        <td style="color: red;">{{ (isset($problem->problem_name)) ? $problem->problem_name : 'NA'}}</td>
+                        <td style="color: #00A14C;">{{ (isset($problem->name)) ? $problem->name : 'NA'}}</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
     <div class="row pt-5">
         <h5>Validation Questions</h5>
         <p>Does the solution of the actual problem replace the actual problem?</p>
@@ -157,32 +182,12 @@
     </div>
 @endif 
 
-<div class="row">
-    <div class="row-title">
-        <h5>Problem and Solution Identification</h5>
-    </div>
-    <div class="row-table">
-        <table class="table slp-tbl text-center">
-            <thead>
-                <th>Problem</th>
-                <th>Solution</th>
-            </thead>
-            <tbody>
-               
-                <tr>
-                    <td style="color: red;">{{ (isset($problem->problem_name)) ? $problem->problem_name : 'NA'}}</td>
-                    <td style="color: #00A14C;">{{ (isset($problem->name)) ? $problem->name : 'NA'}}</td>
-                </tr>
-                
-            </tbody>
-        </table>
-    </div>
-</div>
+
 
 
 
  </div>   
-@include('adult.solution.model.add-sol' , [$problem_id])
+@include('adult.solution.model.add-sol' , [$problem_id , $solutionTypes])
 
 @endsection
 @section('css')
@@ -191,42 +196,10 @@
     .delProblemBtn{
         cursor: pointer;
     }
-    .long-arrow-right{
-    display: block;
-    margin: 30px auto;
-    width: 25px;
-    height: 25px;
-    border-top: 2px solid #000;
-    border-left: 2px solid #000;
-}
-
-.long-arrow-right{
- transform: rotate(135deg);
-}
-.long-arrow-right::after{
-    content: "";
-    display: block;
-    width: 2px;
-    height: 45px;
-    background-color: black;
-    transform: rotate(-45deg) translate(15px, 4px);
-    left: 0;
-    top: 0;
-}
-.conditionBlock {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-.blockProblem {
-    width: 215px;
-}
-.imgWrp {
-    margin: 0 15px 15px;
-}
-.imgWrp img {
-    border-radius: 10px;
-}
+    .long-arrow cross-text.{
+        position: relative;
+        top:20px;
+   }
 </style>
 @endsection
 

@@ -51,10 +51,11 @@
                     </div>
                     <div class="form-group">
                        <select class="form-control form-select" id="solution_type" name="solution_type_id">
-                        <option value="">Transition Phrase *</option>
-                        <option value="1">Option one</option>
-                        <option value="2">Option two</option>
-                        <option value="3">Option three</option>
+                        <option value=" ">Transition Phrase *</option>
+                            @foreach($solutionTypes as $solutionType)
+                                <option value="{{ $solutionType->id  }}"> {{ $solutionType->name }}</option>
+                            @endforeach    
+                            
                        </select>
                         
                     </div>

@@ -583,3 +583,40 @@ button.btn.btn-primary.login-btn a {
     background-color:#00A14C !important;
     border-color: #00A14C !important;
 }
+
+.long-arrow-right{
+    display: block;
+    margin: 30px auto;
+    width: 25px;
+    height: 25px;
+    border-top: 2px solid #000;
+    border-left: 2px solid #000;
+}
+
+.long-arrow-right{
+ transform: rotate(135deg);
+}
+.long-arrow-right::after{
+    content: "";
+    display: block;
+    width: 2px;
+    height: 45px;
+    background-color: black;
+    transform: rotate(-45deg) translate(15px, 4px);
+    left: 0;
+    top: 0;
+}
+.conditionBlock {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.blockProblem {
+    width: 215px;
+}
+.imgWrp {
+    margin: 0 15px 15px;
+}
+.imgWrp img {
+    border-radius: 10px;
+}

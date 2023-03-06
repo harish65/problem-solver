@@ -31,18 +31,18 @@ class SolutionController extends BaseController
         $project_id = $project->project_id;
         $problem_name = $project->name;
             
-        
+        $solutionTypes = DB::table('solution_types')->get();
         $problems = Problem::orderBy("id", "asc")
             -> where("user_id", Auth::user() -> id)
             -> get();
         $problem = DB::table('solutions')
                     ->join('problems' , 'solutions.problem_id' , 'problems.id')
-                    ->select('solutions.*' , 'problems.name as problem_name', 'problems.project_id','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at')
+                    ->join('solution_types' , 'solutions.solution_type_id' , 'solution_types.id')                    
+                    ->select('solutions.*' , 'solution_types.output_slug','problems.name as problem_name', 'problems.project_id','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at')
                     ->where('solutions.problem_id','=' ,$problem_id )
                     ->first();
-
-                 
-        return view('adult.solution.index' , compact('problem' ,'problems' , 'problem_id' , 'project_id' , 'problem_name'));
+        
+        return view('adult.solution.index' , compact('problem' ,'problems' , 'problem_id' , 'project_id' , 'problem_name','solutionTypes'));
     }
 
     public function store(Request $request){
@@ -123,7 +123,9 @@ class SolutionController extends BaseController
             }
             $solution = DB::table('solutions')
                                 ->where('problem_id','=', $problem_id)->first();
-                                $parameter = ['problem_id' => $solution->problem_id];                                
+                                $parameter = ['problem_id' => $problem_id];  
+                                
+                               
                                 $success['type'] =  $insert;
                                 $success['params'] = $params = Crypt::encrypt($parameter);
                 return $this->sendResponse($success, 'Solution saved successfully.');
