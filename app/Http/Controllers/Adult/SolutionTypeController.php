@@ -12,7 +12,7 @@ class SolutionTypeController extends BaseController
 {
     public function index(){
         $solutionTypes = DB::table('solution_types')->get();
-        return view('adult.solutiontypes.index' , compact('solutionTypes'));
+        return view('adult.solutionTypes.index' , compact('solutionTypes'));
     }
 
     public function store(Request $request){
