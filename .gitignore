@@ -1,6 +1,9 @@
 /node_modules
 /public/hot
 /public/storage
+/public/assets-new/problem
+/public/assets-new/solFunction
+/public/assets-new/solution
 /storage/*.key
 /vendor
 .env

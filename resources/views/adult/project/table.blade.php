@@ -15,11 +15,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                   
+                        
                     @foreach ($project as $item)
                         <tr>
                             <td>{{ date('d/m/Y' , strtotime($item->created_at))}}</td>
-                            <?php $parameter= Crypt::encrypt($item->problem_id);?>
+
+                            <?php 
+                            $parameters = ['problem_id'=> $item->problem_id , 'project_id' => $item->id];
+                            $parameter =  Crypt::encrypt($parameters);
+                            ?>
+                            
                             <td><a class="grid-p-l" href="{{ route("adult.problem" ,@$parameter) }}" >{{ $item->name }}</a></td>
                             <td style="color:red">{{ ($item->problem != '') ? $item->problem : 'N/A' }}</td>
                             <td style="color:#00A14C">{{ ($item->solution_name != '') ? $item->solution_name : 'N/A' }}</td>

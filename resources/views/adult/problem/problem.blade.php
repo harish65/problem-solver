@@ -11,7 +11,7 @@
         <h4>TITLE FOR EXPLANTION</h4>
     </div>
      <div class="banner text-center">
-        <img src="{{ asset('/assets-new/problem/problem.png') }}" width="666px" height="213px" >
+        <img src="{{ asset('/assets-new/images/problem.png') }}" width="666px" height="213px" >
     </div>
 
     <div class="row pt-5">
