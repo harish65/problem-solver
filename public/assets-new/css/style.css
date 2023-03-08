@@ -8,6 +8,16 @@
     font-weight: 300;
     font-style: normal;
 }
+@font-face {
+    font-family: 'Inter-Bold';
+    src: url('../fonts/Inter-Bold.eot');
+    src: url('../fonts/Inter-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Inter-Bold.woff') format('woff'),
+        url('../fonts/Inter-Bold.ttf') format('truetype'),
+        url('../fonts/Inter-Bold.svg#Inter-Bold') format('svg');
+    font-weight: Bold;
+    font-style: normal;
+}
 body {
     font-family: 'Inter-Regular';
 }
@@ -620,3 +630,136 @@ button.btn.btn-primary.login-btn a {
 .imgWrp img {
     border-radius: 10px;
 }
+
+/* Relationship Page css Start */
+.relationshipPage .mainTitle {
+    padding: 25px 0;
+    border-bottom: 1px solid #00A14C;
+}
+.relationshipPage .mainTitle h2 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 29px;
+    color: #000000;
+    margin-right: 10px;
+    font-family: 'Inter-Bold';
+    margin-bottom: 0;
+}
+.relationshipPage .mainTitle select {
+    border: 1px solid #00A14C;
+    border-radius: 10px;
+    height: 50px;
+    width: 285px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+    font-family: 'Inter-Regular';
+}
+.relationshipContent {
+    margin: 25px 0;
+}
+.relationshipContent h1 {
+    font-family: 'Inter-Bold';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 29px;
+    color: #000000;
+}
+.relationshipContent p {
+    font-family: 'Inter-Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+    color: #000000;
+}
+.principleRelation {
+    margin: auto;
+}
+.principleRelation .principleSelector {
+    width: 216px;
+    height: 312px;
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 161, 76, 0.5);
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+.principleSelectorInner ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.principleSelectorInner ul li {
+    padding: 5px;
+}
+.principleSelectorInner ul li a {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #00A14C;
+}
+.principleSelectorInner label {
+    font-family: 'Inter-Bold';
+    border-bottom: 1px solid rgba(0, 161, 76, 0.5);
+    border-radius: 10px;
+    width: 100%;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+    color: #000000;
+}
+.principleRelationWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 50px 0;
+}
+.principleSelectorInner ul.communicate {
+    height: calc(284px - 51px);
+}
+.principleSelectorInner ul.communicate li {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #000000;
+}
+.questionWrap h2 {
+    font-family: 'Inter-Bold';
+    margin-top: 30px;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 29px;
+    color: #000000;
+}
+.questionWrap h3 {
+    font-family: 'Inter-Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+    color: #000000;
+}
+.questionWrap ul li {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    padding: 5px 0;
+    color: #000000;
+}
+.questionWrap ul  {
+    padding-left: 18px;
+}
+/* Relationship Page css End */

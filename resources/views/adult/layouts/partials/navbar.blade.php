@@ -20,7 +20,7 @@
               <a class="nav-link nav-solution-func" id="nav-solution-func" href="">Solution Function</a>
             </li> 
             <li class="nav-item">
-              <a class="nav-link" href="#">Verification</a>
+              <a class="nav-link" href="{{ route('adult.varification')}}">Verification</a>
             </li> 
             <li class="nav-item">
               <a class="nav-link" href="#">Relationship</a>

@@ -4,6 +4,7 @@
 /public/assets-new/problem
 /public/assets-new/solFunction
 /public/assets-new/solution
+/public/assets-new/avatar
 /storage/*.key
 /vendor
 .env

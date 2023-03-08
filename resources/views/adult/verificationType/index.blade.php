@@ -9,7 +9,7 @@
     </div>
 
     <div class="row spl-row">
-        <div class="text-end">
+        <div class="modal-btn">
             <button type="button" data-toggle="modal" data-target="#addVerificationTypeModal" class="btn btn-success">Add New Verification Type</button>
         </div>
         <table class="table slp-tbl" id="myTable">
@@ -31,9 +31,9 @@
                     <tr>
                         <td>{{ $type->name }}</td>
                         <td>{{ Auth::user()->name }} </td>
-                        <td>{{ $type->first_field }}</td>
-                        <td>{{ $type->second_field }}</td>
-                        <td>{{ $type->third_field }}</td>
+                        <td>{{ ($type->first_field != '') ? $type->first_field : 'NA' }}</td>
+                        <td>{{ ($type->second_field != '') ? $type->second_field : 'NA' }}</td>
+                        <td>{{ ($type->third_field != '') ? $type->third_field : 'NA' }}</td>
                         
                         <td>
                             <a href="javaScript:Void(0)"  data-href="{{ route('problem.delete') }}"  data-id="{{ $type-> id }}" class="delProblemBtn" title="Delete" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20"></a>
@@ -66,24 +66,40 @@
 @endsection
 @section('css')
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<style>
+    #myTable_filter{
+        text-align:end;
+    }
+
+    .modal-btn{
+        position: relative;
+        top: 33px;
+    }
+    #myTable_paginate{
+        border:none;
+        text-align:end;
+    }
+</style>
 @endsection
 @section('scripts')
+<script src="{{ asset('assets-new/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('assets-new/js/dataTables.buttons.min.js')}}"></script>
 <script>
 $(document).ready( function () {
     $('#myTable').DataTable({
         dom: 'Bfrtip',
-        buttons: [
-            {
-                text: '<i class="fa fa-plus"></i>Add new verification type',
-                className : 'btn btn-success',
-                attr:  {
-                        title: 'Add VerificationType',
-                        id: 'add-verification-model',
+        // buttons: [
+        //     {
+        //         text: '<i class="fa fa-plus"></i>Add new verification type',
+        //         className : 'btn btn-success',
+        //         attr:  {
+        //                 title: 'Add VerificationType',
+        //                 id: 'add-verification-model',
+                       
                         
-                }
-            }
-        ]
+        //         }
+        //     }
+        // ]
     });
 });
 
@@ -182,5 +198,22 @@ $(document).on('click','#add-verification-model',function(){
                 }
             });
       });
+
+</script>
+
+<script>
+   $(document).ready(function() {
+    $("body").on("click","#question",function(){ 
+        var html = '';
+        html = $(".after-add-more").first().clone();
+        //   $(html).find(".change").html("<label for=''>&nbsp;</label><br/><a class='btn btn-danger remove'>- Remove</a>");
+        $(".after-add-more").last().after(html);
+       
+    });
+
+    $("body").on("click",".remove",function(){ 
+        $(this).parents(".after-add-more").remove();
+    });
+});
 </script>
 @endsection

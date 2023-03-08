@@ -16,6 +16,12 @@ use Auth;
 
 class VerificationController extends Controller
 {
+
+    public function index(){
+            $type = 1;    
+            return view('adult.verification.index',compact('type'));
+    }
+
     //verification
     public function adultVerification(Request $request){
         $type = $request -> type;
