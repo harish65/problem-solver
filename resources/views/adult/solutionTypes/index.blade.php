@@ -3,20 +3,16 @@
 
 @section('content')
 <div class="container">
-
     <div class="row spl-row">
         <h4>Solution Type</h4>
     </div>
-
     <div class="row spl-row">
         <div class="text-end">
             <button type="button" data-toggle="modal" data-target="#addSolutionTypeModal" class="btn btn-success">Add New Solution Type</button>
         </div>
         <table class="table slp-tbl" id="myTable">
-        
             <thead>
                 <tr>
-                  
                     <th>Name</th>
                     <th>Creator Name</th>
                     <th>Action</th>
@@ -28,7 +24,6 @@
                     <tr>
                         <td>{{ $type->name }}</td>
                         <td>{{ Auth::user()->name }} </td>
-
                         <td>
                             <a href="javaScript:Void(0)"  data-href="{{ route('problem.delete') }}"  data-id="{{ $type-> id }}" class="delProblemBtn" title="Delete" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20"></a>
                             &nbsp;

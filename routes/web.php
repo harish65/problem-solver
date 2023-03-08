@@ -194,6 +194,10 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::get("sftindex", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'index'])-> name("sftindex");
         Route::post("sftstore", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'store'])->name("sftstore");
         Route::post("sftdelete", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'delete'])->name("sftdelete");
+        // vrification
+        Route::get("varification", [\App\Http\Controllers\Adult\VerificationController::class, 'index'])-> name("varification");
+        // Route::post("sftstore", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'store'])->name("sftstore");
+        // Route::post("sftdelete", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'delete'])->name("sftdelete");
 
     });  
 });
