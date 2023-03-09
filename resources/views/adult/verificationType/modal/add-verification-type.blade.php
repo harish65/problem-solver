@@ -37,32 +37,31 @@
                                 placeholder="Explanation Text....."></textarea>
                         </div>
                     </div>
-
-
-                    <div class=" after-add-more">
-                        <div class="col-md-12  form-row">
-                            <div class="form-group col-md-8">
-                                <input type="text" name="validation_questions" class="form-control"
-                                    id="validation_questions" placeholder="Validation Question">
-                            </div>
-                            <div class="col-md-4">
-                                <button id="question" type="button" class="btn btn-success"> + Add</button>
-                                
+                    <div class="after-add-more">
+  
+                        <div class="col-md-12">                                
+                            <div class="form-group">                               
+                                <input type="text" name="validation_questions" class="form-control"  id="validation_questions" placeholder="Validation Question">
                             </div>
                         </div>
-                        <div class="col-md-12 after-add-more form-row">
-                            <div class="form-group col-md-8">
-                                <input type="text" name="validation_questions" class="form-control"
-                                    id="validation_questions" placeholder="Add Option">
+                        <div class="col-md-12 form-row add-more-option-div">
+                            <div class="col-md-10">
+                                <div class="form-group">                               
+                                    <input type="text" name="validation_questions" class="form-control" id="validation_questions" placeholder="Add Option">
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <button id="add-more" type="button" class="btn btn-success">+ </button>
-                                <button id="add-more" type="button" class="btn btn-danger">- </button>
+                            <div class="col-md-2">
+                                <div class="form-group change"> 
+                                    <a class="btn btn-success add-more-option">+</a>
+                                </div>
+                            
                             </div>
                         </div>
                     </div>
 
-
+                    <div class="col-md-8">
+                        <button type="button" class="btn btn-success add-more-option-question">Add Question</button>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -69,12 +69,12 @@ class ApiController extends BaseController
                         $validator->errors()
                     );
                 }
-
+               
                 $insert = DB::table("problems")->updateOrInsert(
                     ["id" => $request->id],
                     [
                         "user_id" => Auth::user()->id,
-                        "project_id" => $project_id,
+                        "project_id" => $request->project_id,
                         "category_id" => $request->category_id,
                         "name" => $request->name,
                         "type" => $request->problemType,
