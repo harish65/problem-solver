@@ -34,7 +34,7 @@ class ProblemController extends BaseController
 
     
     public function store(Request $request){
-        
+       
         $validator = Validator::make ( $request->all(),[
             'updateProblemName' => 'required',
             'category_id' => 'required',
