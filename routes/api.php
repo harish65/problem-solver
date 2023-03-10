@@ -32,11 +32,12 @@ Route::middleware('auth:api')->group( function () {
     Route::post("/store-problem", [\App\Http\Controllers\API\ApiController::class, 'storeProblem'])-> name("store-problem");
     Route::post("/delete-problem", [\App\Http\Controllers\API\ApiController::class, 'deleteProblem'])-> name("delete-problem");
     Route::post('/problem-validation', [\App\Http\Controllers\API\ApiController::class, 'updateProblemValidation'])->name('problem-validation');
+    Route::get('/get-problem-category', [\App\Http\Controllers\API\ApiController::class, 'getProblemCategoery'])->name('get-problem-category');
 
     // Solution Routes
     Route::get("/solution", [\App\Http\Controllers\API\ApiController::class, 'getSolution'])-> name("solution");
     Route::post("/store-solution", [\App\Http\Controllers\API\ApiController::class, 'storeSolution'])-> name("store-solution");
-    Route::post("/delete-solution", [\App\Http\Controllers\API\ApiController::class, 'deleteSolution'])-> name("delete-solution");
+    Route::post("/delete-solution", [\App\Http\Controllers\API\ApiController::class, 'deleteProblem'])-> name("delete-solution");
 
    
 
