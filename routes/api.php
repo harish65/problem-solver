@@ -23,14 +23,22 @@ Route::middleware('auth:api')->group( function () {
     Route::get('/dashborad', [\App\Http\Controllers\Adult\ProjectController::class, 'index'])->name('dashborad');
     Route::post('/create-project', [\App\Http\Controllers\Adult\ProjectController::class, 'store'])->name('create-project');
     Route::post('/delete-project', [\App\Http\Controllers\Adult\ProjectController::class, 'destroy'])->name('delete-project');
-
+    
+    
+    //User profile pic API
+    Route::post('/upload-profile-pic', [\App\Http\Controllers\API\ApiController::class, 'uploadProfilePic'])->name('upload-profile-pic');
     // Probelm Routes
     Route::get("/problem", [\App\Http\Controllers\API\ApiController::class, 'getProblem'])-> name("problem");
     Route::post("/store-problem", [\App\Http\Controllers\API\ApiController::class, 'storeProblem'])-> name("store-problem");
     Route::post("/delete-problem", [\App\Http\Controllers\API\ApiController::class, 'deleteProblem'])-> name("delete-problem");
-    // Route::post('/validation', [\App\Http\Controllers\Adult\ProblemController::class, 'updateValidation'])->name('validation');
-    //User profile pic API
-    Route::post('/upload-profile-pic', [\App\Http\Controllers\API\ApiController::class, 'uploadProfilePic'])->name('upload-profile-pic');
+    Route::post('/problem-validation', [\App\Http\Controllers\API\ApiController::class, 'updateProblemValidation'])->name('problem-validation');
+
+    // Solution Routes
+    Route::get("/solution", [\App\Http\Controllers\API\ApiController::class, 'getSolution'])-> name("solution");
+    Route::post("/store-solution", [\App\Http\Controllers\API\ApiController::class, 'storeSolution'])-> name("store-solution");
+    Route::post("/delete-solution", [\App\Http\Controllers\API\ApiController::class, 'deleteSolution'])-> name("delete-solution");
+
+   
 
 });
 
