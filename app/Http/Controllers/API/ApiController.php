@@ -254,11 +254,14 @@ class ApiController extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
+        // echo "<pre>";print_r($request->all());die;
         try{
-            $checkSolutionExist = $solution = DB::table('solutions')->where('problem_id','=', $request->problem_id)->first();
+            if(!isset($request->id)){
+                $checkSolutionExist = $solution = DB::table('solutions')->where('problem_id','=', $request->problem_id)->first();
 
-            if(isset($checkSolutionExist)){
-                return $this->sendError('Error.', ['error'=> 'Problem have already solution!']);
+                if(isset($checkSolutionExist)){
+                    return $this->sendError('Error.', ['error'=> 'Problem have already solution!']);
+                }
             }
             if($request -> solutionType == 0){
                 $type =  null;
