@@ -360,4 +360,13 @@ class ApiController extends BaseController
         }
     }
 
+
+
+    public function getProblemCategoery(){
+
+        $category  = DB::table('problem_categories')->get();
+        $success['category'] =  $category;
+        return $this->sendResponse($success, true);
+    }
+
 }
