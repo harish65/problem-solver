@@ -30,7 +30,7 @@ class ApiController extends BaseController
         }
         try {
             $checkProblemInPrject = DB::table("problems")->where("project_id", "=", $request->project_id)->first();
-            if(isset($checkProblemInPrject->id)){
+            if(!isset($checkProblemInPrject->id)){
                 return $this->sendError("Error.", ["error" => 'Project already have problem.Only one problem a project can have!']);
             }
 
