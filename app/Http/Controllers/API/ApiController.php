@@ -369,4 +369,11 @@ class ApiController extends BaseController
         return $this->sendResponse($success, true);
     }
 
+    public function getSolutionType(){
+
+        $solutionType  = DB::table('solution_types')->get();
+        $success['solutionType'] =  $solutionType;
+        return $this->sendResponse($success, true);
+    }
+
 }
