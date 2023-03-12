@@ -38,7 +38,7 @@ Route::middleware('auth:api')->group( function () {
     Route::get("/solution", [\App\Http\Controllers\API\ApiController::class, 'getSolution'])-> name("solution");
     Route::post("/store-solution", [\App\Http\Controllers\API\ApiController::class, 'storeSolution'])-> name("store-solution");
     Route::post("/delete-solution", [\App\Http\Controllers\API\ApiController::class, 'deleteProblem'])-> name("delete-solution");
-    Route::post("/get-solution-type", [\App\Http\Controllers\API\ApiController::class, 'getSolutionType'])-> name("get-solution-type");
+    Route::get("/get-solution-type", [\App\Http\Controllers\API\ApiController::class, 'getSolutionType'])-> name("get-solution-type");
 
    
 
