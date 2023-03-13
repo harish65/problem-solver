@@ -69,7 +69,7 @@ class SolutionFunctionController extends BaseController
                 $problem_id = Crypt::decrypt($request->input('problem_id'));    
                 $project_id = Crypt::decrypt($request->input('project_id')); 
                 $solution_id = Crypt::decrypt($request->input('solution_id'));      
-                    // echo "<pre>";print_r($request->all());die;
+                    
                     if($request -> updateSolFunctionType == 0){
                         if($request->hasFile('updateSolFunctionFile')){
                             $validator = Validator::make ( $request->all(),[
