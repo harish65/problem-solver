@@ -37,10 +37,15 @@ Route::middleware('auth:api')->group( function () {
     // Solution Routes
     Route::get("/solution", [\App\Http\Controllers\API\ApiController::class, 'getSolution'])-> name("solution");
     Route::post("/store-solution", [\App\Http\Controllers\API\ApiController::class, 'storeSolution'])-> name("store-solution");
-    Route::post("/delete-solution", [\App\Http\Controllers\API\ApiController::class, 'deleteProblem'])-> name("delete-solution");
-    Route::get("/get-solution-type", [\App\Http\Controllers\API\ApiController::class, 'getSolutionType'])-> name("get-solution-type");
+    Route::post("/delete-solution", [\App\Http\Controllers\API\ApiController::class, 'deleteSolution'])-> name("delete-solution");
+    Route::get("/get-solution-type", [\App\Http\Controllers\API\ApiController::class, 'getSolutionType'])-> name("get-solution-type");  
+    Route::post("/upadate-solution-valiadtion", [\App\Http\Controllers\API\ApiController::class, 'updateSolutionValidation'])-> name("upadate-solution-valiadtion"); 
+    
+    
 
-   
+    // /Solution function
+    Route::get("/solution-fun", [\App\Http\Controllers\API\ApiController::class, 'getSolutionFunction'])-> name("solution-fun");
+
 
 });
 
