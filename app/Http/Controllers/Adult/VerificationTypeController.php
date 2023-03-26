@@ -18,24 +18,36 @@ class VerificationTypeController extends BaseController
         return view("adult.verificationType.index" , compact('types'));
     }
 
+    public function verificationType(){
+        return view('adult.verificationType.add-verification-type');
+    }
 
 
     public function store(Request $request){
+        // echo "<pre>";print_r($request->all());die;
         $validator = Validator::make ( $request->all(),[
-                'name' => 'required|max:255'
+                'name' => 'required|max:255',
+                'page_main_title' => 'required',
+                'explanation' => 'required'
+
         ]);
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
         try{
-            
+            $file = null;
+            if($request->hasFile('banner')){
+                $file = time().'.'.$request -> banner -> extension();
+                $request -> banner -> move(public_path('assets-new/verification_types/'), $file);
+            }
             $insert = DB::table('verification_types')->updateOrInsert(['id'=> $request->id],
                                         [
                                         'user_id' => Auth::user()->id,
                                         'name'=> $request->name,                                       
-                                        'first_field' =>  $request->first_field,
-                                        'second_field'=> $request->second_field, 
-                                        'third_field' =>  $request->third_field
+                                        'page_main_title' =>  $request->page_main_title,
+                                        'banner'=> $file, 
+                                        'explanation' =>  $request->explanation,
+                                        'validation_questions' => json_encode($request->validation)
                                         ]);
             $success['type'] =  $insert;
             return $this->sendResponse($success, 'Verifivcation type created successfully.');

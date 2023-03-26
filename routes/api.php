@@ -45,6 +45,9 @@ Route::middleware('auth:api')->group( function () {
 
     // /Solution function
     Route::get("/solution-fun", [\App\Http\Controllers\API\ApiController::class, 'getSolutionFunction'])-> name("solution-fun");
+    Route::post("/add-sol-fun", [\App\Http\Controllers\API\ApiController::class, 'storeSolutionFunction'])-> name("add-sol-fun");
+    Route::post("/delete-sol-fun", [\App\Http\Controllers\API\ApiController::class, 'deleteSolutionFunction'])-> name("delete-sol-fun");
+    Route::post("/validation-sol-fun", [\App\Http\Controllers\API\ApiController::class, 'updateValidationSolutionFunction'])-> name("validation-sol-fun");
 
 
 });

@@ -5,6 +5,7 @@
 /public/assets-new/solFunction
 /public/assets-new/solution
 /public/assets-new/avatar
+/public/assets-new/verification_types
 /storage/*.key
 /vendor
 .env

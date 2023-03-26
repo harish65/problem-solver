@@ -18,6 +18,7 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+
 // Super Admin Routes Start
 Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
 
@@ -147,6 +148,7 @@ Route::group(['as' => 'solutionfunction.', 'prefix' => 'solutionfunction'], func
     });
 });    
 //ADULT ROUTES------------------------------------------------------------------------------
+Route::get("home", [\App\Http\Controllers\Adult\ProjectController::class, 'index']) ->name("home");
 ///home
 Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
     Route::group(['middleware' => ['auth' , 'adult']], function () {
@@ -194,10 +196,13 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::get("sftindex", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'index'])-> name("sftindex");
         Route::post("sftstore", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'store'])->name("sftstore");
         Route::post("sftdelete", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'delete'])->name("sftdelete");
-        // vrification
-        Route::get("varification", [\App\Http\Controllers\Adult\VerificationController::class, 'index'])-> name("varification");
-        // Route::post("sftstore", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'store'])->name("sftstore");
-        // Route::post("sftdelete", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'delete'])->name("sftdelete");
+        // vrification Type
+        Route::get("varification/{id?}/{type?}", [\App\Http\Controllers\Adult\VerificationController::class, 'index'])-> name("varification");
+        Route::get("add-varification-type", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'verificationType'])-> name("add-varification-type");
+        Route::post("store-verification-type", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'store'])->name("store-verification-type");
+        
+        // vrification 
+        Route::post("store-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'store'])-> name("store-verification");
 
     });  
 });

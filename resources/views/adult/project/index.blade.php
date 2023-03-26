@@ -157,10 +157,19 @@
 
         var url_fun = "{{ route('adult.solution-func') }}" + "/" +$(this).attr('data-params') ;
         localStorage.setItem("sol-fun",url_fun);
-
-        
         var hrefsolfun = localStorage.getItem("sol-fun");
         $('.nav-solution-func').attr('href' , hrefsolfun)
+
+
+
+
+        var url_ver = "{{ route('adult.varification') }}" + "/" +$(this).attr('data-params') ;
+        localStorage.setItem("varification",url_ver);
+
+        var hrefverification = localStorage.getItem("varification");        
+        if (typeof hrefverification !== 'undefined') {
+            $('.nav-varification').attr('href', hrefverification)
+        }
     })
 </script>
 

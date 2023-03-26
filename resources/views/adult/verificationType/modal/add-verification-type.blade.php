@@ -50,18 +50,18 @@
                                     <input type="text" name="validation_questions" class="form-control" id="validation_questions" placeholder="Add Option">
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <!-- <div class="col-md-2">
                                 <div class="form-group change"> 
                                     <a class="btn btn-success add-more-option">+</a>
                                 </div>
                             
-                            </div>
+                            </div> -->
                         </div>
                     </div>
 
-                    <div class="col-md-8">
+                    <!-- <div class="col-md-8">
                         <button type="button" class="btn btn-success add-more-option-question">Add Question</button>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

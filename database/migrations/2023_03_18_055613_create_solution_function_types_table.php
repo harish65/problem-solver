@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSolutionTypesTable extends Migration
+class CreateSolutionFunctionTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateSolutionTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('solution_types', function (Blueprint $table) {
+        Schema::create('solution_function_types', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
-            $table->string('name');
-            $table->string('output_slug');
+            $table->integer('user_id');
+            $table->string('name');   
+            $table->string('first_arr');   
+            $table->string('second_arr');    
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateSolutionTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('solution_types');
+        Schema::dropIfExists('solution_function_types');
     }
 }
