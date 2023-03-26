@@ -443,6 +443,7 @@ public function storeSolutionFunction(Request $request){
                         
                     }else{
                         $insert = DB::table('solution_functions')->updateOrInsert(['id'=> $request->id],[
+                            
                             'user_id' => Auth::user()->id,                                  
                             'project_id' => $project_id,
                             'solution_id' => $solution_id,
@@ -456,6 +457,7 @@ public function storeSolutionFunction(Request $request){
 
                 }elseif($request -> solFunctionType == 2){
                             $insert = DB::table('solution_functions')->updateOrInsert(['id'=> $request->id],[
+                                'type' => 2,
                                 'user_id' => Auth::user()->id,
                                 'file' => $request->link,
                                 'project_id' => $project_id,
