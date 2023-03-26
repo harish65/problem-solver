@@ -10,9 +10,17 @@ use App\Http\Controllers\BaseController as BaseController;
 use Validator;
 class SolutionFuntionTypeController extends BaseController
 {
-    public function index(){
+    public function index(Request $request){
         $solutionTypes = DB::table('solution_function_types')->get();
+
+        if ($request->is('api/*')) {
+            $success['solutionFuntionTypes'] = $solutionTypes;
+            $success['token'] = $request->header('Authorization');
+            return $this->sendResponse($success,'solutionTypes');
+    }else{
         return view('adult.solutionFuntionTypes.index' , compact('solutionTypes'));
+    }
+        
     }
 
     public function store(Request $request){

@@ -50,6 +50,9 @@ Route::middleware('auth:api')->group( function () {
     Route::post("/validation-sol-fun", [\App\Http\Controllers\API\ApiController::class, 'updateValidationSolutionFunction'])-> name("validation-sol-fun");
 
 
+    //Solutionf function Type
+    Route::get("solutiofunctiontype", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'index'])-> name("solutiofunctiontype");
+
 });
 
 
