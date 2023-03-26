@@ -21,9 +21,10 @@ class CreateVerificationsTable extends Migration
             $table->integer('solution_id')->unsigned();            
             $table->integer('solution_function_id')->unsigned();            
             $table->integer('user_id')->unsigned();
-            $table->string('key');
-            $table->string('val');
-            $table->string('type');
+            $table->string('key')->nullable();
+            $table->string('val')->nullable();
+            $table->string('type')->nullable();
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }

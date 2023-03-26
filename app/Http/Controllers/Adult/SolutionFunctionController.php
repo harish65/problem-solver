@@ -14,7 +14,8 @@ use App\Models\Setting;
 use Auth;
 use Validator;
 use DB;
-
+use Redirect;
+use Session;
 class SolutionFunctionController extends BaseController
 {
     //solution function
@@ -25,7 +26,10 @@ class SolutionFunctionController extends BaseController
                     ->join('problems' , 'solutions.problem_id' , '=' , 'problems.id')
                     ->select('solutions.*' , 'problems.name as problem_name')
                     ->where('solutions.problem_id', $problem_id)->first();
-                    
+            if(! isset($solution_id->id)){
+    
+                return Redirect::back()->withErrors(['msg' => 'Solution Function must have solution identified.' , 'error' => 'Solution not identified']);
+            }        
             $solutionID = $solution_id->id;
             $solutionName =  $solution_id->name;
             $solutionProblemName =  $solution_id->problem_name;
@@ -57,7 +61,7 @@ class SolutionFunctionController extends BaseController
    
     public function store(Request $request){
 
-        
+        // echo "<pre>";print_r($request->all());die;
         $validator = Validator::make ( $request->all(),[
             'updateSolFunctionName' => 'required|max:255',
             "updateSolFunctionSolutionId" => 'required',

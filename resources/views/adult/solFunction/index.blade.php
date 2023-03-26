@@ -26,7 +26,7 @@
 							<span class="d-block text-success problem-title-bottom-border mb-2">
 								Problem
 							</span>	
-                            @if($item -> problem -> file == null)
+                            @if($item->problem->file == null)
 								<div class="fileField"></div>
 							@else
 								@if($item -> problem -> type == 0)

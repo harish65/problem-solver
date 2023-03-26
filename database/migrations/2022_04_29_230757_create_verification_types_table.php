@@ -17,8 +17,10 @@ class CreateVerificationTypesTable extends Migration
             $table->id();
             $table->string('user_id');
             $table->string('name');
-            $table->string('key');
-            $table->string('val');
+            $table->string('page_main_title');
+            $table->string('banner');
+            $table->string('explanation');
+            $table->longText('validation_questions');
             $table->timestamps();
         });
     }

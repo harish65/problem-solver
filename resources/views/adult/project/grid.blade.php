@@ -3,8 +3,7 @@
         <div class="row">
             @foreach ($project as $item)
             <div class="col">
-                <div class="projectBlock text-center">
-                    
+                <div class="projectBlock text-center">                    
                         <h2>{{ $item->name }}</h2>
                         <?php 
                             $parameters = ['problem_id'=> $item->problem_id , 'project_id' => $item->id];
@@ -12,8 +11,7 @@
                         ?>
                         <a href="{{ route("adult.problem",@$parameter) }}" data-params="{{ $parameter }}" class="project-grid">
                             <div class="projectList">
-                                <h3>Problem</h3>
-                                
+                                <h3>Problem</h3>                                
                                 <p class="redText">{{ ($item->problem != '') ? $item->problem : 'N/A' }}</p>
                             </div>
                             <div class="projectList">

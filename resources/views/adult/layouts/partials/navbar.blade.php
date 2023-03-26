@@ -20,13 +20,13 @@
               <a class="nav-link nav-solution-func" id="nav-solution-func" href="">Solution Function</a>
             </li> 
             <li class="nav-item">
-              <a class="nav-link" href="{{ route('adult.varification')}}">Verification</a>
+              <a class="nav-link nav-varification" id="nav-varification" href="">Verification</a>
             </li> 
             <li class="nav-item">
-              <a class="nav-link" href="#">Relationship</a>
+              <a class="nav-link nav-relationship" id="nav-relationship"  href="">Relationship</a>
             </li> 
             <li class="nav-item">
-              <a class="nav-link" href="#">Report</a>
+              <a class="nav-link nav-report" id="nav-report" href="">Report</a>
             </li> 
             <li class="nav-item">
               <a class="nav-link" href="#">Result</a>

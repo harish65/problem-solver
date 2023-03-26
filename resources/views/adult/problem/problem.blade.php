@@ -33,6 +33,8 @@
                 <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
                 <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
                 <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
+                <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>
+                
                 <div class="imgWrp">
                                 @if($problem -> type == 0)
 									@if(strlen($problem -> file) < 15)
@@ -311,6 +313,13 @@ $('.nav-solution-func').click(function(){
     $(this).attr('href' ,$('#solution_fun_nav').attr('href'))
 })
 
+$('.nav-verification').click(function(){
+    $(this).attr('href' , '');
+    localStorage.setItem("varification", $('#verification').attr('href'));   
+    $(this).attr('href' ,$('#verification').attr('href'))
+})
+
+
 
 $('.dashboard').click(function(){
     //Solution
@@ -325,7 +334,10 @@ $('.dashboard').click(function(){
     $('.nav-solution-func').attr('href' , '');
     localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
     $('.nav-solution-func').attr('href' ,$('#solution_fun_nav').attr('href'))
-
+    //verification
+    $('.nav-varification').attr('href' , '');
+    localStorage.setItem("varification", $('#verification').attr('href'));   
+    $('.nav-varification').attr('href' ,$('#solution_fun_nav').attr('href'))
 })
 
 </script>

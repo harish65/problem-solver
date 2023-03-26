@@ -13,13 +13,14 @@ use App\Models\User;
 use App\Models\Problem;
 use App\Models\Solution;
 use App\Models\SolutionType;
+use App\Models\SolutionFunction;
 
 class ApiController extends BaseController
 {
     //Add / Edit problem
     public function storeProblem(Request $request)
     {
-    
+        // echo "<pre>";print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "name" => "required",
             "category_id" => "required",
@@ -29,12 +30,7 @@ class ApiController extends BaseController
             return $this->sendError("Validation Error.", $validator->errors());
         }
         try {
-            $checkProblemInPrject = DB::table("problems")->where("project_id", "=", $request->project_id)->first();
-            // if(!isset($checkProblemInPrject->id)){
-            //     return $this->sendError("Error.", ["error" => 'Project already have problem.Only one problem a project can have!']);
-            // }
-
-
+           
             if ($request->problemType == 0) {
                 $file = null;
                 $type = null;
@@ -99,8 +95,8 @@ class ApiController extends BaseController
             $success["problem"] = $problem;
             $success["token"] = $request->header("Authorization");
             return $this->sendResponse($success, "Problem saved successfully.");
-        } catch (Exception $e) {
-            return $this->sendError("Error.", ["error" => $e->getMessage()]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->sendError("Error.", ["error" => $e->getMessage() , 'message' => 'Project id is not exist']);
         }
     }
     //Update problem validation questions
@@ -152,8 +148,8 @@ class ApiController extends BaseController
                     "error" => "Problem not exist!",
                 ]);
             }
-        } catch (Exception $e) {
-            return $this->sendError("Error.", ["error" => $e->getMessage()]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->sendError("Error.", ["error" => $e->getMessage() , 'message' => 'Project id is not exist']);
         }
     }
 
@@ -175,8 +171,8 @@ class ApiController extends BaseController
                     "Image Saved successfully."
                 );
             }
-        } catch (Exception $e) {
-            return response()->json(["Error." => $e->getMessage()]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->sendError("Error.", ["error" => $e->getMessage() , 'message' => 'Project id is not exist']);
         }
     }
 
@@ -334,8 +330,8 @@ class ApiController extends BaseController
                                 $success["token"] = $request->header("Authorization");
                 return $this->sendResponse($success, 'Solution saved successfully.');
 
-        }catch(Exception $e){
-            return $this->sendError('Error.', ['error'=> $e->getMessage()]);
+        }catch (\Illuminate\Database\QueryException $e) {
+            return $this->sendError("Error.", ["error" => $e->getMessage() , 'message' => 'Project id is not exist']);
         }
     }
     public function deleteSolution(Request $request){
@@ -351,7 +347,7 @@ class ApiController extends BaseController
     }
 
     public function updateSolutionValidation(Request $request){
-        $column = ($request->input('name') == 'optradio_firts')   ? 'validation_first' : 'validation_second';
+        $column = ($request->input('name') == 'optradio_first')   ? 'validation_first' : 'validation_second';
         $update = DB::table('solutions')->where("id",'=' ,$request->input('data'))-> update([
             $column => $request->input('value')
         ]);
@@ -403,35 +399,27 @@ public function getSolutionFunction(Request $request){
                 }else{
                     return $this->sendError('Error.', ['error'=> 'Problem must have solution.']);
                 }
-        }       
+            }else{
+                    return $this->sendError('Error.', ['error'=> 'Solution must be created before solution function.']); 
     }
+}
 
 // store solution function
-public function store(Request $request){
-
-        
-    $validator = Validator::make ( $request->all(),[
-        'updateSolFunctionName' => 'required|max:255',
-        "updateSolFunctionSolutionId" => 'required',
-    ]);
-    if($validator->fails()){
-        return $this->sendError('Validation Error.', $validator->errors());       
-    }
+public function storeSolutionFunction(Request $request){
     try{
             $problem_id = $request->input('problem_id');    
             $project_id = $request->input('project_id'); 
-            $solution_id = $request->input('solution_id');      
-                
-                if($request -> updateSolFunctionType == 0){
-                    if($request->hasFile('updateSolFunctionFile')){
+            $solution_id = $request->input('solution_id'); 
+                if($request -> solFunctionType == 0){
+                    if($request->hasFile('file')){
                         $validator = Validator::make ( $request->all(),[
-                            'updateSolFunctionFile' => 'required|mimes:png,jpg,jpeg,avi,mp4,mpeg|:2048',
+                            'file' => 'required|mimes:png,jpg,jpeg,avi,mp4,mpeg|:2048',
                         ]);
                         if($validator->fails()){
                             return $this->sendError('Validation Error.', $validator->errors());       
                         }
-                        $file = time().'.'.$request -> updateSolFunctionFile -> extension();
-                        $request -> updateSolFunctionFile -> move(public_path('assets-new/solFunction/'), $file);
+                        $file = time().'.'.$request -> file -> extension();
+                        $request -> file -> move(public_path('assets-new/solFunction/'), $file);
 
                         $mime = mime_content_type(public_path('assets-new/solFunction/' . $file));
                         if(strstr($mime, "video/")){
@@ -441,41 +429,40 @@ public function store(Request $request){
                         }
                         
                       
-                        $insert = DB::table('solution_functions')->updateOrInsert(['id'=> $request->updateSolFunctionId],[                    
+                        $insert = DB::table('solution_functions')->updateOrInsert(['id'=> $request->id],[                    
                             'type' => $type,
                             'file' => $file,                    
                             'project_id' => $project_id,
                             'problem_id' => $problem_id,
                             'solution_id' => $solution_id,
                             'user_id' => Auth::user()->id,
-                            'name' => $request ->updateSolFunctionName,
-                            'solution_function_type_id' => $request -> updateSolFunctionTypeId,
+                            'name' => $request ->solFunctionName,
+                            'solution_function_type_id' => $request -> solFunctionTypeId,
                             'created_at' => date('Y-m-d h:i:s')
                         ]);
                         
                     }else{
-                        $insert = DB::table('solution_functions')->updateOrInsert(['id'=> $request->updateSolFunctionId],[
+                        $insert = DB::table('solution_functions')->updateOrInsert(['id'=> $request->id],[
                             'user_id' => Auth::user()->id,                                  
                             'project_id' => $project_id,
                             'solution_id' => $solution_id,
                             'problem_id' => $problem_id,
-                            'name' => $request ->updateSolFunctionName,                                
-                            'solution_function_type_id' => $request -> updateSolFunctionTypeId,
+                            'name' => $request ->solFunctionName,                                
+                            'solution_function_type_id' => $request -> solFunctionTypeId,
                             'created_at' => date('Y-m-d h:i:s')
                         ]);
                     }
 
 
-                }elseif($request -> type == 2){
-                            $insert = DB::table('solution_functions')->updateOrInsert(['id'=> $request->updateSolFunctionId],[
+                }elseif($request -> solFunctionType == 2){
+                            $insert = DB::table('solution_functions')->updateOrInsert(['id'=> $request->id],[
                                 'user_id' => Auth::user()->id,
-                                'file' => $request->updateSolFunctionFileLink,
+                                'file' => $request->link,
                                 'project_id' => $project_id,
                                 'solution_id' => $solution_id,
                                 'problem_id' => $problem_id,
-                                'name' => $request ->updateSolFunctionName,
-                                // 'state' => 1,
-                                'solution_function_type_id' => $request -> updateSolFunctionTypeId,
+                                'name' => $request ->solFunctionName,
+                                'solution_function_type_id' => $request -> solFunctionTypeId,
                                 'created_at' => date('Y-m-d h:i:s')
                             ]);
                 }
@@ -489,11 +476,33 @@ public function store(Request $request){
                 }else{
                     return $this->sendError('Error.', ['error'=> 'Something went wrong.']);
                 }
-            }catch(Exception $e){
-                return $this->sendError('Error.', ['error'=> $e->getMessage()]);
+            }catch (\Illuminate\Database\QueryException $e) {
+                return $this->sendError("Error.", ["error" => $e->getMessage() , 'message' => 'Project id is not exist']);
             }
     
 }
-   
+
+
+    public function deleteSolutionFunction(Request $request){
+        $solutionFunction  = SolutionFunction::where("id", $request -> id)-> delete();
+        if($solutionFunction){
+            $success['type'] =  $solutionFunction;
+            return $this->sendResponse($success, 'Solution Function has been deleted successfully.');  
+        }else{
+            return $this->sendError('Error.', ['error'=> 'Something wrong please try later!']);
+        }
+        
+
+    }
+
+    public function updateValidationSolutionFunction(Request $request){       
+        $column = ($request->input('name') == 'optradio_firts')   ? 'validation_first' : 'validation_second';     
+        $update = DB::table('solution_functions')->where("id",'=' ,$request->input('id'))-> update([
+            $column => $request->input('value')
+        ]);
+        if($update){
+            return true;
+        }
+    }
 
 }

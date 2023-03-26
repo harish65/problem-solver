@@ -10,7 +10,7 @@
 
     <div class="row spl-row">
         <div class="modal-btn">
-            <button type="button" data-toggle="modal" data-target="#addVerificationTypeModal" class="btn btn-success">Add New Verification Type</button>
+            <a type="button" href="{{ route('adult.add-varification-type')  }}" class="btn btn-success">Add New Verification Type</a>
         </div>
         <table class="table slp-tbl" id="myTable">
         
@@ -202,50 +202,50 @@ $(document).on('click','#add-verification-model',function(){
 </script>
 
 <script>
-   $(document).ready(function() {
-    $(document).on("click",".add-more-option",function(){         
-        // var html = $(this).closest(".add-more-option-div").first().clone();       
-        $(this).parent().parents(".add-more-option-div").attr('test' , 'fuct');    
-            // $(html).find(".change").html("<buttov type='button' class='btn btn-danger remove'>-</button>");
-            // $(this).parents(".add-more-option-div").last().after(html);
+//    $(document).ready(function() {
+//     $(document).on("click",".add-more-option",function(){         
+//         // var html = $(this).closest(".add-more-option-div").first().clone();       
+//         $(this).parent().parents(".add-more-option-div").attr('test' , 'fuct');    
+//             // $(html).find(".change").html("<buttov type='button' class='btn btn-danger remove'>-</button>");
+//             // $(this).parents(".add-more-option-div").last().after(html);
        
-    });
+//     });
 
 
 
 
-    $("body").on("click",".remove",function(){ 
-        $(this).parents(".add-more-option-div").remove();
-    });
+    // $("body").on("click",".remove",function(){ 
+    //     $(this).parents(".add-more-option-div").remove();
+    // });
 
-    $(document).on("click",".add-more-option-question",function(){ 
-            $(".after-add-more").last().append('<div class="after-add-more">'+
-                                                    '<div class="col-md-12">'+                               
-                                                        '<div class="form-group">'+                              
-                                                                '<input type="text" name="validation_questions" class="form-control"  id="validation_questions" placeholder="Validation Question">'+
-                                                        '</div>'+
-                                                    '</div>'+
-                                                        '<div class="col-md-12 form-row add-more-option-div">'+
-                                                            '<div class="col-md-10">'+
-                                                                '<div class="form-group ">' +                          
-                                                                        '<input type="text" name="validation_questions" class="form-control" id="validation_questions" placeholder="Add Option">'+
-                                                                '</div>'+
-                                                            '</div>'+
-                                                        '</div>'+
-                                                        '<div class="col-md-2">'+
-                                                            '<div class="form-group change">'+
-                                                                '<a class="btn btn-success add-more-option">+</a>'+
-                                                            '</div>'+
-                                                        '</div>'+
-                                                    '</div>'+
-                                            '</div>');
+    // $(document).on("click",".add-more-option-question",function(){ 
+    //         $(".after-add-more").last().append('<div class="after-add-more">'+
+    //                                                 '<div class="col-md-12">'+                               
+    //                                                     '<div class="form-group">'+                              
+    //                                                             '<input type="text" name="validation_questions" class="form-control"  id="validation_questions" placeholder="Validation Question">'+
+    //                                                     '</div>'+
+    //                                                 '</div>'+
+    //                                                     '<div class="col-md-12 form-row add-more-option-div">'+
+    //                                                         '<div class="col-md-10">'+
+    //                                                             '<div class="form-group ">' +                          
+    //                                                                     '<input type="text" name="validation_questions" class="form-control" id="validation_questions" placeholder="Add Option">'+
+    //                                                             '</div>'+
+    //                                                         '</div>'+
+    //                                                     '</div>'+
+    //                                                     '<div class="col-md-2">'+
+    //                                                         '<div class="form-group change">'+
+    //                                                             '<a class="btn btn-success add-more-option">+</a>'+
+    //                                                         '</div>'+
+    //                                                     '</div>'+
+    //                                                 '</div>'+
+    //                                         '</div>');
 
-    })
-
-
+    // })
 
 
-});
+
+
+// });
 
 
 

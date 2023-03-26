@@ -15,13 +15,16 @@ class CreateProblemsTable extends Migration
     {
         Schema::create('problems', function (Blueprint $table) {
             $table->id();
-            $table->integer('project_id');
+           
+            $table->unsignedBigInteger('project_id');
+            $table->foreign('project_id')->references('id')->on('projects');
+
             $table->integer('category_id');
             $table->string('type')->default("0");
             $table->string('file');
             $table->integer('user_id')->nullable();           
             $table->string('name');
-            $table->enum('validation', ['0', '1'])->default("0");;
+            $table->enum('validation', ['0', '1'])->default("0");
             $table->timestamps();
         });
     }
