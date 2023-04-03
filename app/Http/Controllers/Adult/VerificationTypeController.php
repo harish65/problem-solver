@@ -24,7 +24,7 @@ class VerificationTypeController extends BaseController
 
 
     public function store(Request $request){
-        // echo "<pre>";print_r($request->all());die;
+        // 
         $validator = Validator::make ( $request->all(),[
                 'name' => 'required|max:255',
                 'page_main_title' => 'required',
@@ -40,15 +40,37 @@ class VerificationTypeController extends BaseController
                 $file = time().'.'.$request -> banner -> extension();
                 $request -> banner -> move(public_path('assets-new/verification_types/'), $file);
             }
-            $insert = DB::table('verification_types')->updateOrInsert(['id'=> $request->id],
-                                        [
-                                        'user_id' => Auth::user()->id,
-                                        'name'=> $request->name,                                       
-                                        'page_main_title' =>  $request->page_main_title,
-                                        'banner'=> $file, 
-                                        'explanation' =>  $request->explanation,
-                                        'validation_questions' => json_encode($request->validation)
-                                        ]);
+                            // $insert = DB::table('verification_types')->insert(['id'=> $request->id],
+                            //             [
+                            //             'user_id' => Auth::user()->id,
+                            //             'name'=> $request->name,                                       
+                            //             'page_main_title' =>  $request->page_main_title,
+                            //             'banner'=> $file, 
+                            //             'explanation' =>  $request->explanation,
+                            //             'validation_questions' => json_encode($request->validation)
+                            //             ]);
+
+                            $verType = new VerificationType();
+                            $verType->user_id =   Auth::user()->id;
+                            $verType->name =   Auth::user()->name;
+                            $verType->user_id =   Auth::user()->id;
+                            $verType->user_id =   Auth::user()->id;
+                            $verType->user_id =   Auth::user()->id;
+                            $verType->user_id =   Auth::user()->id;
+
+
+            
+            // $insert = DB::table('verification_types')->updateOrInsert(['id'=> $request->id],
+            //                             [
+            //                             'user_id' => Auth::user()->id,
+            //                             'name'=> $request->name,                                       
+            //                             'page_main_title' =>  $request->page_main_title,
+            //                             'banner'=> $file, 
+            //                             'explanation' =>  $request->explanation,
+            //                             'validation_questions' => json_encode($request->validation)
+            //                             ]);
+
+            echo "<pre>";print_r($insert);die;
             $success['type'] =  $insert;
             return $this->sendResponse($success, 'Verifivcation type created successfully.');
         }catch(Exception $e){

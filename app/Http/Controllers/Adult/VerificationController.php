@@ -21,6 +21,7 @@ use Validator;
 
 class VerificationController extends BaseController
 {
+   
 
     public function index($data = null , $type = null){  
 
@@ -46,18 +47,21 @@ class VerificationController extends BaseController
         if(!isset($Solution_function->id )){    
             return Redirect::back()->withErrors(['msg' => 'Verificatioon must have Solution function identified.']);
         } 
-
+        //get Verification
+        $verification = Verification::where('problem_id' , '=' , $problem_id)
+                                    ->where('verification_type_id' , '=' , $type)
+                                    ->where('solution_function_id' , '=' , $Solution_function->id)->first();  
 
         if($type != ''){
             $verificationType = VerificationType::where('id', '=' , $type)->first();
+           
             $verificationType->validation_questions = json_decode($verificationType->validation_questions);
             $verifiationTypeText = VerificationTypeText::where('verification_type_id', $type)->get();
-        }           
-        //get Verification
-        $verification = Verification::where('problem_id' , '=' , $problem_id)
-                                    ->where('problem_id' , '=' , $solution->id)
-                                            ->first();     
+        }    
+     
         $solution_id = $solution->id;      
+        // echo "<pre>";print_r($verificationType);die;
+        
         $types = VerificationType::orderBy("id", "desc")->get();
         return view('adult.verification.index',compact('types' , 
                                                         'verificationType' , 
@@ -71,8 +75,9 @@ class VerificationController extends BaseController
     }
 
     public function store(Request $request){
+        //  echo "<pre>";print_r($request->all());die;
         $validator = Validator::make ( $request->all(),[
-            'varificationName' => 'required|max:255',
+            // 'varificationName' => 'required|max:255',
             'problem_id' => 'required',
             'solution_id' => 'required',
             'solution_fun_id' => 'required'
@@ -81,36 +86,30 @@ class VerificationController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());       
         }
         try{
-            $type =  null;
-            $file = null;
-            if($request->hasFile('imageFile')){
-                $file = Validator::make($request->all(), [
-                                        'imageFile' => 'required|mimes:png,jpg,jpeg,avi,mp4,mpeg|:2048',
-                                    ]);
-                if($validator->fails()){
-                    return $this->sendError('Validation Error.', $validator->errors());       
+            
+
+                if($request->id != ''){
+                    $verification = Verification::find($request->id);
+                    $verification->verification_type_id = $request->verificationType;
+                    $verification->verification_type_text_id = $request->verification_type_text_id;
+                    $verification->problem_id = Crypt::decrypt($request->problem_id);;
+                    $verification->solution_id =  Crypt::decrypt($request->solution_id);
+                    $verification->solution_function_id = $request->solution_fun_id;
+                    $verification->user_id = Auth::user()->id;
+                    $verification->type = 0;
+                    $verification->save();
+                }else{
+                    $verification = new Verification();
+                    $verification->verification_type_id = $request->verificationType;
+                    $verification->verification_type_text_id = $request->verification_type_text_id;
+                    $verification->problem_id = Crypt::decrypt($request->problem_id);;
+                    $verification->solution_id =  Crypt::decrypt($request->solution_id);
+                    $verification->solution_function_id = $request->solution_fun_id;
+                    $verification->user_id = Auth::user()->id;
+                    $verification->type = 0;
+                    $verification->save();
                 }
-
-                $file = time().'.'.$request -> imageFile -> extension();
-                    $request -> imageFile -> move(public_path('assets-new/verifications/'), $file);                    
-                    $mime = mime_content_type(public_path('assets-new/verifications/' . $file));
-                    if(strstr($mime, "video/")){
-                        $type = 1;
-                    }else if(strstr($mime, "image/")){
-                        $type = 0;
-                    }
-                }
-
-
-                $verification = new Verification();
-                $verification->verification_type_id = $request->verificationType;
-                $verification->verification_type_text_id = $request->verification_type_text_id;
-                $verification->problem_id = Crypt::decrypt($request->problem_id);;
-                $verification->solution_id =  Crypt::decrypt($request->solution_id);
-                $verification->solution_function_id = $request->solution_fun_id;
-                $verification->user_id = Auth::user()->id;
-                $verification->type = $type;
-                $verification->save();
+               
                 $success['verification'] =  $verification;
                
                 return $this->sendResponse($success, 'Verification created successfully.');
