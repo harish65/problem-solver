@@ -183,6 +183,8 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         // Verification type  
         Route::get("vfrindex", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'index'])->name("vfrindex");
         Route::post("vfrstore", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'store'])->name("vfrstore");
+       
+
         Route::post("vfrdelete", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'delete'])->name("vfrdelete");
         // Verification type text
         Route::get("vrftindex", [\App\Http\Controllers\Adult\VerificationTypeTextController::class, 'index'])-> name("vrftindex");
@@ -200,7 +202,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::get("varification/{id?}/{type?}", [\App\Http\Controllers\Adult\VerificationController::class, 'index'])-> name("varification");
         Route::get("add-varification-type", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'verificationType'])-> name("add-varification-type");
         Route::post("store-verification-type", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'store'])->name("store-verification-type");
-        
+        Route::get("edit-verification-type/{id}", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'edit'])->name("edit-verification-type");
         // vrification 
         Route::post("store-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'store'])-> name("store-verification");
 

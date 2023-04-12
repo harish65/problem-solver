@@ -25,26 +25,26 @@
                 <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
                 <div class="form-group">
                     <div class="row">
-                        <!-- <div class="col-6">
+                        <div class="col-6">
                             <div class="custom-control custom-radio mb-5">
                                 <input type="radio" id="file" name="file" class="custom-control-input filetypeRadio" value="0" checked>
                                 <label class="custom-control-label" for="file"> File</label>
                             </div>
-                        </div> -->
-                        <!-- <div class="col-6">
+                        </div>
+                        <div class="col-6">
                             <div class="custom-control custom-radio mb-5">
                                 <input type="radio" id="link" name="file" class="custom-control-input filetypeRadio" value="2">
                                 <label class="custom-control-label" for="link"> Link</label>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
-                <!-- <div class="form-group" id="imageFile">
+                <div class="form-group" id="imageFileDiv">
                     <input type="file" name="imageFile" id="imageFile" class="dropify" accept="image/*, video/*">
                     
-                </div> -->
+                </div>
                 <div class="form-group" id="youtubeLink" style="display: none">
-                    <input type="url" name="youtubeLink" id="youtubeLink" class="form-control" placeholder="Link">
+                    <input type="url" name="youtubeLink" id="youtubeLinkUrl" class="form-control" placeholder="Link">
                     
                 </div>
                 <div class="form-group">
@@ -59,10 +59,10 @@
                     <input type="text" disabled  value="{{ 'Solution Function : '.@$Solution_function->name }}"  class="form-control" id="updateSolFunctionName" placeholder="Solution Function Name *" required>
                     
                 </div>
-                <!-- <div class="form-group">
-                    <input type="text"  name="varificationName"  value=""  class="form-control" id="varificationName" placeholder="Name *" required>
+                <div class="form-group">
+                    <input type="text"  name="name"  value=""  id="verification_name" class="form-control" id="varificationName" placeholder="Name *" required>
                     
-                </div> -->
+                </div>
                 <div class="form-group">
                 <input type="text"  disabled value="{{ 'varification Type : '.@$verificationType->name }}"  class="form-control" id="varificationType" placeholder="varification Type *" required>
                 </div>

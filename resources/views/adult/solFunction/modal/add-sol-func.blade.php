@@ -47,11 +47,11 @@
 					</div>
                     <div class="form-group">
 
-                    <input type="text"  value="{{ $solutionProblemName }}" name="updateSolFunctionProblemId"  class="form-control" placeholder="Problem Name">
+                    <input type="text"  value="{{ $solutionProblemName }}" disabled name="updateSolFunctionProblemId"  class="form-control" placeholder="Problem Name">
                         
                     </div>
                     <div class="form-group">
-                    <input type="text"  value="{{ $solutionName }}" name="updateSolFunctionSolutionId"  class="form-control" placeholder="Problem Name">
+                    <input type="text"  value="{{ $solutionName }}" disabled name="updateSolFunctionSolutionId"  class="form-control" placeholder="Problem Name">
                     </div>
                     <div class="form-group">
                         <input type="text" name="updateSolFunctionName" class="form-control" id="updateSolFunctionName" placeholder="Solution Function Name *" required>

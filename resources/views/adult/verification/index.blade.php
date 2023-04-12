@@ -33,9 +33,65 @@
     <!-- Content Section Start -->
     <div class="relationshipContent">
         <div class="container">
-            @if(@$verification->id)
-                @include('adult.verification.verification-content')
-            @endif
+            @switch(!is_null($verificationType) && $verificationType->id)
+                @case(1)
+                    @include('adult.verification.view.verification-content')
+                    @break
+                @case(2)
+                    case 2
+                    @include('adult.verification.view.information-content')
+                    @break
+                @case(3)
+                    case 3
+                    @include('adult.verification.view.before-after-content')
+                    @break
+                @case(4)
+                    case 4
+                    @include('adult.verification.view.separation-step-content')
+                    @break
+                @case(5)
+                    case 5
+                    @include('adult.verification.view.time-verification-content')
+                    @break
+                @case(6)
+                    case 6
+                    @include('adult.verification.view.past-present-content')
+                    @break
+                @case(7)
+                    case 7
+                    @include('adult.verification.view.entity-content')
+                    @break
+                @case(8)
+                    case 8
+                    @include('adult.verification.view.solution-time-location1-content')
+                    @break
+                @case(9)
+                    case 9
+                    @include('adult.verification.view.solution-time-location2-content')
+                    @break
+                @case(10)
+                    case 10
+                    @include('adult.verification.view.people-project-content')
+                    @break
+                @case(11)
+                    case 11
+                    @include('adult.verification.view.people-communication-content')
+                    @break
+                @case(12)
+                    case 12
+                    @include('adult.verification.view.communication-flow-content')
+                    @break
+                @case(13)
+                    case 13
+                    @include('adult.verification.view.partition-approch-content')
+                    @break
+                @case(14)
+                    case 14
+                    @include('adult.verification.view.principle-identification-content')
+                    @break
+                @default
+            @endswitch
+
         </div>
     </div>
     <!-- Content Section End -->
@@ -136,9 +192,6 @@ $('.validation').on('change',function(){
             }
 
         })
-
-
-
    })
 
 
@@ -152,9 +205,9 @@ $('.validation').on('change',function(){
    })
 //.editSolFunBtn
 
-$('.editverBtn').click(function(){
-   $('#createVerification').modal('toggle')
-})
+// $('.editverBtn').click(function(){
+//    $('#createVerification').modal('toggle')
+// })
 
 
 
@@ -162,15 +215,54 @@ $('.editverBtn').click(function(){
         var type = $(this).val()
         if(type == 0){
             $('#fileType').val('0')
-            $('#imageFile').css("display", "block");
+            $('#imageFileDiv').css("display", "block");
+            $('#youtubeLinkUrl').val('');
             $('#youtubeLink').css("display", "none");
         }if(type == 2){
             $('#fileType').val('2')
-            $('#imageFile').css("display", "none");
+            $('#imageFileDiv').css("display", "none");
+            $('#imageFile').val('');
             $('#youtubeLink').css("display", "block");
         }
    })
 
+// /imageFile
+   $('.editverBtn').click(function(){
+    $('.dropify').dropify();
+    var type = $(this).data('type')
+    
+            $('#verification_name').val($(this).data('name'))
+            $('#id').val($(this).data('id'));
+            $('#verification_type_text_id').val($(this).data('verification_type_text_id'));
+            if(type == 0){
+                $('#imageFile').css('display' , 'block')
+                $('#youtubeLink').css("display", "none");
+                $('#file').prop("checked", true);
+                $('#fileType').val('0')
+                $('#imageFile').css("display", "block");
+            }else if(type == 2){
+                $('#imageFileDiv').css('display' , 'none')
+                $('#link').prop("checked", true);
+                $('#youtubeLinkUrl').val($(this).data('file'))
+                $('#fileType').val('2')
+                $('#youtubeLink').css("display", "block");
+            }
+            if($(this).file != ""){
+               var file = $(this).data("file");
+               var drEvent = $('#imageFile').dropify(
+               {
+                   defaultFile: "/assets-new/verifications/" + file
+               });
+               drEvent = drEvent.data('dropify');
+               drEvent.resetPreview();
+               drEvent.clearElement();
+               drEvent.settings.defaultFile = "/assets-new/verifications/" + file;
+               drEvent.destroy();
+               drEvent.init();	
+           }
+    $('#createVerification').modal('toggle')
+
+   })
 
 
 

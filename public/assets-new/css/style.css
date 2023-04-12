@@ -755,9 +755,10 @@ button.btn.btn-primary.login-btn a {
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
-    line-height: 19px;
+    line-height: 2px;
     padding: 5px 0;
     color: #000000;
+    list-style: none;
 }
 .questionWrap ul  {
     padding-left: 18px;

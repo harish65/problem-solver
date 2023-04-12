@@ -61,21 +61,21 @@
                                             <h2>Verification</h2>
                                             <div class="projectList text-center">
                                                 <div class="imgWrp">
-                                                    <img class="mx-auto" src="{{ asset('assets-new/verification/'.$verification->file)}}"
+                                                    <img class="mx-auto" src="{{ asset('assets-new/verifications/'.$verification->file)}}"
                                                         width="100%" height="128px">
                                                 </div>
-                                                <p class="redText">{{ $verificationType->name }}</p>
+                                                <p class="redText"> {{ $verification->name }} </p>
                                             </div>
                                             <div class="projectList">
                                                 <p class="date">{{ date('d/m/Y', strtotime($verification->created_at))}}</p>
                                                 <ul>
-                                                    <li>
-                                                        <a href="javaScript:Void(0)" class="editverBtn" data-file="{{ $verification->file }}" data-file="{{ $verification->file }}">
+                                                    <li> 
+                                                        <a href="javaScript:Void(0)" class="editverBtn" data-name="{{ $verification->name }}" data-verification_type_text_id="{{ $verification->verification_type_text_id }}" data-type="{{ $verification->type }}"  data-id="{{ $verification->id }}" data-file="{{ $verification->file }}">
                                                             <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a data-id="1" class="editverBtn" title="Delete">
+                                                        <a data-id="1" href class="delverBtn" title="Delete">
                                                             <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
                                                                 alt=""></a>
                                                     </li>
@@ -95,10 +95,15 @@
                                         nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
                                         Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
                                     <div class="row">
-                                        <div class="title">
-                                            <h2>Vacabulary</h2>
+                                       
+                                            <div class="col">
+                                                        <h2>Vacabulary</h2>
+                                            </div>
+                                            <div class="col text-end">
+                                                   <button style="margin-top:20px;" type="button" class="btn btn-success add-new-btn"  >+ Add New</button>
+                                            </div>
+                                        
 
-                                        </div>
                                         <div class="entity">
                                             <table class="table slp-tbl text-center">
                                                 <thead>
@@ -131,16 +136,18 @@
 
                                     <h2>Validation Question</h2>
 
+                                    @php $pre = null; @endphp
 
-                                    
-                                    
-                                    <ul>
-                                        <li>Yes, I do understand the relationship between communication and principle in a project.
-                                        </li>
-                                        <li>No, I do not understand the relationship between communication and principle in a
-                                            project. </li>
-                                    </ul>
-
+                                    @foreach($validationQuestions as $key=>$Questions)
+                                        @if($pre != $Questions->question || $pre == null)
+                                        <h3>{{ $Questions->question }}</h3>
+                                        @endif
+                                        <ul>
+                                            <li><input type="radio"  name="validation_{{ $key }}">  {{ $Questions->answer }}</li>
+                                            
+                                        </ul>
+                                        @php $pre = $Questions->question; @endphp
+                                    @endforeach
                                    
                                 </div>
                             </div>

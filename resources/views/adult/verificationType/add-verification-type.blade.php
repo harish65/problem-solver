@@ -16,28 +16,31 @@
                 
                     <div class="col-md-12">
                         <div class="form-group">
-                            <input type="text" name="name" class="form-control" id="updateVerificationTypeName"
+                            <input type="text" name="name" class="form-control" value="{{ @$data->name }}" id="updateVerificationTypeName"
                                 placeholder="Name">
                         </div>
                     </div>
 
                     <div class="col-md-12">
                         <div class="form-group">
-                            <input type="text" name="page_main_title" class="form-control" id="page_main_title"
+                            <input type="text" name="page_main_title"  value="{{ @$data->page_main_title }}" class="form-control" id="page_main_title"
                                 placeholder="Title">
                         </div>
                     </div>
 
                     <div class="col-md-12">
                         <div class="form-group">
-                            <input type="file" name="banner" class="form-control" id="banner">
+                            <input type="file" name="banner" class="form-control"  id="banner">
+                            @if(isset($data->banner) && !empty($data->banner))
+                                <img src="{{asset('asset-new/verfication-type/'.$data->banner)}}" id="imgInp" height="370px" width="100%">
+                            @endif
                         </div>
                     </div>
 
                     <div class="col-md-12">
                         <div class="form-group">
                             <textarea class="form-control" name="explanation" id="explanation"
-                                placeholder="Explanation Text....."></textarea>
+                                placeholder="Explanation Text.....">{{ @$data->explanation }}</textarea>
                         </div>
                     </div>
                     <div class="long_box col-md-12">
@@ -227,11 +230,32 @@
                     });
                 } else {
                     toastr.success('Record saved successfully!');
-                    window.location.href = "{{route('adult.varification')}}";
+
+                    window.location.href = "{{route('adult.vfrindex')}}";
                 }
               }
           });
       });
+
+
+
+
+      function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgInp').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+$("#banner").change(function(){
+    
+    readURL(this);
+});
   </script>
 
 
