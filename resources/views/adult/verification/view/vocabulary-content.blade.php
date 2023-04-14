@@ -96,7 +96,7 @@
                                 <h2>Verification</h2>
                                 <div class="projectList text-center">
                                     <div class="imgWrp">
-                                        <img class="mx-auto" src="{{ asset('assets-new/verification/'.$verification->file)}}"
+                                        <img class="mx-auto" src="{{ asset('assets-new/verification/'.@$verification->file)}}"
                                             width="100%" height="128px">
                                     </div>
                                     <p class="redText">{{ $verificationType->name }}</p>
