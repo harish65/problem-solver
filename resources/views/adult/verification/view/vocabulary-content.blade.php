@@ -105,7 +105,7 @@
                                     <p class="date">03/04/2023</p>
                                     <ul>
                                         <li>
-                                            <a href="javaScript:Void(0)" class="editverBtn" data-file="{{ $verification->file }}" data-file="{{ $verification->file }}">
+                                            <a href="javaScript:Void(0)" class="editverBtn" >
                                                 <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
                                             </a>
                                         </li>
