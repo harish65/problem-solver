@@ -38,7 +38,7 @@
                         <td>
                             <a href="javaScript:Void(0)"  data-href="{{ route('problem.delete') }}"  data-id="{{ $type-> id }}" class="delProblemBtn" title="Delete" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20"></a>
                             &nbsp;
-                            <a href="{{ route('adult.edit-verification-type' , @$type->id)  }}" 
+                            <a href="javaScript:Void(0)"  class="editProblemBtn"  
                                                                             data-id="{{ $type->id }}" 
                                                                             data-name="{{ $type->name }}"
                                                                             data-firts_field ="{{ $type->first_field }}"

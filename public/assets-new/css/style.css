@@ -619,7 +619,7 @@ button.btn.btn-primary.login-btn a {
 .conditionBlock {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
 }
 .blockProblem {
     width: 215px;
@@ -755,10 +755,9 @@ button.btn.btn-primary.login-btn a {
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
-    line-height: 2px;
+    line-height: 19px;
     padding: 5px 0;
     color: #000000;
-    list-style: none;
 }
 .questionWrap ul  {
     padding-left: 18px;
