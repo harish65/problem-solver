@@ -17,7 +17,6 @@ use App\Models\VerificationTypeText;
 use Auth;
 use Redirect;
 use Validator;
-use DB;
 
 
 class VerificationController extends BaseController
@@ -33,10 +32,10 @@ class VerificationController extends BaseController
         if($problem_id == ''){    
             return Redirect::back()->withErrors(['msg' => 'Verificatioon must have Solution function identified.']);
         }   
+
         $verificationType = null;
         $verifiationTypeText = null;
         $verification = null;
-        $validationQuestions = null;
             
         //get problem
         $problem = Problem::where('id' , '=' , $problem_id)->first();
@@ -58,37 +57,192 @@ class VerificationController extends BaseController
            
             $verificationType->validation_questions = json_decode($verificationType->validation_questions);
             $verifiationTypeText = VerificationTypeText::where('verification_type_id', $type)->get();
-
-            $validationQuestions = DB::table('verification_validation_questions')->where('verificatoin_type_id' , '=' , $type)->get();
-        }       
-
-       
+        }    
      
-        $solution_id = $solution->id; 
-        
-        
+        $solution_id = $solution->id;      
+        // echo "<pre>";print_r($verificationType);die;
 
-        // foreach($verificationType->validation_questions as $validations){
-        //     echo "<pre>";print_r($validations[0]);die;
-        // }
-        
-        
-        $types = VerificationType::orderBy("id", "desc")->get();
-        return view('adult.verification.index',compact('types' , 
-                                                        'verificationType' , 
-                                                        'verification' , 
-                                                        'problem_id' , 
-                                                        'project_id',
-                                                        'problem',
-                                                        'solution',
-                                                        'solution_id' , 
-                                                        'Solution_function','verifiationTypeText','validationQuestions'));
+        $types = VerificationType::orderBy("id", "asc")->get();
+
+        switch($type){
+            case 1:
+                return view('adult.verification.view.vocabulary-content', [
+                    'types' => $types, 
+                    'verificationType' => $verificationType, 
+                    'verification' => $verification, 
+                    'problem_id' => $problem_id, 
+                    'project_id' => $project_id,
+                    'problem' => $problem,
+                    'solution' => $solution,
+                    'solution_id' => $solution_id, 
+                    'Solution_function' => $Solution_function,
+                    'verificationTypeText' => $verifiationTypeText
+                ]);
+                break;
+            case 2:
+                return view('adult.verification.view.information-content', [
+                    'types' => $types, 
+                    'verificationType' => $verificationType, 
+                    'verification' => $verification, 
+                    'problem_id' => $problem_id, 
+                    'project_id' => $project_id,
+                    'problem' => $problem,
+                    'solution' => $solution,
+                    'solution_id' => $solution_id, 
+                    'Solution_function' => $Solution_function,
+                    'verificationTypeText' => $verifiationTypeText
+                ]);
+                    break;
+            case 3:
+                return view('adult.verification.view.before-after-content',compact('types' , 
+                    'verificationType' , 
+                    'verification' , 
+                    'problem_id' , 
+                    'project_id',
+                    'problem',
+                    'solution',
+                    'solution_id' , 
+                    'Solution_function','verifiationTypeText'));
+                    break;
+            case 4:
+                return view('adult.verification.view.separation-step',compact('types' , 
+                    'verificationType' , 
+                    'verification' , 
+                    'problem_id' , 
+                    'project_id',
+                    'problem',
+                    'solution',
+                    'solution_id' , 
+                    'Solution_function','verifiationTypeText'));
+                    break;
+            case 5:
+                return view('adult.verification.view.time-verification-content',compact('types' , 
+                    'verificationType' , 
+                    'verification' , 
+                    'problem_id' , 
+                    'project_id',
+                    'problem',
+                    'solution',
+                    'solution_id' , 
+                    'Solution_function','verifiationTypeText'));
+                    break;
+            case 6:
+                return view('adult.verification.view.past-present-content',compact('types' , 
+                    'verificationType' , 
+                    'verification' , 
+                    'problem_id' , 
+                    'project_id',
+                    'problem',
+                    'solution',
+                    'solution_id' , 
+                    'Solution_function','verifiationTypeText'));
+                    break;
+            case 7:
+                return view('adult.verification.view.entity-content',compact('types' , 
+                    'verificationType' , 
+                    'verification' , 
+                    'problem_id' , 
+                    'project_id',
+                    'problem',
+                    'solution',
+                    'solution_id' , 
+                    'Solution_function','verifiationTypeText'));
+                    break;
+            case 8:
+                return view('adult.verification.view.solution-time-location1-content',compact('types' , 
+                    'verificationType' , 
+                    'verification' , 
+                    'problem_id' , 
+                    'project_id',
+                    'problem',
+                    'solution',
+                    'solution_id' , 
+                    'Solution_function','verifiationTypeText'));
+                    break;
+            case 9:
+                return view('adult.verification.view.solution-time-location2-content',compact('types' , 
+                    'verificationType' , 
+                    'verification' , 
+                    'problem_id' , 
+                    'project_id',
+                    'problem',
+                    'solution',
+                    'solution_id' , 
+                    'Solution_function','verifiationTypeText'));
+                    break;
+            case 10:
+                return view('adult.verification.view.people-project-content',compact('types' , 
+                    'verificationType' , 
+                    'verification' , 
+                    'problem_id' , 
+                    'project_id',
+                    'problem',
+                    'solution',
+                    'solution_id' , 
+                    'Solution_function','verifiationTypeText'));
+                    break;
+            case 11:
+                return view('adult.verification.view.people-communication-content',compact('types' , 
+                    'verificationType' , 
+                    'verification' , 
+                    'problem_id' , 
+                    'project_id',
+                    'problem',
+                    'solution',
+                    'solution_id' , 
+                    'Solution_function','verifiationTypeText'));
+                    break;
+            case 12:
+                return view('adult.verification.view.communication-flow-content',compact('types' , 
+                    'verificationType' , 
+                    'verification' , 
+                    'problem_id' , 
+                    'project_id',
+                    'problem',
+                    'solution',
+                    'solution_id' , 
+                    'Solution_function','verifiationTypeText'));
+                    break;
+            case 13:
+                return view('adult.verification.view.partition-approch-content',compact('types' , 
+                    'verificationType' , 
+                    'verification' , 
+                    'problem_id' , 
+                    'project_id',
+                    'problem',
+                    'solution',
+                    'solution_id' , 
+                    'Solution_function','verifiationTypeText'));
+                    break;
+            case 14:
+                return view('adult.verification.view.principle-identification-content',compact('types' , 
+                    'verificationType' , 
+                    'verification' , 
+                    'problem_id' , 
+                    'project_id',
+                    'problem',
+                    'solution',
+                    'solution_id' , 
+                    'Solution_function','verifiationTypeText'));
+                    break;
+            default:
+                return view('adult.verification.index',compact('types' , 
+                    'verificationType' , 
+                    'verification' , 
+                    'problem_id' , 
+                    'project_id',
+                    'problem',
+                    'solution',
+                    'solution_id' , 
+                    'Solution_function','verifiationTypeText'));
+        }
+
     }
 
     public function store(Request $request){
         //  echo "<pre>";print_r($request->all());die;
         $validator = Validator::make ( $request->all(),[
-            'name' => 'required|max:255',
+            // 'varificationName' => 'required|max:255',
             'problem_id' => 'required',
             'solution_id' => 'required',
             'solution_fun_id' => 'required'
@@ -97,23 +251,8 @@ class VerificationController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());       
         }
         try{
-            $type =  null;
-            $file = null;
-                if($request->fileType == 0){
-                    if($request->hasFile('imageFile')){
-                            $file = time().'.'.$request -> imageFile -> extension();
-                            $request -> imageFile -> move(public_path('assets-new/verifications/'), $file);
-                            $mime = mime_content_type(public_path('assets-new/verifications/' . $file));
-                            if(strstr($mime, "video/")){
-                                $type = 1;
-                            }else if(strstr($mime, "image/")){
-                                $type = 0;
-                            }
-                        }
-                }else{
-                    $type = 2;
-                }
-                    //Update Code
+            
+
                 if($request->id != ''){
                     $verification = Verification::find($request->id);
                     $verification->verification_type_id = $request->verificationType;
@@ -121,40 +260,18 @@ class VerificationController extends BaseController
                     $verification->problem_id = Crypt::decrypt($request->problem_id);;
                     $verification->solution_id =  Crypt::decrypt($request->solution_id);
                     $verification->solution_function_id = $request->solution_fun_id;
-                    $verification->name = $request->name;
-
-                    if($request->fileType == 2){
-                        $verification->file = $request->youtubeLink;
-                        $verification->type = 2;
-                    }elseif ($request->fileType == 0){
-                        $verification->file = $file;
-                        $verification->type = $type;
-                    }
                     $verification->user_id = Auth::user()->id;
-                    $verification->type = $type;
+                    $verification->type = 0;
                     $verification->save();
                 }else{
-
-                    //Insert code
                     $verification = new Verification();
                     $verification->verification_type_id = $request->verificationType;
                     $verification->verification_type_text_id = $request->verification_type_text_id;
                     $verification->problem_id = Crypt::decrypt($request->problem_id);;
                     $verification->solution_id =  Crypt::decrypt($request->solution_id);
-                    $verification->solution_id =  Crypt::decrypt($request->solution_id);
                     $verification->solution_function_id = $request->solution_fun_id;
-                    $verification->name = $request->name;
-
                     $verification->user_id = Auth::user()->id;
-                    if($request->fileType == 2){
-                        $verification->file = $request->youtubeLink;
-                        $verification->type = 2;
-                    }elseif ($request->fileType == 0){
-                        $verification->file = $file;
-                        $verification->type = $type;
-                    }
-                   
-                   
+                    $verification->type = 0;
                     $verification->save();
                 }
                

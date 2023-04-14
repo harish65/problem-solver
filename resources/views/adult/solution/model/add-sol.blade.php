@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title">Add Solution</h4>
+            <h4 class="modal-title">Add New Problem</h4>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         </div>
         <form id="updateProlemForm" method="post" enctype="multipart/form-data">
@@ -42,7 +42,7 @@
                     
                     </div>
                     <div class="form-group">
-                        <input type="text" name="problem" id="problem" disabled  value="{{ $problem_name }}" class="form-control" placeholder="Problem *">
+                        <input type="text" name="problem" id="problem"  value="{{ $problem_name }}" class="form-control" placeholder="Problem *">
                         
                     </div>
                     <div class="form-group">
