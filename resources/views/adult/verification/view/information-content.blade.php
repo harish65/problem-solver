@@ -37,7 +37,7 @@
                 <div class="col-sm-12">
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
-                        <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />
+                    <img src="{{ asset("assets-new/images/verification-banners/info_var.png")}}" alt="relationImage" />
                         
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
@@ -93,7 +93,7 @@
                         </div>
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
-                                <h2>Verification</h2>
+                                <h2>Information</h2>
                                 <div class="projectList text-center">
                                     <div class="imgWrp">
                                         <img class="mx-auto" src="{{ asset('assets-new/verification/1680525666.png')}}"
@@ -195,8 +195,19 @@
         </div>
     </div>
     <!-- Content Section End -->
-    
-    
+    @if(!isset($verification->id))
+    <div class="relationshipContent" style="height: 280px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-success" id="add-info-varification-button"><i class="fa fa-plus"></i>  Create Verificatoin</button>
+                    </div>
+                    
+                </div>
+            </div>
+    </div>
+    @endif
+    @include('adult.verification.modal.add-info-verification')
     <!-- Modal End -->
 </div>
 
@@ -283,7 +294,7 @@ $('.validation').on('change',function(){
    })
 
 
-   $('#add-varification-button').click(function(){
+   $('#add-info-varification-button').click(function(){
    
         if($('#verification_types').val() == ''){
             toastr.error('Please select verification type first');

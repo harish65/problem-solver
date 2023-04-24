@@ -6,6 +6,7 @@
 /public/assets-new/solution
 /public/assets-new/avatar
 /public/assets-new/verification_types
+/public/assets-new/verification
 /storage/*.key
 /vendor
 .env

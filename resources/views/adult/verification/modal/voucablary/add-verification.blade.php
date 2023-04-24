@@ -25,28 +25,29 @@
                 <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
                 <div class="form-group">
                     <div class="row">
-                        <!-- <div class="col-6">
+                       <div class="col-6">
                             <div class="custom-control custom-radio mb-5">
-                                <input type="radio" id="file" name="file" class="custom-control-input filetypeRadio" value="0" checked>
+                                <input type="radio" id="file" name="file" class="custom-control-input filetypeRadio" value="0" >
                                 <label class="custom-control-label" for="file"> File</label>
                             </div>
-                        </div> -->
-                        <!-- <div class="col-6">
+                        </div>
+                        <div class="col-6">
                             <div class="custom-control custom-radio mb-5">
                                 <input type="radio" id="link" name="file" class="custom-control-input filetypeRadio" value="2">
                                 <label class="custom-control-label" for="link"> Link</label>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
-                <!-- <div class="form-group" id="imageFile">
+                <div class="form-group" id="imageFile">
                     <input type="file" name="imageFile" id="imageFile" class="dropify" accept="image/*, video/*">
                     
-                </div> -->
+                </div> 
                 <div class="form-group" id="youtubeLink" style="display: none">
                     <input type="url" name="youtubeLink" id="youtubeLink" class="form-control" placeholder="Link">
                     
                 </div>
+                
                 <div class="form-group">
 
                 <input type="text" disabled  value="{{ 'Problem : '.@$problem->name }}"  class="form-control" placeholder="Problem Name">
@@ -67,14 +68,19 @@
                 <input type="text"  disabled value="{{ 'varification Type : '.@$verificationType->name }}"  class="form-control" id="varificationType" placeholder="varification Type *" required>
                 </div>
                 <div class="form-group">
-                    @if(isset($verifiationTypeText))
-                    <select class="form-control" name="verification_type_text_id" id="verification_type_text_id">
-                            <option value=''>Choose verification type text..</option>
-                            @foreach($verifiationTypeText as $typetext)
-                                <option value='{{ $typetext->id }}'>{{ $typetext->name }}</option>
-                            @endforeach
-                    </select>
-                    @endif
+
+                <input type="text" value="" name="name"  class="form-control" placeholder="Verification Name">
+                    
+                </div>
+                <div class="form-group">
+                    
+                        <select class="form-control" name="verification_type_text_id" id="verification_type_text_id">
+                                <option value=''>Choose verification type text..</option>
+                                @foreach($verificationTypeText as $typetext)
+                                    <option value='{{ $typetext->id }}'>{{ $typetext->name }}</option>
+                                @endforeach
+                        </select>
+                    
                 </div>
             </div>
             <div class="modal-footer">

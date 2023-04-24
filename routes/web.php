@@ -203,6 +203,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         
         // vrification 
         Route::post("store-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'store'])-> name("store-verification");
+        Route::post("updateVerification", [\App\Http\Controllers\Adult\EditVerificationController::class, 'updateVerification'])-> name("updateVerification");
 
     });  
 });

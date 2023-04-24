@@ -29,7 +29,7 @@
             </div>
         </div>
     </div>
-   
+    @if(@$verification->id)
     <!-- Content Section Start -->
     <div class="relationshipContent">
         <div class="container">
@@ -37,8 +37,7 @@
                 <div class="col-sm-12">
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
-                        <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />
-                        
+                    <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />                        
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
@@ -96,16 +95,30 @@
                                 <h2>Verification</h2>
                                 <div class="projectList text-center">
                                     <div class="imgWrp">
-                                        <img class="mx-auto q" src="{{ asset('assets-new/verification/1680525666.png')}}"
-                                            width="100%" height="128px">
+                                        <!-- <img class="mx-auto q" src="{{ asset('assets-new/verification/'.$verification->file)}}"
+                                            width="100%" height="128px"> -->
+
+
+
+                                            @if($verification -> type == 0)
+                                                @if(strlen($problem -> file) < 15)
+                                                    <img class="mx-auto" src="{{ asset('assets-new/verification/'.$verification->file)}}" width="100%" height="128px">
+                                                @endif
+                                            @elseif($verification -> type == 1)
+                                                <video class="mx-auto" controls="controls" preload="metadata" width="100%" height="128px" preload="metadata">
+                                                    <source src="{{ asset("assets-new/verification/" . $verification -> file) }}#t=0.1" type="video/mp4">
+                                                </video>
+                                            @elseif($verification -> type == 2)
+                                                    <iframe class="mx-auto" src="{{ $verification -> file }}" width="100%" height="128px"> </iframe>
+                                            @endif
                                     </div>
-                                    <p class="redText">{{ $verificationType->name }}</p>
+                                    <p class="redText">{{ $verification->name }}</p>
                                 </div>
                                 <div class="projectList">
-                                    <p class="date">03/04/2023</p>
+                                    <p class="date">{{ date('d/m/Y' , strtotime($verification->created_at)) }}</p>
                                     <ul>
                                         <li>
-                                            <a href="javaScript:Void(0)" class="editverBtn" >
+                                            <a href="javaScript:Void(0)" class="editverBtn"  >
                                                 <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
                                             </a>
                                         </li>
@@ -189,8 +202,8 @@
     </div>
 </div>
 <!-- Content Section End -->
-
-@if(!@$verification->id)
+@include('adult.verification.modal.voucablary.edit-verification')
+@else
 <div class="relationshipContent" style="height: 280px;">
     <div class="container">
         <div class="row">
@@ -201,9 +214,10 @@
             </div>
         </div>
     </div>
-    @endif
+@include('adult.verification.modal.voucablary.add-verification')
+@endif
    
-    @include('adult.verification.modal.add-verification')
+    
     
     
     <!-- Modal End -->
@@ -303,7 +317,7 @@ $('.validation').on('change',function(){
 //.editSolFunBtn
 
 $('.editverBtn').click(function(){
-   $('#createVerification').modal('toggle')
+   $('#editVerification').modal('toggle')
 })
 
 
@@ -378,6 +392,62 @@ $('.editverBtn').click(function(){
        });
    });
 
+
+   ////////////////////////////////////////////
+
+
+   $('#btnUpdate').click(function(e){
+    e.preventDefault();
+       var fd = new FormData($('#createVerificationForm')[0]);
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+    $.ajax({
+            url: "{{route('adult.store-verification')}}",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            type: 'POST',
+            beforeSend: function(){
+                $('#btnSave').attr('disabled',true);
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#btnSave').attr('disabled',false);
+                $('#btnSave').html('Submit');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response){
+                if(response.success == false)
+                {
+                    $('#btnSave').attr('disabled',false);
+                    $('#btnSave').html('Login');
+                    var errors = response.data;
+                    $.each( errors, function( key, value ) {
+                        toastr.error(value)
+                    });
+                } else {
+                    
+                    toastr.success(response.message);
+                    location.reload()
+                    //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
+                    //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
+                    //  }else{
+
+
+                        
+                        // window.location.href = "{{ route('adult.dashboard')}}"
+                    //  }
+                    
+                }
+            }
+        });
+   });
 
 </script>
 @endsection
