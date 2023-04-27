@@ -14,6 +14,8 @@ use App\Models\Setting;
 use App\Models\Verification;
 use App\Models\VerificationType;
 use App\Models\VerificationTypeText;
+use App\Models\VerificationEntity;
+use DB;
 use Auth;
 use Redirect;
 use Validator;
@@ -39,6 +41,11 @@ class VerificationController extends BaseController
             
         //get problem
         $problem = Problem::where('id' , '=' , $problem_id)->first();
+       
+        if($problem)
+        {
+            $problem_name = $problem->name;
+        }
         //get solution
         $solution = Solution::where('problem_id' , '=' , $problem_id)->first();
         //get solution function
@@ -51,15 +58,21 @@ class VerificationController extends BaseController
         $verification = Verification::where('problem_id' , '=' , $problem_id)
                                     ->where('verification_type_id' , '=' , $type)
                                     ->where('solution_function_id' , '=' , $Solution_function->id)->first();  
-       
         if($type != ''){
             $verificationType = VerificationType::where('id', '=' , $type)->first();
-           
             $verificationType->validation_questions = json_decode($verificationType->validation_questions);
             $verifiationTypeText = VerificationTypeText::where('verification_type_id', $type)->get();
-        }    
-     
-        $solution_id = $solution->id;      
+            // dd($verifiationTypeText);
+
+        if($verification != ''){
+            $entity = VerificationEntity::where('verTypeId', '=', $type)->where('verId', '=', $verification->id)->get();
+        }else{
+            $entity = VerificationEntity::where('verTypeId', '=', $type)->get();
+        }
+        }  
+
+        $solution_id = $solution->id; 
+        $solutionTypes = DB::table('solution_types')->get();
         // echo "<pre>";print_r($verification);die;
 
         $types = VerificationType::orderBy("id", "asc")->get();
@@ -76,7 +89,8 @@ class VerificationController extends BaseController
                     'solution' => $solution,
                     'solution_id' => $solution_id, 
                     'Solution_function' => $Solution_function,
-                    'verificationTypeText' => $verifiationTypeText
+                    'verificationTypeText' => $verifiationTypeText,
+                    'entity' =>$entity
                 ]);
                 break;
             case 2:
@@ -90,7 +104,8 @@ class VerificationController extends BaseController
                     'solution' => $solution,
                     'solution_id' => $solution_id, 
                     'Solution_function' => $Solution_function,
-                    'verificationTypeText' => $verifiationTypeText
+                    'verificationTypeText' => $verifiationTypeText,
+                    'entity' =>$entity
                 ]);
                     break;
             case 3:
@@ -102,7 +117,7 @@ class VerificationController extends BaseController
                     'problem',
                     'solution',
                     'solution_id' , 
-                    'Solution_function','verifiationTypeText'));
+                    'Solution_function','verifiationTypeText','entity','solutionTypes'));
                     break;
             case 4:
                 return view('adult.verification.view.separation-step',compact('types' , 
@@ -113,7 +128,7 @@ class VerificationController extends BaseController
                     'problem',
                     'solution',
                     'solution_id' , 
-                    'Solution_function','verifiationTypeText'));
+                    'Solution_function','verifiationTypeText','entity'));
                     break;
             case 5:
                 return view('adult.verification.view.time-verification-content',compact('types' , 
@@ -124,7 +139,7 @@ class VerificationController extends BaseController
                     'problem',
                     'solution',
                     'solution_id' , 
-                    'Solution_function','verifiationTypeText'));
+                    'Solution_function','verifiationTypeText','entity'));
                     break;
             case 6:
                 return view('adult.verification.view.past-present-content',compact('types' , 
@@ -135,7 +150,7 @@ class VerificationController extends BaseController
                     'problem',
                     'solution',
                     'solution_id' , 
-                    'Solution_function','verifiationTypeText'));
+                    'Solution_function','verifiationTypeText','entity'));
                     break;
             case 7:
                 return view('adult.verification.view.entity-content',compact('types' , 
@@ -240,7 +255,6 @@ class VerificationController extends BaseController
     }
 
     public function store(Request $request){
-        
         $validator = Validator::make ($request->all(),[
             'verificationType' => 'required'
         ]);
@@ -255,7 +269,7 @@ class VerificationController extends BaseController
                    return $this->AddverificationVocablary($request);
                     break;
                 case 2 :
-                    $this->AddverificationInformation($request);
+                    $this->AddverificationVocablary($request);
                     break;
                 default:
                  return true;
@@ -272,6 +286,7 @@ class VerificationController extends BaseController
      * 
      */
     public function AddverificationVocablary($request){
+        // dd($request);
         // echo "<pre>";print_r($request->all());die;
         $validator = Validator::make ($request->all() , [
             'name' => 'required',
@@ -338,5 +353,89 @@ class VerificationController extends BaseController
 
 
     }
-    
+    public function delete(Request $request)
+    {
+        $validator = Validator::make ($request->all(),[
+            'verificationType' => 'required',
+            'id' =>'required'
+        ]);
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        try{    
+            $type = $request->verificationType;
+            $verId = $request->id;
+            $delete = Verification::where('id' , '=' , $verId)->delete();
+            if($delete)
+            {   
+                $success['delete_verification'] =  $delete;
+                return $this->sendResponse($success, 'Verification deleted successfully.');
+            }else{
+                return $this->sendResponse($error, 'Something Wrong.');
+            }
+        }catch(Exception $e){
+            return $this->sendError('Validation Error.', ['error'=> $e->getMessage]);  
+        }
+    }
+
+    public function addVocabulary(Request $request)
+    {
+        $validator = Validator::make ($request->all(),[
+            'verificationType' => 'required',
+            // 'id' =>'required',
+            'key' => 'required',
+            'value' => 'required'
+        ]);
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        try{
+            $type = $request->verificationType;
+            $verId = $request->id;
+            $key = $request->key;
+            $entity = $request->value;
+
+            // add new row to varification_entity table
+            $verificationEntity = new VerificationEntity();
+                    $verificationEntity->verification_key = $key;
+                    $verificationEntity->verification_value = $entity;
+                    $verificationEntity->verId = $verId;
+                    $verificationEntity->verTypeId = $type;
+                    
+                    $verificationEntity->save();
+                    if($verificationEntity->id){
+                        $success['verificationEntity'] =  $verificationEntity;
+                        return $this->sendResponse($success, 'Verification Entity Has created successfully.');
+                    }else{
+                        return $this->sendResponse($error, 'Something Wrong.');
+                    }
+
+        }catch(Exception $e){
+            return $this->sendError('Validation Error.', ['error'=> $e->getMessage]);  
+        }
+    }
+
+    public function deleteVocabulary(Request $request)
+    {
+        $validator = Validator::make ($request->all(),[
+            'entityId' => 'required'
+        ]);
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        try{    
+            $entityId = $request->entityId;
+            $delete = VerificationEntity::where('id' , '=' , $entityId)->delete();
+            if($delete)
+            {   
+                $success['delete_verification'] =  $delete;
+                return $this->sendResponse($success, 'Verification deleted successfully.');
+            }else{
+                return $this->sendResponse($error, 'Something Wrong.');
+            }
+        }catch(Exception $e){
+            return $this->sendError('Validation Error.', ['error'=> $e->getMessage]);  
+        }
+    }
+
 }

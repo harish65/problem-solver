@@ -81,7 +81,23 @@
                                 </div>
                                 <div class="projectList">
                                     <p class="date">{{ date('d/m/Y', strtotime($solution->created_at))}}</p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                    <ul>
+                                        <li>
+                                            <a href="javaScript:Void(0)" class="editverBtn"  >
+                                                <img src="{{ asset('assets-new/images/editIcon.png') }}" alt="">
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a data-id="1" class="deleteSolBtn" title="Delete">
+                                                <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
+                                                    alt=""></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img
+                                                    src="{{ asset('assets-new/images/uploadIcon.png') }}"
+                                                    alt=""></a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -124,14 +140,14 @@
 
                                             </td>
                                             <td>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
+                                                <a href="javaScript:Void(0)" class="addVocabularyBtn">
                                                     <img src="{{ asset('assets-new/images/add-verification.png')}}"
                                                         alt="">
                                                 </a>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
+                                                <a href="javaScript:Void(0)" class="deleteVoucablaryBtn">
                                                     <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
                                                 </a>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
+                                                <a href="javaScript:Void(0)" class="editVocabularyBtn">
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
                                                 </a>
 
@@ -164,6 +180,13 @@
     </div>
     <!-- Content Section End -->
 
+@include('adult.verification.modal.voucablary.add-vocabulary')
+@include('adult.verification.modal.voucablary.delete-vocabulary')
+@include('adult.verification.modal.voucablary.edit-vocabulary')
+
+<!-- edit and delete solution -->
+@include('adult.verification.modal.add-sol')
+@include('adult.verification.modal.delete-sol')
     <!-- Modal End -->
 </div>
 
@@ -261,7 +284,27 @@ $('.validation').on('change',function(){
 //.editSolFunBtn
 
 $('.editverBtn').click(function(){
-   $('#createVerification').modal('toggle')
+   $('#updateSolution').modal('toggle')
+})
+
+// .deleteSolBtn
+$('.deleteSolBtn').click(function(){
+    $('#deleteSolution').modal('toggle')
+})
+
+// .addVocabularyBtn
+$('.addVocabularyBtn').click(function(){
+    $('#addVocabulary').modal('toggle')
+})
+
+// .deleteVoucablaryBtn
+$('.deleteVoucablaryBtn').click(function(){
+     $('#deleteVocabulary').modal('toggle')
+})
+
+// .editVocabularyBtn
+$('.editVocabularyBtn').click(function(){
+    $('#editVocabulary').modal('toggle')
 })
 
 
@@ -335,6 +378,357 @@ $('.editverBtn').click(function(){
            }
        });
    });
+
+   $('#btnUpdate').click(function(e){
+    e.preventDefault();
+       var fd = new FormData($('#VerificationeditForm')[0]);
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+    $.ajax({
+            type: 'POST',
+            url: "{{route('adult.updateVerification')}}",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            beforeSend: function(){
+                $('#btnSave').attr('disabled',true);
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#btnSave').attr('disabled',false);
+                $('#btnSave').html('Submit');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response){
+                if(response.success == false)
+                {
+                    $('#btnSave').attr('disabled',false);
+                    $('#btnSave').html('Login');
+                    var errors = response.data;
+                    $.each( errors, function( key, value ) {
+                        toastr.error(value)
+                    });
+                } else {
+                    
+                    toastr.success(response.message);
+                    location.reload()
+                    //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
+                    //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
+                    //  }else{
+
+
+                        
+                        // window.location.href = "{{ route('adult.dashboard')}}"
+                    //  }
+                    
+                }
+            }
+        });
+   });
+
+   $('#btnDelete').click(function(e){
+    e.preventDefault();
+       var dv = new FormData($('#deleteVerificationForm')[0]);
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+    $.ajax({
+            type: 'POST',
+            url: "{{route('adult.delete-verification')}}",
+            data: dv,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            beforeSend: function(){
+                $('#btnSave').attr('disabled',true);
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#btnSave').attr('disabled',false);
+                $('#btnSave').html('Submit');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response){
+                if(response.success == false)
+                {
+                    $('#btnSave').attr('disabled',false);
+                    $('#btnSave').html('Login');
+                    var errors = response.data;
+                    $.each( errors, function( key, value ) {
+                        toastr.error(value)
+                    });
+                } else {
+                    
+                    toastr.success(response.message);
+                    location.reload();
+                }
+            }
+        });
+
+   });
+
+   $('#btnSaveEntity').click(function(e){
+    e.preventDefault();
+       var dv = new FormData($('#addVocabularyForm')[0]);
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+       $.ajax({
+            type: 'POST',
+            url: "{{route('adult.add-vocabulary')}}",
+            data: dv,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            beforeSend: function(){
+                $('#btnSave').attr('disabled',true);
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#btnSave').attr('disabled',false);
+                $('#btnSave').html('Submit');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response){
+                if(response.success == false)
+                {
+                    $('#btnSave').attr('disabled',false);
+                    $('#btnSave').html('Login');
+                    var errors = response.data;
+                    $.each( errors, function( key, value ) {
+                        toastr.error(value)
+                    });
+                } else {
+                    
+                    toastr.success(response.message);
+                    location.reload();
+                }
+            }
+        });
+
+   });
+
+
+   $('#btnDeleteVocab').click(function(e){
+    e.preventDefault();
+       var dv = new FormData($('#deleteVocabularyForm')[0]);
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+    $.ajax({
+            type: 'POST',
+            url: "{{route('adult.delete-vocabulary')}}",
+            data: dv,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            beforeSend: function(){
+                $('#btnSave').attr('disabled',true);
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#btnSave').attr('disabled',false);
+                $('#btnSave').html('Submit');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response){
+                if(response.success == false)
+                {
+                    $('#btnSave').attr('disabled',false);
+                    $('#btnSave').html('Login');
+                    var errors = response.data;
+                    $.each( errors, function( key, value ) {
+                        toastr.error(value)
+                    });
+                } else {
+                    
+                    toastr.success(response.message);
+                    location.reload();
+                }
+            }
+        });
+
+   });
+
+   $('#btnEditSaveEntity').click(function(e){
+    e.preventDefault();
+       var fd = new FormData($('#editVocabularyForm')[0]);
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+    $.ajax({
+            type: 'POST',
+            url: "{{route('adult.updateVocabulary')}}",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            beforeSend: function(){
+                $('#btnSave').attr('disabled',true);
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#btnSave').attr('disabled',false);
+                $('#btnSave').html('Submit');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response){
+                if(response.success == false)
+                {
+                    $('#btnSave').attr('disabled',false);
+                    $('#btnSave').html('Login');
+                    var errors = response.data;
+                    $.each( errors, function( key, value ) {
+                        toastr.error(value)
+                    });
+                } else {
+                    
+                    toastr.success(response.message);
+                    location.reload()
+                    //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
+                    //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
+                    //  }else{
+
+
+                        
+                        // window.location.href = "{{ route('adult.dashboard')}}"
+                    //  }
+                    
+                }
+            }
+        });
+   });
+
+//    update solution 
+$('#btnUpadteSolution').click(function(e){
+    e.preventDefault();
+       var fd = new FormData($('#updateSolutionForm')[0]);
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+    $.ajax({
+            type: 'POST',
+            url: "{{route('adult.updateSolution')}}",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            beforeSend: function(){
+                $('#btnSave').attr('disabled',true);
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#btnSave').attr('disabled',false);
+                $('#btnSave').html('Submit');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response){
+                if(response.success == false)
+                {
+                    $('#btnSave').attr('disabled',false);
+                    $('#btnSave').html('Login');
+                    var errors = response.data;
+                    $.each( errors, function( key, value ) {
+                        toastr.error(value)
+                    });
+                } else {
+                    
+                    toastr.success(response.message);
+                    location.reload()
+                    //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
+                    //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
+                    //  }else{
+
+
+                        
+                        // window.location.href = "{{ route('adult.dashboard')}}"
+                    //  }
+                    
+                }
+            }
+        });
+   });
+
+   // delete solution 
+   $('#btnDeleteSol').click(function(e){
+    e.preventDefault();
+       var fd = new FormData($('#deleteSolutionForm')[0]);
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+    $.ajax({
+            type: 'POST',
+            url: "{{route('adult.deleteSolution')}}",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            beforeSend: function(){
+                $('#btnSave').attr('disabled',true);
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#btnSave').attr('disabled',false);
+                $('#btnSave').html('Submit');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response){
+                if(response.success == false)
+                {
+                    $('#btnSave').attr('disabled',false);
+                    $('#btnSave').html('Login');
+                    var errors = response.data;
+                    $.each( errors, function( key, value ) {
+                        toastr.error(value)
+                    });
+                } else {
+                    
+                    toastr.success(response.message);
+                    location.reload()
+                    //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
+                    //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
+                    //  }else{
+
+
+                        
+                        // window.location.href = "{{ route('adult.dashboard')}}"
+                    //  }
+                    
+                }
+            }
+        });
+   });
+
 
 
 </script>

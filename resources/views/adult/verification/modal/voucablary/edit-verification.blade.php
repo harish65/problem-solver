@@ -6,7 +6,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add Verification</h4>
+                <h4 class="modal-title">Edit Verification</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <?php 
@@ -39,7 +39,7 @@
                         </div>
                     </div>
                 </div>
-            
+            <!-- style="{{($verification->type == '2') ? 'display:none' : ''}} -->
                 <div class="form-group" id="imageFile" style="{{($verification->type == '2') ? 'display:none' : ''}}">
                     <input type="file" name="imageFile" id="imageFile" class="dropify" accept="image/*, video/*">
                     

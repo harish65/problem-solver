@@ -161,4 +161,66 @@ class SolutionController extends BaseController
         }
     }
 
+
+    public function updateSolution(Request $request)
+    {
+        dd($request);
+        $validator = Validator::make ($request->all() , [
+            'id' => 'required' //Id is solution id
+        ]);
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        try{
+            if($request['file'] == 0){
+                if($request['imageFile'] != ''){
+                    $file = time().'.'.$request['imageFile'] -> extension();
+                    $request['imageFile'] -> move(public_path('assets-new/verification/'), $file);
+                    $mime = mime_content_type(public_path('assets-new/verification/' . $file));
+                    if(strstr($mime, "video/")){
+                        $type = 1;
+                    }else if(strstr($mime, "image/")){
+                        $type = 0;
+                    }
+                    $solution = Solution::find($request->id);
+                    $solution->name = $request->solutionName;
+                    $solution->solution_type_id = $request->solution_type_id;
+                    $solution->type = $type;
+                    $solution->file = $file;
+                    $solution->save();
+                if($solution->id){
+                    $success['solution_update'] =  $solution;
+                    return $this->sendResponse($success, 'Solution updated  successfully.');
+                }else{
+                    return $this->sendResponse($error, 'Something Wrong.');
+                }
+            }
+        }
+        }catch(Exception $e){
+            return $this->sendError('Error.', ['error'=> $e->getMessage()]);
+        }
+    }
+
+    public function deleteSolution(Request $request)
+    {
+        $validator = Validator::make ($request->all(),[
+            'id' =>'required'
+        ]);
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        try{    
+            $solId = $request->id;
+            $delete = Verification::where('id' , '=' , $solId)->delete();
+            if($delete)
+            {   
+                $success['delete_solution'] =  $delete;
+                return $this->sendResponse($success, 'Solution deleted successfully.');
+            }else{
+                return $this->sendResponse($error, 'Something Wrong.');
+            }
+        }catch(Exception $e){
+            return $this->sendError('Validation Error.', ['error'=> $e->getMessage]);  
+        }
+    }
 }
