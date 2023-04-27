@@ -172,7 +172,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::post("/delete-solution", [\App\Http\Controllers\Adult\SolutionController::class, 'delete'])-> name("delete-solution");
         Route::post('/sol-validation', [\App\Http\Controllers\Adult\SolutionController::class, 'updateValidation'])->name('sol-validation');
         Route::post('/update-solution', [\App\Http\Controllers\Adult\SolutionController::class, 'updateSolution'])->name('updateSolution');
-        Route::post('/delete-solution', [\App\Http\Controllers\Adult\SolutionController::class, 'deleteSolution'])->name('deleteSolution');
+       // Route::post('/delete-solution', [\App\Http\Controllers\Adult\SolutionController::class, 'deleteSolution'])->name('deleteSolution');
         
         //Route Solution Function
         Route::get("/solution-func/{id?}", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'index'])-> name("solution-func");

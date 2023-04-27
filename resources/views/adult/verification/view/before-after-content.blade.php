@@ -686,7 +686,7 @@ $('#btnUpadteSolution').click(function(e){
        });
     $.ajax({
             type: 'POST',
-            url: "{{route('adult.deleteSolution')}}",
+            url: "{{route('adult.delete-solution')}}",
             data: fd,
             processData: false,
             contentType: false,
