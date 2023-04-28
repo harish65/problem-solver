@@ -64,7 +64,7 @@ class SolutionFunctionController extends BaseController
         // echo "<pre>";print_r($request->all());die;
         $validator = Validator::make ( $request->all(),[
             'updateSolFunctionName' => 'required|max:255',
-            "updateSolFunctionSolutionId" => 'required',
+            // "updateSolFunctionSolutionId" => 'required',
         ]);
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
