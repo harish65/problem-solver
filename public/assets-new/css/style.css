@@ -621,6 +621,11 @@ button.btn.btn-primary.login-btn a {
     align-items: center;
     justify-content: space-between;
 }
+.solutionconditionBlock {
+    display: flex;
+    align-items: center;
+   
+}
 .blockProblem {
     width: 215px;
 }

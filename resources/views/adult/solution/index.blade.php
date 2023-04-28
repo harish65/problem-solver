@@ -27,7 +27,7 @@
                             <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
                             <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
 @if(isset($problem->id))
-    <div class="conditionBlock">
+    <div class="solutionconditionBlock">
         <div class="blockProblem">
             <div class="projectBlock text-center">
               <h2>Problem</h2>
@@ -56,7 +56,7 @@
             </div>
           </div>
           <div class="long-arrow">            
-                <p style="position:relative; top:35px;left:25px;">{{ $problem->output_slug }}</p>
+                <p style="position:relative; top:35px;left:10px;">{{ $problem->output_slug }}</p>
             <img src="{{ asset('assets-new/images/arrowRight.png')}}">
             <!-- add arrow Image over here -->
           </div>
