@@ -102,8 +102,14 @@
 
 
                                             @if($verification -> type == 0)
-                                                @if(strlen($problem -> file) < 15)
-                                                    <img class="mx-auto" src="{{ asset('assets-new/verification/'.$verification->file)}}" width="100%" height="128px">
+                                                @if(strlen($verification -> file) < 15)
+
+                                                    @if($verification->file == 1)
+                                                    <img class="mx-auto" src="{{ asset('assets-new/verification/voucablary/1vocabulary.png')}}" width="100%" height="128px">
+                                                    @else
+                                                    <img class="mx-auto" src="{{ asset('assets-new/verification/voucablary/2vocabulary.png')}}" width="100%" height="128px">
+                                                    @endif
+
                                                 @endif
                                             @elseif($verification -> type == 1)
                                                 <video class="mx-auto" controls="controls" preload="metadata" width="100%" height="128px" preload="metadata">
@@ -124,7 +130,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a data-id="1" class="deleteverBtn" title="Delete">
+                                            <a data-id="{{ $verification->id }}" class="deleteverBtn" title="Delete">
                                                 <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
                                                     alt=""></a>
                                         </li>
@@ -151,49 +157,66 @@
                                 <table class="table slp-tbl text-center">
                                     <thead>
                                         <th>Word</th>
+                                        <th> </th>
                                         <th>Actual Entity</th>
                                         <th>Action</th>
                                     </thead>
                                     <tbody>
+                                    @foreach($entity as $ent)
                                         <tr>
-                                            <td>Wrod</td>
-                                            <td>Entity</td>
-                                            <td>
-                                                <a href="javaScript:Void(0)" class="addVocabularyBtn">
-                                                    <img src="{{ asset('assets-new/images/add-verification.png')}}"
-                                                        alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="deleteVoucablaryBtn">
-                                                    <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="editVocabularyBtn">
-                                                    <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
-                                                </a>
+                                           
+                                                <td>{{ $ent->verification_key }}</td>
+                                                <td>  
+                                                 <span>{{ ($ent->point_to == 'to') ? 'Point to' : 'Not Point to'}}</span>  
+                                                 <br>                 
+                                                <img src="{{ asset('assets-new/images/arrowRight.png') }}" width="80" height="25">    </td>
+                                                <td>{{ $ent->verification_value }}</td>
+                                                <td>
+                                                    <a href="javaScript:Void(0)" class="addVocabularyBtn">
+                                                        <img src="{{ asset('assets-new/images/add-verification.png')}}"
+                                                            alt="">
+                                                    </a>
+                                                    <a href="javaScript:Void(0)" data-id="{{ $ent->id }}" class="deleteVoucablaryBtn">
+                                                        <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
+                                                    </a>
+                                                    <a href="javaScript:Void(0)" class="editVocabularyBtn"
+                                                        data-id="{{ $ent->id }}"
+                                                        data-key="{{ $ent->verification_key }}"
+                                                        data-value="{{ $ent->verification_value }}""
+                                                        data-point_to="{{ $ent->point_to }}"
+                                                    >
+                                                        <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
+                                                    </a>
 
-                                            </td>
+                                                </td>
+                                            
                                         </tr>
+                                        @endforeach    
                                     </tbody>
                                 </table>
                             </div>
                         </div>
 
                     <h2>Validation Question</h2>
-
-                    <ul>
+                    <form id="validation_form">
+                    <ul class="validate_que">
+                        
                         <br>
                         <h5>Do I use any word that does not me solve the identified problem?</h5>
-                        <li>Yes, I use words that does not help me solve the problem</li>
-                        <li>No, I don't use any word that does not help me solve the problem</li>
+                        <input type="hidden" name="id" value="{{ $verification->id }}">
+                        <li><input  type="radio" data-id="{{ $verification->id  }}" {{ ($verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1"></label> Yes, I use words that does not help me solve the problem<label></li>
+                        <li><input  type="radio" data-id="{{ $verification->id  }}" {{ ($verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2"></label> No, I don't use any word that does not help me solve the problem<label></li>
                         <br>    
                         <h5>Does each word from the vocabulary match to actual entity that enables solving the problem?</h5>    
-                        <li>Yes, each word from the vocabulary matches to actual entity that enables me to solve the problem</li>
-                        <li>No, some words I used in my vocabulary does not match to actual entity that enables me to solve the problem</li>
+                        <li><input  type="radio" data-id="{{ $verification->id  }}" {{ ($verification->validations->validation_2 == 1) ? 'checked' : '' }} name="validation_2" class="form-check-input validation" value="1"> Yes, each word from the vocabulary matches to actual entity that enables me to solve the problem<label></li>
+                        <li><input  type="radio" data-id="{{ $verification->id  }}" {{ ($verification->validations->validation_2 == 2) ? 'checked' : '' }} name="validation_2" class="form-check-input validation" value="2"> No, some words I used in my vocabulary does not match to actual entity that enables me to solve the problem<label></li>
                         <br>
                         <h5> Do you understand that the solution of a problem is given with its own vocabulary and does not include any word that does not help solve the problem?</h5>
-                        <li>Yes, I understand that the solution of a problem is given with its own vocabulary and does not include any word that does not help me solve the problem</li>
-                        <li>No, I do not understand that the solution of a problem is given with its own vocabulary and does not include any word that does not help me solve the problem
+                        <li><input  type="radio" data-id="{{ $verification->id  }}" {{ ($verification->validations->validation_3 == 1) ? 'checked' : '' }} name="validation_3" class="form-check-input validation" value="1"> Yes, I understand that the solution of a problem is given with its own vocabulary and does not include any word that does not help me solve the problem<label></li>
+                        <li><input type="radio" data-id="{{ $verification->id  }}" {{ ($verification->validations->validation_3 == 2) ? 'checked' : '' }} name="validation_3" class="form-check-input validation" value="2"> No, I do not understand that the solution of a problem is given with its own vocabulary and does not include any word that does not help me solve the problem<label></li>
                     </ul>
-                        
+                        <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        </form>
                 </div>
             </div>
             <!-- End -->
@@ -202,11 +225,10 @@
     </div>
 </div>
 <!-- Content Section End -->
+@include('adult.verification.modal.voucablary.entity.create')
+@include('adult.verification.modal.voucablary.delete-verification')
+@include('adult.verification.modal.voucablary.edit-verification')
 
-
-@include('adult.verification.modal.voucablary.add-vocabulary')
-@include('adult.verification.modal.voucablary.delete-vocabulary')
-@include('adult.verification.modal.voucablary.edit-vocabulary')
 @else
 <div class="relationshipContent" style="height: 280px;">
     <div class="container">
@@ -220,21 +242,28 @@
     </div>
 @include('adult.verification.modal.voucablary.add-verification')
 @endif
-   
-@if(isset($verification))
-
-@include('adult.verification.modal.voucablary.edit-verification')
-@include('adult.verification.modal.voucablary.delete-verification')
-
-@endif
-    
-    
     <!-- Modal End -->
 </div>
 
 @endsection
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+<style>
+    .image{
+        margin: 20px;
+        text-align: center;
+        border: 2px solid;
+        padding: 14px;
+        border-radius: 5px;
+        background: #eee;
+        }
+    .image img{
+        border-radius : 5px;
+    }     
+    .validate_que{
+        list-style:none;
+    }
+</style>
 @endsection
 @section('scripts')
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
@@ -291,38 +320,74 @@ $('.dashboard').click(function(){
 
 })
 
-$('.validation').on('change',function(){
+//Update Validations
+
+$('#saveValidations').on('click',function(){
         var problem = $(this).attr('data-id');
-        var validation  = $(this).val();
-        var name = $(this).attr('name')
+        var fd = new FormData($('#validation_form')[0]);
         $.ajaxSetup({
                headers: {
                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                        }
                }); 
         $.ajax({
-           url: "{{route('adult.sol-validation')}}",
-           data: {data : problem , value : validation , name : name},
+           url: "{{route('adult.add-vocabulary-validations')}}",
+           data: fd,
+           processData: false,
+           contentType: false,
+           dataType: 'json',
            type: 'POST',
-           success: function (response){                
-               console.log(response)
-            }
-
-        })
-
-
-
+           beforeSend: function(){
+             $('#validation').attr('disabled',true);
+             $('#validation').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+           },
+           error: function (xhr, status, error) {
+               $('#validation').attr('disabled',false);
+               $('#validation').html('Save Validations');
+               $.each(xhr.responseJSON.data, function (key, item) {
+                   toastr.error(item);
+               });
+           },
+           success: function (response){
+             if(response.success == false)
+             {
+                 $('#validation').attr('disabled',false);
+                 $('#validation').html('Save Validations');
+                 var errors = response.data;
+                 $.each( errors, function( key, value ) {
+                     toastr.error(value)
+                 });
+             } else {
+                
+                 toastr.success(response.message);
+                 location.reload()
+              }
+           }
+       });
    })
 
-
-   $('#add-varification-button').click(function(){
-   
+   $('#add-varification-button').click(function(){   
         if($('#verification_types').val() == ''){
             toastr.error('Please select verification type first');
             return false;
         }
         $('#createVerification').modal('toggle')
    })
+
+
+
+   //onchange File
+   $('#file').change(function(){
+        var file = $('option:selected', this).data('src');
+        
+        if(file){
+            $('#default-image').removeClass('d-none').html('<img  src='+ file +' width="200" height="200">')
+        }else{
+            $('#default-image').addClass('d-none').html('')
+        }
+       
+   })
+
 //.editSolFunBtn
 
 $('.editverBtn').click(function(){
@@ -339,32 +404,16 @@ $('.addVocabularyBtn').click(function(){
     $('#addVocabulary').modal('toggle')
 })
 
-// .deleteVoucablaryBtn
-$('.deleteVoucablaryBtn').click(function(){
-     $('#deleteVocabulary').modal('toggle')
-})
+
 
 // .editVocabularyBtn
 $('.editVocabularyBtn').click(function(){
-    $('#editVocabulary').modal('toggle')
+    $('#key').val($(this).attr('data-key'))
+    $('#value').val($(this).attr('data-value'))
+    $('#point_to').val($(this).attr('data-point_to'))
+
+    $('#addVocabulary').modal('toggle')
 })
-
-   $('.filetypeRadio').change(function(){
-        var type = $(this).val()
-        if(type == 0){
-            $('#fileType').val('0')
-            $('#imageFile').css("display", "block");
-            $('#youtubeLink').css("display", "none");
-        }if(type == 2){
-            $('#fileType').val('2')
-            $('#imageFile').css("display", "none");
-            $('#youtubeLink').css("display", "block");
-        }
-   })
-
-
-
-
    $(document).on('click','#btnSave',function(e){
        e.preventDefault();
        var fd = new FormData($('#createVerificationForm')[0]);
@@ -405,15 +454,6 @@ $('.editVocabularyBtn').click(function(){
                 
                  toastr.success(response.message);
                  location.reload()
-                //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                //  }else{
-
-
-                    
-                    // window.location.href = "{{ route('adult.dashboard')}}"
-                //  }
-                 
               }
            }
        });
@@ -531,18 +571,18 @@ $('.editVocabularyBtn').click(function(){
        });
        $.ajax({
             type: 'POST',
-            url: "{{route('adult.add-vocabulary')}}",
+            url: "{{route('adult.add-vocabulary-entity')}}",
             data: dv,
             processData: false,
             contentType: false,
             dataType: 'json',
             beforeSend: function(){
-                $('#btnSave').attr('disabled',true);
-                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+                $('#btnSaveEntity').attr('disabled',true);
+                $('#btnSaveEntity').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
             },
             error: function (xhr, status, error) {
-                $('#btnSave').attr('disabled',false);
-                $('#btnSave').html('Submit');
+                $('#btnSaveEntity').attr('disabled',false);
+                $('#btnSaveEntity').html('Save changes');
                 $.each(xhr.responseJSON.data, function (key, item) {
                     toastr.error(item);
                 });
@@ -550,8 +590,8 @@ $('.editVocabularyBtn').click(function(){
             success: function (response){
                 if(response.success == false)
                 {
-                    $('#btnSave').attr('disabled',false);
-                    $('#btnSave').html('Login');
+                    $('#btnSaveEntity').attr('disabled',false);
+                    $('#btnSaveEntity').html('Save changes');
                     var errors = response.data;
                     $.each( errors, function( key, value ) {
                         toastr.error(value)
@@ -664,7 +704,43 @@ $('.editVocabularyBtn').click(function(){
             }
         });
    });
-
+   $(document).on('click', '.deleteVoucablaryBtn', function(e){
+         e.preventDefault();
+         var r = confirm("Are you sure to delete");
+         if (r == false) {
+             return false;
+         }
+         var id = $(this).attr('data-id')
+         $.ajaxSetup({
+               headers: {
+                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                       }
+               });      
+         $.ajax({
+               url: "{{route('adult.delete-vocabulary')}}",
+               data:{id :  id},         
+              
+               type: 'POST',           
+               error: function (xhr, status, error) {
+                   $.each(xhr.responseJSON.data, function (key, item) {
+                       toastr.error(item);
+                   });
+               },
+               success: function (response){
+                
+                   if(response.success == false)
+                   {
+                       var errors = response.data;
+                       $.each( errors, function( key, value ) {
+                           toastr.error(value)
+                       });
+                   } else {
+                       toastr.success(response.message);
+                       location.reload()
+                   }
+               }
+           });
+     });
 
 </script>
 @endsection

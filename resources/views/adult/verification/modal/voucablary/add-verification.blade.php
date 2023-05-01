@@ -6,7 +6,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Add Verification</h4>
+                <h4 class="modal-title">Voucablary Verification</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <?php 
@@ -23,11 +23,11 @@
                 <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
                 <input type="hidden" name="fileType" id="fileType">
                 <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <div class="row">
                        <div class="col-6">
                             <div class="custom-control custom-radio mb-5">
-                                <input type="radio" id="file" name="file" class="custom-control-input filetypeRadio" value="0" >
+                                <input type="radio" id="file" name="file" class="custom-control-input filetypeRadio" value="0" checked>
                                 <label class="custom-control-label" for="file"> File</label>
                             </div>
                         </div>
@@ -38,15 +38,15 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group" id="imageFile">
+                </div> -->
+                <!-- <div class="form-group" id="imageFile">
                     <input type="file" name="imageFile" id="imageFile" class="dropify" accept="image/*, video/*">
                     
                 </div> 
                 <div class="form-group" id="youtubeLink" style="display: none">
                     <input type="url" name="youtubeLink" id="youtubeLink" class="form-control" placeholder="Link">
                     
-                </div>
+                </div> -->
                 
                 <div class="form-group">
 
@@ -67,21 +67,36 @@
                 <div class="form-group">
                 <input type="text"  disabled value="{{ 'varification Type : '.@$verificationType->name }}"  class="form-control" id="varificationType" placeholder="varification Type *" required>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
 
                 <input type="text" value="" name="name"  class="form-control" placeholder="Verification Name">
                     
-                </div>
+                </div> -->
+                
                 <div class="form-group">
                     
                         <select class="form-control" name="verification_type_text_id" id="verification_type_text_id">
-                                <option value=''>Choose verification type text..</option>
+                                <option value=''>Transition Phrases..</option>
                                 @foreach($verificationTypeText as $typetext)
                                     <option value='{{ $typetext->id }}'>{{ $typetext->name }}</option>
                                 @endforeach
                         </select>
                     
                 </div>
+
+                <div class="form-group">
+                    
+                <select class="form-control" name="file" id="file">
+                            <option value=''>Choose Image..</option>
+                            <option  data-src="{{ asset('assets-new/verification/voucablary/1vocabulary.png')}}" value="1">Image One </option>
+                            <option  data-src="{{ asset('assets-new/verification/voucablary/2vocabulary.png')}}" value="2">Image Tow</option>
+                    </select>
+                    <div class="image d-none"  id="default-image"style="margin: 20px;text-align: center;">
+                        
+                    </div>
+                
+            </div>
+               
             </div>
             <div class="modal-footer">
                 <button type="button"   class="btn btn-secondary" data-dismiss="modal">Close</button>
