@@ -29,7 +29,7 @@
             </div>
         </div>
     </div>
-   
+    @if(isset($verification->id))
     <!-- Content Section Start -->
     <div class="relationshipContent">
         <div class="container">
@@ -96,21 +96,30 @@
                                 <h2>Information</h2>
                                 <div class="projectList text-center">
                                     <div class="imgWrp">
-                                        <img class="mx-auto" src="{{ asset('assets-new/verification/1680525666.png')}}"
-                                            width="100%" height="128px">
+                                    @if($verification->file == 1)
+                                        <img class="mx-auto" src="{{ asset('assets-new/verification/voucablary/default-001.jpg')}}" width="100%" height="128px">
+                                    @else
+                                        <img class="mx-auto" src="{{ asset('assets-new/verification/voucablary/default-002.jpg')}}" width="100%" height="128px">
+                                    @endif
+
                                     </div>
-                                    <p class="redText">{{ $verificationType->name }}</p>
+                                    <p class="redText">Information</p>
                                 </div>
                                 <div class="projectList">
-                                    <p class="date">03/04/2023</p>
+                                    <p class="date"{{ date('d/m/Y' , strtotime($verification->created_at)) }}</p>
                                     <ul>
                                         <li>
-                                            <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
+                                            <a href="javaScript:Void(0)" class="editverBtn" 
+                                                data-verification_type_text_id = "{{ @$verification->verification_type_text_id }}"
+                                                data-file = "{{ @$verification->file }}"
+
+                                            
+                                            >
                                                 <img src="{{ asset('assets-new/images/editIcon.png') }}" alt="">
                                             </a>
                                         </li>
                                         <li>
-                                            <a data-id="1" class="deleteverBtn" title="Delete">
+                                            <a data-id="{{ $verification->id }}" class="deleteVoucablaryBtn" title="Delete">
                                                 <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
                                                     alt="delete-icon"></a>
                                         </li>
@@ -138,36 +147,23 @@
                                 <table class="table slp-tbl text-center">
                                     <thead>
                                         <th>Identified Information</th>
-                                        <th>Given Information</th>
-                                        <th>Entity Poin to</th>
+                                        <th>Given Information</th>                                       
                                         <th>Action</th>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td>Wrod</td>
                                             <td>Entity</td>
+                                          
                                             <td>
-                                                <a href="javaScript:Void(0)" class="addVocabularyBtn">
+                                                <a href="javaScript:Void(0)" id="addEntity" class="addEntity">
                                                     <img src="{{ asset('assets-new/images/add-verification.png')}}"
                                                         alt="">
                                                 </a>
-                                                <a href="javaScript:Void(0)" class="deleteVoucablaryBtn">
+                                                <a href="javaScript:Void(0)" id="deleteEntity" class="deleteEntity">
                                                     <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
                                                 </a>
-                                                <a href="javaScript:Void(0)" class="editVocabularyBtn">
-                                                    <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
-                                                </a>
-
-                                            </td>
-                                            <td>
-                                                <a href="javaScript:Void(0)" class="addVocabularyBtn">
-                                                    <img src="{{ asset('assets-new/images/add-verification.png')}}"
-                                                        alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="deleteVoucablaryBtn">
-                                                    <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="editVocabularyBtn">
+                                                <a href="javaScript:Void(0)" id="editEntity" class="editEntity">
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
                                                 </a>
 
@@ -195,8 +191,8 @@
         </div>
     </div>
     <!-- Content Section End -->
-   
-    @if(!isset($verification->id))
+    @include('adult.verification.modal.information.entity.create')
+    @else
     <div class="relationshipContent" style="height: 280px;">
         <div class="container">
             <div class="row">
@@ -208,25 +204,30 @@
             </div>
     </div>
     @endif
-    @if(isset($verification))
-
-    @include('adult.verification.modal.voucablary.edit-verification')
-    @include('adult.verification.modal.voucablary.delete-verification')
-
-    
-    @endif
-  
-    @include('adult.verification.modal.voucablary.add-verification')
-    @include('adult.verification.modal.add-info-verification')
-    @include('adult.verification.modal.voucablary.add-vocabulary')
-    @include('adult.verification.modal.voucablary.delete-vocabulary')
-    @include('adult.verification.modal.voucablary.edit-vocabulary')
-    <!-- Modal End -->
-</div>
+   
+    @include('adult.verification.modal.information.create')
+   
+   
 
 @endsection
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+<style>
+    .image{
+        margin: 20px;
+        text-align: center;
+        border: 2px solid;
+        padding: 14px;
+        border-radius: 5px;
+        background: #eee;
+        }
+    .image img{
+        border-radius : 5px;
+    }     
+    .validate_que{
+        list-style:none;
+    }
+</style>
 @endsection
 @section('scripts')
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
@@ -283,81 +284,35 @@ $('.dashboard').click(function(){
 
 })
 
-$('.validation').on('change',function(){
-        var problem = $(this).attr('data-id');
-        var validation  = $(this).val();
-        var name = $(this).attr('name')
-        $.ajaxSetup({
-               headers: {
-                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                       }
-               }); 
-        $.ajax({
-           url: "{{route('adult.sol-validation')}}",
-           data: {data : problem , value : validation , name : name},
-           type: 'POST',
-           success: function (response){                
-               console.log(response)
-            }
-
-        })
 
 
-
-   })
-
-
-   $('#add-info-varification-button').click(function(){
+$('#add-info-varification-button').click(function(){
         if($('#verification_types').val() == ''){
             toastr.error('Please select verification type first');
             return false;
         }
-        $('#createVerification').modal('toggle')
-   })
+        $('#createinfoVerification').modal('toggle')
+})
 //.editSolFunBtn
 
 $('.editverBtn').click(function(){
-   $('#editVerification').modal('toggle')
+    $('#btnSave').attr('id' , 'btnUpdate')
+    $('#verification_type_text_id').val($(this).data('verification_type_text_id'))
+    $('#file').val($(this).data('file'))
+    
+    var html = "";
+    if($(this).data('file') ==  1){
+        html += "<img src='{{ asset('assets-new/verification/voucablary/default-001.jpg')}}'  width='200' height='200' >"
+    }else{
+        html +=  "<img src='{{ asset('assets-new/verification/voucablary/default-002.jpg')}}'  width='200' height='200' >"
+    }
+    $('#default-image').removeClass('d-none').html(html)
+   $('#createinfoVerification').modal('toggle')
 })
-
-// .deleteverBtn
-$('.deleteverBtn').click(function(){
-    $('#deleteVerification').modal('toggle')
-})
-
-// .addVocabularyBtn
-$('.addVocabularyBtn').click(function(){
-    $('#addVocabulary').modal('toggle')
-})
-
-// .deleteVoucablaryBtn
-$('.deleteVoucablaryBtn').click(function(){
-     $('#deleteVocabulary').modal('toggle')
-})
-
-// .editVocabularyBtn
-$('.editVocabularyBtn').click(function(){
-    $('#editVocabulary').modal('toggle')
-})
-
-
-
-   $('.filetypeRadio').change(function(){
-        var type = $(this).val()
-        if(type == 0){
-            $('#fileType').val('0')
-            $('#imageFile').css("display", "block");
-            $('#youtubeLink').css("display", "none");
-        }if(type == 2){
-            $('#fileType').val('2')
-            $('#imageFile').css("display", "none");
-            $('#youtubeLink').css("display", "block");
-        }
-   })
 
    $(document).on('click','#btnSave',function(e){
        e.preventDefault();
-       var fd = new FormData($('#createVerificationForm')[0]);
+       var fd = new FormData($('#InformationVerificationForm')[0]);
        $.ajaxSetup({
        headers: {
                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -395,23 +350,16 @@ $('.editVocabularyBtn').click(function(){
                 
                  toastr.success(response.message);
                  location.reload()
-                //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                //  }else{
-
-
-                    
-                    // window.location.href = "{{ route('adult.dashboard')}}"
-                //  }
+               
                  
               }
            }
        });
    });
 
-   $('#btnUpdate').click(function(e){
+   $(document).on('click' , '#btnUpdate' , function(e){    
     e.preventDefault();
-       var fd = new FormData($('#VerificationeditForm')[0]);
+       var fd = new FormData($('#InformationVerificationForm')[0]);
        $.ajaxSetup({
        headers: {
                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -425,12 +373,12 @@ $('.editVocabularyBtn').click(function(){
             contentType: false,
             dataType: 'json',
             beforeSend: function(){
-                $('#btnSave').attr('disabled',true);
-                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+                $('#btnUpdate').attr('disabled',true);
+                $('#btnUpdate').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
             },
             error: function (xhr, status, error) {
-                $('#btnSave').attr('disabled',false);
-                $('#btnSave').html('Submit');
+                $('#btnUpdate').attr('disabled',false);
+                $('#btnUpdate').html('Submit');
                 $.each(xhr.responseJSON.data, function (key, item) {
                     toastr.error(item);
                 });
@@ -438,8 +386,8 @@ $('.editVocabularyBtn').click(function(){
             success: function (response){
                 if(response.success == false)
                 {
-                    $('#btnSave').attr('disabled',false);
-                    $('#btnSave').html('Login');
+                    $('#btnUpdate').attr('disabled',false);
+                    $('#btnUpdate').html('Login');
                     var errors = response.data;
                     $.each( errors, function( key, value ) {
                         toastr.error(value)
@@ -448,66 +396,69 @@ $('.editVocabularyBtn').click(function(){
                     
                     toastr.success(response.message);
                     location.reload()
-                    //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                    //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                    //  }else{
-
-
-                        
-                        // window.location.href = "{{ route('adult.dashboard')}}"
-                    //  }
-                    
                 }
             }
         });
    });
 
-   $('#btnDelete').click(function(e){
-    e.preventDefault();
-       var dv = new FormData($('#deleteVerificationForm')[0]);
-       $.ajaxSetup({
-       headers: {
-                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+   $(document).on('click', '.deleteVoucablaryBtn', function(e){
+         e.preventDefault();
+         var r = confirm("Are you sure to delete");
+         if (r == false) {
+             return false;
+         }
+         var id = $(this).attr('data-id')
+         $.ajaxSetup({
+               headers: {
+                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                       }
+               });      
+         $.ajax({
+               url: "{{route('adult.delete-verification')}}",
+               data:{id :  id},         
+              
+               type: 'POST',           
+               error: function (xhr, status, error) {
+                   $.each(xhr.responseJSON.data, function (key, item) {
+                       toastr.error(item);
+                   });
+               },
+               success: function (response){
+                
+                   if(response.success == false)
+                   {
+                       var errors = response.data;
+                       $.each( errors, function( key, value ) {
+                           toastr.error(value)
+                       });
+                   } else {
+                       toastr.success(response.message);
+                       location.reload()
+                   }
                }
-       });
-    $.ajax({
-            type: 'POST',
-            url: "{{route('adult.delete-verification')}}",
-            data: dv,
-            processData: false,
-            contentType: false,
-            dataType: 'json',
-            beforeSend: function(){
-                $('#btnSave').attr('disabled',true);
-                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-            },
-            error: function (xhr, status, error) {
-                $('#btnSave').attr('disabled',false);
-                $('#btnSave').html('Submit');
-                $.each(xhr.responseJSON.data, function (key, item) {
-                    toastr.error(item);
-                });
-            },
-            success: function (response){
-                if(response.success == false)
-                {
-                    $('#btnSave').attr('disabled',false);
-                    $('#btnSave').html('Login');
-                    var errors = response.data;
-                    $.each( errors, function( key, value ) {
-                        toastr.error(value)
-                    });
-                } else {
-                    
-                    toastr.success(response.message);
-                    location.reload();
-                }
-            }
-        });
+           });
+     });
 
-   });
+   
 
-   $('#btnSaveEntity').click(function(e){
+$(function(){
+    $('#file').change(function(){
+        var file = $('option:selected', this).data('src');           
+        if(file){
+            $('#default-image').removeClass('d-none').html('<img  src='+ file +' width="200" height="200">')
+        }else{
+            $('#default-image').addClass('d-none').html('')
+        }
+       
+   })
+})
+$('#addEntity').click(function(){
+    $('#informationEntity').modal('toggle')
+
+    })
+
+
+$('#btnSaveEntity').click(function(e){
     e.preventDefault();
        var dv = new FormData($('#addVocabularyForm')[0]);
        $.ajaxSetup({
@@ -517,18 +468,18 @@ $('.editVocabularyBtn').click(function(){
        });
        $.ajax({
             type: 'POST',
-            url: "{{route('adult.add-vocabulary')}}",
+            url: "{{route('adult.add-vocabulary-entity')}}",
             data: dv,
             processData: false,
             contentType: false,
             dataType: 'json',
             beforeSend: function(){
-                $('#btnSave').attr('disabled',true);
-                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+                $('#btnSaveEntity').attr('disabled',true);
+                $('#btnSaveEntity').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
             },
             error: function (xhr, status, error) {
-                $('#btnSave').attr('disabled',false);
-                $('#btnSave').html('Submit');
+                $('#btnSaveEntity').attr('disabled',false);
+                $('#btnSaveEntity').html('Save changes');
                 $.each(xhr.responseJSON.data, function (key, item) {
                     toastr.error(item);
                 });
@@ -536,8 +487,8 @@ $('.editVocabularyBtn').click(function(){
             success: function (response){
                 if(response.success == false)
                 {
-                    $('#btnSave').attr('disabled',false);
-                    $('#btnSave').html('Login');
+                    $('#btnSaveEntity').attr('disabled',false);
+                    $('#btnSaveEntity').html('Save changes');
                     var errors = response.data;
                     $.each( errors, function( key, value ) {
                         toastr.error(value)
@@ -551,106 +502,5 @@ $('.editVocabularyBtn').click(function(){
         });
 
    });
-
-
-   $('#btnDeleteVocab').click(function(e){
-    e.preventDefault();
-       var dv = new FormData($('#deleteVocabularyForm')[0]);
-       $.ajaxSetup({
-       headers: {
-                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-               }
-       });
-    $.ajax({
-            type: 'POST',
-            url: "{{route('adult.delete-vocabulary')}}",
-            data: dv,
-            processData: false,
-            contentType: false,
-            dataType: 'json',
-            beforeSend: function(){
-                $('#btnSave').attr('disabled',true);
-                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-            },
-            error: function (xhr, status, error) {
-                $('#btnSave').attr('disabled',false);
-                $('#btnSave').html('Submit');
-                $.each(xhr.responseJSON.data, function (key, item) {
-                    toastr.error(item);
-                });
-            },
-            success: function (response){
-                if(response.success == false)
-                {
-                    $('#btnSave').attr('disabled',false);
-                    $('#btnSave').html('Login');
-                    var errors = response.data;
-                    $.each( errors, function( key, value ) {
-                        toastr.error(value)
-                    });
-                } else {
-                    
-                    toastr.success(response.message);
-                    location.reload();
-                }
-            }
-        });
-
-   });
-
-   $('#btnEditSaveEntity').click(function(e){
-    e.preventDefault();
-       var fd = new FormData($('#editVocabularyForm')[0]);
-       $.ajaxSetup({
-       headers: {
-                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-               }
-       });
-    $.ajax({
-            type: 'POST',
-            url: "{{route('adult.updateVocabulary')}}",
-            data: fd,
-            processData: false,
-            contentType: false,
-            dataType: 'json',
-            beforeSend: function(){
-                $('#btnSave').attr('disabled',true);
-                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-            },
-            error: function (xhr, status, error) {
-                $('#btnSave').attr('disabled',false);
-                $('#btnSave').html('Submit');
-                $.each(xhr.responseJSON.data, function (key, item) {
-                    toastr.error(item);
-                });
-            },
-            success: function (response){
-                if(response.success == false)
-                {
-                    $('#btnSave').attr('disabled',false);
-                    $('#btnSave').html('Login');
-                    var errors = response.data;
-                    $.each( errors, function( key, value ) {
-                        toastr.error(value)
-                    });
-                } else {
-                    
-                    toastr.success(response.message);
-                    location.reload()
-                    //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                    //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                    //  }else{
-
-
-                        
-                        // window.location.href = "{{ route('adult.dashboard')}}"
-                    //  }
-                    
-                }
-            }
-        });
-   });
-
-
 </script>
 @endsection

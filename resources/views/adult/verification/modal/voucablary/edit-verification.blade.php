@@ -6,7 +6,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Verification</h4>
+                <h4 class="modal-title">Voucablary Verification</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <?php 
@@ -23,27 +23,7 @@
                 <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
                 <input type="hidden" name="fileType" id="fileType">
                 <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
-                <div class="form-group">
-                    <div class="row">
-                       <div class="col-6">
-                            <div class="custom-control custom-radio mb-5">
-                                <input type="radio" id="file" name="file" class="custom-control-input filetypeRadio" value="0" {{ ($verification->type == '0' || $verification->type == '1')  ? 'checked' : ''}}>
-                                <label class="custom-control-label" for="file"> File</label>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="custom-control custom-radio mb-5">
-                                <input type="radio" id="link" name="file" class="custom-control-input filetypeRadio" value="2" {{ ($verification->type == '2')  ? 'checked' : ''}}>
-                                <label class="custom-control-label" for="link"> Link</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <!-- style="{{($verification->type == '2') ? 'display:none' : ''}} -->
-                <div class="form-group" id="imageFile" style="{{($verification->type == '2') ? 'display:none' : ''}}">
-                    <input type="file" name="imageFile" id="imageFile" class="dropify" accept="image/*, video/*">
-                    
-                </div> 
+                
                  
 
                 <div class="form-group " id="youtubeLink " style="{{($verification->type == '0' || $verification->type == '1') ? 'display:none' : ''}}">
@@ -70,11 +50,11 @@
                 <div class="form-group">
                 <input type="text"  disabled value="{{ 'varification Type : '.@$verificationType->name }}"  class="form-control" id="varificationType" placeholder="varification Type *" required>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
 
                     <input type="text" name="name"  value='{{ $verification->name }}'  class="form-control" placeholder="Problem Name">
                     
-                </div>
+                </div> -->
                 <div class="form-group">
                     
                         <select class="form-control" name="verification_type_text_id" id="verification_type_text_id">
@@ -85,6 +65,21 @@
                         </select>
                     
                 </div>
+                <div class="form-group">
+                    
+                    <select class="form-control" name="file" id="file">
+                            <option value=''>Choose Image..</option>
+                            <option {{ ($verification->file == 1) ? 'selected' : '' }} data-src="{{ asset('assets-new/verification/voucablary/1vocabulary.png')}}" value="1">Image One </option>
+                            <option {{ ($verification->file == 2) ? 'selected' : '' }} data-src="{{ asset('assets-new/verification/voucablary/2vocabulary.png')}}" value="2">Image Tow</option>
+                    </select>
+                    <div class="image"  id="default-image"style="margin: 20px;text-align: center;">
+                        
+                        @if($verification->file == 1)
+                        <img class="mx-auto" src="{{ asset('assets-new/verification/voucablary/1vocabulary.png')}}"  width="200" height="200">
+                        @else
+                        <img class="mx-auto" src="{{ asset('assets-new/verification/voucablary/2vocabulary.png')}}"  width="200" height="200">
+                        @endif
+                    </div>
             </div>
             <div class="modal-footer">
                 <button type="button"   class="btn btn-secondary" data-dismiss="modal">Close</button>

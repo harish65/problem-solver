@@ -172,7 +172,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::post("/delete-solution", [\App\Http\Controllers\Adult\SolutionController::class, 'delete'])-> name("delete-solution");
         Route::post('/sol-validation', [\App\Http\Controllers\Adult\SolutionController::class, 'updateValidation'])->name('sol-validation');
         Route::post('/update-solution', [\App\Http\Controllers\Adult\SolutionController::class, 'updateSolution'])->name('updateSolution');
-       // Route::post('/delete-solution', [\App\Http\Controllers\Adult\SolutionController::class, 'deleteSolution'])->name('deleteSolution');
+       
         
         //Route Solution Function
         Route::get("/solution-func/{id?}", [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'index'])-> name("solution-func");
@@ -206,8 +206,10 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::post("store-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'store'])-> name("store-verification");
         Route::post("updateVerification", [\App\Http\Controllers\Adult\EditVerificationController::class, 'updateVerification'])-> name("updateVerification");
         Route::post("delete-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'delete'])-> name("delete-verification");
-        Route::post("add-vocabulary", [\App\Http\Controllers\Adult\VerificationController::class, 'addVocabulary'])-> name("add-vocabulary");
+        //Verification Entity Routes
+        Route::post("add-vocabulary-entity", [\App\Http\Controllers\Adult\VerificationController::class, 'addVocabularyEntity'])-> name("add-vocabulary-entity");
         Route::post("delete-vocabulary", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteVocabulary'])-> name("delete-vocabulary");
         Route::post("updateVocabulary", [\App\Http\Controllers\Adult\EditVerificationController::class, 'updateVocabulary'])-> name("updateVocabulary");
+        Route::post("add-vocabulary-validations", [\App\Http\Controllers\Adult\VerificationController::class, 'addVocabularyValidations'])-> name("add-vocabulary-validations");
     });  
 });
