@@ -34,6 +34,7 @@
                 <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
                 <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
                 <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>
+                <a id="relationship" href="{{ route("adult.varification",@$parameter) }}"></a>
                 
                 <div class="imgWrp">
                                 @if($problem -> type == 0)
@@ -319,6 +320,11 @@ $('.nav-verification').click(function(){
     $(this).attr('href' ,$('#verification').attr('href'))
 })
 
+$('.nav-relationship').click(function(){
+    $(this).attr('href' , '');
+    localStorage.setItem("relationship", $('#relationship').attr('href'));   
+    $(this).attr('href' ,$('#relationship').attr('href'))
+})
 
 
 $('.dashboard').click(function(){
@@ -338,6 +344,12 @@ $('.dashboard').click(function(){
     $('.nav-varification').attr('href' , '');
     localStorage.setItem("varification", $('#verification').attr('href'));   
     $('.nav-varification').attr('href' ,$('#solution_fun_nav').attr('href'))
+    //Relation
+    $('.nav-relationship').click(function(){
+    $(this).attr('href' , '');
+    localStorage.setItem("relationship", $('#relationship').attr('href'));   
+    $(this).attr('href' ,$('#relationship').attr('href'))
+})
 })
 
 </script>

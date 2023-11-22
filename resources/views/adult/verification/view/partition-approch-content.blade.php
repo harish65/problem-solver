@@ -38,146 +38,111 @@
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
                         <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />
-                        
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
-                <div class="principleRelation">
-                    <div class="conditionBlock">
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Problem</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto"
-                                            src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
-                                            height="128px">
-                                    </div>
-                                    <p class="redText" style="color:red">{{ $problem->name }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-                                </div>
+                <div class="principleRelation container">
+                            <div class="add-entity mb-3">
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+ Add New</button>
                             </div>
-                        </div>
-                        <div class="long-arrow">
-                            <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
-                            <!-- add arrow Image over here -->
-                            <img src="{{ asset('assets-new/images/arrowRight.png')}}">
-                            <!-- add arrow Image over here -->
-                        </div>
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Solution</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto"
-                                            src=" {{ asset('assets-new/solution/'.$solution->file)}}" width="100%"
-                                            height="128px">
+                    <div class="partitionApp">
+                            <div class="blockProblem">
+                                    <div class="projectBlock text-center">
+                                        <h2>Problem</h2>
+                                       <div class="problem-list">
+                                        <ul class="text-center p-2">
+                                            @foreach($entities as $entity)
+                                            <li class="form-control btn btn-success">{{ $entity->word}}
+                                                <div class="actions">
+                                                    <a class="text-white editAction" data-id="{{ $entity->id }}" data-part="{{ $entity->part }}" data-problem="{{ $entity->word }}"  data-solution="{{ $entity->given }}"><i class="fa fa-pencil"></i></a>
+                                                    <a class="text-white removeAction" data-id="{{ $entity->id }}" ><i class="fa fa-trash"></i></a>
+                                                </div>
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                       </div>
+                                            <div class="list-part">
+                                                <p style="color:red;">{{ $problem->name }}</p>
+                                            </div>
                                     </div>
-                                    <p class="redText" style="color:#00A14C">{{ $solution->name }}</p>
                                 </div>
-                                <div class="projectList">
-                                    <p class="date">{{ date('d/m/Y', strtotime($solution->created_at))}}</p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="long-arrow">
-                            <!-- <p style="position:relative; top:35px;left:25px;">through</p> -->
-                            <!-- add arrow Image over here -->
-                            <img src="{{ asset('assets-new/images/arrowRight.png') }}">
-                            <!-- add arrow Image over here -->
-                        </div>
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Verification</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto" src="{{ asset('assets-new/verification/1680525564.png')}}"
-                                            width="100%" height="128px">
-                                    </div>
-                                    <p class="redText">{{ $verificationType->name }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date">03/04/2023</p>
+                                <div class="arrow">
                                     <ul>
-                                        <li>
-                                            <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
-                                                <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a data-id="1" class="editverBtn" title="Delete">
-                                                <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
-                                                    alt=""></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><img
-                                                    src="{{ asset('assets-new/images/uploadIcon.png') }}"
-                                                    alt=""></a>
-                                        </li>
+                                        @foreach($entities as $entity)
+                                        <li><img src="{{ asset('assets-new/images/arrow_sm.png')}}"></li>
+                                        @endforeach
                                     </ul>
                                 </div>
+                                <div class="blockProblem">
+                                    <div class="projectBlock text-center">
+                                        <h2>Solution</h2>
+                                        <div class="problem-list">
+                                            <ul class="text-center p-2">
+                                                @foreach($entities as $entity)
+                                                <li class="form-control btn-success">{{ $entity->given}}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                        <div class="list-part">
+                                                <p style="color:#1e7e34;">{{ $solution->name }}</p>
+                                            </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="questionWrap">
-                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
-                            tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
-                            nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
-                            Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
-                        <div class="row">
-                            <div class="title">
-                                <h2>Vacabulary</h2>
 
+                        <!-- <ul>
+                            <li>
+                                    <div class="inner-section d-flex">
+                                        <input type="text" disabled class="form-control" value="Problem">
+                                        <img src="{{ asset('assets-new/images/arrow_sm.png')}}">
+                                        <input type="text" disabled class="form-control" value="Solution">
+                                    </div>
+                                </li>
+                                @php $part = 1;@endphp
+                                @foreach($entities as $entity)
+                                <li>
+                                    <div class="inner-section d-flex">                                        
+                                        <input type="text" readonly class="form-control" value="" >
+                                        <img src="{{ asset('assets-new/images/arrow_sm.png')}}">
+                                        <input type="text" readonly class="form-control" value="">
+                                    </div>
+                                </li>
+                                @php $part++;@endphp
+                                @endforeach
+                               
+                          
+                           
+                        </ul> -->
+                        <div class="questionWrap">
+                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
+                                tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
+                                nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+                                Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
+                            <div class="row">
                             </div>
-                            <div class="entity">
-                                <table class="table slp-tbl text-center">
-                                    <thead>
-                                        <th>Word</th>
-                                        <th>Actual Entity</th>
-                                        <th>Action</th>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Wrod</td>
-                                            <td>Entity</td>
-                                            <td>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/add-verification.png')}}"
-                                                        alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
-                                                </a>
 
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <h2>Validation Question</h2>
-
-
-                        
-                        
-                        <ul>
-                            <li>Yes, I do understand the relationship between communication and principle in a project.
-                            </li>
-                            <li>No, I do not understand the relationship between communication and principle in a
-                                project. </li>
+                            <h2>Validation Question</h2>
+                        <br>
+                        <form id="validation_form">
+                        <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                            <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
+                            <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                            <input type="hidden" name="project_id" value="{{ $project_id }}">
+                            <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                            <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                            <input type="hidden" name="name" id="name_" value="partition_aproach">
+                            
+                        <h5>Have you replaced each part of the problem to specific part of the solution?</h5>
+                        <ul class="validate_que" style="list-style:none;">
+                            
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, I have replaced each part of the problem to specific part of the solution</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, I haven’t not replaced each part of the problem to specific part of the solution</label></li>
+                           
                         </ul>
-
-                        
-                    </div>
+                        <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        </form>
+                        </div>
                 </div>
                 <!-- End -->
                 
@@ -186,15 +151,145 @@
     </div>
     <!-- Content Section End -->
 
+    <!-- Modal Start -->
     
-    
-    
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add New Part: {{ $part }}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                 <form id="entity_form" method="post">
+                    <div class="row">
+                        <div class="from-group">
+                            <label for="problem">Problem Part : {{ $part }}</label>
+                            <input type="text" disabled value="{{$problem->name}}" class="form-control">
+                            <input type="hidden" name="problem_id" value="{{$problem->id}}">
+                            <input type="hidden" name="part" value="{{$part}}" id="part">
+                        </div>
+                        <div class="from-group">
+                            <label for="problem">Solution Part : {{ $part }}</label>
+                            <input type="text" disabled value="{{$solution->name}}" class="form-control">
+                            <input type="hidden" name="solution_id" value="{{$solution->id}}">
+                        </div>
+                        <div class="from-group">
+                            <label for="word">Add Problem Part:</label>
+                            <input type="text" name="word" class="form-control">
+                        </div>
+                        <div class="from-group">
+                            <label for="word">Add Solution Part:</label>
+                            <input type="text" name="given" class="form-control">
+                        </div>
+                    </div>
+                 </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success" id="btnSave">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
     <!-- Modal End -->
+    <div class="modal fade" id="problemModal" tabindex="-1" role="dialog" aria-labelledby="problemModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Edit Part: {{ $part }}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                 <form id="entity_form_update" method="post">
+                    <div class="row">
+                    <input type="hidden" name="id" id="part_id">
+                        <div class="from-group">
+                            <label for="word">Edit Problem Part:</label>
+                            <input type="text" name="word" id="problem_part" class="form-control">
+                            <input type="hidden" name="problem_id" value="{{$problem->id}}">
+                            <input type="hidden" name="part" value="" id="part_update">
+                            <input type="hidden" name="solution_id" value="{{$solution->id}}">
+                        </div>
+                        <div class="from-group">
+                            <label for="word">Edit Solution Part:</label>
+                            <input type="text" name="given" id="solution_part" class="form-control">
+                        </div>
+                    </div>
+                 </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success" id="btnUpdate">Update</button>
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
 
 @endsection
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+<style>
+    .entity{
+        display: flex;
+        list-style: none;
+        justify-content: center;
+    }
+   li {
+    list-style: none;
+   }
+    li input{
+        text-align: center;
+        color: #000000 !important;
+        border: 1px solid #00A14C !important;
+        background: #fff !important;
+        font-weight: 500;
+        text-decoration: solid;
+        
+    }
+    .inner-section{
+        padding-bottom: 20px;
+    }
+    .inner-section input{
+
+        height: 50px;
+        font-size: 22px;
+        font-weight: 100;
+        width: 50% !important;
+        /* border-radius: 20px; */
+    }
+    .partionapproach{
+        justify-content:center !important;
+    }
+    .partitionApp{
+        display: flex;
+        justify-content:center;
+    }
+    .problem-list ul li{
+        margin-top: 10%;
+        border: 1px solid rgba(0, 161, 76, 0.5);
+    }
+    .arrow ul{
+        margin-top: 40%;
+        position: relative;
+        right: 20px;
+    }
+    .arrow ul li{
+        margin-top: 17%;
+    }
+    li .actions{
+        display: inline;
+        float: right;
+        font-size: 14px;
+        margin: 2%;
+        padding: 0;
+    }
+</style>
 @endsection
 @section('scripts')
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
@@ -275,41 +370,9 @@ $('.validation').on('change',function(){
    })
 
 
-   $('#add-varification-button').click(function(){
-   
-        if($('#verification_types').val() == ''){
-            toastr.error('Please select verification type first');
-            return false;
-        }
-        $('#createVerification').modal('toggle')
-   })
-//.editSolFunBtn
-
-$('.editverBtn').click(function(){
-   $('#createVerification').modal('toggle')
-})
-
-
-
-   $('.filetypeRadio').change(function(){
-        var type = $(this).val()
-        if(type == 0){
-            $('#fileType').val('0')
-            $('#imageFile').css("display", "block");
-            $('#youtubeLink').css("display", "none");
-        }if(type == 2){
-            $('#fileType').val('2')
-            $('#imageFile').css("display", "none");
-            $('#youtubeLink').css("display", "block");
-        }
-   })
-
-
-
-
    $(document).on('click','#btnSave',function(e){
        e.preventDefault();
-       var fd = new FormData($('#createVerificationForm')[0]);
+       var fd = new FormData($('#entity_form')[0]);
        $.ajaxSetup({
        headers: {
                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -317,7 +380,7 @@ $('.editverBtn').click(function(){
        });
        
        $.ajax({
-           url: "{{route('adult.store-verification')}}",
+           url: "{{route('adult.add-entity-word')}}",
            data: fd,
            processData: false,
            contentType: false,
@@ -360,7 +423,67 @@ $('.editverBtn').click(function(){
            }
        });
    });
+   $(document).on('click','.editAction',function(e){
+    $('#part_id').val($(this).data('id'))
+    $('#problem_part').val($(this).data('problem'))
+    $('#solution_part').val($(this).data('solution'))
+    $('#part_update').val($(this).data('part'))
+    $('#problemModal').modal('toggle');
+   })
 
+   $(document).on('click','#btnUpdate',function(e){
+    e.preventDefault();
+       var fd = new FormData($('#entity_form_update')[0]);
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+       
+       $.ajax({
+           url: "{{route('adult.add-entity-word')}}",
+           data: fd,
+           processData: false,
+           contentType: false,
+           dataType: 'json',
+           type: 'POST',
+           beforeSend: function(){
+             $('#btnSave').attr('disabled',true);
+             $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+           },
+           error: function (xhr, status, error) {
+               $('#btnSave').attr('disabled',false);
+               $('#btnSave').html('Submit');
+               $.each(xhr.responseJSON.data, function (key, item) {
+                   toastr.error(item);
+               });
+           },
+           success: function (response){
+             if(response.success == false)
+             {
+                 $('#btnSave').attr('disabled',false);
+                 $('#btnSave').html('Login');
+                 var errors = response.data;
+                 $.each( errors, function( key, value ) {
+                     toastr.error(value)
+                 });
+             } else {
+                
+                 toastr.success(response.message);
+                 location.reload()
+                //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
+                //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
+                //  }else{
+
+
+                    
+                    // window.location.href = "{{ route('adult.dashboard')}}"
+                //  }
+                 
+              }
+           }
+       });
+   })
 
 </script>
 @endsection

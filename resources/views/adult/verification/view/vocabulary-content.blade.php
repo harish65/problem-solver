@@ -150,9 +150,15 @@
                             nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
                             Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
                         <div class="row">
-                            <div class="title">
+                            <div class="title d-flex">
+                            <div class="text-left w-50 ">
                                 <h2>Vacabulary</h2>
                             </div>
+                                <div class="text-right w-50 pt-3">
+                                    <button type="button"  class="btn btn-success addVocabularyBtn" id="add-new-variant">+ Add New</button>
+                                </div>
+                            </div>
+
                             <div class="entity">
                                 <table class="table slp-tbl text-center">
                                     <thead>
@@ -204,16 +210,16 @@
                         <br>
                         <h5>Do I use any word that does not me solve the identified problem?</h5>
                         <input type="hidden" name="id" value="{{ $verification->id }}">
-                        <li><input  type="radio" data-id="{{ $verification->id  }}" {{ ($verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1"></label> Yes, I use words that does not help me solve the problem<label></li>
-                        <li><input  type="radio" data-id="{{ $verification->id  }}" {{ ($verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2"></label> No, I don't use any word that does not help me solve the problem<label></li>
+                        <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1">Yes, I use words that does not help me solve the problem</label> </li>
+                        <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2">No, I don't use any word that does not help me solve the problem</label> </li>
                         <br>    
                         <h5>Does each word from the vocabulary match to actual entity that enables solving the problem?</h5>    
-                        <li><input  type="radio" data-id="{{ $verification->id  }}" {{ ($verification->validations->validation_2 == 1) ? 'checked' : '' }} name="validation_2" class="form-check-input validation" value="1"> Yes, each word from the vocabulary matches to actual entity that enables me to solve the problem<label></li>
-                        <li><input  type="radio" data-id="{{ $verification->id  }}" {{ ($verification->validations->validation_2 == 2) ? 'checked' : '' }} name="validation_2" class="form-check-input validation" value="2"> No, some words I used in my vocabulary does not match to actual entity that enables me to solve the problem<label></li>
+                        <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} name="validation_2" class="form-check-input validation" value="1"> Yes, each word from the vocabulary matches to actual entity that enables me to solve the problem</label></li>
+                        <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} name="validation_2" class="form-check-input validation" value="2"> No, some words I used in my vocabulary does not match to actual entity that enables me to solve the problem</label></li>
                         <br>
                         <h5> Do you understand that the solution of a problem is given with its own vocabulary and does not include any word that does not help solve the problem?</h5>
-                        <li><input  type="radio" data-id="{{ $verification->id  }}" {{ ($verification->validations->validation_3 == 1) ? 'checked' : '' }} name="validation_3" class="form-check-input validation" value="1"> Yes, I understand that the solution of a problem is given with its own vocabulary and does not include any word that does not help me solve the problem<label></li>
-                        <li><input type="radio" data-id="{{ $verification->id  }}" {{ ($verification->validations->validation_3 == 2) ? 'checked' : '' }} name="validation_3" class="form-check-input validation" value="2"> No, I do not understand that the solution of a problem is given with its own vocabulary and does not include any word that does not help me solve the problem<label></li>
+                        <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_3 == 1) ? 'checked' : '' }} name="validation_3" class="form-check-input validation" value="1"> Yes, I understand that the solution of a problem is given with its own vocabulary and does not include any word that does not help me solve the problem</label></li>
+                        <li><label><input type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_3 == 2) ? 'checked' : '' }} name="validation_3" class="form-check-input validation" value="2"> No, I do not understand that the solution of a problem is given with its own vocabulary and does not include any word that does not help me solve the problem</label></li>
                     </ul>
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
                         </form>
@@ -391,6 +397,7 @@ $('#saveValidations').on('click',function(){
 //.editSolFunBtn
 
 $('.editverBtn').click(function(){
+   
    $('#editVerification').modal('toggle')
 })
 
@@ -411,7 +418,7 @@ $('.editVocabularyBtn').click(function(){
     $('#key').val($(this).attr('data-key'))
     $('#value').val($(this).attr('data-value'))
     $('#point_to').val($(this).attr('data-point_to'))
-
+    $('#id').val($(this).attr('data-id'))
     $('#addVocabulary').modal('toggle')
 })
    $(document).on('click','#btnSave',function(e){

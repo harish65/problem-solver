@@ -119,7 +119,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a data-id="{{ $verification->id }}" class="deleteVoucablaryBtn" title="Delete">
+                                            <a data-id="{{ $verification->id }}" class="deleteverBtn" title="Delete">
                                                 <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
                                                     alt="delete-icon"></a>
                                         </li>
@@ -139,49 +139,79 @@
                             nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
                             Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
                         <div class="row">
-                            <div class="title">
-                                <h2>Information</h2>
-
+                        <div class="title d-flex">
+                                <div class="text-left w-50 ">
+                                    <h2>Information</h2>
+                                </div>
+                                <div class="text-right w-50 pt-3">
+                                    <button type="button"  class="btn btn-success addEntity" id="add-new-variant">+ Add New</button>
+                                </div>
                             </div>
                             <div class="entity">
                                 <table class="table slp-tbl text-center">
                                     <thead>
                                         <th>Identified Information</th>
-                                        <th>Given Information</th>                                       
+                                        <th></th>
+                                        <th>Given Information</th>
+                                        <th>Matched</th>                                       
                                         <th>Action</th>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Wrod</td>
-                                            <td>Entity</td>
-                                          
-                                            <td>
-                                                <a href="javaScript:Void(0)" id="addEntity" class="addEntity">
-                                                    <img src="{{ asset('assets-new/images/add-verification.png')}}"
-                                                        alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" id="deleteEntity" class="deleteEntity">
-                                                    <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" id="editEntity" class="editEntity">
-                                                    <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
-                                                </a>
+                                    
 
-                                            </td>
+
+                                    @foreach($entity as $ent)
+                                        <tr>
+                                           
+                                                <td>{{ $ent->verification_key }}</td>
+                                                <td>  
+                                                    <span>{{ ($ent->point_to == 'to') ? 'Match' : 'Not Matched'}}</span>  
+                                                    <br>                 
+                                                    <img src="{{ asset('assets-new/images/arrowRight.png') }}" width="80" height="25">    
+                                                </td>
+                                                <td>{{ $ent->verification_value }}</td>
+                                                <td>  
+                                                    <span>{{ ($ent->point_to == 'to') ? 'Check' : 'Not Checked'}}</span>  
+                                                    
+                                                </td>
+                                                
+                                                <td>
+                                                    <a href="javaScript:Void(0)"  id="addEntity" class="addEntity">
+                                                        <img src="{{ asset('assets-new/images/add-verification.png')}}"
+                                                            alt="">
+                                                    </a>
+                                                    <a href="javaScript:Void(0)" data-id="{{ $ent->id }}"  id="deleteEntity" class="deleteEntity">
+                                                        <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
+                                                    </a>
+                                                    <a href="javaScript:Void(0)" id="editEntity" class="editEntity"
+                                                        data-id="{{ $ent->id }}"
+                                                        data-key="{{ $ent->verification_key }}"
+                                                        data-value="{{ $ent->verification_value }}""
+                                                        data-point_to="{{ $ent->point_to }}"
+                                                    >
+                                                        <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
+                                                    </a>
+
+                                                </td>
+                                            
                                         </tr>
+                                        @endforeach 
                                     </tbody>
                                 </table>
                             </div>
                         </div>
 
                         <h2>Validation Question</h2>
-                        <br>    
+                        <br> 
+                        <form id="validation_form">   
                         <ul>
                             <h5>Does the identified information match the given information?</h5>
-                            <li>Yes, the identified information matches the given information</li>
-                            <li>No, the identified information does not match the given information</li>
+                            <input type="hidden" name="id" value="{{ $verification->id }}">
+                            <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1">Yes, the identified information matches the given information</label></li>
+                            <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2">No, the identified information does not match the given information</label></li>
                         </ul>
-
+                        <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        </form>
                         
                     </div>
                 </div>
@@ -191,7 +221,7 @@
         </div>
     </div>
     <!-- Content Section End -->
-    @include('adult.verification.modal.information.entity.create')
+    
     @else
     <div class="relationshipContent" style="height: 280px;">
         <div class="container">
@@ -204,10 +234,10 @@
             </div>
     </div>
     @endif
-   
+    @include('adult.verification.modal.information.entity.create')
     @include('adult.verification.modal.information.create')
    
-   
+</div>
 
 @endsection
 @section('css')
@@ -401,45 +431,15 @@ $('.editverBtn').click(function(){
         });
    });
 
-   $(document).on('click', '.deleteVoucablaryBtn', function(e){
-         e.preventDefault();
-         var r = confirm("Are you sure to delete");
-         if (r == false) {
-             return false;
-         }
-         var id = $(this).attr('data-id')
-         $.ajaxSetup({
-               headers: {
-                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                       }
-               });      
-         $.ajax({
-               url: "{{route('adult.delete-verification')}}",
-               data:{id :  id},         
-              
-               type: 'POST',           
-               error: function (xhr, status, error) {
-                   $.each(xhr.responseJSON.data, function (key, item) {
-                       toastr.error(item);
-                   });
-               },
-               success: function (response){
-                
-                   if(response.success == false)
-                   {
-                       var errors = response.data;
-                       $.each( errors, function( key, value ) {
-                           toastr.error(value)
-                       });
-                   } else {
-                       toastr.success(response.message);
-                       location.reload()
-                   }
-               }
-           });
-     });
-
    
+
+     $('.editEntity').click(function(){
+        $('#key').val($(this).attr('data-key'))
+        $('#value').val($(this).attr('data-value'))
+        $('#point_to').val($(this).attr('data-point_to'))
+        $('#id').val($(this).attr('data-id'))
+        $('#informationEntity').modal('toggle')
+     })
 
 $(function(){
     $('#file').change(function(){
@@ -451,16 +451,19 @@ $(function(){
         }
        
    })
+
+
 })
-$('#addEntity').click(function(){
+$('.addEntity').click(function(){
     $('#informationEntity').modal('toggle')
 
     })
 
 
 $('#btnSaveEntity').click(function(e){
+    
     e.preventDefault();
-       var dv = new FormData($('#addVocabularyForm')[0]);
+       var dv = new FormData($('#informationEntityForm')[0]);
        $.ajaxSetup({
        headers: {
                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -502,5 +505,123 @@ $('#btnSaveEntity').click(function(e){
         });
 
    });
+   $(document).on('click', '.deleteEntity', function(e){
+         e.preventDefault();
+         var r = confirm("Are you sure to delete");
+         if (r == false) {
+             return false;
+         }
+         var id = $(this).attr('data-id')
+         $.ajaxSetup({
+               headers: {
+                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                       }
+               });      
+         $.ajax({
+               url: "{{route('adult.delete-vocabulary')}}",
+               data:{id :  id},         
+              
+               type: 'POST',           
+               error: function (xhr, status, error) {
+                   $.each(xhr.responseJSON.data, function (key, item) {
+                       toastr.error(item);
+                   });
+               },
+               success: function (response){
+                
+                   if(response.success == false)
+                   {
+                       var errors = response.data;
+                       $.each( errors, function( key, value ) {
+                           toastr.error(value)
+                       });
+                   } else {
+                       toastr.success(response.message);
+                       location.reload()
+                   }
+               }
+           });
+     });
+
+     $('#saveValidations').on('click',function(){
+        var problem = $(this).attr('data-id');
+        var fd = new FormData($('#validation_form')[0]);
+        $.ajaxSetup({
+               headers: {
+                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                       }
+               }); 
+        $.ajax({
+           url: "{{route('adult.add-vocabulary-validations')}}",
+           data: fd,
+           processData: false,
+           contentType: false,
+           dataType: 'json',
+           type: 'POST',
+           beforeSend: function(){
+             $('#validation').attr('disabled',true);
+             $('#validation').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+           },
+           error: function (xhr, status, error) {
+               $('#validation').attr('disabled',false);
+               $('#validation').html('Save Validations');
+               $.each(xhr.responseJSON.data, function (key, item) {
+                   toastr.error(item);
+               });
+           },
+           success: function (response){
+             if(response.success == false)
+             {
+                 $('#validation').attr('disabled',false);
+                 $('#validation').html('Save Validations');
+                 var errors = response.data;
+                 $.each( errors, function( key, value ) {
+                     toastr.error(value)
+                 });
+             } else {
+                
+                 toastr.success(response.message);
+                 location.reload()
+              }
+           }
+       });
+   })
+   // .deleteverBtn
+$('.deleteverBtn').click(function(e){
+    e.preventDefault();
+         var r = confirm("Are you sure to delete");
+         if (r == false) {
+             return false;
+         }
+         var id = $(this).attr('data-id')
+         $.ajaxSetup({
+               headers: {
+                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                       }
+               });      
+         $.ajax({
+               url: "{{route('adult.delete-verification')}}",
+               data:{id :  id},
+               type: 'POST',           
+               error: function (xhr, status, error) {
+                   $.each(xhr.responseJSON.data, function (key, item) {
+                       toastr.error(item);
+                   });
+               },
+               success: function (response){
+                
+                   if(response.success == false)
+                   {
+                       var errors = response.data;
+                       $.each( errors, function( key, value ) {
+                           toastr.error(value)
+                       });
+                   } else {
+                       toastr.success(response.message);
+                       location.reload()
+                   }
+               }
+           });
+})
 </script>
 @endsection

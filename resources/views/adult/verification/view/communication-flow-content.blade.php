@@ -44,137 +44,75 @@
                 </div>
                 <!-- start -->
                 <div class="principleRelation">
-                    <div class="conditionBlock">
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Problem</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto"
-                                            src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
-                                            height="128px">
+                    <ul class="inner-card">
+                        @foreach($users as $k=>$user)
+                            @if($k < 2)
+                            <li>
+                                <div class="blockProblem">
+                                    <div class="projectBlock text-center">
+                                        <h2>People</h2>
+                                        <div class="projectList text-center">
+                                            <div class="imgWrp">
+                                                <img class="mx-auto"
+                                                    src="{{ asset('assets-new/users/'.$user->file)}}" width="100%"
+                                                    height="128px">
+                                            </div>
+                                            <p class="redText" style="color:red">Adult</p>
+                                        </div>
+                                        <div class="">
+                                            <button class="btn btn-success" value="communicate">Communication</button>
+                                            <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                        </div>
                                     </div>
-                                    <p class="redText" style="color:red">{{ $problem->name }}</p>
                                 </div>
-                                <div class="projectList">
-                                    <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="long-arrow">
-                            <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
-                            <!-- add arrow Image over here -->
+                        </li>
+                        @endif
+                       @endforeach
+                       <li>
+                       <div class="long-arrow-flow">
                             <img src="{{ asset('assets-new/images/arrowRight.png')}}">
                             <!-- add arrow Image over here -->
                         </div>
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Solution</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto"
-                                            src=" {{ asset('assets-new/solution/1680525564.png')}}" width="100%"
-                                            height="128px">
+                        </li>
+                        <li>
+                       <div class="blockProblem">
+                                <div class="projectBlock text-center">
+                                    <h2>People</h2>
+                                    <div class="projectList text-center">
+                                        <div class="imgWrp">
+                                            <img class="mx-auto"
+                                                src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
+                                                height="128px">
+                                        </div>
+                                        <p class="redText" style="color:red">{{ $problem->name }}</p>
                                     </div>
-                                    <p class="redText" style="color:#00A14C">{{ $solution->name }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date">03/04/2023</p>
+                                    <div class="">
+                                    <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
                                     <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="long-arrow">
-                            <!-- <p style="position:relative; top:35px;left:25px;">through</p> -->
-                            <!-- add arrow Image over here -->
-                            <img src="{{ asset('assets-new/images/arrowRight.png') }}">
-                            <!-- add arrow Image over here -->
-                        </div>
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Verification</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto" src="{{ asset('assets-new/verification/1680525564.png')}}"
-                                            width="100%" height="128px">
                                     </div>
-                                    <p class="redText">{{ $verificationType->name }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date">03/04/2023</p>
-                                    <ul>
-                                        <li>
-                                            <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
-                                                <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a data-id="1" class="editverBtn" title="Delete">
-                                                <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
-                                                    alt=""></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><img
-                                                    src="{{ asset('assets-new/images/uploadIcon.png') }}"
-                                                    alt=""></a>
-                                        </li>
-                                    </ul>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                            </li>
+                    </ul>
                     <div class="questionWrap">
                         <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
                             tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
                             nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
                             Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
-                        <div class="row">
-                            <div class="title">
-                                <h2>Vacabulary</h2>
-
-                            </div>
-                            <div class="entity">
-                                <table class="table slp-tbl text-center">
-                                    <thead>
-                                        <th>Word</th>
-                                        <th>Actual Entity</th>
-                                        <th>Action</th>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Wrod</td>
-                                            <td>Entity</td>
-                                            <td>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/add-verification.png')}}"
-                                                        alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
-                                                </a>
-
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
                         <h2>Validation Question</h2>
-
-
-                        
-                        
-                        <ul>
-                            <li>Yes, I do understand the relationship between communication and principle in a project.
-                            </li>
-                            <li>No, I do not understand the relationship between communication and principle in a
-                                project. </li>
+                        <br>
+                        <form id="validation_form">
+                                <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                        <h5>Do I communicate with others to solve the underlying problem?</h5>
+                        <ul class="validate_que" style="list-style:none;">
+                            
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} value="1">&nbsp;&nbsp;Yes, I communicate with others to solve the problem</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2">&nbsp;&nbsp;No, I do not communicate with others to solve the problem</label></li>
+                           
                         </ul>
+                        <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        </form>
+                        
 
                         
                     </div>
@@ -195,6 +133,18 @@
 @endsection
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+<style>
+    .inner-card{
+        margin: 0 30px;
+        display: flex;
+        gap:50px;
+        list-style: none;
+    }
+    .long-arrow-flow{
+        position: relative;
+        top:45%;
+    }
+</style>
 @endsection
 @section('scripts')
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>

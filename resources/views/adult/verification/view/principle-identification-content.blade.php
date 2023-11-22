@@ -47,17 +47,17 @@
                     <div class="conditionBlock">
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
-                                <h2>Problem</h2>
+                                <h2>People</h2>
                                 <div class="projectList text-center">
                                     <div class="imgWrp">
                                         <img class="mx-auto"
-                                            src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
+                                            src="{{ asset('assets-new/users/'.@$users->file)}}" width="100%"
                                             height="128px">
                                     </div>
-                                    <p class="redText" style="color:red">{{ $problem->name }}</p>
+                                    <p class="redText" style="color:red">{{ @$users->type }}</p>
                                 </div>
                                 <div class="projectList">
-                                    <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
+                                    <p class="date"></p>
                                     <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
                                 </div>
                             </div>
@@ -70,19 +70,16 @@
                         </div>
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
-                                <h2>Solution</h2>
+                                <h2>Principles</h2>
                                 <div class="projectList text-center">
                                     <div class="imgWrp">
                                         <img class="mx-auto"
-                                            src=" {{ asset('assets-new/solution/'.$solution->file)}}" width="100%"
-                                            height="128px">
+                                            src=" {{ asset('assets-new/verification_types/pi/pi-card.jpg')}}" width="100%"
+                                            height="250px">
                                     </div>
-                                    <p class="redText" style="color:#00A14C">{{ $solution->name }}</p>
+                                    
                                 </div>
-                                <div class="projectList">
-                                    <p class="date">{{ date('d/m/Y', strtotime($solution->created_at))}}</p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-                                </div>
+                                
                             </div>
                         </div>
                         <div class="long-arrow">
@@ -93,89 +90,137 @@
                         </div>
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
-                                <h2>Verification</h2>
+                                <h2>Problem</h2>
                                 <div class="projectList text-center">
                                     <div class="imgWrp">
-                                        <img class="mx-auto" src="{{ asset('assets-new/verification/1680525564.png')}}"
+                                        <img class="mx-auto" src="{{ asset('assets-new/problem/'.$problem->file)}}"
                                             width="100%" height="128px">
                                     </div>
-                                    <p class="redText">{{ $verificationType->name }}</p>
+                                    <p class="redText" style="color:red">{{ $problem->name }}</p>
                                 </div>
                                 <div class="projectList">
-                                    <p class="date">03/04/2023</p>
+                                <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
                                     <ul>
                                         <li>
-                                            <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
+                                            <!-- <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
                                                 <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
-                                            </a>
+                                            </a> -->
                                         </li>
                                         <li>
-                                            <a data-id="1" class="editverBtn" title="Delete">
+                                            <!-- <a data-id="1" class="editverBtn" title="Delete">
                                                 <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
-                                                    alt=""></a>
+                                                    alt=""></a> -->
                                         </li>
                                         <li>
-                                            <a href="#"><img
+                                            <!-- <a href="#"><img
                                                     src="{{ asset('assets-new/images/uploadIcon.png') }}"
-                                                    alt=""></a>
+                                                    alt=""></a> -->
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
                     <div class="questionWrap">
                         <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
                             tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
                             nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
                             Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
                         <div class="row">
-                            <div class="title">
-                                <h2>Vacabulary</h2>
-
+                          
+                            <div class="title d-flex">
+                            <div class="text-left w-50 ">
+                                <h2>Principle Identification</h2>
+                            </div>
+                                <div class="text-right w-50 pt-3">
+                                    <button type="button"  class="btn btn-success addVocabularyBtn" id="add-new-variant">Select</button>
+                                </div>
+                            </div>
                             </div>
                             <div class="entity">
                                 <table class="table slp-tbl text-center">
                                     <thead>
-                                        <th>Word</th>
-                                        <th>Actual Entity</th>
-                                        <th>Action</th>
+                                    <td>Principle Count</td>
+                                    <td>Actual Principle</td>
+                                    <td>Applicable</td>
+                                    <td>Action</td>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Wrod</td>
-                                            <td>Entity</td>
-                                            <td>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/add-verification.png')}}"
-                                                        alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
-                                                </a>
-
-                                            </td>
-                                        </tr>
+                                    @php $index = 1 @endphp
+                                           @foreach($allVarifications as $data)
+                                                @if($data->type == 1)
+                                                <tr class="given-set {{ ($verification->type == 0) ? 'show':'d-none' }}">
+                                                    <td>{{ $data->number }}</td>
+                                                    <td>{{ $data->text }}</td>
+                                                    <td> {{ ($data->applicable == 0) ? 'YES' :'NO'   }}</td>
+                                                    <td> <a href="javaScript:Void(0)" class="editEntity"
+                                                        data-id="{{ $data->id }}"
+                                                        data-priciple="{{ $data->text }}"
+                                                        data-applicable="{{ $data->applicable }}"
+                                                        data-index="{{ $index }}"
+                                                        >
+                                                                <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                @php $index++ @endphp
+                                                @endif
+                                                @endforeach
+                                        @php $index = 1 @endphp
+                                           @foreach($allVarifications as $data)
+                                                @if($data->type == 2)
+                                                <tr class="derived-principle {{ ($verification->type == 1) ? 'show':'d-none' }}">
+                                                    <td>{{ $data->number }}</td>
+                                                    <td>{{ $data->text }}</td>
+                                                    <td> {{ ($data->applicable == 0) ? 'YES' :'NO'   }}</td>
+                                                    <td> <a href="javaScript:Void(0)" class="editEntity"
+                                                        data-id="{{ $data->id }}"
+                                                        data-priciple="{{ $data->text }}"
+                                                        data-applicable="{{ $data->applicable }}"
+                                                        data-number="{{ $data->number }}"
+                                                        >
+                                                                <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                @php $index++ @endphp
+                                                @endif
+                                           @endforeach
+                                        
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-
-                        <h2>Validation Question</h2>
-
-
-                        
-                        
-                        <ul>
-                            <li>Yes, I do understand the relationship between communication and principle in a project.
-                            </li>
-                            <li>No, I do not understand the relationship between communication and principle in a
-                                project. </li>
-                        </ul>
-
+                        @if($verification->type == 1)
+                        <form id="content" action="{{ url('adult/store-priciple-identification')}}" method="post">
+                            @csrf
+                                <div class="row">
+                                    <textarea name="content"> {{ @$allVarifications[0]->content }}</textarea>
+                                </div>
+                                
+                                <div class="row mt-3 text-right">
+                                    <div class="form-group">
+                                            <button class="btn btn-success" id="update-content"  type="submit">Update Content</button>
+                                    </div>
+                                </div>
+                        </form>
+                        @endif
+                        <div class="row">
+                            <h2>Validation Question</h2>
+                            <form id="validation_form">
+                                <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                            <ul style="list-style:none;">
+                            <h5>Do you use principles to solve the underlying problem?</h5>
+                                <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="validation" value="1">Ye, I use principles to solve the underlying problem.</label></li>
+                                <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="validation" value="2">No, I don’t use principles to solve the underlying problem.</label></li>
+                            <h5>Do people use principles to solve the problem?</h5>    
+                            <li><label><input  type="radio"  {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} name="validation_2" class="validation" value="1">Yes, people user principles to solve the problem</label></li>
+                                <li><label><input  type="radio"  {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} name="validation_2" class="validation" value="2">No, people don’t use principles to solve the problem</label></li>
+                            </ul>
+                            <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        </form>
+                        </div>
                         
                     </div>
                 </div>
@@ -188,18 +233,64 @@
 
     
     
-    
+    @include('adult.verification.modal.principle-identification.add')
     <!-- Modal End -->
-</div>
+    <div class="modal fade" id="pricipleIdentfyModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true" enctype="multipart/form-data">
 
+    <form method="POST" id="pricipleIdentfy" enctype="multipart/form-data">
+        @csrf
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Principle dentification</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <?php 
+           
+                        $problem_id =  Crypt::encrypt($problem_id);
+                        $project_id =  Crypt::encrypt($project_id);
+                        $solution_id =  Crypt::encrypt($solution_id);
+                    ?>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="ver_id" value="{{ @$verification->id}}">
+                    <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                    <input type="hidden" name="project_id" value="{{ $project_id }}">
+                    <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                    <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                    <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
+                    <div class="form-group">
+                        <select class="form-control" name="applicable">
+                            <option value='0'>THE GIVEN SET</option>
+                            <option value='1'>DERIVED PRINCIPLE</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="btnSave" class="btn btn-success">Select</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 @endsection
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
 @endsection
 @section('scripts')
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+<script src="https://cdn.tiny.cloud/1/5f20xhd98muhs1m7cl3eud00r4ugz5hxk5cbblquuo02mfef/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
    
+
+
+
+
+
+
+
 $('#verification_types').on('change',function(){
     var id = $(this).val();
     window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
@@ -285,29 +376,73 @@ $('.validation').on('change',function(){
    })
 //.editSolFunBtn
 
-$('.editverBtn').click(function(){
+$('.editEntity').click(function(){
+    $('#pricple_identify_id').val($(this).attr('data-id'))
+    var counter = $(this).attr('data-number') + '.  ' + $(this).attr('data-priciple')
+    $('#principle').val(counter)
+    if($(this).attr('data-applicable')){
+        $('#applicable').val($(this).attr('data-applicable'))
+    }else{
+        $('#applicable').val('0')
+    }
+    
    $('#createVerification').modal('toggle')
+})
+   $('.addVocabularyBtn').click(function(){
+    $('#pricipleIdentfyModal').modal('toggle')
 })
 
 
-
-   $('.filetypeRadio').change(function(){
-        var type = $(this).val()
-        if(type == 0){
-            $('#fileType').val('0')
-            $('#imageFile').css("display", "block");
-            $('#youtubeLink').css("display", "none");
-        }if(type == 2){
-            $('#fileType').val('2')
-            $('#imageFile').css("display", "none");
-            $('#youtubeLink').css("display", "block");
-        }
-   })
-
-
-
-
    $(document).on('click','#btnSave',function(e){
+       e.preventDefault();
+       var fd = new FormData($('#pricipleIdentfy')[0]);
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+       
+       $.ajax({
+           url: "{{route('adult.store-priciple-verification')}}",
+           data: fd,
+           processData: false,
+           contentType: false,
+           dataType: 'json',
+           type: 'POST',
+           beforeSend: function(){
+             $('#btnSave').attr('disabled',true);
+             $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+           },
+           error: function (xhr, status, error) {
+               $('#btnSave').attr('disabled',false);
+               $('#btnSave').html('Submit');
+               $.each(xhr.responseJSON.data, function (key, item) {
+                   toastr.error(item);
+               });
+           },
+           success: function (response){
+             if(response.success == false)
+             {
+                 $('#btnSave').attr('disabled',false);
+                 $('#btnSave').html('Login');
+                 var errors = response.data;
+                 $.each( errors, function( key, value ) {
+                     toastr.error(value)
+                 });
+             } else {
+                
+                 toastr.success(response.message);
+                 location.reload()
+               
+                 
+              }
+           }
+       });
+   });
+
+
+
+   $(document).on('click','#btnSavePriciple',function(e){
        e.preventDefault();
        var fd = new FormData($('#createVerificationForm')[0]);
        $.ajaxSetup({
@@ -317,7 +452,7 @@ $('.editverBtn').click(function(){
        });
        
        $.ajax({
-           url: "{{route('adult.store-verification')}}",
+           url: "{{route('adult.store-priciple-identification')}}",
            data: fd,
            processData: false,
            contentType: false,
@@ -362,5 +497,15 @@ $('.editverBtn').click(function(){
    });
 
 
+  
+
+
 </script>
+<script>
+    tinymce.init({
+      selector: 'textarea',
+      plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+      toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+    });
+  </script>
 @endsection
