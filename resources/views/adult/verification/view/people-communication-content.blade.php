@@ -44,138 +44,57 @@
                 </div>
                 <!-- start -->
                 <div class="principleRelation">
-                    <div class="conditionBlock">
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Problem</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto"
-                                            src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
-                                            height="128px">
+                    <ul class="inner-card">
+                        @foreach($users as $user)
+                        <li>
+                            <div class="blockProblem">
+                                <div class="projectBlock text-center">
+                                    <h2>People</h2>
+                                    <div class="projectList text-center">
+                                        <div class="imgWrp">
+                                            <img class="mx-auto"
+                                                src="{{ asset('assets-new/users/'.$user->file)}}" width="100%"
+                                                height="128px">
+                                        </div>
+                                        <p class="redText" style="color:red">{{ $user->name }}</p>
+                                        
+                                        <p class="redText">{{ $user->type }}</p>
                                     </div>
-                                    <p class="redText" style="color:red">{{ $problem->name }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                    <div class="">
+                                        <button class="btn btn-success communicate" data-customer_id="{{ $user->id }}" value="communicate" data-toggle="modal" data-target="#exampleModal">Communication</button>
+                                        <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="long-arrow">
-                            <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
-                            <!-- add arrow Image over here -->
-                            <img src="{{ asset('assets-new/images/arrowRight.png')}}">
-                            <!-- add arrow Image over here -->
-                        </div>
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Solution</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto"
-                                            src=" {{ asset('assets-new/solution/'.$solution->file)}}" width="100%"
-                                            height="128px">
-                                    </div>
-                                    <p class="redText" style="color:#00A14C">{{ $solution->name }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date">{{ date('d/m/Y', strtotime($solution->created_at))}}</p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="long-arrow">
-                            <!-- <p style="position:relative; top:35px;left:25px;">through</p> -->
-                            <!-- add arrow Image over here -->
-                            <img src="{{ asset('assets-new/images/arrowRight.png') }}">
-                            <!-- add arrow Image over here -->
-                        </div>
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Verification</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto" src="{{ asset('assets-new/verification/1680525564.png')}}"
-                                            width="100%" height="128px">
-                                    </div>
-                                    <p class="redText">{{ $verificationType->name }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date">03/04/2023</p>
-                                    <ul>
-                                        <li>
-                                            <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
-                                                <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a data-id="1" class="editverBtn" title="Delete">
-                                                <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
-                                                    alt=""></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><img
-                                                    src="{{ asset('assets-new/images/uploadIcon.png') }}"
-                                                    alt=""></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                      </li>
+                       @endforeach
+                    </ul>
                     <div class="questionWrap">
                         <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
                             tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
                             nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
                             Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
-                        <div class="row">
-                            <div class="title">
-                                <h2>Vacabulary</h2>
-
-                            </div>
-                            <div class="entity">
-                                <table class="table slp-tbl text-center">
-                                    <thead>
-                                        <th>Word</th>
-                                        <th>Actual Entity</th>
-                                        <th>Action</th>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Wrod</td>
-                                            <td>Entity</td>
-                                            <td>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/add-verification.png')}}"
-                                                        alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
-                                                </a>
-
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
                         <h2>Validation Question</h2>
-
-
-                        
-                        
-                        <ul>
-                            <li>Yes, I do understand the relationship between communication and principle in a project.
-                            </li>
-                            <li>No, I do not understand the relationship between communication and principle in a
-                                project. </li>
+                        <br>
+                        <form id="validation_form">
+                                <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                        <h5>Have you separated the people in the project from their communication?</h5>
+                        <ul class="validate_que" style="list-style:none;">
+                            
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I have separated the people in the project from their communication</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2">&nbsp;&nbsp;No, I have not separated the people in the project form their communication</label></li>
+                           
                         </ul>
 
+                        <h5>Do you understand that separation of people and communication is important in a project?</h5>
+                        <ul class="validate_que" style="list-style:none;">
+                            
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I do understand that separation of people and communication is important in a project</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}  value="2">&nbsp;&nbsp;No, I don’t understand that separation of people and communication is important in a project</label></li>
+                           
+                        </ul>
+                        <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        </form>
                         
                     </div>
                 </div>
@@ -186,21 +105,61 @@
     </div>
     <!-- Content Section End -->
 
-    @if(!@$verification->id)
-    <div class="relationshipContent" style="height: 280px;">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <button class="btn btn-success" id="add-varification-button"><i class="fa fa-plus"></i>  Create Verificatoin</button>
-                </div>
-                
+   
+     <!-- Modal start -->
+     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Person Communication</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            <form id="comm_form" method="post">
+                <input type="hidden" id="user_id" name="user_id" value="">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="mb-5">
+                                        <input type="radio" id="typeFile" name="fileType" class=" fileType" value="0" checked>
+                                        <label class="" for="typeFile"> File</label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="mb-5">
+                                        <input type="radio" id="typeLink" name="fileType" class="fileType" value="2">
+                                        <label class="" for="typeLink"> Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="from-group" id="imageFile">
+                                <input type="file" name="file" data-height="150" id="updateProblemFileFile" class="dropify" accept="image/*, video/*">
+                        </div>
+                        <div class="from-group d-none" id="youtubeLink">
+                            <label class="" for="updateProblemFileFile"> Add Link</label>
+                            <input type="text" name="link" id="updateProblemFileFile" class="form-control" placeholder="www.example.com">
+                        </div>
+                        <div class="from-group mt-2">
+                            <label for="word">Subject</label>
+                            <input type="text" name="title" class="form-control" placeholder="Subject">
+                    </div>
+                        <div class="from-group mt-3">
+                                <label for="word">Message</label>
+                                <textarea class="form-control" name="comment" id="msg"></textarea>
+                        </div>
+                      
+                 </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="btnSave">Submit</button>
+            </div>
             </div>
         </div>
     </div>
-    @endif
-   
-    @include('adult.verification.modal.add-verification')
-    
     
     <!-- Modal End -->
 </div>
@@ -208,9 +167,20 @@
 @endsection
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+<style>
+    .inner-card{
+        margin: 0 30px;
+        display: flex;
+        gap:50px;
+        list-style: none;
+    }
+
+    
+</style>
 @endsection
 @section('scripts')
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+<script src="https://cdn.tiny.cloud/1/5f20xhd98muhs1m7cl3eud00r4ugz5hxk5cbblquuo02mfef/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
    
 $('#verification_types').on('change',function(){
@@ -298,31 +268,24 @@ $('.validation').on('change',function(){
    })
 //.editSolFunBtn
 
-$('.editverBtn').click(function(){
-   $('#createVerification').modal('toggle')
+$('.fileType').on('change', function(){
+   var type = $(this).val();
+   if(type == 0){
+        $('#imageFile').show()
+        $('#youtubeLink').hide().addClass('d-none')
+        
+   }else{
+    $('#youtubeLink').show().removeClass('d-none')
+    $('#imageFile').hide()
+   }
 })
 
-
-
-   $('.filetypeRadio').change(function(){
-        var type = $(this).val()
-        if(type == 0){
-            $('#fileType').val('0')
-            $('#imageFile').css("display", "block");
-            $('#youtubeLink').css("display", "none");
-        }if(type == 2){
-            $('#fileType').val('2')
-            $('#imageFile').css("display", "none");
-            $('#youtubeLink').css("display", "block");
-        }
-   })
-
-
+$
 
 
    $(document).on('click','#btnSave',function(e){
        e.preventDefault();
-       var fd = new FormData($('#createVerificationForm')[0]);
+       var fd = new FormData($('#comm_form')[0]);
        $.ajaxSetup({
        headers: {
                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -330,7 +293,7 @@ $('.editverBtn').click(function(){
        });
        
        $.ajax({
-           url: "{{route('adult.store-verification')}}",
+           url: "{{route('adult.communication_flow')}}",
            data: fd,
            processData: false,
            contentType: false,
@@ -374,6 +337,16 @@ $('.editverBtn').click(function(){
        });
    });
 
-
+$('.communicate').on('click',function(){
+    $('#user_id').val($(this).attr('data-customer_id'))
+})
 </script>
+<script>
+    tinymce.init({
+      selector: 'textarea',
+      plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+      toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+      height : "300"
+    });
+  </script>
 @endsection

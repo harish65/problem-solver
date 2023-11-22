@@ -32,6 +32,7 @@
    
     <!-- Content Section Start -->
     <div class="relationshipContent">
+        
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
@@ -43,155 +44,111 @@
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
-                <div class="principleRelation">
-                    <div class="conditionBlock">
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Problem</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto"
-                                            src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
-                                            height="128px">
-                                    </div>
-                                    <p class="redText" style="color:red">{{ $problem->name }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-                                </div>
-                            </div>
+                @foreach ($users as $user)
+                <div class="blockProblem">
+                    <div class="projectBlock text-center">
+                      <h2>People</h2>
+                      <div class="projectList text-center"> 
+        
+                                                
+                        <div class="imgWrp">
+                            <img class="mx-auto" src="{{ asset('assets-new/users/'.$user->file) }}" width="100%" height="128px">
                         </div>
-                        <div class="long-arrow">
-                            <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
-                            <!-- add arrow Image over here -->
-                            <img src="{{ asset('assets-new/images/arrowRight.png')}}">
-                            <!-- add arrow Image over here -->
-                        </div>
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Solution</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto"
-                                            src=" {{ asset('assets-new/solution/'.$solution->file)}}" width="100%"
-                                            height="128px">
-                                    </div>
-                                    <p class="redText" style="color:#00A14C">{{ $solution->name }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date">{{ date('d/m/Y', strtotime($solution->created_at))}}</p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="long-arrow">
-                            <!-- <p style="position:relative; top:35px;left:25px;">through</p> -->
-                            <!-- add arrow Image over here -->
-                            <img src="{{ asset('assets-new/images/arrowRight.png') }}">
-                            <!-- add arrow Image over here -->
-                        </div>
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Verification</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto" src="{{ asset('assets-new/verification/1680525564.png')}}"
-                                            width="100%" height="128px">
-                                    </div>
-                                    <p class="redText">{{ $verificationType->name }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date">03/04/2023</p>
-                                    <ul>
-                                        <li>
-                                            <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
-                                                <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a data-id="1" class="editverBtn" title="Delete">
-                                                <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
-                                                    alt=""></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><img
-                                                    src="{{ asset('assets-new/images/uploadIcon.png') }}"
-                                                    alt=""></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        <p class="redText">{{ ucfirst($user->name) }}</p>
+                        <p>{{ ucfirst($user->type) }}</p>
+                      </div>
+                      
                     </div>
-                    <div class="questionWrap">
-                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
-                            tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
-                            nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
-                            Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
-                        <div class="row">
-                            <div class="title">
-                                <h2>Vacabulary</h2>
-
-                            </div>
-                            <div class="entity">
-                                <table class="table slp-tbl text-center">
-                                    <thead>
-                                        <th>Word</th>
-                                        <th>Actual Entity</th>
-                                        <th>Action</th>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Wrod</td>
-                                            <td>Entity</td>
-                                            <td>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/add-verification.png')}}"
-                                                        alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
-                                                </a>
-
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <h2>Validation Question</h2>
-
-
-                        
-                        
-                        <ul>
-                            <li>Yes, I do understand the relationship between communication and principle in a project.
-                            </li>
-                            <li>No, I do not understand the relationship between communication and principle in a
-                                project. </li>
-                        </ul>
-
-                        
-                    </div>
-                </div>
+                  </div>
+                  @endforeach
                 <!-- End -->
                 
             </div>
+            <div class="row">
+                <div class="modal-btn">
+                    <a type="button" href="#" class="btn btn-success float-right mb-3"  data-toggle="modal" data-target="#exampleModal">+ Add New User</a>
+                </div>
+                <table class="table slp-tbl text-center">
+                    <thead>
+                        <tr>
+                            <td>Person Name</td>
+                            <td>Person Title</td>
+                            <td>Actions</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($users as $user)
+                        <tr>
+                            <td>
+                                {{ ucfirst($user->name) }}
+                            </td>
+                            <td>
+                                {{ ucfirst($user->type) }}
+                            </td>
+                            <td>
+                                <a href="javaScript:Void(0)"  data-href="{{ route('problem.delete') }}" class="delProblemBtn" title="Delete" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20"></a>
+                                &nbsp;
+                                <a href="javaScript:Void(0)"  class="editProblemBtn"
+                                                                                        data-id = {{ $user->id }}
+                                                                                        data-name = {{ $user->name }}
+                                                                                        data-type = {{ $user->type }}
+                                                                                        data-file = {{ $user->file }}><img src="{{ url('/') }}/assets-new/images/editIcon.png" width="15" height="20"></a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
+        
     </div>
     <!-- Content Section End -->
-
+        
     
     
     
     <!-- Modal End -->
 </div>
+<!-- Modal start -->
 
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create User</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="formUsers">
+        <div class="modal-body">
+          <div class="form-group" id="userPic">
+              <label for="exampleInputEmail1">Upload Image</label>
+              <input type="file" name="file" data-height="150" id="file" class="dropify" accept="image/*, video/*">
+              <input type="hidden" id="user_id" name="id" value="">
+              <input type="hidden" name="project_id" value="{{ $project_id }}">
+          </div>
+          <div class="form-group">
+              <label for="exampleInputEmail1">Name</label>
+              <input type="text" name="name"  class="form-control"  id="name" placeholder="Enter name">
+          </div>
+          <div class="form-group">
+              <label for="exampleInputEmail1">Title</label>
+              <input type="text" name="type" id="type" class="form-control" placeholder="Title">
+          </div>
+          
+         
+          </form>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="saveBtn">Save</button>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal End -->
 @endsection
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
@@ -362,5 +319,72 @@ $('.editverBtn').click(function(){
    });
 
 
+</script>
+<script>    
+   
+    $(document).on('click','#saveBtn',function(e){
+       e.preventDefault();
+       var fd = new FormData($('#formUsers')[0]);
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+       
+       $.ajax({
+           url: "{{route('adult.create-user')}}",
+           data: fd,
+           processData: false,
+           contentType: false,
+           dataType: 'json',
+           type: 'POST',
+           beforeSend: function(){
+             $('#saveBtn').attr('disabled',true);
+             $('#saveBtn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+           },
+           error: function (xhr, status, error) {
+               $('#saveBtn').attr('disabled',false);
+               $('#saveBtn').html('Submit');
+               $.each(xhr.responseJSON.data, function (key, item) {
+                   toastr.error(item);
+               });
+           },
+           success: function (response){
+             if(response.success == false)
+             {
+                $('#saveBtn').attr('disabled',false);
+                $('#saveBtn').html('Login');
+                var errors = response.data;
+                $.each( errors, function( key, value ) {
+                     toastr.error(value)
+                });
+             } else {
+                toastr.success(response.message);
+                window.location.reload();
+              }
+           }
+       });
+   });
+</script>
+<script>
+    $('.editProblemBtn').click(function(){
+        $('#name').val($(this).attr('data-name'))    
+        if($(this).file != ""){
+            var file = $(this).data("file");
+            var drEvent = $('#file').dropify({
+                defaultFile: "/assets-new/users/" + file
+            });
+            drEvent = drEvent.data('dropify');
+               drEvent.resetPreview();
+               drEvent.clearElement();
+               drEvent.settings.defaultFile = "/assets-new/users/" + file;
+               drEvent.destroy();
+               drEvent.init();	
+           }
+           $('#type').val($(this).attr('data-type'))       
+           $('#user_id').val($(this).attr('data-id'))       
+       
+        $('#exampleModal').modal('toggle')
+    })
 </script>
 @endsection

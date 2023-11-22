@@ -49,7 +49,7 @@
             <a class="dropdown-item" href="{{route('adult.vrftindex')}}"><i class="fa fa-gear"></i>Verification Type Text</a> 
             <a class="dropdown-item" href="{{route('adult.sftindex')}}"><i class="fa fa-gear"></i>Solution Fuction Type</a> 
             <a class="dropdown-item" href="{{ route('adult.stindex') }}"><i class="fa fa-gear"></i>Solution Type</a> 
-            <a class="dropdown-item" href="#"><i class="fa fa-gear"></i>Users</a> 
+            <!-- <a class="dropdown-item" href="{{ route('adult.users') }}"><i class="fa fa-gear"></i>Users</a>  -->
             <a class="dropdown-item logout"  onClick="logout();" href="{{route('user.getlogout')}}"><i class="fa fa-lock"></i>Logout</a>
           </div>
         </div>

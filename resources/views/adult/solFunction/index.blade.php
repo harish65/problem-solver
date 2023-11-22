@@ -21,7 +21,7 @@
 
                 @foreach ($solFunctions as $item)
                 <div class="col-lg-3 col-md-6 col-sm-12 mb-30 pr-0">
-					<div class="card-box pd-30 height-100-p">
+					<div class="card-box pd-30 height-100-p4">
 						<div class="progress-box text-center">
 							<span class="d-block text-success problem-title-bottom-border mb-2">
 								Problem

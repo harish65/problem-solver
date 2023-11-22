@@ -44,65 +44,38 @@
                 </div>
                 <!-- start -->
                 <div class="principleRelation">
-                    <div class="conditionBlock">
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Problem</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto"
-                                            src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
-                                            height="128px">
-                                    </div>
-                                    <p class="redText" style="color:red">{{ $problem->name }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-                                </div>
+                    <div class="conditionBlock-solution">
+                        <div class="solutioone-card">
+                           <div class="location-card">
+                            <div class="location-head text-center">
+                                <h2>My Location</h2>
                             </div>
-                        </div>
-                        <div class="long-arrow">
-                            <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
-                            <!-- add arrow Image over here -->
-                            <img src="{{ asset('assets-new/images/arrowRight.png')}}">
-                            <!-- add arrow Image over here -->
-                        </div>
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Solution</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto"
-                                            src=" {{ asset('assets-new/solution/'.$solution->file)}}" width="100%"
-                                            height="128px">
+                            <div class="left-side float-left mt-4">
+                                <div class="imgWrp">
+                                    <div id="myCarousel" class="carousel slide " data-ride="carousel">
+                                    <ol class="carousel-indicators">
+                                    @php $index = 0; @endphp
+                                        @foreach($custommers as $entity)
+                                                <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
+                                        @php $index++; @endphp
+                                    @endforeach 
+                                    </ol>
+                                        <div class="imgWrp  carousel-inner" role="listbox">
+                                            @php $index = 1; @endphp
+                                            @foreach($custommers as $entity)
+                                                <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
+                                                    <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">
+                                                </div>
+                                                @php $index++; @endphp
+                                            @endforeach 
+                                        </div>
                                     </div>
-                                    <p class="redText" style="color:#00A14C">{{ $solution->name }}</p>
+                                   
                                 </div>
-                                <div class="projectList">
-                                    <p class="date">{{ date('d/m/Y', strtotime($solution->created_at))}}</p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="long-arrow">
-                            <!-- <p style="position:relative; top:35px;left:25px;">through</p> -->
-                            <!-- add arrow Image over here -->
-                            <img src="{{ asset('assets-new/images/arrowRight.png') }}">
-                            <!-- add arrow Image over here -->
-                        </div>
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Verification</h2>
+                                
                                 <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto" src="{{ asset('assets-new/verification/1680525564.png')}}"
-                                            width="100%" height="128px">
-                                    </div>
-                                    <p class="redText">{{ $verificationType->name }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date">03/04/2023</p>
+                                    <p class="redText" style="color: red;">Adult</p>
+                                    <p class="date"></p>
                                     <ul>
                                         <li>
                                             <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
@@ -122,6 +95,73 @@
                                     </ul>
                                 </div>
                             </div>
+                            <div class="right-side float-right mt-4">
+                                <div class="imgWrp">
+                                    <img class="mx-auto" src="{{ asset('assets-new/problem/'.$problem->file)}}"
+                                        width="100%" height="128px">
+                                </div>
+                                <p class="redText">{{ $problem->name }}</p>
+                                <div class="projectList text-center">
+                                    <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
+                                    <ul>
+                                        <li>
+                                            <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
+                                                <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a data-id="1" class="editverBtn" title="Delete">
+                                                <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
+                                                    alt=""></a>
+                                        </li>
+                                        <li>
+                                            <a href="javaScript:Void(0)"><img
+                                                    src="{{ asset('assets-new/images/uploadIcon.png') }}"
+                                                    alt=""></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                           </div>
+                                                 
+                        </div>
+                       
+                        <div class="long-arrow">                            
+                            <!-- add arrow Image over here -->
+                            <img src="{{ asset('assets-new/images/arrowRight.png') }}">
+                            <!-- add arrow Image over here -->
+                        </div>
+                        <div class="blockProblem">
+                            <div class="projectBlock text-center">
+                                <h2>Destination</h2>
+                                <div class="projectList text-center">
+                                    <div class="imgWrp">
+                                        <img class="mx-auto" src="{{ asset('assets-new/verification/destination.png')}}"
+                                            width="100%" height="128px">
+                                    </div>
+                                    <p class="redText">{{ $solution->name }}</p>
+                                </div>
+                                <div class="projectList">
+                                    <p class="date">{{ date('d/m/Y' , strtotime($solution->created_at))}}</p>
+                                    <ul>
+                                        <li>
+                                            <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
+                                                <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a data-id="1" class="editverBtn" title="Delete">
+                                                <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
+                                                    alt=""></a>
+                                        </li>
+                                        <li>
+                                            <a href="javaScript:Void(0)"><img
+                                                    src="{{ asset('assets-new/images/uploadIcon.png') }}"
+                                                    alt=""></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="questionWrap">
@@ -131,51 +171,48 @@
                             Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
                         <div class="row">
                             <div class="title">
-                                <h2>Vacabulary</h2>
-
+                                <h2>Solution time location1 Identification</h2>
                             </div>
                             <div class="entity">
-                                <table class="table slp-tbl text-center">
+                                <table class="table slp-tbl">
                                     <thead>
-                                        <th>Word</th>
-                                        <th>Actual Entity</th>
-                                        <th>Action</th>
+                                        <th>Problem</th>
+                                        <th>Date</th>
+                                        <th>Solution Function</th>
+                                        <th>Date</th>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Wrod</td>
-                                            <td>Entity</td>
-                                            <td>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/add-verification.png')}}"
-                                                        alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="editSolFunBtn">
-                                                    <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
-                                                </a>
-
-                                            </td>
+                                            <td style="color: red;">{{ $problem->name }}</td>
+                                            <td style="color: red;">{{ date('d/m/Y', strtotime($problem->created_at))}}</td>
+                                            <td style="color: rgba(0, 161, 76, 0.5)">{{ $Solution_function->name }}</td>
+                                            <td style="color: rgba(0, 161, 76, 0.5)">{{ date('d/m/Y', strtotime($Solution_function->created_at))}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-
                         <h2>Validation Question</h2>
+                        <br>
+                        <form id="validation_form">
+                                <input type="hidden" name="id" value="{{ @$verification->id }}">      
+                                <h5>Have you separated the problem from yourself?</h5>
+                                <ul class="validate_que" style="list-style:none;">
+                                    
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;I have separated the problem from myself</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2">&nbsp;&nbsp;No, I haven’t separated the problem from myself</label></li>
+                                
+                                </ul>
 
-
-                        
-                        
-                        <ul>
-                            <li>Yes, I do understand the relationship between communication and principle in a project.
-                            </li>
-                            <li>No, I do not understand the relationship between communication and principle in a
-                                project. </li>
-                        </ul>
-
+                                <h5>Have you separated the problem from the people?</h5>
+                                <ul class="validate_que" style="list-style:none;">
+                                    
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I have separated the problem from the people</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}  value="2">&nbsp;&nbsp;No, I haven’t separated the problem from the people</label></li>
+                                
+                                </ul>
+                                <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        </form>
                         
                     </div>
                 </div>
@@ -194,9 +231,18 @@
 
 @endsection
 @section('css')
+
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+<style>
+    .carousel{
+        height: 128px;
+        overflow: hidden;
+        width: 200px;
+    }
+</style>
 @endsection
 @section('scripts')
+
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
 <script>
    
@@ -361,6 +407,8 @@ $('.editverBtn').click(function(){
        });
    });
 
-
+   $('.carousel').carousel({
+        interval: 2000
+    })
 </script>
 @endsection

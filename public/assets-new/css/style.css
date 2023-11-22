@@ -621,6 +621,12 @@ button.btn.btn-primary.login-btn a {
     align-items: center;
     justify-content: space-between;
 }
+
+.conditionBlock-solution{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .solutionconditionBlock {
     display: flex;
     align-items: center;
@@ -768,3 +774,22 @@ button.btn.btn-primary.login-btn a {
     padding-left: 18px;
 }
 /* Relationship Page css End */
+.solutioone-card{
+    display: flex;
+    border: 1px solid rgba(0, 161, 76, 0.5);
+    border-radius: 10px;
+    background: #FFFFFF;
+}
+
+
+.solutioone-card h2 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    color: #000000;
+    margin: 0;
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 161, 76, 0.5);
+    border-radius: 0 0 10px 10px;
+}

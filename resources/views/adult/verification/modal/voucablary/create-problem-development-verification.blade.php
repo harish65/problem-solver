@@ -86,14 +86,14 @@
 
                 <div class="form-group">
                     
-                <select class="form-control" name="file" id="file">
+                <!-- <select class="form-control" name="file" id="file">
                             <option value=''>Choose Image..</option>
                             <option  data-src="{{ asset('assets-new/verification/voucablary/1vocabulary.png')}}" value="1">Image One </option>
                             <option  data-src="{{ asset('assets-new/verification/voucablary/2vocabulary.png')}}" value="2">Image Tow</option>
                     </select>
                     <div class="image d-none"  id="default-image"style="margin: 20px;text-align: center;">
                         
-                    </div>
+                    </div> -->
                 
             </div>
                

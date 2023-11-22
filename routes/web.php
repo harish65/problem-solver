@@ -204,12 +204,35 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         
         // vrification 
         Route::post("store-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'store'])-> name("store-verification");
+        Route::post("store-priciple-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'storePricipleVerification'])-> name("store-priciple-verification");
+        Route::post("store-entity-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'storeEntityAvailable'])-> name("store-entity-verification");
+        Route::post("store-priciple-identification", [\App\Http\Controllers\Adult\VerificationController::class, 'storePricipleIdentification'])-> name("store-priciple-identification");
+        Route::post("store-time-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'storeTimeVerification'])-> name("store-time-verification");
+        Route::post("delete-time-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteTimeVerification'])-> name("delete-time-verification");
         Route::post("updateVerification", [\App\Http\Controllers\Adult\EditVerificationController::class, 'updateVerification'])-> name("updateVerification");
         Route::post("delete-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'delete'])-> name("delete-verification");
+
+        Route::post("create-entity", [\App\Http\Controllers\Adult\VerificationController::class, 'createEntity'])-> name("create-entity");
+        Route::post("del-entity", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteEntity'])-> name("del-entity");
+
+
+        Route::post("add-problem-development", [\App\Http\Controllers\Adult\VerificationController::class, 'storeProblemDevelopmnt'])-> name("add-problem-development");
         //Verification Entity Routes
         Route::post("add-vocabulary-entity", [\App\Http\Controllers\Adult\VerificationController::class, 'addVocabularyEntity'])-> name("add-vocabulary-entity");
         Route::post("delete-vocabulary", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteVocabulary'])-> name("delete-vocabulary");
         Route::post("updateVocabulary", [\App\Http\Controllers\Adult\EditVerificationController::class, 'updateVocabulary'])-> name("updateVocabulary");
         Route::post("add-vocabulary-validations", [\App\Http\Controllers\Adult\VerificationController::class, 'addVocabularyValidations'])-> name("add-vocabulary-validations");
+        //partition approach
+        Route::post("add-entity-word", [\App\Http\Controllers\Adult\VerificationController::class, 'createPartitionApproach'])-> name("add-entity-word");
+        Route::post("update_validations", [\App\Http\Controllers\Adult\VerificationController::class, 'updateValidations'])-> name("update_validations");
+        Route::post("communication_flow", [\App\Http\Controllers\Adult\VerificationController::class, 'storeCommunicationFlow'])-> name("communication_flow");
+
+        //Project Usres
+        Route::get("users", [\App\Http\Controllers\Adult\UserController::class, 'index'])-> name("users");
+        Route::post("create-user", [\App\Http\Controllers\Adult\UserController::class, 'create'])-> name("create-user");
+
+        //Error Correction Aproach
+        Route::post("create-error-correction-type", [\App\Http\Controllers\Adult\VerificationController::class, 'addErrorCorectionAproach'])-> name("create-error-correction-type");
+
     });  
 });
