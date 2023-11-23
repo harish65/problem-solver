@@ -582,12 +582,12 @@ class VerificationController extends BaseController
                     }
                     
                     $errorcorrection = DB::table('error_correction')->get();
-                    $problemDevelopment = DB::table('problem_development')->get();
+                    // $problemDevelopment = DB::table('problem_development')->get();
 
-                    Customer::select('customers.*')
-                                ->leftJoin('orders', 'customers.id', '=', 'orders.customer_id')
-                                ->whereNull('orders.customer_id')->first();
-                                            
+                    $problemDevelopment = db::table('problem_development')->select('problem_development.*' , 'error_correction.compensator' )
+                                        ->leftJoin('error_correction', 'problem_development.id', '=', 'error_correction.error_id')
+                                        ->get();
+                    //   echo "<pre>";print_r($data);die;                      
                     return view(
                         "adult.verification.view.error-correction-approach",
                         compact(
@@ -1375,9 +1375,10 @@ class VerificationController extends BaseController
                 "error" => $e->getMessage,
             ]);
         }
+    }
 
 
-
+    public function feedbackIdentification(){
         
     }
 }
