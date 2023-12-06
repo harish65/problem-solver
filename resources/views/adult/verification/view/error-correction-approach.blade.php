@@ -71,7 +71,7 @@
                                 <h2>Compensator</h2>
                                 <div class="projectList text-center">
                                     @foreach($problemDevelopment as $data)
-                                    <button class="btn btn-success mt-3 compensator" data-error-id="{{ $data->id }}" data-toggle="modal" data-target="#exampleModal">
+                                    <button class="btn btn-success mt-3 compensator" data-error-id="{{ $data->id }}" data-toggle="modal" data-target ="#exampleModal">
                                         {{($data->compensator == null) ? '+ Add Compensator' : $data->compensator }}
                                     </button>
                                     
@@ -132,10 +132,10 @@
                             <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav">
                                 <li class="nav-item active">
-                                    <a class="btn btn-success" href="#">2. Feedback identification<span class="sr-only">(current)</span></a>
+                                    <a class="btn btn-success" target="_blank" href="{{ route('adult.feedback-identification') }}">2. Feedback identification<span class="sr-only">(current)</span></a>
                                 </li>
                                 <li class="nav-item active">
-                                    <a class="btn btn-success" href="#">3. Continue With Error Correction<span class="sr-only">(current)</span></a>
+                                    <a class="btn btn-success" target="_blank" href="{{ route('adult.error-correction') }}">3. Continue With Error Correction<span class="sr-only">(current)</span></a>
                                 </li>
                             </ul>
                             </div>

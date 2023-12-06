@@ -233,6 +233,9 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
 
         //Error Correction Aproach
         Route::post("create-error-correction-type", [\App\Http\Controllers\Adult\VerificationController::class, 'addErrorCorectionAproach'])-> name("create-error-correction-type");
-
+        Route::get("feedback-identification", [\App\Http\Controllers\Adult\VerificationController::class, 'feedbackIdentification'])-> name("feedback-identification");
+        Route::post("store-feedback-identification", [\App\Http\Controllers\Adult\VerificationController::class, 'storeFeedbackIdentification'])-> name("store-feedback-identification");
+        Route::get("error-correction", [\App\Http\Controllers\Adult\VerificationController::class, 'errorCorrection'])-> name("error-correction");
+        Route::post("store-error-correction", [\App\Http\Controllers\Adult\VerificationController::class, 'storeErrorCorrection'])-> name("store-error-correction");
     });  
 });
