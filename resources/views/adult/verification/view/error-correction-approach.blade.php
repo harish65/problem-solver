@@ -71,7 +71,7 @@
                                 <h2>Compensator</h2>
                                 <div class="projectList text-center">
                                     @foreach($problemDevelopment as $data)
-                                    <button class="btn btn-success mt-3 compensator" data-error-id="{{ $data->id }}" data-toggle="modal" data-target="#exampleModal">
+                                    <button class="btn btn-success mt-3 compensator" data-error-id="{{ $data->id }}" data-toggle="modal" data-target ="#exampleModal">
                                         {{($data->compensator == null) ? '+ Add Compensator' : $data->compensator }}
                                     </button>
                                     
@@ -102,51 +102,58 @@
                             <div class="entity">
                                 <table class="table slp-tbl text-center">
                                     <thead>
-                                        <th>Error Name</th>
-                                        <th>Error Date</th>
-                                        <th>Problem</th>
-                                        <th>Problem Date</th>
-                                        <th>Actions</th>
+                                        <th>Error Identified</th>
+                                        <th>Compensator Identified</th>
+                                        <th>Date</th>                                        
                                     </thead>
                                     <tbody>
-                                {{--  @foreach($compensator as $data)
+                                @foreach($problemDevelopment as $data)
+                                  @if($data->compensator != null)
                                         <tr>
                                             <td>
                                                 {{$data->error_name}}
                                             </td>
+                                            
+                                            <td>
+                                                {{($data->compensator == null) ? 'Not Identified' : $data->compensator}}
+                                            </td>
                                             <td>
                                                 {{date('d-m-Y' , strtotime($data->error_date))}}
                                             </td>
-                                            <td>
-                                                {{$data->problem_name}}
-                                            </td>
-                                            <td>
-                                                {{date('d-m-Y' , strtotime($data->problem_date))}}
-                                            </td>
-                                            <td>
-                                                <a href="" class="btn btn-success"><i class="fa fa-pencil"></i></a>
-                                                <a href="" class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                                            </td>
                                         </tr>
-                                  @endforeach --}}
+                                    @endif
+                                @endforeach
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-
-                    <h2>Validation Question</h2>
-                    <form id="validation_form">
-                      
-                    <ul class="validate_que">                        
-                        <br>
-                        <h5>Do you understand that errors or errors in communication develop problems?</h5>
-                        <input type="hidden" name="id" value="{{ @$verification->id }}">
-                        <li><label><input  type="radio" data-id="{{ @$verification->id  }}" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1">Yes, I do understand that errors or errors in communication develop problems</label> </li>
-                        <li><label><input  type="radio" data-id="{{ @$verification->id  }}" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2">No, I do not understand that errors or errors in communication develop problems</label> </li>
+                        <div class="paginate" style="float:right;">
+                            <nav class="navbar navbar-expand-lg ">
+                            <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav">
+                                <li class="nav-item active">
+                                    <a class="btn btn-success" target="_blank" href="{{ route('adult.feedback-identification') }}">2. Feedback identification<span class="sr-only">(current)</span></a>
+                                </li>
+                                <li class="nav-item active">
+                                    <a class="btn btn-success" target="_blank" href="{{ route('adult.error-correction') }}">3. Continue With Error Correction<span class="sr-only">(current)</span></a>
+                                </li>
+                            </ul>
+                            </div>
+                            </nav>
+                        </div>
+                    <!-- <h2>Validation Question</h2>
+                        <form id="validation_form">
                         
-                    </ul>
-                        <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
-                        </form>
+                            <ul class="validate_que">                        
+                                <br>
+                                <h5>Do you understand that errors or errors in communication develop problems?</h5>
+                                <input type="hidden" name="id" value="{{ @$verification->id }}">
+                                <li><label><input  type="radio" data-id="{{ @$verification->id  }}" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1">Yes, I do understand that errors or errors in communication develop problems</label> </li>
+                                <li><label><input  type="radio" data-id="{{ @$verification->id  }}" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2">No, I do not understand that errors or errors in communication develop problems</label> </li>
+                                
+                            </ul>
+                            <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        </form> -->
                 </div>
             </div>
             <!-- End -->

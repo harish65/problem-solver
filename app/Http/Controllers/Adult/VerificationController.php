@@ -582,12 +582,12 @@ class VerificationController extends BaseController
                     }
                     
                     $errorcorrection = DB::table('error_correction')->get();
-                    $problemDevelopment = DB::table('problem_development')->get();
+                    // $problemDevelopment = DB::table('problem_development')->get();
 
-                    Customer::select('customers.*')
-                                ->leftJoin('orders', 'customers.id', '=', 'orders.customer_id')
-                                ->whereNull('orders.customer_id')->first();
-                                            
+                    $problemDevelopment = db::table('problem_development')->select('problem_development.*' , 'error_correction.compensator' )
+                                        ->leftJoin('error_correction', 'problem_development.id', '=', 'error_correction.error_id')
+                                        ->get();
+                    //   echo "<pre>";print_r($data);die;                      
                     return view(
                         "adult.verification.view.error-correction-approach",
                         compact(
@@ -608,22 +608,73 @@ class VerificationController extends BaseController
                     );
                     break;
 
-            default:
-                return view(
-                    "adult.verification.index",
-                    compact(
-                        "types",
-                        "verificationType",
-                        "verification",
-                        "problem_id",
-                        "project_id",
-                        "problem",
-                        "solution",
-                        "solution_id",
-                        "Solution_function",
-                        "verifiationTypeText"
-                    )
-                );
+                    case 17:
+                        
+                        $allVarifications = DB::table(
+                            "principle_identification"
+                        )->get();
+                        $users = DB::table("customers")
+                            ->where("project_id", "=", $project_id)
+                            ->first();
+                        if (!$verification) {
+                            $verification = Verification::where(
+                                "verification_type_id", "=", 16
+                            )->first();
+                            if (isset($verification->validations)) {
+                                $verification->validations = json_decode(
+                                    $verification->validations
+                                );
+                            }
+                        }
+                        if(!$verificationType){
+                            $verificationType = VerificationType::where(
+                                "id", "=", 16
+                            )->first();
+                        }
+                        
+                        $errorcorrection = DB::table('error_correction')->get();
+                       
+    
+                        $problemDevelopment = db::table('problem_development')->select('problem_development.*' , 'error_correction.compensator' )
+                                            ->leftJoin('error_correction', 'problem_development.id', '=', 'error_correction.error_id')
+                                            ->get();
+                        //   echo "<pre>";print_r($data);die;                      
+                        return view(
+                            "adult.verification.view.function-adjustment",
+                            compact(
+                                "types",
+                                "verificationType",
+                                "verification",
+                                "problem_id",
+                                "project_id",
+                                "problem",
+                                "solution",
+                                "solution_id",
+                                "Solution_function",
+                                "verifiationTypeText",
+                                "allVarifications",
+                                "users",
+                                'errorcorrection','problemDevelopment'
+                            )
+                        );
+                        break;
+
+                default:
+                    return view(
+                        "adult.verification.index",
+                        compact(
+                            "types",
+                            "verificationType",
+                            "verification",
+                            "problem_id",
+                            "project_id",
+                            "problem",
+                            "solution",
+                            "solution_id",
+                            "Solution_function",
+                            "verifiationTypeText"
+                        )
+                    );
         }
     }
 
@@ -1375,9 +1426,111 @@ class VerificationController extends BaseController
                 "error" => $e->getMessage,
             ]);
         }
+    }
 
 
+    public function feedbackIdentification(){
+        $problemDevelopment = DB::table('problem_development')->get();
+        // $feedBack = DB::table('feedback_identifications')->get();
+        $feedBack = db::table('feedback_identifications')->select('feedback_identifications.*' , 'problem_development.error_name' )
+                    ->leftJoin('problem_development', 'feedback_identifications.error_id', '=', 'problem_development.id')
+                    ->get();   
+        return view("adult.verification.view.feed-back-identification" , compact("problemDevelopment" , "feedBack" ));
+    }
 
+    public function storeFeedbackIdentification(Request $request){
+        $validator = Validator::make($request->all(), [
+            "error" => "required",
+            "feedback" => "required",
+            "date" => "required",
+            "from-person" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError("Validation Error.", $validator->errors());
+        }
+        try {
+            $data =  $request->all();
+            $insert = DB::table(
+                "feedback_identifications"
+            )->updateOrInsert(
+                ["id" => @$request->id],
+                [
+                    "error_id" => $data["error"],
+                    "feedback" => $data["feedback"],
+                    "feedback_date" => date('Y-m-d H:i:s', strtotime($data["date"])),
+                    "user_id" => $data["from-person"]
+                ]
+            );
+            $success["entity"] = $insert;
+            return $this->sendResponse(
+                $success,
+                "Record created successfully."
+            );
+        }catch(Exception $e){
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage,
+            ]);
+        } 
+    }
+
+    public function errorCorrection(Request $request){
+        $problemDevelopment = DB::table('problem_development')->get();
+        $compensator = DB::table('error_correction')->get();
+        $feedBack = DB::table('feedback_identifications')->get();
         
+        $errorcorrections = db::table('error_correction_type')->select('error_correction_type.*' , 'problem_development.error_name','error_correction.compensator' )
+                ->leftJoin('problem_development', 'error_correction_type.error', '=', 'problem_development.id')
+                ->leftJoin('error_correction', 'error_correction_type.error', '=', 'error_correction.id')
+                ->get();
+        return view("adult.verification.view.error-corection" ,  compact("problemDevelopment" ,"compensator" , "feedBack" , "errorcorrections"));
+    }
+
+
+    public function storeErrorCorrection(Request $request){
+        $validator = Validator::make($request->all(), [
+            "error" => "required",
+            "feedback" => "required",
+            "compensator" => "required",
+          
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError("Validation Error.", $validator->errors());
+        }
+
+        //error_correction_type
+
+        try {
+            $data =  $request->all();
+            $insert = DB::table(
+                "error_correction_type"
+            )->updateOrInsert(
+                ["id" => @$request->id],
+                [
+                    "error" => $data["error"],
+                    "compensator" => $data["compensator"],
+                    "feedback" => $data["feedback"],
+                    "feedback_applied" => $data["feedback_applied"]
+                ]
+            );
+            $success["error"] = $insert;
+            return $this->sendResponse(
+                $success,
+                "Record created successfully."
+            );
+        }catch(Exception $e){
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage,
+            ]);
+        }
+    }
+
+
+
+    ///function Function Adjustment
+    public function storeFunctionAdjustment(Request $request){
+        // return view("adult.verification.view.error-corection" );
+    }
+    public function functionAdjustment(Request $request){
+        return view("adult.verification.view.error-corection" );
     }
 }
