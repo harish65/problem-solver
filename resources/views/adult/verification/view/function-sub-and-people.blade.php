@@ -48,33 +48,19 @@
                     <div class="conditionBlock">
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
-                                <h2>Improper Function</h2>
-                                <div class="projectList text-center min-height-250">
+                                <h2>Function</h2>
+                                <div class="projectList text-center">
                                     <div class="imgWrp">
-                                        <a class="cursor" data-toggle="modal" data-target="#exampleModal">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="#28a745" class="bi bi-plus" viewBox="0 0 16 16">
-                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                                          </svg>
-                                        </a>
+                                        <img class="mx-auto"
+                                            src="{{ asset('assets-new/solFunction/'.$Solution_function->file)}}" width="100%"
+                                            height="128px">
                                     </div>
-                                    
+                                    <p class="redText" style="color:red">{{ $Solution_function->name }}</p>
                                 </div>
-                               
-                            </div>
-                        </div>
-                        <div class="long-border"></div>
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Improper Function</h2>
-                                <div class="projectList text-center min-height-250">
-                                    <div class="mt-5">
-                                        <div class="margit-fifty">
-                                        <p>{{ ($functionAud->function_name) ? ucfirst($functionAud->function_name) : '' }}</p>
-                                        </div>
-                                    </div>
-                                    
+                                <div class="projectList">
+                                    <p class="date">{{ date('d/m/Y', strtotime($Solution_function->created_at))}}</p>
+                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
                                 </div>
-                               
                             </div>
                         </div>
                         <div class="long-arrow">
@@ -85,11 +71,49 @@
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
                                 <h2>Problem</h2>
+                                <div class="projectList text-center">
+                                    <div class="imgWrp">
+                                        <img class="mx-auto"
+                                            src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
+                                            height="128px">
+                                    </div>
+                                    <p class="redText" style="color:red">{{ $problem->name }}</p>
+                                </div>
+                                <div class="projectList">
+                                    <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
+                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="long-arrow">
+                            <!-- add arrow Image over here -->
+                                <img src="{{ asset('assets-new/images/arrowRight.png') }}">
+                            <!-- add arrow Image over here -->
+                        </div>
+                        <div class="blockProblem">
+                            <div class="projectBlock text-center">
+                                <h2>People</h2>
                                 <div class="projectList text-center min-height-250">
-                                    <div class="mt-5">
-                                        <div class="margit-fifty">
-                                            <p>{{ $problem->name }}</p>
-                                         </div>
+                                    <div class="imgWrp">
+                                        <div id="myCarousel" class="carousel slide " data-ride="carousel">
+                                        <ol class="carousel-indicators">
+                                        @php $index = 0; @endphp
+                                            @foreach($custommers as $entity)
+                                                    <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
+                                            @php $index++; @endphp
+                                        @endforeach 
+                                        </ol>
+                                            <div class="imgWrp  carousel-inner" role="listbox">
+                                                @php $index = 1; @endphp
+                                                @foreach($custommers as $entity)
+                                                    <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
+                                                        <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">
+                                                    </div>
+                                                    @php $index++; @endphp
+                                                @endforeach 
+                                            </div>
+                                        </div>
+                                       
                                     </div>
                                     
                                 </div>
@@ -110,6 +134,40 @@
             
         </div>
     </div>
+
+
+
+    <div class="relationshipContent">
+        <div class="container">
+            <div class="row ">
+                <div class="col-md-8">
+                    <h2>Error Identification and Compensator</h2>
+                </div>
+                <div class="col-md-4    ">
+                    <button type="button"  class="btn btn-success addVocabularyBtn"   data-toggle="modal" data-target="#exampleModal">+ Add </button>
+                </div>
+                               
+            </div>
+
+            <div class="row mt-3">
+                <table class="table slp-tbl text-center">
+                    <thead>
+                        <th>Person Name</th>
+                        <th>Function Name</th>
+                        
+                    </thead>
+                    <tbody>
+                       @foreach($people as $data)
+                       <tr>
+                        <td>{{ $data->name }}</td>
+                        <td>{{ $Solution_function->name }}</td>
+                       </tr>
+                       @endforeach     
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</div>
 </div>
 <!-- Content Section End -->
 
@@ -135,17 +193,21 @@
             <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
             <div class="form-group">
                 <label for="compensator">Function Name</label>
-                <input type="text" name="function_name" class="form-control" id="fun_name">
+                <input type="text" name="function_name" disabled value="{{ $Solution_function->name }}" class="form-control" id="fun_name">
             </div>
             <div class="form-group">
                 <label for="feedback">Problem Name</label>
-                <input type="text" disabled name="problem_name" value="{{ $problem->name }}" class="form-control" id="fun_name">
+                <input type="text" disabled name="problem_name" value="{{ $problem->name }}" disabled class="form-control" id="fun_name">
                 
             </div>
            
             <div class="form-group">
-                <label for="from-person">Actual Problem Name</label>
-                <input type="text" disabled name="problem_name" value="{{ $problem->name }}" class="form-control" id="fun_name">
+                <select name="customer" class="form-control" id="customer">
+                    <option value="">Please Select....</option>
+                    @foreach($custommers as $custommer)
+                        <option value="{{ $custommer->id }}">{{ $custommer->name }}</option>
+                    @endforeach
+                </select>
             </div>
             
           </form>
@@ -248,7 +310,7 @@ $('#btnSave').click(function(e){
        });
        $.ajax({
             type: 'POST',
-            url: "{{route('adult.store-function-adjustment')}}",
+            url: "{{route('adult.function-sub-and-people')}}",
             data: dv,
             processData: false,
             contentType: false,

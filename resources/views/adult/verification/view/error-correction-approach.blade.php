@@ -91,9 +91,9 @@
                             Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
                         <div class="row">
                             <div class="title d-flex">
-                            <div class="text-left w-50 ">
-                                <h2>Error Identification and Compensator</h2>
-                            </div>
+                                <div class="text-left w-50 ">
+                                    <h2>Error Identification and Compensator</h2>
+                                </div>
                                 <div class="text-right w-50 pt-3">
                                     <!-- <button type="button"  class="btn btn-success addVocabularyBtn" >+ Add Problem Development</button> -->
                                 </div>

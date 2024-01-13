@@ -83,7 +83,7 @@ class RegisterController extends BaseController
                     $request -> avatar -> move(public_path('assets-new/avatar/'), $file);
                     $mime = mime_content_type(public_path('assets-new/avatar/' . $file));
                 }
-
+                
                 $user = User::create([
                     'name' => $request->first_name. ' ' . $request->last_name,
                     'first_name' => $request->first_name,                    
@@ -91,7 +91,7 @@ class RegisterController extends BaseController
                     'email' => $request->email,
                     'phone_number'  => $request->phone_number, 
                     'avatar' => $file,
-                    'role' => $request->role,                   
+                    'role' => ($request->role) ?  $request->role : '2',                   
                     'password' => Hash::make($request->password),
                 ]);
         if($user->id){

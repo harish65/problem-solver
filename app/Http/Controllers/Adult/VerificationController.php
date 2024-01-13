@@ -638,7 +638,8 @@ class VerificationController extends BaseController
                         $problemDevelopment = db::table('problem_development')->select('problem_development.*' , 'error_correction.compensator' )
                                             ->leftJoin('error_correction', 'problem_development.id', '=', 'error_correction.error_id')
                                             ->get();
-                        //   echo "<pre>";print_r($data);die;                      
+                        $functionAud  = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
+                        
                         return view(
                             "adult.verification.view.function-adjustment",
                             compact(
@@ -654,12 +655,241 @@ class VerificationController extends BaseController
                                 "verifiationTypeText",
                                 "allVarifications",
                                 "users",
-                                'errorcorrection','problemDevelopment'
+                                'errorcorrection','problemDevelopment','functionAud'
                             )
                         );
                         break;
-
-                default:
+                        case 18:
+                        
+                            $allVarifications = DB::table(
+                                "principle_identification"
+                            )->get();
+                            $custommers = DB::table("customers")
+                                ->where("project_id", "=", $project_id)
+                                ->get();
+                            if (!$verification) {
+                                $verification = Verification::where(
+                                    "verification_type_id", "=", 16
+                                )->first();
+                                if (isset($verification->validations)) {
+                                    $verification->validations = json_decode(
+                                        $verification->validations
+                                    );
+                                }
+                            }
+                            if(!$verificationType){
+                                $verificationType = VerificationType::where(
+                                    "id", "=", 16
+                                )->first();
+                            }
+                            
+                            $errorcorrection = DB::table('error_correction')->get();
+                            $people = db::table('function_belong_to_people')->select('function_belong_to_people.*' , 'customers.name' )
+                            ->leftJoin('customers', 'function_belong_to_people.customer_id', '=', 'customers.id')
+                            ->where('function_belong_to_people.problem_id' , $problem_id)->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , Auth::user()->id)->get();
+        
+                            $problemDevelopment = db::table('problem_development')->select('problem_development.*' , 'error_correction.compensator' )
+                                                ->leftJoin('error_correction', 'problem_development.id', '=', 'error_correction.error_id')
+                                                ->get();
+                            $functionAud  = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
+                               
+                            return view(
+                                "adult.verification.view.function-sub-and-people",
+                                compact(
+                                    "types",
+                                    "verificationType",
+                                    "verification",
+                                    "problem_id",
+                                    "project_id",
+                                    "problem",
+                                    "solution",
+                                    "solution_id",
+                                    "Solution_function",
+                                    "verifiationTypeText",
+                                    "allVarifications",
+                                    "custommers",
+                                    'errorcorrection','problemDevelopment','functionAud','people'
+                                )
+                            );
+                            break;
+                            case 19:
+                        
+                                $allVarifications = DB::table(
+                                    "principle_identification"
+                                )->get();
+                                $custommers = DB::table("customers")
+                                    ->where("project_id", "=", $project_id)
+                                    ->get();
+                                if (!$verification) {
+                                    $verification = Verification::where(
+                                        "verification_type_id", "=", 16
+                                    )->first();
+                                    if (isset($verification->validations)) {
+                                        $verification->validations = json_decode(
+                                            $verification->validations
+                                        );
+                                    }
+                                }
+                                if(!$verificationType){
+                                    $verificationType = VerificationType::where(
+                                        "id", "=", 16
+                                    )->first();
+                                }
+                               
+                                $people = db::table('function_belong_to_people')->select('function_belong_to_people.*' , 'customers.name' )
+                                            ->leftJoin('customers', 'function_belong_to_people.customer_id', '=', 'customers.id')
+                                            ->where('function_belong_to_people.problem_id' , $problem_id)->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , Auth::user()->id)->get();
+                               
+                               
+                                return view(
+                                    "adult.verification.view.function-sub-and-people",
+                                    compact(
+                                        "types",
+                                        "verificationType",
+                                        "verification",
+                                        "problem_id",
+                                        "project_id",
+                                        "problem",
+                                        "solution",
+                                        "solution_id",
+                                        "Solution_function",
+                                        "verifiationTypeText",
+                                        "allVarifications",
+                                        "custommers","people"
+                                        
+                                    )
+                                );
+                                break;
+                                case 20:
+                                   
+                                    $allVarifications = DB::table(
+                                        "principle_identification"
+                                    )->get();
+                                    
+                                    if (!$verification) {
+                                        $verification = Verification::where(
+                                            "verification_type_id", "=", 16
+                                        )->first();
+                                        if (isset($verification->validations)) {
+                                            $verification->validations = json_decode(
+                                                $verification->validations
+                                            );
+                                        }
+                                    }
+                                    if(!$verificationType){
+                                        $verificationType = VerificationType::where(
+                                            "id", "=", 16
+                                        )->first();
+                                    }
+                                    $problemPart = DB::table("averaging_approach")->select('problem_part' , 'id') ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
+                                   
+                                    // echo "<pre>";print_r($problemPart);die;
+                                    return view(
+                                        "adult.verification.view.average-aparoach-calculation",
+                                        compact(
+                                            "types",
+                                            "verificationType",
+                                            "verification",
+                                            "problem_id",
+                                            "project_id",
+                                            "problem",
+                                            "solution",
+                                            "solution_id",
+                                            "Solution_function",
+                                            "verifiationTypeText",
+                                            "allVarifications","problemPart"
+                                            
+                                            
+                                        )
+                                    );
+                                    break;
+                                    case 21:
+                                   
+                                        $allVarifications = DB::table(
+                                            "principle_identification"
+                                        )->get();
+                                        
+                                        if (!$verification) {
+                                            $verification = Verification::where(
+                                                "verification_type_id", "=", 16
+                                            )->first();
+                                            if (isset($verification->validations)) {
+                                                $verification->validations = json_decode(
+                                                    $verification->validations
+                                                );
+                                            }
+                                        }
+                                        if(!$verificationType){
+                                            $verificationType = VerificationType::where(
+                                                "id", "=", 16
+                                            )->first();
+                                        }
+                                        $problemPart = DB::table("averaging_approach")->select('problem_part' , 'id') ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
+                                       
+                                        // echo "<pre>";print_r($problemPart);die;
+                                        return view(
+                                            "adult.verification.view.passive-voice-approach",
+                                            compact(
+                                                "types",
+                                                "verificationType",
+                                                "verification",
+                                                "problem_id",
+                                                "project_id",
+                                                "problem",
+                                                "solution",
+                                                "solution_id",
+                                                "Solution_function",
+                                                "verifiationTypeText",
+                                                "allVarifications","problemPart"
+                                                
+                                                
+                                            )
+                                        );
+                                        break;
+                                        case 22:
+                                   
+                                            $allVarifications = DB::table(
+                                                "principle_identification"
+                                            )->get();
+                                            
+                                            if (!$verification) {
+                                                $verification = Verification::where(
+                                                    "verification_type_id", "=", 16
+                                                )->first();
+                                                if (isset($verification->validations)) {
+                                                    $verification->validations = json_decode(
+                                                        $verification->validations
+                                                    );
+                                                }
+                                            }
+                                            if(!$verificationType){
+                                                $verificationType = VerificationType::where(
+                                                    "id", "=", 16
+                                                )->first();
+                                            }
+                                            $problemPart = DB::table("averaging_approach")->select('problem_part' , 'id') ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
+                                           
+                                            // echo "<pre>";print_r($problemPart);die;
+                                            return view(
+                                                "adult.verification.view.replace-problem-by-problem",
+                                                compact(
+                                                    "types",
+                                                    "verificationType",
+                                                    "verification",
+                                                    "problem_id",
+                                                    "project_id",
+                                                    "problem",
+                                                    "solution",
+                                                    "solution_id",
+                                                    "Solution_function",
+                                                    "verifiationTypeText",
+                                                    "allVarifications","problemPart"
+                                                    
+                                                    
+                                                )
+                                            );
+                                            break;
+                    default:                
                     return view(
                         "adult.verification.index",
                         compact(
@@ -1278,7 +1508,7 @@ class VerificationController extends BaseController
     {
         try {
             $input = $request->all();
-
+            
             $verification = Verification::find($input["id"]);
 
             unset($input["id"]);
@@ -1408,7 +1638,7 @@ class VerificationController extends BaseController
     public function addErrorCorectionAproach(Request $request){
         // echo "<pre>";print_r($request->all());die;
         try{
-            // echo "<pre>";print_r($request->all());die;
+            
             $ErrorCorrection = new ErrorCorrection();
             $ErrorCorrection->project_id = $request->project_id;
             $ErrorCorrection->problem_id = $request->problem_id;
@@ -1528,9 +1758,131 @@ class VerificationController extends BaseController
 
     ///function Function Adjustment
     public function storeFunctionAdjustment(Request $request){
-        // return view("adult.verification.view.error-corection" );
+        // echo "<pre>";print_r($request->all());die;
+        $validator = Validator::make($request->all(), [
+            "function_name" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError("Validation Error.", $validator->errors());
+        }
+        try {
+            $data =  $request->all();
+            $insert = DB::table(
+                "function_adjustments"
+            )->updateOrInsert(
+                ["id" => @$request->id],
+                [
+                    "problem_id" => $data["problem_id"],
+                    "project_id" => $data["project_id"],
+                    "solution_id" => $data["solution_id"],
+                    "solution_function_id" => $data["solution_fun_id"],
+                    "user_id" => Auth::user()->id,                   
+                    "function_name" => $data["function_name"],
+                    
+                ]
+            );
+            $success["entity"] = $insert;
+            return $this->sendResponse(
+                $success,
+                "Record created successfully."
+            );
+        }catch(Exception $e){
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage,
+            ]);
+        } 
     }
     public function functionAdjustment(Request $request){
         return view("adult.verification.view.error-corection" );
     }
+
+
+
+    // Function Substitution and People
+
+    public function functionSustitutionAndPeople(Request $request){
+        
+        $validator = Validator::make($request->all(), [
+            "customer" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError("Validation Error.", $validator->errors());
+        }
+        try {
+            $data =  $request->all();
+            $insert = DB::table(
+                "function_belong_to_people"
+            )->updateOrInsert(
+                ["id" => @$request->id],
+                [
+                    "problem_id" => $data["problem_id"],
+                    "project_id" => $data["project_id"],
+                    "solution_id" => $data["solution_id"],
+                    "solution_function_id" => $data["solution_fun_id"],
+                    "user_id" => Auth::user()->id,                   
+                    "customer_id" => $data["customer"],
+                    
+                ]
+            );
+            $success["entity"] = $insert;
+            return $this->sendResponse(
+                $success,
+                "Record created successfully."
+            );
+        }catch(Exception $e){
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage,
+            ]);
+        } 
+    }
+
+
+
+    public function SolutionFunctionAverage(Request $request){
+        // echo "<pre>";print_r($request->all());die;
+        $validator = Validator::make($request->all(), [
+            "problem_part" => "required|numeric",
+            "solution_value" => "required|numeric",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError("Validation Error.", $validator->errors());
+        }
+        try {
+            $data =  $request->all();
+           
+            $insert = DB::table(
+                "averaging_approach"
+            )->updateOrInsert(
+                ["id" => @$request->id],
+                [
+                    "problem_id" => $data["problem_id"],
+                    "project_id" => $data["project_id"],
+                    "solution_id" => $data["solution_id"],
+                    "solution_function_id" => $data["solution_fun_id"],
+                    "user_id" => Auth::user()->id,                   
+                    "solution_value" => $data["solution_value"],
+                    "problem_part" => $data["problem_part"],
+                    
+                ]
+            );
+            $success["entity"] = $insert;
+            return $this->sendResponse(
+                $success,
+                "Record created successfully."
+            );
+        }catch(Exception $e){
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage,
+            ]);
+        } 
+    }
+
+
+    //Replace Problem By Problem
+
+    public function replaceProblemByProblem(Request $request){
+        echo "<pre>";print_r();die;
+    }
+
+
 }

@@ -237,5 +237,12 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::post("store-feedback-identification", [\App\Http\Controllers\Adult\VerificationController::class, 'storeFeedbackIdentification'])-> name("store-feedback-identification");
         Route::get("error-correction", [\App\Http\Controllers\Adult\VerificationController::class, 'errorCorrection'])-> name("error-correction");
         Route::post("store-error-correction", [\App\Http\Controllers\Adult\VerificationController::class, 'storeErrorCorrection'])-> name("store-error-correction");
+
+        //function Adjustments
+        Route::post("store-function-adjustment", [\App\Http\Controllers\Adult\VerificationController::class, 'storeFunctionAdjustment'])-> name("store-function-adjustment");
+        Route::post("function-sub-and-people", [\App\Http\Controllers\Adult\VerificationController::class, 'functionSustitutionAndPeople'])-> name("function-sub-and-people");
+        Route::post("sol-fun-av", [\App\Http\Controllers\Adult\VerificationController::class, 'SolutionFunctionAverage'])-> name("sol-fun-av");
+        //	Replace Problem by Problem
+
     });  
 });
