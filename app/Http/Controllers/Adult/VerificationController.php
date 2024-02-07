@@ -867,9 +867,9 @@ class VerificationController extends BaseController
                                                     "id", "=", 16
                                                 )->first();
                                             }
-                                            $problemPart = DB::table("averaging_approach")->select('problem_part' , 'id') ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
+                                            $problemreplaced = DB::table("replace_problem_by_problem")->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
                                            
-                                            // echo "<pre>";print_r($problemPart);die;
+                                            //  echo "<pre>";print_r($solution);die;
                                             return view(
                                                 "adult.verification.view.replace-problem-by-problem",
                                                 compact(
@@ -883,12 +883,355 @@ class VerificationController extends BaseController
                                                     "solution_id",
                                                     "Solution_function",
                                                     "verifiationTypeText",
-                                                    "allVarifications","problemPart"
+                                                    "allVarifications","problemreplaced"
                                                     
                                                     
                                                 )
                                             );
                                             break;
+                                            case 23:
+                                   
+                                                $allVarifications = DB::table(
+                                                    "principle_identification"
+                                                )->get();
+                                                
+                                                if (!$verification) {
+                                                    $verification = Verification::where(
+                                                        "verification_type_id", "=", 16
+                                                    )->first();
+                                                    if (isset($verification->validations)) {
+                                                        $verification->validations = json_decode(
+                                                            $verification->validations
+                                                        );
+                                                    }
+                                                }
+                                                if(!$verificationType){
+                                                    $verificationType = VerificationType::where(
+                                                        "id", "=", 16
+                                                    )->first();
+                                                }
+                                                $problemreplaced = DB::table("replace_problem_by_problem")->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
+                                               
+                                                //  echo "<pre>";print_r($solution);die;
+                                                return view(
+                                                    "adult.verification.view.resource-management-consideration",
+                                                    compact(
+                                                        "types",
+                                                        "verificationType",
+                                                        "verification",
+                                                        "problem_id",
+                                                        "project_id",
+                                                        "problem",
+                                                        "solution",
+                                                        "solution_id",
+                                                        "Solution_function",
+                                                        "verifiationTypeText",
+                                                        "allVarifications","problemreplaced"
+                                                        
+                                                        
+                                                    )
+                                                );
+                                                break;
+                                                case 24:
+                                   
+                                                    $allVarifications = DB::table(
+                                                        "principle_identification"
+                                                    )->get();
+                                                    $custommers = DB::table("customers")
+                                                                            ->where("project_id", "=", $project_id)
+                                                                    ->get();
+                                                    if (!$verification) {
+                                                        $verification = Verification::where(
+                                                            "verification_type_id", "=", 16
+                                                        )->first();
+                                                        if (isset($verification->validations)) {
+                                                            $verification->validations = json_decode(
+                                                                $verification->validations
+                                                            );
+                                                        }
+                                                    }
+                                                    $entities = DB::table("entity_available")
+                                                    ->where("type", "=", 0)
+                                                    ->get();
+
+                                                    $entitiestbl = DB::table("entities")->get();
+                                                    if(!$verificationType){
+                                                        $verificationType = VerificationType::where(
+                                                            "id", "=", 16
+                                                        )->first();
+                                                    }
+                                                   
+                                                   
+                                                    
+                                                    return view(
+                                                        "adult.verification.view.entity_usage",
+                                                        compact(
+                                                            "types",
+                                                            "verificationType",
+                                                            "verification",
+                                                            "problem_id",
+                                                            "project_id",
+                                                            "problem",
+                                                            "solution",
+                                                            "solution_id",
+                                                            "Solution_function",
+                                                            "verifiationTypeText",
+                                                            "allVarifications","entities" ,"entitiestbl","custommers"
+                                                            
+                                                            
+                                                        )
+                                                    );
+                                                    break;
+                                                    case 25:
+                                   
+                                                        $allVarifications = DB::table(
+                                                            "principle_identification"
+                                                        )->get();
+                                                        $custommers = DB::table("customers")
+                                                                                ->where("project_id", "=", $project_id)
+                                                                        ->get();
+                                                        if (!$verification) {
+                                                            $verification = Verification::where(
+                                                                "verification_type_id", "=", 16
+                                                            )->first();
+                                                            if (isset($verification->validations)) {
+                                                                $verification->validations = json_decode(
+                                                                    $verification->validations
+                                                                );
+                                                            }
+                                                        }
+                                                        $entities = DB::table("entity_available")
+                                                        ->where("type", "=", 0)
+                                                        ->get();
+    
+                                                        $entitiestbl = DB::table("entities")->get();
+                                                        if(!$verificationType){
+                                                            $verificationType = VerificationType::where(
+                                                                "id", "=", 16
+                                                            )->first();
+                                                        }
+                                                       
+                                                       
+                                                        
+                                                        return view(
+                                                            "adult.verification.view.function_of_people_explanation",
+                                                            compact(
+                                                                "types",
+                                                                "verificationType",
+                                                                "verification",
+                                                                "problem_id",
+                                                                "project_id",
+                                                                "problem",
+                                                                "solution",
+                                                                "solution_id",
+                                                                "Solution_function",
+                                                                "verifiationTypeText",
+                                                                "allVarifications","entities" ,"entitiestbl","custommers"
+                                                                
+                                                                
+                                                            )
+                                                        );
+                                                        break;
+                                                        case 26:
+                                   
+                                                            $allVarifications = DB::table(
+                                                                "principle_identification"
+                                                            )->get();
+                                                            $custommers = DB::table("customers")
+                                                                                    ->where("project_id", "=", $project_id)
+                                                                            ->get();
+                                                            if (!$verification) {
+                                                                $verification = Verification::where(
+                                                                    "verification_type_id", "=", 16
+                                                                )->first();
+                                                                if (isset($verification->validations)) {
+                                                                    $verification->validations = json_decode(
+                                                                        $verification->validations
+                                                                    );
+                                                                }
+                                                            }
+                                                            $entities = DB::table("entity_available")
+                                                            ->where("type", "=", 0)
+                                                            ->get();
+        
+                                                            $entitiestbl = DB::table("entities")->get();
+                                                            if(!$verificationType){
+                                                                $verificationType = VerificationType::where(
+                                                                    "id", "=", 16
+                                                                )->first();
+                                                            }
+                                                           
+                                                           
+                                                            
+                                                            return view(
+                                                                "adult.verification.view.visibility_and_entity_behind_explanation",
+                                                                compact(
+                                                                    "types",
+                                                                    "verificationType",
+                                                                    "verification",
+                                                                    "problem_id",
+                                                                    "project_id",
+                                                                    "problem",
+                                                                    "solution",
+                                                                    "solution_id",
+                                                                    "Solution_function",
+                                                                    "verifiationTypeText",
+                                                                    "allVarifications","entities" ,"entitiestbl","custommers"
+                                                                    
+                                                                    
+                                                                )
+                                                            );
+                                                            break;
+                                                            case 27:
+                                   
+                                                                $allVarifications = DB::table(
+                                                                    "principle_identification"
+                                                                )->get();
+                                                                $custommers = DB::table("customers")
+                                                                                        ->where("project_id", "=", $project_id)
+                                                                                ->get();
+                                                                if (!$verification) {
+                                                                    $verification = Verification::where(
+                                                                        "verification_type_id", "=", 16
+                                                                    )->first();
+                                                                    if (isset($verification->validations)) {
+                                                                        $verification->validations = json_decode(
+                                                                            $verification->validations
+                                                                        );
+                                                                    }
+                                                                }
+                                                                $entities = DB::table("entity_available")
+                                                                ->where("type", "=", 0)
+                                                                ->get();
+            
+                                                                $entitiestbl = DB::table("entities")->get();
+                                                                if(!$verificationType){
+                                                                    $verificationType = VerificationType::where(
+                                                                        "id", "=", 16
+                                                                    )->first();
+                                                                }
+                                                               
+                                                               
+                                                                
+                                                                return view(
+                                                                    "adult.verification.view.mother_nature",
+                                                                    compact(
+                                                                        "types",
+                                                                        "verificationType",
+                                                                        "verification",
+                                                                        "problem_id",
+                                                                        "project_id",
+                                                                        "problem",
+                                                                        "solution",
+                                                                        "solution_id",
+                                                                        "Solution_function",
+                                                                        "verifiationTypeText",
+                                                                        "allVarifications","entities" ,"entitiestbl","custommers"
+                                                                        
+                                                                        
+                                                                    )
+                                                                );
+                                                                break;
+                                                                case 28:
+                                   
+                                                                    $allVarifications = DB::table(
+                                                                        "principle_identification"
+                                                                    )->get();
+                                                                    $custommers = DB::table("customers")
+                                                                                            ->where("project_id", "=", $project_id)
+                                                                                    ->get();
+                                                                    if (!$verification) {
+                                                                        $verification = Verification::where(
+                                                                            "verification_type_id", "=", 16
+                                                                        )->first();
+                                                                        if (isset($verification->validations)) {
+                                                                            $verification->validations = json_decode(
+                                                                                $verification->validations
+                                                                            );
+                                                                        }
+                                                                    }
+                                                                    $entities = DB::table("entity_available")
+                                                                    ->where("type", "=", 0)
+                                                                    ->get();
+                
+                                                                    $entitiestbl = DB::table("entities")->get();
+                                                                    if(!$verificationType){
+                                                                        $verificationType = VerificationType::where(
+                                                                            "id", "=", 16
+                                                                        )->first();
+                                                                    }
+                                                                   
+                                                                   
+                                                                    
+                                                                    return view(
+                                                                        "adult.verification.view.me_vs_you",
+                                                                        compact(
+                                                                            "types",
+                                                                            "verificationType",
+                                                                            "verification",
+                                                                            "problem_id",
+                                                                            "project_id",
+                                                                            "problem",
+                                                                            "solution",
+                                                                            "solution_id",
+                                                                            "Solution_function",
+                                                                            "verifiationTypeText",
+                                                                            "allVarifications","entities" ,"entitiestbl","custommers"
+                                                                            
+                                                                            
+                                                                        )
+                                                                    );
+                                                                    break;
+                                                                    case 29:
+                                   
+                                                                        $allVarifications = DB::table(
+                                                                            "principle_identification"
+                                                                        )->get();
+                                                                        $custommers = DB::table("customers")
+                                                                                                ->where("project_id", "=", $project_id)
+                                                                                        ->get();
+                                                                        if (!$verification) {
+                                                                            $verification = Verification::where(
+                                                                                "verification_type_id", "=", 16
+                                                                            )->first();
+                                                                            if (isset($verification->validations)) {
+                                                                                $verification->validations = json_decode(
+                                                                                    $verification->validations
+                                                                                );
+                                                                            }
+                                                                        }
+                                                                        $entities = DB::table("entity_available")
+                                                                        ->where("type", "=", 0)
+                                                                        ->get();
+                    
+                                                                        $entitiestbl = DB::table("entities")->get();
+                                                                        if(!$verificationType){
+                                                                            $verificationType = VerificationType::where(
+                                                                                "id", "=", 16
+                                                                            )->first();
+                                                                        }
+                                                                       
+                                                                       
+                                                                        
+                                                                        return view(
+                                                                            "adult.verification.view.taking_advantage",
+                                                                            compact(
+                                                                                "types",
+                                                                                "verificationType",
+                                                                                "verification",
+                                                                                "problem_id",
+                                                                                "project_id",
+                                                                                "problem",
+                                                                                "solution",
+                                                                                "solution_id",
+                                                                                "Solution_function",
+                                                                                "verifiationTypeText",
+                                                                                "allVarifications","entities" ,"entitiestbl","custommers"
+                                                                                
+                                                                                
+                                                                            )
+                                                                        );
+                                                                        break;
                     default:                
                     return view(
                         "adult.verification.index",
@@ -1511,7 +1854,7 @@ class VerificationController extends BaseController
             
             $verification = Verification::find($input["id"]);
 
-            unset($input["id"]);
+            // unset($input["id"]);
             if (!$verification) {
                 $verification = new Verification();
                 $verification->verification_type_id =
@@ -1522,6 +1865,8 @@ class VerificationController extends BaseController
                 $verification->solution_function_id = $input["solution_fun_id"];
                 $verification->user_id = Auth::user()->id;
                 $verification->name = $input["name"];
+            }else{
+                $verification = Verification::Find($input["id"]);
             }
 
             $verification->validations = json_encode($input);
@@ -1881,7 +2226,33 @@ class VerificationController extends BaseController
     //Replace Problem By Problem
 
     public function replaceProblemByProblem(Request $request){
-        echo "<pre>";print_r();die;
+        try {
+            $data =  $request->all();
+           
+            $insert = DB::table(
+                "replace_problem_by_problem"
+            )->updateOrInsert(
+                ["id" => @$request->id],
+                [
+                    "problem_id" => $data["problem_id"],
+                    "project_id" => $data["project_id"],
+                    "solution_id" => $data["solution_id"],
+                    "solution_function_id" => $data["solution_function_id"],
+                    "user_id" => Auth::user()->id,                   
+                    "replaced" => true
+                    
+                ]
+            );
+            $success["entity"] = $insert;
+            return $this->sendResponse(
+                $success,
+                "Record created successfully."
+            );
+        }catch(Exception $e){
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage,
+            ]);
+        } 
     }
 
 

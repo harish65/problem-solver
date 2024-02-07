@@ -27,6 +27,7 @@
                             <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
                             <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
 @if(isset($problem->id))
+ <!-- Start card main div -->
     <div class="solutionconditionBlock">
         <div class="blockProblem">
             <div class="projectBlock text-center">
@@ -103,6 +104,7 @@
           </div>
 
     </div>
+    <!-- End card main div -->
     <div class="row pt-5">
         <p>
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit

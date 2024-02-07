@@ -44,63 +44,9 @@
                     <!-- Condition block start -->
                     @if(isset($problemreplaced) && !empty($problemreplaced->id))
                     <div class="solutionconditionBlock justify-content-center">
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                              <h2>Problem</h2>
-                              <div class="projectList text-center"> 
-                                <div class="imgWrp">
-                                        
-                                
-                                            @if($problem->problem_type == 0)
-                                                    @if(strlen($problem -> problem_file) < 15)
-                                                        <img class="mx-auto aaa" src='{{ asset("assets-new/problem/" . $problem->file) }}' width="100%" height="128px">
-                                                    @endif
-                                            @elseif($problem->problem_type == 1)
-                                                    <video class="mx-auto" controls="controls" preload="metadata" width="300" height="320" preload="metadata">
-                                                        <source src="{{ asset("assets-new/problem/" . $problem->file) }}#t=0.1" type="video/mp4">
-                                                    </video>
-                                            @elseif($problem -> problem_type == 2)
-                                                        <iframe class="mx-auto" src="{{ $problem->file }}"width="300" height="320"> </iframe>
-                                            @endif
-                                    </div>
-                                <p class="redText" style="color:red" >{{ $problem->name }}</p>
-                              </div>
-                              <div class="projectList">
-                                <p class="date">{{ date('d/m/Y' , strtotime($problem->created_at))}}</p>
-                                
-                              </div>
-                            </div>
-                          </div>
-                          <div class="long-arrow">            
-                                <p style="position:relative; top:35px;left:10px;">{{ $problem->output_slug }}</p>
-                            <img src="{{ asset('assets-new/images/arrowRight.png')}}">
-                            <!-- add arrow Image over here -->
-                          </div>
-                          <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                              <h2>Solution</h2>
-                              <div class="projectList text-center"> 
-                              <div class="imgWrp">
-                                                @if($problem -> type == 0)
-                                                    @if(strlen($problem -> file) < 15)
-                                                        <img class="mx-auto" src="{{ asset("assets-new/solution/" . $solution -> file) }}" width="100%" height="128px">
-                                                    @endif
-                                                @elseif($problem -> type == 1)
-                                                    <video class="mx-auto" controls="controls" preload="metadata" width="100%" height="128px" preload="metadata">
-                                                        <source src="{{ asset("assets-new/solution/" . $solution -> file) }}#t=0.1" type="video/mp4">
-                                                    </video>
-                                                @elseif($problem -> type == 2)
-                                                        <iframe class="mx-auto" src="{{ $solution -> file }}" width="100%" height="128px"> </iframe>
-                                                @endif 
-                              </div>
-                                <p class="redText" style="color:red">{{ $solution->name }}</p>
-                              </div>
-                              <div class="projectList">
-                                <p class="date">{{ date('d/m/Y' , strtotime($solution->created_at)) }}</p>
-                                
-                              </div>
-                            </div>
-                          </div>
+                        
+                        
+                          
                 
                     </div>
                     @else
@@ -125,10 +71,7 @@
                     @endif
                     <!-- Condition block end -->
                         <div class="questionWrap">
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
-                                tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
-                                nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
-                                Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
+                            
                             <div class="row">
                             </div>
 
@@ -145,13 +88,35 @@
                             <input type="hidden" name="verification_type_id" id="verification_type_id" value="{{ @$verificationType->id }}">
                             <input type="hidden" name="name" id="verification_type_id" value="replace_problem_by_problem">
                                 
-                                <h5>Do you understand that a problem needs to be solved?</h5>
+                                <h5>Do you use resources or physical entities to solve the problem?</h5>
                                 <ul class="validate_que" style="list-style:none;">
                                     
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, I understand that a problem needs to be solved</label></li>
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, I do not understand that a problem needs to be solved</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, I use resources or natural entities to solve that problem</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, I do not use resources or natural entities to solve that problem</label></li>
                                 
                                 </ul>
+                                <h5>Are usage of resources or physical entities required to solve that problem?</h5>
+                                <ul class="validate_que" style="list-style:none;">
+                                    
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, usage of resources or physical entities required to solve that problem</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, usage of resources or physical entities required to solve that problem</label></li>
+                                
+                                </ul>
+                                <h5>Do you use resources or physical entities to solve ProblemName?</h5>
+                                <ul class="validate_que" style="list-style:none;">
+                                    
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, I use resources or natural entities to solve ProblemName</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, I do not use resources or natural entities to solve ProblemName</label></li>
+                                
+                                </ul>
+                                <h5>Are usage of resources or physical entities required to solve ProblemName?</h5>
+                                <ul class="validate_que" style="list-style:none;">
+                                    
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_4" {{ (@$verification->validations->validation_4 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, usage of resources or physical entities required to solve ProblemName</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_4" {{ (@$verification->validations->validation_4 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, usage of resources or physical entities required to solve ProblemName</label></li>
+                                
+                                </ul>
+        
         
                                 
                                 <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>

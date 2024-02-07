@@ -42,8 +42,48 @@
                 <!-- start -->
                 <div class="principleRelation container">
                     <!-- Condition block start -->
-                    @if(isset($problemreplaced) && !empty($problemreplaced->id))
+                   
                     <div class="solutionconditionBlock justify-content-center">
+
+
+                        <div class="blockProblem">
+                            <div class="projectBlock text-center">
+                                <h2>People</h2>
+                                <div class="projectList text-center">
+                                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                                        <ol class="carousel-indicators">
+                                            @php $index = 0; @endphp
+                                                @foreach($custommers as $user)
+                                                        <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
+                                                @php $index++; @endphp
+                                            @endforeach 
+                                        </ol>
+                                        <div class="imgWrp carousel-inner" role="listbox">
+                                            @php $index = 1; @endphp
+                                                @foreach($custommers as $user)
+                                                    <div class="carousel-item {{ ($index == 1) ? 'active':'' }} " data-entity_id="{{$user->id}}" data-file="{{ $user->file }}" >
+                                                        <img  src="{{ asset('assets-new/users/'.$user->file)}}" alt="Chania" width="80%" height="128px">
+                                                    </div>
+                                                @php $index++; @endphp
+                                            @endforeach    
+                                               
+                                        </div>
+                                    </div>
+                                    <p class="redText" style="color:red">People</p>
+                                </div>
+                                <div class="projectList">
+                                    
+                                    <ul>
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="long-arrow">
+                           
+                            <img src="{{ asset('assets-new/images/arrowRight.png')}}">
+                            <!-- add arrow Image over here -->
+                        </div>
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
                               <h2>Problem</h2>
@@ -66,8 +106,7 @@
                                 <p class="redText" style="color:red" >{{ $problem->name }}</p>
                               </div>
                               <div class="projectList">
-                                <p class="date">{{ date('d/m/Y' , strtotime($problem->created_at))}}</p>
-                                
+                                <p class="date">{{ date('d/m/Y' , strtotime($problem->created_at))}}</p>                                
                               </div>
                             </div>
                           </div>
@@ -96,33 +135,13 @@
                                 <p class="redText" style="color:red">{{ $solution->name }}</p>
                               </div>
                               <div class="projectList">
-                                <p class="date">{{ date('d/m/Y' , strtotime($solution->created_at)) }}</p>
-                                
+                                <p class="date">{{ date('d/m/Y' , strtotime($solution->created_at)) }}</p>                                
                               </div>
                             </div>
                           </div>
                 
                     </div>
-                    @else
-                    <div class="conditionBlock justify-content-center">
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Function</h2>
-                                <div class="projectList text-center min-height-250">
-                                    <div class="imgWrp">
-                                        <a class="cursor" id="replace_sol">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="#28a745" class="bi bi-plus" viewBox="0 0 16 16">
-                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                                          </svg>
-                                        </a>
-                                    </div>
-                                    
-                                </div>
-                               
-                            </div>
-                        </div>
-                    </div>
-                    @endif
+                    
                     <!-- Condition block end -->
                         <div class="questionWrap">
                             <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
@@ -143,13 +162,20 @@
                             <input type="hidden" name="fileType" id="fileType">
                             <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
                             <input type="hidden" name="verification_type_id" id="verification_type_id" value="{{ @$verificationType->id }}">
-                            <input type="hidden" name="name" id="verification_type_id" value="replace_problem_by_problem">
+                            <input type="hidden" name="name"  value="taking_advantegs">
                                 
-                                <h5>Do you understand that a problem needs to be solved?</h5>
+                                <h5>Do you understand that the only advantage that exists is to solve the underlying problem?  </h5>
                                 <ul class="validate_que" style="list-style:none;">
                                     
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, I understand that a problem needs to be solved</label></li>
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, I do not understand that a problem needs to be solved</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, I understand that the only advantage that exists is to solve the underlying problem</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, I do not understand that the only advantage that exists is to solve the underlying problem</label></li>
+                                
+                                </ul>
+                                <h5>Do you understand that the only interest that exists is to solve the underlying problem?</h5>
+                                <ul class="validate_que" style="list-style:none;">
+                                    
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, I do understand that the only interest that exists is to solve the underlying problem</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, I do not understand that the only interest that exists is to solve the underlying problem</label></li>
                                 
                                 </ul>
         
