@@ -95,7 +95,13 @@
                         <br>       
                         <input type="hidden" value="{{ $lastDate }}" id="last_date"> 
                         <form id="validation_form">
-                                <input type="hidden" name="id" value="{{ @$verification->id }}">
+                                <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                        <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
+                        <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                        <input type="hidden" name="project_id" value="{{ $project_id }}">
+                        <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                        <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                        <input type="hidden" name="name" id="name" value="People_in_Project">   
                         <ul style="list-style:none;">
                             <h5>Does the solution of the problem hold related to time?</h5>
                             <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} >Yes, the solution of the problem holds related to time</label></li>

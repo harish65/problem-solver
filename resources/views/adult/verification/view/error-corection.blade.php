@@ -6,12 +6,16 @@
     <div class="container">
         <div class="mainTitle">
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-4">
                     <div class="d-flex align-items-center title-min-h ">
                         <h2>Error Correctionn</h2>
                         
                     </div>
+                        
                 </div>
+                 <div class="col-sm-8 ">
+                        <a href="{{ URL::previous() }}" class="btn btn-success float-end">Back</a>
+                    </div>  
                 <div class="principleRelation">
                     <div class="conditionBlock problem-development">
                         <div class="blockProblem">

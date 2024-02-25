@@ -99,11 +99,53 @@
                     </tbody>
                 </table>
             </div>
+            <div class="questionWrap">
+        
+        
+                <h2>Validation Question</h2>
+                <br>
+                <form id="validation_form">
+                        <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                        <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
+                        <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                        <input type="hidden" name="project_id" value="{{ $project_id }}">
+                        <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                        <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                        <input type="hidden" name="name" id="name" value="People_in_Project">     
+                            
+                            
+
+                        
+                        <h5>Are you part of that project?</h5>
+                        <ul class="validate_que" style="list-style:none;">
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I am part of that project</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2">&nbsp;&nbsp;No, I am not part of that project</label></li>
+                        
+                        </ul>
+        
+                        <h5>Do you have a function in that project?</h5>
+                        <ul class="validate_que" style="list-style:none;">
+                            
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I do have a function in that project</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}  value="2">&nbsp;&nbsp;No, I do not have a function in that project</label></li>
+                        
+                        </ul>
+                        <h5>Do you involve in that project?</h5>
+                        <ul class="validate_que" style="list-style:none;">
+                            
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I involve in that project</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 2) ? 'checked' : '' }}  value="2">&nbsp;&nbsp;No, I don’t involve in that project</label></li>
+                        
+                        </ul>
+                        <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                </form>
+                
+            </div>
         </div>
         
     </div>
     <!-- Content Section End -->
-        
+    
     
     
     

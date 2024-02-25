@@ -141,7 +141,7 @@
         <div class="container">
             <div class="row ">
                 <div class="col-md-8">
-                    <h2>Error Identification and Compensator</h2>
+                    <h2>Function and People Identification</h2>
                 </div>
                 <div class="col-md-4    ">
                     <button type="button"  class="btn btn-success addVocabularyBtn"   data-toggle="modal" data-target="#exampleModal">+ Add </button>

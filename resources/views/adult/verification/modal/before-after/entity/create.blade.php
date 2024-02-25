@@ -13,9 +13,14 @@
 
                 <div class="modal-body">
                     <input type="hidden" name="id" id="id" value="">
-                    <input type="hidden" name="ver_id" id="ver_id" value="{{ @$verification->id }}">
-                    <input type="hidden" name="verificationType" id="verificationType"
-                        value="{{ @$verificationType->id }}">
+                    
+                         <input type="hidden" name="id" value="{{ @$verification->id }}">        
+                                <input type="hidden" name="verificationType" value="{{ @$verificationType->id }}">        
+                                <input type="hidden" name="problem_id" value="{{ @$problem->id }}">        
+                                <input type="hidden" name="solution_id" value="{{ @$solution->id }}">        
+                                <input type="hidden" name="solution_function_id" value="{{ @$Solution_function->id }}">
+                                <input type="hidden" name="project_id" value="{{ @$project_id }}">
+                                <input type="hidden" name="beforeafter_id" value="{{ @$beforeAfter->id }}">
                     <div class="form-group">
                         <div class="row">
                             <div class="form-group">
@@ -30,9 +35,9 @@
                             </div>
                             <div class="form-group">
                                 <label>Please State If Problem Exist After The Solution</label>
-                                    <select name="point_to" id="point_to"  class="form-control form-select">
-                                        <option value="to">Yes</option>
-                                        <option value="not">No</option>
+                                    <select name="existing_after" id="point_to"  class="form-control form-select">
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
                                     </select>
                             </div>
                         </div>

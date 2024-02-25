@@ -163,16 +163,19 @@
                                     @foreach($entity as $ent)
                                         <tr>
                                            
-                                                <td>{{ $ent->verification_key }}</td>
+                                                <td>{{ $ent->verification_value }}</td>
                                                 <td>  
                                                     <span>{{ ($ent->point_to == 'to') ? 'Match' : 'Not Matched'}}</span>  
                                                     <br>                 
                                                     <img src="{{ asset('assets-new/images/arrowRight.png') }}" width="80" height="25">    
                                                 </td>
-                                                <td>{{ $ent->verification_value }}</td>
-                                                <td>  
-                                                    <span>{{ ($ent->point_to == 'to') ? 'Check' : 'Not Checked'}}</span>  
-                                                    
+                                                <td>{{ $ent->verification_key }}</td>
+                                                <td style="vertical-align:top;">  
+                                                    @if($ent->point_to == 'to')
+                                                    <span><input class="form-check-input big-checkbox" type="checkbox" checked disabled></span>
+                                                    @else
+                                                    <span><input class="form-check-input big-checkbox" type="checkbox" disabled></span>
+                                                    @endif                                                    
                                                 </td>
                                                 
                                                 <td>
@@ -243,6 +246,7 @@
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
 <style>
+     .big-checkbox {width: 30px; height: 30px;}
     .image{
         margin: 20px;
         text-align: center;

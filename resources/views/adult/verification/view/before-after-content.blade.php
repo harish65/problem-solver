@@ -110,12 +110,16 @@
                             <div class="text-left w-50 ">
                                 <h2>Before And After Verification</h2>
                             </div>
+                            
+                            @if($beforeAfter == '')
                                 <div class="text-right w-50 pt-3">
                                     <button type="button"  class="btn btn-success addEntity" id="add-new-variant">+ Add New</button>
                                 </div>
+                            @endif    
                             </div>
 
                             </div>
+                           @if($beforeAfter)
                             <div class="entity">
                                 <table class="table slp-tbl text-center">
                                     <thead>
@@ -125,41 +129,46 @@
                                         <th>Existed After</th>                                    
                                         <th>Action</th>
                                     </thead>
-                                    @foreach($entity as $ent)
+                                    
+                                    
                                         <tr>
-                                            <td>{{ $ent->verification_key }}</td>
-                                            <td>{{ $ent->verification_value }}</td>
-                                            <td><span>{{ ($ent->point_to == 'to') ? 'Yes' : 'No'}}</span></td>
-                                            <td><a href="javaScript:Void(0)" class="addEntity">
-                                                    <img src="{{ asset('assets-new/images/add-verification.png')}}"
-                                                        alt="">
+                                            <td>{{ $problem->name }}</td>
+                                            <td>{{ $solution->name }}</td>
+                                            <td><span>{{ ( $beforeAfter->existing_after == 1) ? 'Yes' : 'No'}}</span></td>
+                                           
+                                            <td><a href="javascript:void(0)" class="">
+                                                    <img src="{{ asset('assets-new/images/add-verification.png')}}" alt="">
                                                 </a>
-                                                <a href="javaScript:Void(0)" data-id="{{ $ent->id }}" class="deleteEntity">
+                                                <a href="javascript:void(0)" data-id="{{ $beforeAfter->id }}" class="deleteEntity">
                                                     <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
                                                 </a>
-                                                <a href="javaScript:Void(0)" class="editEntity"
-                                                    data-id="{{ $ent->id }}"
-                                                    data-key="{{ $ent->verification_key }}"
-                                                    data-value="{{ $ent->verification_value }}"
-                                                    data-point_to="{{ $ent->point_to }}"
-                                                >
+
+                                                <a href="javascript:void(0)" class="editEntity"  >
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
                                                 </a>
 
                                             </td>
                                             
                                         </tr>
-                                        @endforeach    
+                                       
+                                        
                                 </table>
                             </div>
+                            @endif
+                            
                         </div>
 
                         <h2>Validation Question</h2>
                         <br>
                         
                             <form id="validation_form">
-                                <input type="hidden" name="id" value="{{ @$verification->id }}">
                                 
+                                <input type="hidden" name="beforeafter_id" value="{{ @$beforeAfter->id }}">        
+                                <input type="hidden" name="id" value="{{ @$verification->id }}">        
+                                <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}">        
+                                <input type="hidden" name="problem_id" value="{{ @$problem->id }}">        
+                                <input type="hidden" name="solution_id" value="{{ @$solution->id }}">        
+                                <input type="hidden" name="solution_fun_id" value="{{ @$Solution_function->id }}">
                                 <ul>
                                     <h5>The problem existed before, is the problem solved after?</h5>
                                     <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1">Yes, the problem existed before and after the problem is solved</label></li>
@@ -244,10 +253,8 @@ $('.dashboard').click(function(){
     $('.nav-varification').attr('href' ,$('#solution_fun_nav').attr('href'))
 
 })
-$('.addEntity').click(function(){
-    $('#beforeAfterEntity').modal('toggle')
-})
-$('#btnSaveEntity').click(function(e){
+
+$('#btnSaveEntity').on('click',function(e){ 
     e.preventDefault();
        var dv = new FormData($('#beforeAfterEntityForm')[0]);
        $.ajaxSetup({
@@ -257,7 +264,7 @@ $('#btnSaveEntity').click(function(e){
        });
        $.ajax({
             type: 'POST',
-            url: "{{route('adult.add-vocabulary-entity')}}",
+            url: "{{route('adult.before-after')}}",
             data: dv,
             processData: false,
             contentType: false,
@@ -267,6 +274,7 @@ $('#btnSaveEntity').click(function(e){
                 $('#btnSaveEntity').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
             },
             error: function (xhr, status, error) {
+                console.log(xhr);
                 $('#btnSaveEntity').attr('disabled',false);
                 $('#btnSaveEntity').html('Save changes');
                 $.each(xhr.responseJSON.data, function (key, item) {
@@ -305,7 +313,7 @@ $('#btnSaveEntity').click(function(e){
                        }
                });      
          $.ajax({
-               url: "{{route('adult.delete-vocabulary')}}",
+               url: "{{route('adult.delete-before-after')}}",
                data:{id :  id},         
               
                type: 'POST',           
@@ -330,5 +338,14 @@ $('#btnSaveEntity').click(function(e){
            });
      });
 
+
+
+
+</script>
+
+<script>
+    $(document).on('click' , '.editEntity , #add-new-variant' , function(){
+        $('#beforeAfterEntity').modal('toggle')
+    })
 </script>
 @endsection

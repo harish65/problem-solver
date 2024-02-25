@@ -125,8 +125,8 @@
                                                 {{date('d-m-Y' , strtotime($data->problem_date))}}
                                             </td>
                                             <td>
-                                                <a href="" class="btn btn-success"><i class="fa fa-pencil"></i></a>
-                                                <a href="" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                                <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  data-error_name="{{$data->error_name}}" data-error_date="{{date('d-m-Y' , strtotime($data->error_date))}}" data-problem="{{$data->problem_name}}" data-problem_date="{{date('d-m-Y' , strtotime($data->problem_date))}} " class="btn btn-success editBtn"><i class="fa fa-pencil"></i></a>
+                                                <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  class="btn btn-danger delete-btn"><i class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
                                   @endforeach
@@ -188,6 +188,8 @@
                 <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
                 <input type="hidden" name="project_id" value="{{ $project_id }}">
                 <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
+                <input type="hidden" name="id" id="id" value="">
+                
                 <div class="form-group">
                     <label for="error_name">Error Name</label>
                     <input type="text" class="form-control" name="error_name" id="error_name">
@@ -350,8 +352,61 @@ $('#btnSave').click(function(e){
 
    });
 
+   $(".editBtn").on('click' , function(){
+        $('#error_name').val($(this).data('error_name'))
+        $('#error_date').val($(this).data('error_date'))
+        $('#problem_name').val($(this).data('problem'))
+        $('#problem_date').val($(this).data('problem_date'))
+        $('#problem_date').val($(this).data('problem_date'))
+        $('#id').val($(this).data('id'))
+        $('#exampleModal').modal('toggle')
+   })
 
-   
+   /////Delete 
+
+
+
+   $('.delete-btn').click(function(e){
+    e.preventDefault();
+
+    var id =  $(this).data('id');
+      
+    if (confirm('Are you sure you want to delete this?')) {
+       
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+       var route  =  "{{route('adult.del-problem-development' , ':id')}}"
+       route = route.replace(':id', id);
+       $.ajax({
+            type: 'POST',
+            url: route,
+            processData: false,
+            contentType: false,
+            dataType: 'json',            
+            success: function (response){
+                if(response.success == false)
+                {
+                    $('#delete-btn').attr('disabled',false);
+                    $('#delete-btn').html('Save changes');
+                    var errors = response.data;
+                    $.each( errors, function( key, value ) {
+                        toastr.error(value)
+                    });
+                } else {
+                    
+                    toastr.success(response.message);
+                    location.reload();
+                }
+            }
+        });
+    }else{
+        return false
+    }
+
+   });
 
    
 </script>

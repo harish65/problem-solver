@@ -61,7 +61,7 @@
                                         <p class="redText">{{ $user->type }}</p>
                                     </div>
                                     <div class="">
-                                        <button class="btn btn-success communicate" data-customer_id="{{ $user->id }}" value="communicate" data-toggle="modal" data-target="#exampleModal">Communication</button>
+                                        <button class="btn btn-success communicate" data-id="{{ $user->id }}" data-customer_id="{{ $user->id }}" data-name = "{{ $user->name }}"  value="communicate" data-toggle="modal" data-target="#exampleModal">Communication</button>
                                         <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
                                     </div>
                                 </div>
@@ -119,36 +119,27 @@
             <div class="modal-body">
             <form id="comm_form" method="post">
                 <input type="hidden" id="user_id" name="user_id" value="">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="mb-5">
-                                        <input type="radio" id="typeFile" name="fileType" class=" fileType" value="0" checked>
-                                        <label class="" for="typeFile"> File</label>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="mb-5">
-                                        <input type="radio" id="typeLink" name="fileType" class="fileType" value="2">
-                                        <label class="" for="typeLink"> Link</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="from-group" id="imageFile">
-                                <input type="file" name="file" data-height="150" id="updateProblemFileFile" class="dropify" accept="image/*, video/*">
-                        </div>
-                        <div class="from-group d-none" id="youtubeLink">
-                            <label class="" for="updateProblemFileFile"> Add Link</label>
-                            <input type="text" name="link" id="updateProblemFileFile" class="form-control" placeholder="www.example.com">
+                <input type="hidden" id="id" name="id" value="">
+                        <div class="from-group mt-2">
+                            <label for="person_one">From Person : Person 1<span></span></label>
+                            <input class="form-control" name="person_one" id="person_one" disabled>
                         </div>
                         <div class="from-group mt-2">
-                            <label for="word">Subject</label>
-                            <input type="text" name="title" class="form-control" placeholder="Subject">
-                    </div>
+                            <label for="person_2">To Persone : Person 2<span></span></label>
+                            <select name="person_to" class="form-control form-select" id="person_2">
+                                    <option value="">Please select</option>
+                                    @foreach($users as $user)
+                                    <option value="{{ $user->id}}">{{ $user->name }}</option>
+                                    @endforeach
+                            </select>
+                        </div>
+                        <div class="from-group mt-2">
+                            <label for="title_">Subject</label>
+                            <input type="text" name="title" class="form-control" id="title_" placeholder="Subject">
+                        </div>
                         <div class="from-group mt-3">
-                                <label for="word">Message</label>
-                                <textarea class="form-control" name="comment" id="msg"></textarea>
+                                <label for="msg">Message</label>
+                                <textarea class="form-control " name="comment" id="msg"></textarea>
                         </div>
                       
                  </form>
@@ -266,26 +257,13 @@ $('.validation').on('change',function(){
         }
         $('#createVerification').modal('toggle')
    })
-//.editSolFunBtn
-
-$('.fileType').on('change', function(){
-   var type = $(this).val();
-   if(type == 0){
-        $('#imageFile').show()
-        $('#youtubeLink').hide().addClass('d-none')
-        
-   }else{
-    $('#youtubeLink').show().removeClass('d-none')
-    $('#imageFile').hide()
-   }
-})
-
-$
 
 
    $(document).on('click','#btnSave',function(e){
        e.preventDefault();
+       tinyMCE.triggerSave(true, true);
        var fd = new FormData($('#comm_form')[0]);
+       
        $.ajaxSetup({
        headers: {
                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -338,8 +316,14 @@ $
    });
 
 $('.communicate').on('click',function(){
-    $('#user_id').val($(this).attr('data-customer_id'))
+    var cutomer_id = $(this).attr('data-customer_id');
+    $('#user_id').val(cutomer_id)
+    $('#person_one').val($(this).data('name'))
+    $("#person_2 option[value='"+ cutomer_id +"']").remove();
+
 })
+
+
 </script>
 <script>
     tinymce.init({

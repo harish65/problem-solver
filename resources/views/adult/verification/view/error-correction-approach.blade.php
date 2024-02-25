@@ -132,10 +132,10 @@
                             <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav">
                                 <li class="nav-item active">
-                                    <a class="btn btn-success" target="_blank" href="{{ route('adult.feedback-identification') }}">2. Feedback identification<span class="sr-only">(current)</span></a>
+                                    <a class="btn btn-success"  href="{{ route('adult.feedback-identification') }}">2. Feedback identification<span class="sr-only">(current)</span></a>
                                 </li>
                                 <li class="nav-item active">
-                                    <a class="btn btn-success" target="_blank" href="{{ route('adult.error-correction') }}">3. Continue With Error Correction<span class="sr-only">(current)</span></a>
+                                    <a class="btn btn-success" href="{{ route('adult.error-correction') }}">3. Continue With Error Correction<span class="sr-only">(current)</span></a>
                                 </li>
                             </ul>
                             </div>

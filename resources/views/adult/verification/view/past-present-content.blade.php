@@ -65,25 +65,21 @@
                                     </thead>
                                     <tbody>
                                     <?php $lastDate = null ?>
-                                        @foreach($allVarifications as $varification)
+                                        @foreach($pastAndPresentTime as $varification)
                                         <tr>
-                                            <td>{{ date('d/m/Y' , $varification->key)}}</td>
-                                            <td>{{ ($varification->val == 'n') ? 'NO' : 'YES' }}</td>
+                                            <td>{{ date('d/m/Y' , strtotime($varification->time))}}</td>
+                                            <td>{{ $problem->name }}</td>
                                             <td>
-                                                <!-- <a href="javaScript:Void(0)" class="addVocabularyBtn">
-                                                    <img src="{{ asset('assets-new/images/add-verification.png')}}"
-                                                        alt="">
-                                                </a> -->
-                                                <a href="javaScript:Void(0)" class="deleteVoucablaryBtn" data-id="{{  $varification->id }}">
+                                                <a href="javaScript:void(0)" class="deleteVoucablaryBtn" data-id="{{  $varification->id }}">
                                                     <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
                                                 </a>
-                                                <a href="javaScript:Void(0)" class="editVocabularyBtn" data-id="{{  $varification->id }}" data-key="{{ date('d/m/Y' ,  $varification->key )}}" data-val="{{ $varification->val }}">
+                                                <a href="javaScript:void(0)" class="editVocabularyBtn" data-id="{{  $varification->id }}" data-key="{{ date('d/m/Y' ,  strtotime($varification->time) )}}">
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
                                                 </a>
 
                                             </td>
                                         </tr>
-                                        <?php $lastDate = date('Y-m-d H:i:0' ,  $varification->key) ;
+                                        <?php $lastDate = date('Y-m-d' ,  strtotime($varification->time)) ;
                                             
                                         ?>
                                         @endforeach
@@ -95,7 +91,13 @@
                         <h2>Validation Question</h2>
                         <br>
                         <form id="validation_form">
-                                <input type="hidden" name="id" value="{{ @$verification->id }}">        
+                                <input type="hidden" name="id" value="{{ @$verification->id }}">   
+                                <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
+                                <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                                <input type="hidden" name="project_id" value="{{ $project_id }}">
+                                <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                                <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                                <input type="hidden" name="name" id="name" value="People_in_Project">     
                         <ul style="list-style:none;">
                        
                             <h5>Does the problem exist from past to present?</h5>
@@ -134,20 +136,25 @@
           <div class="form-group">
               <label for="exampleInputEmail1">Date</label>
               <input type="hidden" name="problem_id"  value="{{ $problem_id }}">
+              <input type="hidden" name="project_id"  value="{{ $project_id }}">
               <input type="hidden" name="verification_type_id" value="{{ $verificationType->id }}">
               <input type="hidden" name="solution_id" value="{{ $solution_id }}">
               <input type="hidden" name="solution_function_id" value="{{ $Solution_function->id }}">
-              <input type="hidden" name="verification_id" id="verification_id" value="">
               <input type="hidden" name="update"  value="">
-              <input type="text" id="date" name="date"  class="form-control"  id="name" placeholder="Enter Date">
+              <input type="text" id="date" name="past_time"  class="form-control"  id="name" placeholder="Enter Date">
           </div>
-          <div class="form-group ">
+          <div class="form-group">
+          <label class="radio-inline">Problem Name</label>
+          <input type="text" id="problem_name" name="problem_name"  class="form-control" disabled value="{{ $problem->name }}"  placeholder="Problem Name" >
+          </div>
+          <div class="form-group d-none ">
             <label class="radio-inline">Solution Hold</label>
             <label class="radio-inline">
-                <input type="radio" value="y" class="solution-hold ml-3" id="solution_hold_y" name="solution_hold" checked>  Yes
+                <input type="radio" value="1" class="solution-hold ml-3" id="solution_hold_y" name="solution_hold" checked>  Yes
               </label>
+              
               <label class="radio-inline">
-                <input type="radio" value="n"   class="solution-hold ml-3" id="solution_hold_n" name="solution_hold">  No
+                <input type="radio" value="0"   class="solution-hold ml-3" id="solution_hold_n" name="solution_hold">  No
               </label>
             </div>
           </form>
@@ -285,6 +292,7 @@ $('.validation').on('change',function(){
 
 $(document).on('click','#saveBtn',function(e){
   e.preventDefault();
+  
   var fd = new FormData($('#formTimeVerification')[0]);
   $.ajaxSetup({
   headers: {
@@ -293,7 +301,7 @@ $(document).on('click','#saveBtn',function(e){
   });
   
   $.ajax({
-      url: "{{route('adult.store-time-verification')}}",
+      url: "{{route('adult.store-past-present-time')}}",
       data: fd,
       processData: false,
       contentType: false,
@@ -330,7 +338,7 @@ $(document).on('click','#saveBtn',function(e){
 
 $('.editVocabularyBtn').click(function(){
   $('#verification_id').val($(this).data('id')) 
-    $('#date').val($(this).data('key')).attr('disabled' , true)  
+    // $('#date').val($(this).data('key')).attr('disabled' , true)  
   if($(this).data('val') === 'y'){
    $('#solution_hold_y').prop('checked' , true)  
   }else{
@@ -391,7 +399,10 @@ $.ajax({
 
 $(document).ready(function () {
 var lastDate = $('#last_date').val()
-$("#date").datepicker({ minDate: new Date(lastDate)  });
+console.log(lastDate);
+$("#date").datepicker({ minDate: new Date(lastDate)  , maxDate: 0 });
+
+
 });
    
    

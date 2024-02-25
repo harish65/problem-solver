@@ -111,7 +111,13 @@
                         <h2>Validation Question</h2>
                         <br>
                         <form id="validation_form">
-                                <input type="hidden" name="id" value="{{ @$verification->id }}">
+                                <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                                <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
+                                <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                                <input type="hidden" name="project_id" value="{{ $project_id }}">
+                                <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                                <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                                <input type="hidden" name="name" id="name" value="People_in_Project"> 
                                     <ul class="validate_que">
                                         <h5>Have you separated the problem from yourself?</h5>
                                         <li><label><input  type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} value="1">Yes, I have separated the problem from myself</label></li>

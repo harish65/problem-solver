@@ -38,71 +38,80 @@
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
                         <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />
-                        
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
-                <div class="principleRelation">
-                    <ul class="inner-card">
-                        @foreach($users as $k=>$user)
-                            @if($k < 2)
-                            <li>
-                                <div class="blockProblem">
-                                    <div class="projectBlock text-center">
-                                        <h2>People</h2>
-                                        <div class="projectList text-center">
-                                            <div class="imgWrp">
-                                                <img class="mx-auto"
-                                                    src="{{ asset('assets-new/users/'.$user->file)}}" width="100%"
-                                                    height="128px">
-                                            </div>
-                                            <p class="redText" style="color:red">Adult</p>
-                                        </div>
-                                        <div class="">
-                                            <button class="btn btn-success" value="communicate">Communication</button>
-                                            <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-                                        </div>
-                                    </div>
-                                </div>
-                        </li>
-                        @endif
-                       @endforeach
-                       <li>
-                       <div class="long-arrow-flow">
-                            <img src="{{ asset('assets-new/images/arrowRight.png')}}">
-                            <!-- add arrow Image over here -->
+                <div class="principleRelation ">
+                    <div class="heading_comm">
+                        <div class="md-col-6">
+
                         </div>
-                        </li>
-                        <li>
-                       <div class="blockProblem">
-                                <div class="projectBlock text-center">
-                                    <h2>People</h2>
-                                    <div class="projectList text-center">
-                                        <div class="imgWrp">
-                                            <img class="mx-auto"
-                                                src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
-                                                height="128px">
+                        <div class="md-col-6">
+                            <h4>Communication Mixture</h4>
+                        </div>
+                        
+                    </div>
+                    <div class="d-flex">
+                        <ul class="">
+                            @foreach($users as $k=>$user)
+                            <div class="d-flex ">
+                                
+                                <li>
+                                    <div class="blockProblem">
+                                        <div class="projectBlock text-center">
+                                            <h2>Person</h2>
+                                            <div class="projectList text-center">
+                                                <div class="imgWrp">
+                                                    <img class="mx-auto" src="{{ asset('assets-new/users/'.$user->file)}}" width="100%" height="128px">
+                                                </div>  
+                                                <div class="person_name">
+                                                    <span>{{ $user->name }}</span>
+                                                </div>
+                                            </div>
+                                            
                                         </div>
-                                        <p class="redText" style="color:red">{{ $problem->name }}</p>
                                     </div>
-                                    <div class="">
-                                    <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                </li>
+                                <li class="communication_process">
+                                    <div>
+                                        <img src="{{ asset('assets-new/images/arrowRight.png')}}">
+                                        <!-- add arrow Image over here  -->
                                     </div>
-                                </div>
+                                </li>
+                                
+                                
                             </div>
-                            </li>
-                    </ul>
+                            @endforeach
+                        
+                        </ul>
+                       
+                        <ul class="custom_ul">
+                                    @foreach($users as $k=>$user)
+                                        <li class="custom_li">
+                                            <div class="person_name_ ">
+                                                <button class="btn btn-success"> {{ $user->name }} : Communication</button>
+                                            </div>
+                                        </li>  
+                                    @endforeach      
+                        </ul>
+                        
+                    </div>
                     <div class="questionWrap">
-                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
+                        <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
                             tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
                             nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
                             Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
                         <h2>Validation Question</h2>
                         <br>
                         <form id="validation_form">
-                                <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                            <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                            <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
+                            <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                            <input type="hidden" name="project_id" value="{{ $project_id }}">
+                            <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                            <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                            <input type="hidden" name="name" id="name" value="People_in_Project">     
                         <h5>Do I communicate with others to solve the underlying problem?</h5>
                         <ul class="validate_que" style="list-style:none;">
                             
@@ -112,9 +121,6 @@
                         </ul>
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
                         </form>
-                        
-
-                        
                     </div>
                 </div>
                 <!-- End -->
@@ -123,26 +129,47 @@
         </div>
     </div>
     <!-- Content Section End -->
-
-    
-    
-    
-    <!-- Modal End -->
 </div>
 
 @endsection
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
 <style>
-    .inner-card{
-        margin: 0 30px;
-        display: flex;
-        gap:50px;
+    ul{
         list-style: none;
     }
     .long-arrow-flow{
         position: relative;
         top:45%;
+        padding-top: 75%;
+    }
+    .li_com{
+        margin-top: 100%;
+    }
+    .communication_process{
+        margin-top: 25%;
+        padding: 2%;
+    }
+    .communication_mixture{
+        margin-top: 50%;
+    }
+    .custom_ul{
+        background: #FFFFFF;
+        border: 1px solid rgba(0, 161, 76, 0.5);
+        border-radius: 10px;
+        margin: 10px 0;
+        padding: 2%;
+        margin-left: 2%;
+        width: 215px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    .custom_li{
+        min-height: 220px;
+        margin-top: 15%;
+       
+    }
+    .person_name_{
+        padding-top: 30%;
     }
 </style>
 @endsection

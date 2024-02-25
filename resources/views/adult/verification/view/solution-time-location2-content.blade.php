@@ -81,7 +81,7 @@
                                         <p class="redText" style="color: #00A14C;">{{ $solution->name }}</p>
                                         <p class="date">{{ date('d/m/Y', strtotime($solution->created_at))}}</p>
                                         <ul>
-                                            <li>
+                                            <!-- <li>
                                                 <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
                                                     <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
                                                 </a>
@@ -95,7 +95,7 @@
                                                 <a href="#"><img
                                                         src="{{ asset('assets-new/images/uploadIcon.png') }}"
                                                         alt=""></a>
-                                            </li>
+                                            </li> -->
                                         </ul>
                                     </div>
                                 </div>
@@ -124,7 +124,7 @@
                                         <p class="redText" style="color: red;">Adult</p>
                                         <p class="date"></p>
                                         <ul>
-                                            <li>
+                                            <!-- <li>
                                                 <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
                                                     <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
                                                 </a>
@@ -138,7 +138,7 @@
                                                 <a href="#"><img
                                                         src="{{ asset('assets-new/images/uploadIcon.png') }}"
                                                         alt=""></a>
-                                            </li>
+                                            </li> -->
                                         </ul>
                                     </div>
                                 </div>

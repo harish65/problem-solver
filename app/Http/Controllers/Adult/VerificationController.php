@@ -16,6 +16,8 @@ use App\Models\VerificationType;
 use App\Models\VerificationTypeText;
 use App\Models\VerificationEntity;
 use App\Models\ErrorCorrection;
+use App\Models\BeforeAndAfter;
+use App\Models\PastAndPresentTime;
 use DB;
 use Auth;
 use Redirect;
@@ -147,7 +149,13 @@ class VerificationController extends BaseController
                         $verification->validations
                     );
                 }
-
+                
+                $beforeAfter =  DB::table('before_and_after')
+                                ->where('problem_id' , $problem->id)
+                                ->where('project_id' , $project_id)
+                                ->where('user_id' , Auth::user()->id)
+                                ->first();
+                
                 return view(
                     "adult.verification.view.before-after-content",
                     compact(
@@ -162,7 +170,8 @@ class VerificationController extends BaseController
                         "Solution_function",
                         "verifiationTypeText",
                         "entity",
-                        "solutionTypes"
+                        "solutionTypes",
+                        "beforeAfter"
                     )
                 );
                 break;
@@ -240,6 +249,10 @@ class VerificationController extends BaseController
                     "=",
                     6
                 )->get();
+
+                $pastAndPresentTime = PastAndPresentTime::where('problem_id' , $problem_id)
+                                                        ->where('project_id' , $project_id)
+                                                        ->where('user_id' , Auth::user()->id)->get();
                 return view(
                     "adult.verification.view.past-present-content",
                     compact(
@@ -254,7 +267,7 @@ class VerificationController extends BaseController
                         "Solution_function",
                         "verifiationTypeText",
                         "entity",
-                        "allVarifications"
+                        "allVarifications" , 'pastAndPresentTime'
                     )
                 );
                 break;
@@ -262,10 +275,13 @@ class VerificationController extends BaseController
                 $givenSet = DB::table("verifications")
                     ->where("verification_type_id", "=", 14)
                     ->first();
-                $entities = DB::table("entity_available")
+                $entitiesAvailable = DB::table("entity_available")
                     ->where("type", "=", 0)
+                    ->where("user_id" , Auth::user()->id)
                     ->get();
-                $entitiestbl = DB::table("entities")->get();
+                $entities = DB::table("entities")
+                    ->get();
+                
                 $principle_identification_type = $givenSet->type == 0 ? 1 : 2;
                 $allVarifications = DB::table("principle_identification")
                     ->where("type", "=", $principle_identification_type)
@@ -286,7 +302,7 @@ class VerificationController extends BaseController
                         "verifiationTypeText",
                         "givenSet",
                         "entities",
-                        "entitiestbl",
+                        "entitiesAvailable",                        
                         "allVarifications"
                     )
                 );
@@ -419,7 +435,7 @@ class VerificationController extends BaseController
                     $verification = Verification::where(
                         "verification_type_id",
                         "=",
-                        5
+                        12
                     )->first();
                     if (isset($verification->validations)) {
                         $verification->validations = json_decode(
@@ -868,7 +884,9 @@ class VerificationController extends BaseController
                                                 )->first();
                                             }
                                             $problemreplaced = DB::table("replace_problem_by_problem")->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
+                                            $problemreplaced = DB::table("replace_problem_by_problem")->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
                                            
+                                            //  echo "<pre>";print_r($solution);die;
                                             //  echo "<pre>";print_r($solution);die;
                                             return view(
                                                 "adult.verification.view.replace-problem-by-problem",
@@ -952,6 +970,7 @@ class VerificationController extends BaseController
                                                     }
                                                     $entities = DB::table("entity_available")
                                                     ->where("type", "=", 0)
+                                                    ->where("user_id", "=", Auth::user()->id)
                                                     ->get();
 
                                                     $entitiestbl = DB::table("entities")->get();
@@ -1364,6 +1383,7 @@ class VerificationController extends BaseController
 
     public function addVocabularyEntity(Request $request)
     {
+        
         $validator = Validator::make($request->all(), [
             "verificationType" => "required",
             "key" => "required",
@@ -1413,6 +1433,79 @@ class VerificationController extends BaseController
         }
     }
 
+    //Before And After
+    public function BeforeAndAfter(Request $request){
+        
+        $validator = Validator::make($request->all(), [
+            "verificationType" => "required",
+            "existing_after" => "required",
+           
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError("Validation Error.", $validator->errors());
+        }
+        try {
+           
+            // echo "<pre>";print_r($request->all());die;
+            // add new row to varification_entity table
+            if (!$request->beforeafter_id) {
+                $verificationEntity = new BeforeAndAfter();
+                $verificationEntity->problem_id = $request->problem_id;
+                $verificationEntity->project_id = $request->project_id;
+                $verificationEntity->solution_id = $request->solution_id;
+                $verificationEntity->solution_function_id = $request->solution_function_id;
+                $verificationEntity->user_id = Auth::user()->id;
+                $verificationEntity->existing_after = $request->existing_after;
+                $verificationEntity->save();
+            } else {
+                $verificationEntity = BeforeAndAfter::find($request->beforeafter_id);
+                $verificationEntity->problem_id = $request->problem_id;
+                $verificationEntity->project_id = $request->project_id;
+                $verificationEntity->solution_id = $request->solution_id;
+                $verificationEntity->solution_function_id = $request->solution_function_id;
+                $verificationEntity->user_id = Auth::user()->id;
+                $verificationEntity->existing_after = $request->existing_after;
+                $verificationEntity->save();
+            }
+            if ($verificationEntity->id) {
+                $success["verificationEntity"] = $verificationEntity;
+                return $this->sendResponse(
+                    $success,
+                    "The problem is identified before, then after the problem is solved.  This process can be edited to determine whether the problem is identified before the solution of the problem or the solution is identified after the problem."
+                );
+            } else {
+                return $this->sendResponse($error, "Something Wrong.");
+            }
+        } catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage,
+            ]);
+        }
+    }
+
+    public function DeleteBeforeAndAfter(Request $request){
+        try {
+            $entityId = $request->id;
+            $delete = BeforeAndAfter::where(
+                "id",
+                "=",
+                $request->id
+            )->delete();
+            if ($delete) {
+                $success["delete_verification"] = $delete;
+                return $this->sendResponse(
+                    $success,
+                    "Record deleted successfully."
+                );
+            } else {
+                return $this->sendResponse($error, "Something Wrong.");
+            }
+        } catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage,
+            ]);
+        }
+    }
     public function deleteVocabulary(Request $request)
     {
         try {
@@ -1498,8 +1591,7 @@ class VerificationController extends BaseController
             return $this->sendError("Validation Error.", $validator->errors());
         }
 
-        try {
-            // echo "<pre>";print_r();die;
+        try {            
             if ($request->verification_id == "") {
                 $verification = new Verification();
             } else {
@@ -1509,8 +1601,7 @@ class VerificationController extends BaseController
             $verification->name = "time-verification";
             $verification->user_id = Auth::user()->id;
             $verification->problem_id = $request->problem_id;
-            $verification->verification_type_id =
-            $request->verification_type_id;
+            $verification->verification_type_id =  $request->verification_type_id;
             $verification->solution_id = $request->solution_id;
             $verification->solution_function_id = $request->solution_function_id;
             $verification->verification_type_text_id = 1; //static
@@ -1550,6 +1641,46 @@ class VerificationController extends BaseController
             ]);
         }
     }
+
+    public function StorePastPresentTime(Request $request){
+        // echo "<pre>";print_r($request->all());die;
+        $validator = Validator::make($request->all(), [
+            "past_time" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError("Validation Error.", $validator->errors());
+        }
+        try {
+            if ($request->id) {
+                $PastAndPresentTime = PastAndPresentTime::find($request->id);
+            } else {
+                $PastAndPresentTime = new PastAndPresentTime();
+            }
+            $data = $request->all();
+            $PastAndPresentTime->problem_id = $data["problem_id"];            
+            $PastAndPresentTime->project_id = $data["project_id"];
+            $PastAndPresentTime->solution_id = $data["solution_id"];          
+            $PastAndPresentTime->solution_function_id = $data["solution_function_id"];
+            $PastAndPresentTime->user_id = Auth::user()->id;
+            $PastAndPresentTime->time = date('Y-m-d H:i:s',strtotime($data["past_time"]));
+            $PastAndPresentTime->verification_type_id = $data['verification_type_id'];
+            $PastAndPresentTime->solution_hold = 1;
+            $PastAndPresentTime->save();
+            if ($PastAndPresentTime->id) {
+                $success["verification"] = $PastAndPresentTime;
+                return $this->sendResponse(
+                    $success,
+                    "Record saved successfully."
+                );
+            }
+        } catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage,
+            ]);
+        }
+    }
+
 
     public function storePricipleVerification(Request $request)
     {
@@ -1643,13 +1774,14 @@ class VerificationController extends BaseController
 
     public function storeEntityAvailable(Request $request)
     {
+        
         $validator = Validator::make($request->all(), [
             "entity" => "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError("Validation Error.", $validator->errors());
         }
-        // echo "<pre>";print_r($request->all());die;
+        
         try {
             $verificationID = null;
             //check if verificatoin type is added in verification table
@@ -1659,9 +1791,11 @@ class VerificationController extends BaseController
                 $request->verificationType
             )->first();
             $data = $request->all();
+           
             if ($verification) {
                 $verificationID = $verification->id;
             } else {
+                
                 $verification = new Verification();
                 $verification->name = "entity-available";
                 $verification->verification_type_id = $data["verificationType"];
@@ -1676,6 +1810,7 @@ class VerificationController extends BaseController
                 $verification->save();
                 $verificationID = $verification->id;
             }
+            // echo "<pre>";print_r($request->all());die;
             if ($request->updateProblemType == 0) {
                 $file = null;
                 $type = null;
@@ -1709,6 +1844,11 @@ class VerificationController extends BaseController
                             "actual_entity" => $data["actual_entity"],
                             "type" => $type,
                             "formula" => $data["formula"],
+                            "solution_id" => Crypt::decrypt($data["solution_id"]),
+                            "problem_id"=> Crypt::decrypt($data["problem_id"]),
+                            "project_id"=> Crypt::decrypt($data["project_id"]),
+                            "solution_function_id"=> $data["solution_function_id"],
+                            "user_id"=> Auth::user()->id,
                         ]
                     );
                 } else {
@@ -1719,8 +1859,13 @@ class VerificationController extends BaseController
                             "verification_type_id" => $data["verificationType"],
                             "entity" => $data["entity"],
                             "actual_entity" => $data["actual_entity"],
-                            "type" => $type,
+                            // "type" => $type,
                             "formula" => $data["formula"],
+                            "solution_id" => Crypt::decrypt($data["solution_id"]),
+                            "problem_id"=> Crypt::decrypt($data["problem_id"]),
+                            "project_id"=> Crypt::decrypt($data["project_id"]),
+                            "solution_function_id" => $data["solution_function_id"],
+                            "user_id"=> Auth::user()->id,
                         ]
                     );
                 }
@@ -1750,8 +1895,32 @@ class VerificationController extends BaseController
         }
     }
 
+    //delete Entity Availble // We are not using entities now in the entity available verification
+    public function deleteEntityAvailable($id){
+       
+        try {
+            $delete = Db::table("entity_available")
+                ->where("id", "=", $id)
+                ->delete();
+            if ($delete) {
+                $success["delete_verification"] = $delete;
+                return $this->sendResponse(
+                    $success,
+                    "Record deleted successfully."
+                );
+            } else {
+                return $this->sendResponse($error, "Something Wrong.");
+            }
+        } catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage,
+            ]);
+        }
+    }
+
     public function createEntity(Request $request)
     {
+        // echo "<pre>";print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "entity_name" => "required",
             "actual_enity" => "required",
@@ -1765,10 +1934,15 @@ class VerificationController extends BaseController
             $insert = DB::table("entities")->updateOrInsert(
                 ["id" => $request->id],
                 [
-                    "verification_id" => $data["verificationID"],
+                    
                     "entity" => $data["entity_name"],
                     "actual_entity" => $data["actual_enity"],
                     "selected" => $data["selection"],
+                    "problem_id" => Crypt::decrypt($data["problem_id"]),
+                    "project_id" => Crypt::decrypt($data["project_id"]),
+                    "solution_id" => Crypt::decrypt($data["solution_id"]),
+                    "solution_function_id" => $data["solution_fun_id"],
+                    "user_id" => Auth::user()->id,
                 ]
             );
             $success["entity"] = $insert;
@@ -1855,10 +2029,10 @@ class VerificationController extends BaseController
             $verification = Verification::find($input["id"]);
 
             // unset($input["id"]);
+            // unset($input["id"]);
             if (!$verification) {
                 $verification = new Verification();
-                $verification->verification_type_id =
-                    $input["verification_type_id"];
+                $verification->verification_type_id = $input["verification_type_id"];
                 // $verification->verification_type_text_id =  $input['verification_type_text_id'];
                 $verification->problem_id = $input["problem_id"];
                 $verification->solution_id = $input["solution_id"];
@@ -1867,6 +2041,7 @@ class VerificationController extends BaseController
                 $verification->name = $input["name"];
             }else{
                 $verification = Verification::Find($input["id"]);
+            
             }
 
             $verification->validations = json_encode($input);
@@ -1887,47 +2062,18 @@ class VerificationController extends BaseController
     {
         try {
             $data = $request->all();
-
-            if ($request->hasFile("file")) {
-                $file = time() . "." . $request->file->extension();
-                $request->file->move(
-                    public_path("assets-new/communication/"),
-                    $file
-                );
-                $mime = mime_content_type(
-                    public_path("assets-new/communication/" . $file)
-                );
-                if (strstr($mime, "video/")) {
-                    $type = 1;
-                } elseif (strstr($mime, "image/")) {
-                    $type = 0;
-                }
-                $insert = DB::table(
-                    "people_communication_flow"
-                )->updateOrInsert(
-                    ["id" => @$request->id],
-                    [
-                        "customer_id" => $data["user_id"],
-                        "file" => $file,
-                        "type" => $type,
-                        "title" => $data["title"],
-                        "comment" => $data["comment"],
-                    ]
-                );
-            } else {
-                $insert = DB::table(
-                    "people_communication_flow"
-                )->updateOrInsert(
-                    ["id" => @$request->id],
-                    [
-                        "customer_id" => $data["user_id"],
-                        "file" => $data["link"],
-                        "type" => 2,
-                        "title" => $data["title"],
-                        "comment" => $data["comment"],
-                    ]
-                );
-            }
+            
+            $insert = DB::table(
+                "people_communication_flow"
+            )->updateOrInsert(
+                ["customer_id" => @$request->user_id],
+                [
+                    "customer_id" => $data["user_id"],
+                    "person_to" => $data["person_to"],
+                    "title" => $data["title"],
+                    "comment" => $data["comment"],
+                ]
+            );
             $success["entity"] = $insert;
             return $this->sendResponse(
                 $success,
@@ -1976,6 +2122,34 @@ class VerificationController extends BaseController
                 "error" => $e->getMessage,
             ]);
         } 
+    }
+
+    // Problem development delete
+    public function deleteProblemDevelopmnt($id){
+        // $validator = Validator::make($id, [
+        //     "id" => "required",
+        // ]);
+        // if ($validator->fails()) {
+        //     return $this->sendError("Validation Error.", $validator->errors());
+        // }
+        try {
+            $delete = Db::table("problem_development")
+                ->where("id", "=", $id)
+                ->delete();
+            if ($delete) {
+                $success["delete_verification"] = $delete;
+                return $this->sendResponse(
+                    $success,
+                    "Record deleted successfully."
+                );
+            } else {
+                return $this->sendResponse($error, "Something Wrong.");
+            }
+        } catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage,
+            ]);
+        }
     }
 
     /////////Error Correction Aproach/////////////
@@ -2226,6 +2400,33 @@ class VerificationController extends BaseController
     //Replace Problem By Problem
 
     public function replaceProblemByProblem(Request $request){
+        try {
+            $data =  $request->all();
+           
+            $insert = DB::table(
+                "replace_problem_by_problem"
+            )->updateOrInsert(
+                ["id" => @$request->id],
+                [
+                    "problem_id" => $data["problem_id"],
+                    "project_id" => $data["project_id"],
+                    "solution_id" => $data["solution_id"],
+                    "solution_function_id" => $data["solution_function_id"],
+                    "user_id" => Auth::user()->id,                   
+                    "replaced" => true
+                    
+                ]
+            );
+            $success["entity"] = $insert;
+            return $this->sendResponse(
+                $success,
+                "Record created successfully."
+            );
+        }catch(Exception $e){
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage,
+            ]);
+        } 
         try {
             $data =  $request->all();
            

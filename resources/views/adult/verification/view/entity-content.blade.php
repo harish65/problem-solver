@@ -52,14 +52,14 @@
                                     <div id="myCarousel" class="carousel slide" data-ride="carousel">
                                         <ol class="carousel-indicators">
                                             @php $index = 0; @endphp
-                                                @foreach($entities as $entity)
+                                                @foreach($entitiesAvailable as $entity)
                                                         <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
                                                 @php $index++; @endphp
                                             @endforeach 
                                         </ol>
                                         <div class="imgWrp carousel-inner" role="listbox">
                                             @php $index = 1; @endphp
-                                                @foreach($entities as $entity)
+                                                @foreach($entitiesAvailable as $entity)
                                                     <div class="carousel-item {{ ($index == 1) ? 'active':'' }} " data-entity_id="{{$entity->id}}" data-file="{{ $entity->media }}" data-name="{{ $entity->entity }}" data-actualname="{{ $entity->actual_entity }}">
                                                         <img  src="{{ asset('assets-new/verification_types/entity-available/'.$entity->media)}}" alt="Chania" width="80%" height="128px">
                                                     </div>
@@ -84,7 +84,7 @@
                                                     alt=""></a> -->
                                         </li>
                                         <li>
-                                            <a href="javascript:void(0)" data-toggle="modal" data-target="#entityModal" class="btn btn-success add-entity"><i class="fa fa-plus"></i></a>
+                                            <a href="javascript:void(0)"  class="btn btn-success add-entity" id="add-entity"><i class="fa fa-plus"></i></a>
                                             <a href="javascript:void(0)"  class="btn btn-primary editButton"><i class="fa fa-pencil"></i></a>
                                         </li>
                                     </ul>
@@ -99,7 +99,7 @@
                         </div>
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
-                                <h2>Principles</h2>
+                                <h2>Given</h2>
                                 <div class="projectList text-center">
                                     <div class="imgWrp">
                                         <img class="mx-auto"
@@ -145,6 +145,7 @@
 
                             </div>
                             <div class="entity">
+                            
                                 <table class="table slp-tbl text-center">
                                     <thead>
                                         <th>Entity</th>
@@ -153,27 +154,27 @@
                                     </thead>
                                     <tbody>
 
-                                    @foreach($entitiestbl as $entity)
+                                    @foreach($entitiesAvailable as $entity)
                                         <tr>
                                             <td>{{ $entity->entity}}</td>
                                             <td>{{ $entity->actual_entity}}</td>
                                             <td>
-                                            <a href="javaScript:Void(0)" class="addVocabularyBtn" data-toggle="modal" data-target="#exampleModal">
+                                            <!-- <a href="javaScript:Void(0)" class="addVocabularyBtn" data-toggle="modal" data-target="#exampleModal">
                                                     <img src="{{ asset('assets-new/images/add-verification.png')}}"
                                                         alt="">
-                                                </a>
-                                                <a href="javaScript:Void(0)" class="deleteVoucablaryBtn">
+                                                </a> -->
+                                                <a href="javaScript:Void(0)" class="deleteEntityAvailable" data-id="{{ $entity->id }}">
                                                     <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
                                                 </a>
-                                                <a href="javaScript:Void(0)" class="editEnityTable" data-entity="{{  @$entity->entity }}" data-selected="{{ @$entity->selected }}" data-actual-entity=" {{ $entity->actual_entity }} " data-id="{{ $entity->id }}"  >
+                                                <!-- <a href="javaScript:Void(0)" class="editEnityTable" data-entity="{{  @$entity->entity }}" data-selected="{{ @$entity->selected }}" data-actual-entity=" {{ $entity->actual_entity }} " data-id="{{ $entity->id }}"  >
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="" >
-                                                </a>
+                                                </a> -->
                                             </td>
                                         </tr>
                                     @endforeach    
                                     </tbody>
                                 </table>
-    
+                                
                                 <table class="table slp-tbl text-center">
                                     <thead>
                                     <td>Principle Count</td>
@@ -204,9 +205,9 @@
                                                     </div>
                                                     
                                                     <div class="row mt-3 text-right">
-                                                        <!-- <div class="form-group">
+                                                         <div class="form-group">
                                                                 <button class="btn btn-success" id="update-content"  type="submit">Update Content</button>
-                                                        </div> -->
+                                                        </div> 
                                                     </div>
                                             </form>
                                          @endif
@@ -219,7 +220,13 @@
                        
 
                         <form id="validation_form">
-                                <input type="hidden" name="id" value="{{ @$verification->id }}">        
+                        <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                        <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
+                        <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                        <input type="hidden" name="project_id" value="{{ $project_id }}">
+                        <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                        <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                        <input type="hidden" name="name" id="name" value="People_in_Project">           
                         <ul style="list-style:none;">
                             <h5>Does the problem exist from past to present?</h5>
                             <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} >Yes, I do understand the relationship between communication and principle in a project</label></li>
@@ -253,13 +260,14 @@
                     ?>
                 <div class="modal-body">
                 <input type="hidden" name="updateProblemType" id="updateProblemType">
-                    <input type="hidden" name="id" id="ver_id" value="{{ @$verification->id}}">
+                    <input type="hidden" name="verification_id" id="ver_id" value="{{ @$verification->id}}">
                     <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
                     <input type="hidden" name="project_id" value="{{ $project_id }}">
                     <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
-                    <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                    <input type="hidden" name="solution_function_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
                     <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
                     <input type="hidden" name="entity_id" id="entity_id" value="">
+                    <input type="hidden" name="updateProblemType" id="updateProblemType" value="0">
                     <!-- <div class="form-group">
                         <div class="row">
                             <div class="col-6">
@@ -309,7 +317,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" id="btnSave" class="btn btn-success">Select</button>
+                    <button type="button" id="btnSave" class="btn btn-success">Submit</button>
                 </div>
             </div>
         </div>
@@ -333,6 +341,13 @@
         <div class="modal-body">
             <form id="entityTableform">
             <input type="hidden" name="verificationID" id="ver_id" value="{{ @$verification->id}}">
+            <input type="hidden" name="id" id="function_ad_id" value="{{ @$functionAud->id }}">
+            <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+            <input type="hidden" name="project_id" value="{{ $project_id }}">
+            <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+            <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+            <input type="hidden" name="fileType" id="fileType">
+            <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
             <input type="hidden" name="id" id="ent_id" value="">
             <div class="form-group">
                 <label for="email">Entity Name:</label>
@@ -345,8 +360,8 @@
             <div class="form-group">
                 <label for="email">Select:</label>
                <select name="selection" class="form-control form-select" id="selection">
-                <option value="yes">YES</option>
-                <option value="no">NO</option>
+                <option value="1">YES</option>
+                <option value="0">NO</option>
                 </select>
             </div> 
            
@@ -448,28 +463,7 @@ $('.validation').on('change',function(){
    })
 
 
-   $('#add-varification-button').click(function(){
-   
-        if($('#verification_types').val() == ''){
-            toastr.error('Please select verification type first');
-            return false;
-        }
-        $('#createVerification').modal('toggle')
-   })
-//.editSolFunBtn
-
-$('.filetypeRadio').change(function(){
-    var type = $(this).val()
-    if(type == 0){
-        $('#fileType').val('0')
-        $('#imageFile').css("display", "block");
-        $('#youtubeLink').css("display", "none");
-    }if(type == 2){
-        $('#fileType').val('2')
-        $('#imageFile').css("display", "none");
-        $('#youtubeLink').css("display", "block");
-    }
-})
+  
 $(document).on('click','#btnSave',function(e){
     e.preventDefault();
     var fd = new FormData($('#entityForm')[0]);
@@ -523,148 +517,9 @@ $(document).on('click','#btnSave',function(e){
         }
     });
 });
-$('#btnUpdate').click(function(e){
-e.preventDefault();
-    var fd = new FormData($('#VerificationeditForm')[0]);
-    $.ajaxSetup({
-    headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-    });
-$.ajax({
-        type: 'POST',
-        url: "{{route('adult.updateVerification')}}",
-        data: fd,
-        processData: false,
-        contentType: false,
-        dataType: 'json',
-        beforeSend: function(){
-            $('#btnSave').attr('disabled',true);
-            $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-        },
-        error: function (xhr, status, error) {
-            $('#btnSave').attr('disabled',false);
-            $('#btnSave').html('Submit');
-            $.each(xhr.responseJSON.data, function (key, item) {
-                toastr.error(item);
-            });
-        },
-        success: function (response){
-            if(response.success == false)
-            {
-                $('#btnSave').attr('disabled',false);
-                $('#btnSave').html('Login');
-                var errors = response.data;
-                $.each( errors, function( key, value ) {
-                    toastr.error(value)
-                });
-            } else {
-                
-                toastr.success(response.message);
-                location.reload()
-                //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                //  }else{
 
 
-                    
-                    // window.location.href = "{{ route('adult.dashboard')}}"
-                //  }
-                
-            }
-        }
-    });
-});
 
-$('#btnSaveEntity').click(function(e){
-e.preventDefault();
-    var dv = new FormData($('#addVocabularyForm')[0]);
-    $.ajaxSetup({
-    headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-    });
-    $.ajax({
-        type: 'POST',
-        url: "",
-        data: dv,
-        processData: false,
-        contentType: false,
-        dataType: 'json',
-        beforeSend: function(){
-            $('#btnSave').attr('disabled',true);
-            $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-        },
-        error: function (xhr, status, error) {
-            $('#btnSave').attr('disabled',false);
-            $('#btnSave').html('Submit');
-            $.each(xhr.responseJSON.data, function (key, item) {
-                toastr.error(item);
-            });
-        },
-        success: function (response){
-            if(response.success == false)
-            {
-                $('#btnSave').attr('disabled',false);
-                $('#btnSave').html('Login');
-                var errors = response.data;
-                $.each( errors, function( key, value ) {
-                    toastr.error(value)
-                });
-            } else {
-                
-                toastr.success(response.message);
-                location.reload();
-            }
-        }
-    });
-
-});
-
-$('#btnDeleteVocab').click(function(e){
-e.preventDefault();
-    var dv = new FormData($('#deleteVocabularyForm')[0]);
-    $.ajaxSetup({
-    headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-    });
-$.ajax({
-        type: 'POST',
-        url: "{{route('adult.delete-vocabulary')}}",
-        data: dv,
-        processData: false,
-        contentType: false,
-        dataType: 'json',
-        beforeSend: function(){
-            $('#btnSave').attr('disabled',true);
-            $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-        },
-        error: function (xhr, status, error) {
-            $('#btnSave').attr('disabled',false);
-            $('#btnSave').html('Submit');
-            $.each(xhr.responseJSON.data, function (key, item) {
-                toastr.error(item);
-            });
-        },
-        success: function (response){
-            if(response.success == false)
-            {
-                $('#btnSave').attr('disabled',false);
-                $('#btnSave').html('Login');
-                var errors = response.data;
-                $.each( errors, function( key, value ) {
-                    toastr.error(value)
-                });
-            } else {
-                
-                toastr.success(response.message);
-                location.reload();
-            }
-        }
-    });
-
-});
 
 $('#btnEditSaveEntity').click(function(e){
 e.preventDefault();
@@ -785,9 +640,9 @@ $(".updateProblemType").change(function(){
     }
 });
 $('.editButton').click(function(){
-    
-        var file = $('.active').data("file");
         
+        var file = $('.carousel-inner').find('.active').data("file");
+            
         var drEvent = $('#updateProblemFileFile').dropify(
         {
             defaultFile: "/assets-new/verification_types/entity-available/" + file
@@ -798,21 +653,61 @@ $('.editButton').click(function(){
         drEvent.settings.defaultFile = "/assets-new/verification_types/entity-available/" + file;
         drEvent.destroy();
         drEvent.init();	
-        $('#entity').val($('.active').data("name"));
-        $('#actual_entity').val($('.active').data("actualname"));
-        $('#entity_id').val($('.active').data("entity_id"));
+        $('#entity').val($('.carousel-inner').find('.active').data("name"));
+        $('#actual_entity').val($('.carousel-inner').find('.active').data("actualname"));
+        $('#entity_id').val($('.carousel-inner').find('.active').data("entity_id"));
         $('#entityModal').modal('toggle')
 })
 
-
-$('.editEnityTable').click(function(){
-    $('#entity_name').val($(this).attr('data-entity'))
-    $('#selection').val($(this).attr('data-selected'))
-    $('#actual_enity').val($(this).attr('data-actual-entity'))
-    $('#ent_id').val($(this).attr('data-id'))
-    $('#exampleModal').modal('toggle')
+$('#add-entity').on('click', function(){
+    $('#entityForm')
+    .find("#entity,#actual_entity")
+       .val('')
+       .end()
+       $(".dropify-clear").trigger("click");
+       $('#entityModal').modal('toggle')
 })
 
+$('.deleteEntityAvailable').on('click' , function(e){
+    e.preventDefault();
+
+    var id =  $(this).data('id');
+      
+    if (confirm('Are you sure you want to delete this?')) {
+       
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+       var route  =  "{{route('adult.delete-entity-available' , ':id')}}"
+       route = route.replace(':id', id);
+       $.ajax({
+            type: 'POST',
+            url: route,
+            processData: false,
+            contentType: false,
+            dataType: 'json',            
+            success: function (response){
+                if(response.success == false)
+                {
+                    $('#delete-btn').attr('disabled',false);
+                    $('#delete-btn').html('Save changes');
+                    var errors = response.data;
+                    $.each( errors, function( key, value ) {
+                        toastr.error(value)
+                    });
+                } else {
+                    
+                    toastr.success(response.message);
+                    location.reload();
+                }
+            }
+        });
+    }else{
+        return false
+    }
+})
 </script>
 <script>
     tinymce.init({

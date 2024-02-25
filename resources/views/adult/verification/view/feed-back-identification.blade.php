@@ -22,6 +22,9 @@
                 <div class="row ">
                     <div class="col-sm-4">
                         <button class="btn btn-success" id="feed-back" data-toggle="modal" data-target="#exampleModal">+ Identify Feedback</button>
+                    </div>  
+                    <div class="col-sm-8 ">
+                        <a href="{{ URL::previous() }}" class="btn btn-success float-end">Back</a>
                     </div>                    
                 </div>
 

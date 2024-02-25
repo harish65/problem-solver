@@ -69,7 +69,7 @@
                                 <div class="projectList text-center min-height-250">
                                     <div class="mt-5">
                                         <div class="margit-fifty">
-                                        <p>{{ ($functionAud->function_name) ? ucfirst($functionAud->function_name) : '' }}</p>
+                                        <p>{{ (@$functionAud->function_name) ? ucfirst(@$functionAud->function_name) : '' }}</p>
                                         </div>
                                     </div>
                                     
