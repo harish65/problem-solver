@@ -459,6 +459,7 @@ $(function(){
 
 })
 $('.addEntity').click(function(){
+    $('#informationEntityForm')[0].reset();  
     $('#informationEntity').modal('toggle')
 
     })

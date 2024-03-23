@@ -86,7 +86,7 @@
                                 {{ ucfirst($user->type) }}
                             </td>
                             <td>
-                                <a href="javaScript:Void(0)"  data-href="{{ route('problem.delete') }}" class="delProblemBtn" title="Delete" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20"></a>
+                                <a href="javaScript:Void(0)"  data-href="{{ route('problem.delete') }}" data-id = "{{ $user->id }}" class="delProblemBtn" title="Delete" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20"></a>
                                 &nbsp;
                                 <a href="javaScript:Void(0)"  class="editProblemBtn"
                                                                                         data-id = {{ $user->id }}
@@ -184,7 +184,7 @@
         
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="saveBtn">Save</button>
+          <button type="button" class="btn btn-success" id="saveBtn">Save</button>
         </div>
       </div>
       </div>
@@ -431,8 +431,47 @@ $('.editverBtn').click(function(){
         $('#exampleModal').modal('toggle')
     })
     $('#add_people').on('click',function(){
+        $('#formUsers')[0].reset();  
+        $(".dropify-clear").trigger("click");
         $('#exampleModalLabel').text('Add People') 
         $('#exampleModal').modal('toggle')
+    })
+
+
+$('.delProblemBtn').click(function(e){
+
+        e.preventDefault();
+       var r = confirm("Are you sure to delete this records");
+            if (r == false) {
+                return false;
+            } 
+       var id = $(this).data('id')
+            
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+       
+       $.ajax({
+           url: "{{route('adult.delete-user')}}",
+           data: {'id': id},
+           dataType: 'json',
+           type: 'POST',
+           success: function (response){
+             if(response.success == false)
+             {
+                 var errors = response.data;
+                 $.each( errors, function( key, value ) {
+                     toastr.error(value)
+                 });
+             } else {
+                
+                 toastr.success(response.message);
+                 location.reload()  
+              }
+           }
+       });
     })
 </script>
 @endsection

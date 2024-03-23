@@ -21,7 +21,7 @@
             <div class="container">
                 <div class="row ">
                     <div class="col-sm-4">
-                        <button class="btn btn-success" id="feed-back" data-toggle="modal" data-target="#feedback_identification_modal">+ Identify Feedback</button>
+                        <button class="btn btn-success" id="feed-back" >+ Identify Feedback</button>
                     </div>  
                     <div class="col-sm-8 ">
                         <a href="{{ route('adult.varification' , [$parameter , 16])}}" class="btn btn-success float-end">Back</a>
@@ -221,6 +221,10 @@ $(document).on('click' , '#btnSave', function(e){
             }
         });
    })
+   $('#feed-back').click(function(){
+    $('#feedback-identification-form')[0].reset();  
+    $('#feedback_identification_modal').modal('toggle')
+})
 </script>
 
 @endsection

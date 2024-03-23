@@ -52,7 +52,7 @@
                                     <h2>Time Verification</h2>
                                 </div>
                                 <div class="text-right w-50 pt-3">
-                                    <button type="button" data-toggle="modal" data-target="#exampleModal"  class="btn btn-success addVocabularyBtn" id="add-new-variant">+ Add New</button>
+                                    <button type="button" class="btn btn-success addVocabularyBtn" id="add-new-variant">+ Add New</button>
                                 </div>
                             </div>
                             <div class="entity">
@@ -69,10 +69,7 @@
                                             <td>{{ date('d/m/Y' , $varification->key)}}</td>
                                             <td>{{ ($varification->val == 'n') ? 'NO' : 'YES' }}</td>
                                             <td>
-                                                <!-- <a href="javaScript:Void(0)" class="addVocabularyBtn">
-                                                    <img src="{{ asset('assets-new/images/add-verification.png')}}"
-                                                        alt="">
-                                                </a> -->
+                                               
                                                 <a href="javaScript:Void(0)" class="deleteVoucablaryBtn" data-id="{{  $varification->id }}">
                                                     <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
                                                 </a>
@@ -160,7 +157,7 @@
         
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="saveBtn">Save</button>
+          <button type="button" class="btn btn-success" id="saveBtn">Save</button>
         </div>
       </div>
       </div>
@@ -260,6 +257,7 @@ $('.validation').on('change',function(){
             toastr.error('Please select verification type first');
             return false;
         }
+
         $('#createVerification').modal('toggle')
    })
 
@@ -373,6 +371,14 @@ $(document).ready(function () {
     var lastDate = $('#last_date').val()
     $("#date").datepicker({ minDate: new Date(lastDate)  });
 });
+
+$('.addVocabularyBtn').click(function(){
+
+    // $('#addVocabularyForm').trigger('reset');
+    $('#formTimeVerification')[0].reset();  
+    $('#date').attr('disabled' , false)
+    $('#exampleModal').modal('toggle')
+})
 
 </script>
 @endsection

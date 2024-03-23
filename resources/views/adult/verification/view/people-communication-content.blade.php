@@ -61,7 +61,7 @@
                                         <p class="redText">{{ $user->type }}</p>
                                     </div>
                                     <div class="">
-                                        <button class="btn btn-success communicate" data-id="{{ $user->id }}" data-customer_id="{{ $user->id }}" data-name = "{{ $user->name }}"  value="communicate" data-toggle="modal" data-target="#exampleModal">Communication</button>
+                                        <button class="btn btn-success communicate" data-id="{{ $user->id }}" data-customer_id="{{ $user->id }}" data-name = "{{ $user->name }}"  value="communicate">Communication</button>
                                         <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
                                     </div>
                                 </div>
@@ -157,7 +157,7 @@
                 <input type="hidden" id="user_id" name="user_id" value="">
                 <input type="hidden" id="id" name="id" value="">
                         <div class="from-group mt-2">
-                            <label for="person_1">From Person : Person 1<span></span></label>
+                            <label for="person_1">From Person : Person One<span></span></label>
                             <select name="person_one" class="form-control form-select" id="person_1">
                                     <option value=''>Please select</option>
                                         @foreach($users as $user)
@@ -166,7 +166,7 @@
                             </select>
                         </div>
                         <div class="from-group mt-2">
-                            <label for="person_2">To Persone : Person 2<span></span></label>
+                            <label for="person_2">To Persone : Person Two<span></span></label>
                             <select name="person_to" class="form-control form-select" id="person_2">
                                     <option value="">Please select</option>
                                         @foreach($users as $user)
@@ -266,51 +266,18 @@ $('.dashboard').click(function(){
 
 })
 
-$('.validation').on('change',function(){
-        var problem = $(this).attr('data-id');
-        var validation  = $(this).val();
-        var name = $(this).attr('name')
-        $.ajaxSetup({
-               headers: {
-                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                       }
-               }); 
-        $.ajax({
-           url: "{{route('adult.sol-validation')}}",
-           data: {data : problem , value : validation , name : name},
-           type: 'POST',
-           success: function (response){                
-               console.log(response)
-            }
 
-        })
-
-
-
-   })
-
-
-   $('#add-varification-button').click(function(){
-   
-        if($('#verification_types').val() == ''){
-            toastr.error('Please select verification type first');
-            return false;
-        }
-        $('#createVerification').modal('toggle')
-   })
 
 
    $(document).on('click','#btnSave',function(e){
        e.preventDefault();
        tinyMCE.triggerSave(true, true);
        var fd = new FormData($('#comm_form')[0]);
-       
        $.ajaxSetup({
-       headers: {
-                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-               }
-       });
-       
+        headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+        });       
        $.ajax({
            url: "{{route('adult.communication_flow')}}",
            data: fd,
@@ -349,9 +316,9 @@ $('.validation').on('change',function(){
    });
 
 $('.communicate').on('click',function(){
-    var cutomer_id = $(this).attr('data-customer_id');
-    $('#user_id').val(cutomer_id)
-    $('#person_one').val($(this).data('name'))
+    $('#person_1 , #person_2 , #title_').val('')
+    tinyMCE.activeEditor.setContent('');
+    $('#exampleModal').modal('toggle')
     
 
 })
@@ -363,7 +330,7 @@ $('.communicate').on('click',function(){
         tinyMCE.activeEditor.setContent($(this).data('comment'));
        $('#exampleModal').modal('toggle');
     })
-    $(document).on('click','.delete_',function(e){
+$(document).on('click','.delete_',function(e){
        e.preventDefault();
        var r = confirm("Are you sure to delete this records");
             if (r == false) {
@@ -397,6 +364,7 @@ $('.communicate').on('click',function(){
            }
        });
    });
+  
 </script>
 <script>
     tinymce.init({

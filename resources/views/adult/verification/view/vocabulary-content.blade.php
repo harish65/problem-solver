@@ -408,6 +408,8 @@ $('.deleteverBtn').click(function(){
 
 // .addVocabularyBtn
 $('.addVocabularyBtn').click(function(){
+    // $('#addVocabularyForm').trigger('reset');
+    $('#addVocabularyForm')[0].reset();  
     $('#addVocabulary').modal('toggle')
 })
 

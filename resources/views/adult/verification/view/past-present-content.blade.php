@@ -52,7 +52,7 @@
 
                             </div>
                                 <div class="text-right w-50 pt-3">
-                                    <button type="button" data-toggle="modal" data-target="#exampleModal"  class="btn btn-success addVocabularyBtn" id="add-new-variant">+ Add New</button>
+                                    <button type="button" class="btn btn-success addVocabularyBtn" id="add-new-variant">+ Add New</button>
                                 </div>
                                
                             </div>
@@ -240,64 +240,7 @@ $('.dashboard').click(function(){
 
 })
 
-$('.validation').on('change',function(){
-        var problem = $(this).attr('data-id');
-        var validation  = $(this).val();
-        var name = $(this).attr('name')
-        $.ajaxSetup({
-               headers: {
-                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                       }
-               }); 
-        $.ajax({
-           url: "{{route('adult.sol-validation')}}",
-           data: {data : problem , value : validation , name : name},
-           type: 'POST',
-           success: function (response){                
-            //    console.log(response)
-            }
 
-        })
-
-
-
-   })
-
-
-   $('#add-varification-button').click(function(){
-   
-        if($('#verification_types').val() == ''){
-            toastr.error('Please select verification type first');
-            return false;
-        }
-        $('#createVerification').modal('toggle')
-   })
-
-
-
-   $('.filetypeRadio').change(function(){
-        var type = $(this).val()
-        if(type == 0){
-            $('#fileType').val('0')
-            $('#imageFile').css("display", "block");
-            $('#youtubeLink').css("display", "none");
-        }if(type == 2){
-            $('#fileType').val('2')
-            $('#imageFile').css("display", "none");
-            $('#youtubeLink').css("display", "block");
-        }
-   })
-
-
-
-   $('#add-varification-button').click(function(){
-   
-   if($('#verification_types').val() == ''){
-       toastr.error('Please select verification type first');
-       return false;
-   }
-   $('#createVerification').modal('toggle')
-})
 
 $(document).on('click','#saveBtn',function(e){
   e.preventDefault();
@@ -352,10 +295,9 @@ $('.editVocabularyBtn').click(function(){
 })
 
 $(document).ready(function () {
-    var lastDate = $('#last_date').val()
-    // console.log(lastDate);
+    var lastDate = $('#last_date').val();
     console.log(lastDate)
-    $("#date").datepicker({ minDate: new Date(lastDate)  , maxDate: 0 });
+    $("#date").datepicker({ minDate: new Date()  , maxDate: new Date(lastDate) });
 });
    //   bulk check box delete
 $('#check_all').on('change',function(){
@@ -438,6 +380,12 @@ function deletRecords(data){
                 }
             });
 }
+
+$('.addVocabularyBtn').click(function(){
+    // $('#addVocabularyForm').trigger('reset');
+    $('#formTimeVerification')[0].reset();  
+    $('#exampleModal').modal('toggle')
+})
 
 
 </script>

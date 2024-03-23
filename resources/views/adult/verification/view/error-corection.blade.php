@@ -89,7 +89,7 @@
             <div class="container">
                 <div class="row ">
                     <div class="col-sm-4">
-                        <button class="btn btn-success" id="feed-back" data-toggle="modal" data-target="#error_correction_modal">+ Error Correction</button>
+                        <button class="btn btn-success" id="feed-back">+ Error Correction</button>
                     </div>                    
                 </div>
 
@@ -352,7 +352,10 @@ $(document).on('click' , '#btnSave', function(e){
         });
    })
 
-
+   $('#feed-back').click(function(){
+    $('#error-correction-form')[0].reset();  
+    $('#error_correction_modal').modal('toggle')
+})
 </script>
 
 @endsection

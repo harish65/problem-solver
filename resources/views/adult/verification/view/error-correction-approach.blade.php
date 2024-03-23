@@ -105,7 +105,7 @@
                                 <div class="row">
                                     <div class="col text-end">
                                     @if(isset($data->id))
-                                        <button class="btn btn-success mt-3 compensator" data-error-id="{{ $data->id }}" data-toggle="modal" data-target ="#error_correction_modal">
+                                        <button class="btn btn-success mt-3 compensator" data-error-id="{{ $data->id }}" >
                                             + Identify Compensator
                                         </button>
                                     @endif
@@ -371,10 +371,8 @@ $(document).on('click' , '#btnSave', function(e){
 
 
    $(".editBtn").on('click' , function(){
-
-        // $('#error_name').val($(this).data('error_name'))
-        // $('#error_date').val($(this).data('error_date'))
-        // $('#problem_name').val($(this).data('problem'))
+    
+       
         $('#compensator_date_').val($(this).data('error_date'))
         $('#compensator').val($(this).data('error_name'))
         $('#id').val($(this).data('id'))
@@ -429,5 +427,9 @@ $(document).on('click' , '#btnSave', function(e){
             }
         });
    })
+   $('.compensator').click(function(){
+    $('#error-correction-dev-form')[0].reset();  
+    $('#error_correction_modal').modal('toggle')
+})
 </script>
 @endsection

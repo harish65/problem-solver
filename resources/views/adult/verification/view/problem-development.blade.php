@@ -94,7 +94,7 @@
                                 <h2>Problem Development</h2>
                             </div>
                                 <div class="text-right w-50 pt-3">
-                                    <button type="button"  class="btn btn-success addVocabularyBtn" data-toggle="modal" data-target="#problem_development_">+ Add Problem Development</button>
+                                    <button type="button"  class="btn btn-success addVocabularyBtn" >+ Add Problem Development</button>
                                 </div>
                             </div>
 
@@ -424,5 +424,11 @@ $('#btnSave').click(function(e){
     $('#error_date_').datepicker();
     $('#problem_date').datepicker();
 });
+
+$('.addVocabularyBtn').click(function(){
+    // $('#addVocabularyForm').trigger('reset');
+    $('#prob-dev-form')[0].reset();  
+    $('#problem_development_').modal('toggle')
+})
 </script>
 @endsection

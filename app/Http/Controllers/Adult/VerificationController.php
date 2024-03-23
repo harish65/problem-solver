@@ -2666,4 +2666,26 @@ class VerificationController extends BaseController
     }
 
 
+    public function deletePeopleFromProject(Request $request){
+        try {            
+            
+            $delete = Db::table('customers')->where("id", "=", $request->id)
+                ->delete();
+            if ($delete) {
+                $success["delete_verification"] = true;
+                return $this->sendResponse(
+                    $success,
+                    "Record deleted successfully."
+                );
+            } else {
+                $success["delete_verification"] = false;
+                return $this->sendResponse($success, "Something Wrong.");
+            }
+        } catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
+            ]);
+        }
+    }
+
 }

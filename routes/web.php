@@ -240,6 +240,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         //Project Usres
         Route::get("users", [\App\Http\Controllers\Adult\UserController::class, 'index'])-> name("users");
         Route::post("create-user", [\App\Http\Controllers\Adult\UserController::class, 'create'])-> name("create-user");
+        Route::post("delete-user", [\App\Http\Controllers\Adult\VerificationController::class, 'deletePeopleFromProject'])-> name("delete-user");
 
         //Error Correction Aproach
         Route::post("create-error-correction-type", [\App\Http\Controllers\Adult\VerificationController::class, 'addErrorCorectionAproach'])-> name("create-error-correction-type");
