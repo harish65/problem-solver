@@ -71,14 +71,14 @@
                     </ul>
                     <div class="row mt-5">
                     <div class="title d-flex">
-                        <h2>Communation Flow</h2>
+                        <h2>People Communation</h2>
                     </div>
                         <table class="table slp-tbl text-center">
                         <thead>      
-                            <th>Person One</th>
-                            <th>Person Two</th>
-                            <th>Subject</th>
-                            <th>Comments</th>
+                            <th>From Person</th>
+                            <th>To Person</th>
+                            <th>Date</th>                            
+                            <th>Subject</th>                            
                             <th>Actions</th>
                             
                         </thead>
@@ -87,14 +87,18 @@
                                         <tr>
                                             <td>{{ App\Models\Customer::getCustomerName($communication->customer_id)}}</td>
                                             <td>{{ App\Models\Customer::getCustomerName($communication->person_to)}}</td>
+                                            <td>{{ date('d-m-Y' , strtotime($communication->created_at) ) }}</td>
                                             <td>{{ $communication->title }}</td>
-                                            <td>{{ strip_tags($communication->comment) }}</td>
+                                            
                                             <td>
                                                 <a href="javaScript:void(0)" class="delete_"  data-id="{{ $communication->id }}">
                                                     <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
                                                 </a>
                                                 <a href="javaScript:void(0)" class="edit" data-id="{{ $communication->id }}" data-person_one="{{ $communication->customer_id }}"  data-person_two="{{ $communication->person_to }}" data-title="{{ $communication->title }}" data-comment="{{ $communication->comment }}" >
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
+                                                </a>
+                                                <a href="javaScript:void(0)" class="view" data-id="{{ $communication->id }}" data-person_one="{{ $communication->customer_id }}"  data-person_two="{{ $communication->person_to }}" data-title="{{ $communication->title }}" data-comment="{{ $communication->comment }}" >
+                                                    <i class="fa fa-eye"></i>
                                                 </a>
 
                                             </td>
@@ -323,11 +327,22 @@ $('.communicate').on('click',function(){
 
 })
     $('.edit').on('click',function(){
-        $('#person_1').val($(this).data('person_one'))
-        $('#person_2').val($(this).data('person_two'))
-        $('#title_').val($(this).data('title'))
+        $('#person_1').val($(this).data('person_one')).attr('disabled' , false)
+        $('#person_2').val($(this).data('person_two')).attr('disabled' , false)
+        $('#title_').val($(this).data('title')).attr('disabled' , false)
         $('#id').val($(this).data('id'))
         tinyMCE.activeEditor.setContent($(this).data('comment'));
+        $('#btnSave').show();
+       $('#exampleModal').modal('toggle');
+    })
+    $('.view').click(function(){
+        $('#person_1').val($(this).data('person_one')).attr('disabled' , true)
+        $('#person_2').val($(this).data('person_two')).attr('disabled' , true)
+        $('#title_').val($(this).data('title')).attr('disabled' , true)
+        $('#id').val($(this).data('id'))
+        tinyMCE.activeEditor.setContent($(this).data('comment'));
+        
+        $('#btnSave').hide();
        $('#exampleModal').modal('toggle');
     })
 $(document).on('click','.delete_',function(e){
