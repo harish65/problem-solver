@@ -126,7 +126,7 @@
                                         <th>Before</th>
                                        
                                         <th>After</th>    
-                                        <th>Existed After</th>                                    
+                                        <th>Problem Existed After</th>                                    
                                         <th>Action</th>
                                     </thead>
                                     

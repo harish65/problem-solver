@@ -26,6 +26,7 @@ class ProjectController extends BaseController
                     ->leftJoin('solutions', 'projects.id', '=', 'solutions.project_id')
                     ->select('projects.*', 'problems.id as problem_id', 'problems.name as problem' , 'solutions.name as solution_name' , 'solutions.id as solution_id')
                     ->orderBy("id", "desc")
+                    ->where('projects.user_id' , Auth::user()->id)
                     ->get();
                     if ($request->is('api/*')) {
                             $success['projects'] = $project;

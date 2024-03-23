@@ -206,19 +206,28 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::post("store-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'store'])-> name("store-verification");
         Route::post("store-priciple-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'storePricipleVerification'])-> name("store-priciple-verification");
         Route::post("store-entity-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'storeEntityAvailable'])-> name("store-entity-verification");
+        Route::post("delete-entity-available/{id}", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteEntityAvailable'])-> name("delete-entity-available");
+
         Route::post("store-priciple-identification", [\App\Http\Controllers\Adult\VerificationController::class, 'storePricipleIdentification'])-> name("store-priciple-identification");
         Route::post("store-time-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'storeTimeVerification'])-> name("store-time-verification");
         Route::post("delete-time-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteTimeVerification'])-> name("delete-time-verification");
         Route::post("updateVerification", [\App\Http\Controllers\Adult\EditVerificationController::class, 'updateVerification'])-> name("updateVerification");
         Route::post("delete-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'delete'])-> name("delete-verification");
+        //Past and present time
+        Route::post("store-past-present-time", [\App\Http\Controllers\Adult\VerificationController::class, 'StorePastPresentTime'])->name("store-past-present-time");
+        Route::post("delete-past-present-time", [\App\Http\Controllers\Adult\VerificationController::class, 'DeletePastPresentTime'])->name("delete-past-present-time");
+
 
         Route::post("create-entity", [\App\Http\Controllers\Adult\VerificationController::class, 'createEntity'])-> name("create-entity");
         Route::post("del-entity", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteEntity'])-> name("del-entity");
 
 
         Route::post("add-problem-development", [\App\Http\Controllers\Adult\VerificationController::class, 'storeProblemDevelopmnt'])-> name("add-problem-development");
+        Route::post("del-problem-development/{id}", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteProblemDevelopmnt'])-> name("del-problem-development");
         //Verification Entity Routes
         Route::post("add-vocabulary-entity", [\App\Http\Controllers\Adult\VerificationController::class, 'addVocabularyEntity'])-> name("add-vocabulary-entity");
+        Route::post("before-after", [\App\Http\Controllers\Adult\VerificationController::class, 'BeforeAndAfter'])-> name("before-after");
+        Route::post("delete-before-after", [\App\Http\Controllers\Adult\VerificationController::class, 'DeleteBeforeAndAfter'])-> name("delete-before-after");
         Route::post("delete-vocabulary", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteVocabulary'])-> name("delete-vocabulary");
         Route::post("updateVocabulary", [\App\Http\Controllers\Adult\EditVerificationController::class, 'updateVocabulary'])-> name("updateVocabulary");
         Route::post("add-vocabulary-validations", [\App\Http\Controllers\Adult\VerificationController::class, 'addVocabularyValidations'])-> name("add-vocabulary-validations");
@@ -226,6 +235,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::post("add-entity-word", [\App\Http\Controllers\Adult\VerificationController::class, 'createPartitionApproach'])-> name("add-entity-word");
         Route::post("update_validations", [\App\Http\Controllers\Adult\VerificationController::class, 'updateValidations'])-> name("update_validations");
         Route::post("communication_flow", [\App\Http\Controllers\Adult\VerificationController::class, 'storeCommunicationFlow'])-> name("communication_flow");
+        Route::post("del-communication_flow", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteCommunicationFlow'])-> name("del-communication_flow");
 
         //Project Usres
         Route::get("users", [\App\Http\Controllers\Adult\UserController::class, 'index'])-> name("users");
@@ -235,14 +245,18 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::post("create-error-correction-type", [\App\Http\Controllers\Adult\VerificationController::class, 'addErrorCorectionAproach'])-> name("create-error-correction-type");
         Route::get("feedback-identification", [\App\Http\Controllers\Adult\VerificationController::class, 'feedbackIdentification'])-> name("feedback-identification");
         Route::post("store-feedback-identification", [\App\Http\Controllers\Adult\VerificationController::class, 'storeFeedbackIdentification'])-> name("store-feedback-identification");
+        Route::post("delete-feedback-identification/{id}", [\App\Http\Controllers\Adult\VerificationController::class, 'DeleteFeedbackIdentification'])-> name("delete-feedback-identification");
         Route::get("error-correction", [\App\Http\Controllers\Adult\VerificationController::class, 'errorCorrection'])-> name("error-correction");
         Route::post("store-error-correction", [\App\Http\Controllers\Adult\VerificationController::class, 'storeErrorCorrection'])-> name("store-error-correction");
+        Route::post("delete-error-correction", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteErrorCorrection'])-> name("delete-error-correction");
 
         //function Adjustments
         Route::post("store-function-adjustment", [\App\Http\Controllers\Adult\VerificationController::class, 'storeFunctionAdjustment'])-> name("store-function-adjustment");
         Route::post("function-sub-and-people", [\App\Http\Controllers\Adult\VerificationController::class, 'functionSustitutionAndPeople'])-> name("function-sub-and-people");
         Route::post("sol-fun-av", [\App\Http\Controllers\Adult\VerificationController::class, 'SolutionFunctionAverage'])-> name("sol-fun-av");
         //	Replace Problem by Problem
+        Route::post("replace-problem-by-problem", [\App\Http\Controllers\Adult\VerificationController::class, 'replaceProblemByProblem'])-> name("replace-problem-by-problem");
+
 
     });  
 });

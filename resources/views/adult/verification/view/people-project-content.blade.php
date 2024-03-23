@@ -66,7 +66,7 @@
             </div>
             <div class="row">
                 <div class="modal-btn">
-                    <a type="button" href="#" class="btn btn-success float-right mb-3"  data-toggle="modal" data-target="#exampleModal">+ Add New User</a>
+                    <a type="button" href="#" class="btn btn-success float-right mb-3"  id="add_people">+ Add New User</a>
                 </div>
                 <table class="table slp-tbl text-center">
                     <thead>
@@ -111,7 +111,7 @@
                         <input type="hidden" name="project_id" value="{{ $project_id }}">
                         <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
                         <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
-                        <input type="hidden" name="name" id="name" value="People_in_Project">     
+                        <input type="hidden" name="name" id="People_in_Project" value="People_in_Project">     
                             
                             
 
@@ -157,7 +157,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Create User</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Add People</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -171,7 +171,7 @@
               <input type="hidden" name="project_id" value="{{ $project_id }}">
           </div>
           <div class="form-group">
-              <label for="exampleInputEmail1">Name</label>
+              <label for="exampleInputEmail1">People</label>
               <input type="text" name="name"  class="form-control"  id="name" placeholder="Enter name">
           </div>
           <div class="form-group">
@@ -410,7 +410,9 @@ $('.editverBtn').click(function(){
 </script>
 <script>
     $('.editProblemBtn').click(function(){
-        $('#name').val($(this).attr('data-name'))    
+        
+        $('#name').val($(this).data('name'))   
+        $('#exampleModalLabel').text('Edit People') 
         if($(this).file != ""){
             var file = $(this).data("file");
             var drEvent = $('#file').dropify({
@@ -426,6 +428,10 @@ $('.editverBtn').click(function(){
            $('#type').val($(this).attr('data-type'))       
            $('#user_id').val($(this).attr('data-id'))       
        
+        $('#exampleModal').modal('toggle')
+    })
+    $('#add_people').on('click',function(){
+        $('#exampleModalLabel').text('Add People') 
         $('#exampleModal').modal('toggle')
     })
 </script>

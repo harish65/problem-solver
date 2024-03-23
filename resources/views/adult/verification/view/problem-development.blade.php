@@ -48,38 +48,36 @@
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
                                 <h2>Error</h2>
-                                <div class="projectList text-center">
-                                    @foreach($problemDevelopment as $data)
-                                    <button class="btn btn-danger  mt-3">
-                                        {{$data->error_name}}
-                                    </button>
-
-                                    @endforeach
+                                <div class="problem-list">
+                                    <ul class="text-center p-2">
+                                        @foreach($problemDevelopment as $entity)
+                                        <li class="form-control btn btn-danger mt-3">
+                                            {{ $entity->error_name}}
+                                        </li>
+                                        @endforeach
+                                    </ul>
                                 </div>
-                              
                             </div>
                         </div>
-                       
-                        <div class="long-arrow">
-                            <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
-                            <!-- add arrow Image over here -->
-                            <img src="{{ asset('assets-new/images/arrowRight.png')}}">
-                            <!-- add arrow Image over here -->
+                        <div class="arrow">
+                            <ul>
+                                @foreach($problemDevelopment as $entity)
+                                <li class="top"><img src="{{ asset('assets-new/images/arrow_sm.png')}}"></li>
+                                @endforeach
+                            </ul>
                         </div>
-                        
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
-                                <h2>Problem</h2>
-                                <div class="projectList text-center">
-                                    @foreach($problemDevelopment as $data)
-                                    <button class="btn btn-success mt-3">
-                                        {{$data->problem_name}}
-                                    </button>
-                                    
-
-                                    @endforeach
+                                <h2>Compensator</h2>
+                                <div class="problem-list">
+                                    <ul class="text-center p-2">
+                                        @foreach($problemDevelopment as $entity)
+                                        <li class="form-control btn btn-success mt-3">
+                                            {{ $entity->problem_name}}
+                                        </li>
+                                        @endforeach
+                                    </ul>
                                 </div>
-                               
                             </div>
                         </div>
                        
@@ -96,7 +94,7 @@
                                 <h2>Problem Development</h2>
                             </div>
                                 <div class="text-right w-50 pt-3">
-                                    <button type="button"  class="btn btn-success addVocabularyBtn" data-toggle="modal" data-target="#exampleModal">+ Add Problem Development</button>
+                                    <button type="button"  class="btn btn-success addVocabularyBtn" data-toggle="modal" data-target="#problem_development_">+ Add Problem Development</button>
                                 </div>
                             </div>
 
@@ -138,15 +136,15 @@
                     <h2>Validation Question</h2>
                     <form id="validation_form">
                       
-                    <ul class="validate_que">                        
-                        <br>
-                        <h5>Do you understand that errors or errors in communication develop problems?</h5>
-                        <input type="hidden" name="id" value="{{ $verification->id }}">
-                        <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1">Yes, I do understand that errors or errors in communication develop problems</label> </li>
-                        <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2">No, I do not understand that errors or errors in communication develop problems</label> </li>
-                        
-                    </ul>
-                        <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                            <ul class="validate_que">                        
+                                <br>
+                                <h5>Do you understand that errors or errors in communication develop problems?</h5>
+                                <input type="hidden" name="id" value="{{ $verification->id }}">
+                                <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1">Yes, I do understand that errors or errors in communication develop problems</label> </li>
+                                <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2">No, I do not understand that errors or errors in communication develop problems</label> </li>
+                                
+                            </ul>
+                            <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
                         </form>
                 </div>
             </div>
@@ -173,7 +171,10 @@
 @endif
     <!-- Modal Start -->
     
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    
+    <!-- Modal End -->
+</div>
+<div class="modal fade" id="problem_development_" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -192,19 +193,19 @@
                 
                 <div class="form-group">
                     <label for="error_name">Error Name</label>
-                    <input type="text" class="form-control" name="error_name" id="error_name">
+                    <input type="text" class="form-control" name="error_name" id="error_name" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label for="error_date">Error Date</label>
-                    <input type="text" class="form-control" name="error_date" id="error_date">
+                    <input type="text" class="form-control" name="error_date" id="error_date_" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label for="problem_name">Problem Name</label>
-                    <input type="text" class="form-control" name="problem_name" id="problem_name">
+                    <input type="text" class="form-control" name="problem_name" id="problem_name" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label for="problem_date">Problem date</label>
-                    <input type="text" class="form-control" name="problem_date" id="problem_date">
+                    <input type="text" class="form-control" name="problem_date" id="problem_date" autocomplete="off">
                 </div>
               </form>
             </div>
@@ -215,13 +216,10 @@
           </div>
         </div>
       </div>
-    <!-- Modal End -->
-</div>
-
 @endsection
 @section('css')
-<link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
 <style>
     .image{
         margin: 20px;
@@ -240,10 +238,24 @@
     .conditionBlock.problem-development{
         justify-content: center;
     }
+    .arrow ul {
+        margin-top: 40%;
+        position: relative;
+        right: 20px;
+    }
+    .arrow ul li {
+        margin-top: 17%;
+        list-style: none;
+    }
+    #ui-datepicker-div{
+        position: absolute !important;
+    }
+
+    
 </style>
 @endsection
 @section('scripts')
-<script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script>
    
@@ -251,8 +263,8 @@ $('#verification_types').on('change',function(){
     var id = $(this).val();
     window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
 })
-$('.dropify').dropify();
-$("#error_date , #problem_date").datepicker();
+
+
 </script>
 <script>
 $('.nav-problem').click(function(){
@@ -354,12 +366,12 @@ $('#btnSave').click(function(e){
 
    $(".editBtn").on('click' , function(){
         $('#error_name').val($(this).data('error_name'))
-        $('#error_date').val($(this).data('error_date'))
+        $('#error_date_').val($(this).data('error_date'))
         $('#problem_name').val($(this).data('problem'))
         $('#problem_date').val($(this).data('problem_date'))
         $('#problem_date').val($(this).data('problem_date'))
         $('#id').val($(this).data('id'))
-        $('#exampleModal').modal('toggle')
+        $('#problem_development_').modal('toggle')
    })
 
    /////Delete 
@@ -408,6 +420,9 @@ $('#btnSave').click(function(e){
 
    });
 
-   
+   $(document).ready(function () {
+    $('#error_date_').datepicker();
+    $('#problem_date').datepicker();
+});
 </script>
 @endsection

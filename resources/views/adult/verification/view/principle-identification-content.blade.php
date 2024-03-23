@@ -193,6 +193,10 @@
                             </div>
                         </div>
                         @if($verification->type == 1)
+                        <div class="title">
+                        <h2>Derived Principle</h2>
+                        </div>
+                        
                         <form id="content" action="{{ url('adult/store-priciple-identification')}}" method="post">
                             @csrf
                                 <div class="row">
@@ -278,6 +282,17 @@
 @endsection
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+<style>
+    .title h2{
+        font-family: 'Inter-Bold';
+        margin-top: 30px;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 29px;
+        color: #000000;
+    }
+</style>
 @endsection
 @section('scripts')
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>

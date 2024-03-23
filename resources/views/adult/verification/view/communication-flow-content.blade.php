@@ -20,9 +20,9 @@
                         <h2>Verification</h2>
                         <select class="form-control form-select" id="verification_types">
                                 <option value=''>Select Verification Type..</option>
-                            @foreach(@$types as $type)
-                                <option {{  (@$verificationType->id  == $type->id) ? 'selected' : '' }} value='{{ $type->id }}'>{{ $type->name }}</option>
-                            @endforeach
+                                    @foreach(@$types as $type)
+                                        <option {{  (@$verificationType->id  == $type->id) ? 'selected' : '' }} value='{{ $type->id }}'>{{ $type->name }}</option>
+                                    @endforeach
                         </select>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
 
                         </div>
                         <div class="md-col-6">
-                            <h4>Communication Mixture</h4>
+                            <h4>Communication Flow</h4>
                         </div>
                         
                     </div>
@@ -87,12 +87,13 @@
                         </ul>
                        
                         <ul class="custom_ul">
-                                    @foreach($users as $k=>$user)
-                                        <li class="custom_li">
-                                            <div class="person_name_ ">
-                                                <button class="btn btn-success"> {{ $user->name }} : Communication</button>
-                                            </div>
-                                        </li>  
+                                    <li><h6><strong>Communication Mixture</strong></h6></li>
+                                            @foreach($users as $k=>$user)
+                                                <li class="custom_li">
+                                                    <div class="person_name_ ">
+                                                        <button class="btn btn-success _communication" data-comment="{{ $user->comment }}" data-title="{{ $user->title }}" > {{ $user->name }} : Communication</button>
+                                                    </div>
+                                    </li>  
                                     @endforeach      
                         </ul>
                         
@@ -130,7 +131,60 @@
     </div>
     <!-- Content Section End -->
 </div>
-
+<!-- Modal start -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Person Communication</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            <form id="comm_form" method="post">
+                <input type="hidden" id="project_id" name="project_id" value="{{ $project_id}}">
+                <input type="hidden" id="problem_id" name="problem_id" value="{{ $problem_id}}">
+                <input type="hidden" id="user_id" name="user_id" value="">
+                <input type="hidden" id="id" name="id" value="">
+                        <!-- <div class="from-group mt-2">
+                            <label for="person_1">From Person : Person 1<span></span></label>
+                            <select name="person_one" class="form-control form-select" id="person_1">
+                                    <option value=''>Please select</option>
+                                        @foreach($users as $user)
+                                            <option value="{{ $user->id}}">{{ $user->name }}</option>
+                                        @endforeach
+                            </select>
+                        </div>
+                        <div class="from-group mt-2">
+                            <label for="person_2">To Persone : Person 2<span></span></label>
+                            <select name="person_to" class="form-control form-select" id="person_2">
+                                    <option value="">Please select</option>
+                                        @foreach($users as $user)
+                                            <option value="{{ $user->id}}">{{ $user->name }}</option>
+                                        @endforeach
+                            </select>
+                        </div>-->
+                        <div class="from-group mt-2">
+                            <label for="title_">Subject</label>
+                            <input type="text" name="subject" class="form-control" id="title_" placeholder="Subject">
+                        </div> 
+                        <div class="from-group mt-3">
+                                <label for="msg">Message</label>
+                                <textarea class="form-control " name="comment" id="msg"></textarea>
+                        </div>
+                      
+                 </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <!-- <button type="button" class="btn btn-success" id="btnSave">Submit</button> -->
+            </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal End -->
 @endsection
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
@@ -175,6 +229,8 @@
 @endsection
 @section('scripts')
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+<script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+<script src="https://cdn.tiny.cloud/1/5f20xhd98muhs1m7cl3eud00r4ugz5hxk5cbblquuo02mfef/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
    
 $('#verification_types').on('change',function(){
@@ -324,20 +380,24 @@ $('.editverBtn').click(function(){
                 
                  toastr.success(response.message);
                  location.reload()
-                //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                //  }else{
-
-
-                    
-                    // window.location.href = "{{ route('adult.dashboard')}}"
-                //  }
-                 
+                
               }
            }
        });
    });
 
-
+   $('._communication').on('click',function(){
+        $('#title_').val($(this).data('title'))
+        tinyMCE.activeEditor.setContent($(this).data('comment'));
+        $('#exampleModal').modal('toggle');
+   })
 </script>
+<script>
+    tinymce.init({
+      selector: 'textarea',
+      plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+      toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+      height : "300"
+    });
+  </script>
 @endsection

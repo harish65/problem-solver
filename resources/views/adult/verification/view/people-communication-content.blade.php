@@ -69,6 +69,40 @@
                       </li>
                        @endforeach
                     </ul>
+                    <div class="row mt-5">
+                    <div class="title d-flex">
+                        <h2>Communation Flow</h2>
+                    </div>
+                        <table class="table slp-tbl text-center">
+                        <thead>      
+                            <th>Person One</th>
+                            <th>Person Two</th>
+                            <th>Subject</th>
+                            <th>Comments</th>
+                            <th>Actions</th>
+                            
+                        </thead>
+                            <tbody>
+                                @foreach ($communications as $communication)
+                                        <tr>
+                                            <td>{{ App\Models\Customer::getCustomerName($communication->customer_id)}}</td>
+                                            <td>{{ App\Models\Customer::getCustomerName($communication->person_to)}}</td>
+                                            <td>{{ $communication->title }}</td>
+                                            <td>{{ strip_tags($communication->comment) }}</td>
+                                            <td>
+                                                <a href="javaScript:void(0)" class="delete_"  data-id="{{ $communication->id }}">
+                                                    <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
+                                                </a>
+                                                <a href="javaScript:void(0)" class="edit" data-id="{{ $communication->id }}" data-person_one="{{ $communication->customer_id }}"  data-person_two="{{ $communication->person_to }}" data-title="{{ $communication->title }}" data-comment="{{ $communication->comment }}" >
+                                                    <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
+                                                </a>
+
+                                            </td>
+                                        </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="questionWrap">
                         <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
                             tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
@@ -118,24 +152,31 @@
             </div>
             <div class="modal-body">
             <form id="comm_form" method="post">
+                <input type="hidden" id="project_id" name="project_id" value="{{ $project_id}}">
+                <input type="hidden" id="problem_id" name="problem_id" value="{{ $problem_id}}">
                 <input type="hidden" id="user_id" name="user_id" value="">
                 <input type="hidden" id="id" name="id" value="">
                         <div class="from-group mt-2">
-                            <label for="person_one">From Person : Person 1<span></span></label>
-                            <input class="form-control" name="person_one" id="person_one" disabled>
+                            <label for="person_1">From Person : Person 1<span></span></label>
+                            <select name="person_one" class="form-control form-select" id="person_1">
+                                    <option value=''>Please select</option>
+                                        @foreach($users as $user)
+                                            <option value="{{ $user->id}}">{{ $user->name }}</option>
+                                        @endforeach
+                            </select>
                         </div>
                         <div class="from-group mt-2">
                             <label for="person_2">To Persone : Person 2<span></span></label>
                             <select name="person_to" class="form-control form-select" id="person_2">
                                     <option value="">Please select</option>
-                                    @foreach($users as $user)
-                                    <option value="{{ $user->id}}">{{ $user->name }}</option>
-                                    @endforeach
+                                        @foreach($users as $user)
+                                            <option value="{{ $user->id}}">{{ $user->name }}</option>
+                                        @endforeach
                             </select>
                         </div>
                         <div class="from-group mt-2">
                             <label for="title_">Subject</label>
-                            <input type="text" name="title" class="form-control" id="title_" placeholder="Subject">
+                            <input type="text" name="subject" class="form-control" id="title_" placeholder="Subject">
                         </div>
                         <div class="from-group mt-3">
                                 <label for="msg">Message</label>
@@ -301,15 +342,7 @@ $('.validation').on('change',function(){
                 
                  toastr.success(response.message);
                  location.reload()
-                //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                //  }else{
-
-
-                    
-                    // window.location.href = "{{ route('adult.dashboard')}}"
-                //  }
-                 
+                
               }
            }
        });
@@ -319,11 +352,51 @@ $('.communicate').on('click',function(){
     var cutomer_id = $(this).attr('data-customer_id');
     $('#user_id').val(cutomer_id)
     $('#person_one').val($(this).data('name'))
-    $("#person_2 option[value='"+ cutomer_id +"']").remove();
+    
 
 })
-
-
+    $('.edit').on('click',function(){
+        $('#person_1').val($(this).data('person_one'))
+        $('#person_2').val($(this).data('person_two'))
+        $('#title_').val($(this).data('title'))
+        $('#id').val($(this).data('id'))
+        tinyMCE.activeEditor.setContent($(this).data('comment'));
+       $('#exampleModal').modal('toggle');
+    })
+    $(document).on('click','.delete_',function(e){
+       e.preventDefault();
+       var r = confirm("Are you sure to delete this records");
+            if (r == false) {
+                return false;
+            } 
+       var id = $(this).data('id')
+            
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+       
+       $.ajax({
+           url: "{{route('adult.del-communication_flow')}}",
+           data: {'id': id},
+           dataType: 'json',
+           type: 'POST',
+           success: function (response){
+             if(response.success == false)
+             {
+                 var errors = response.data;
+                 $.each( errors, function( key, value ) {
+                     toastr.error(value)
+                 });
+             } else {
+                
+                 toastr.success(response.message);
+                 location.reload()  
+              }
+           }
+       });
+   });
 </script>
 <script>
     tinymce.init({

@@ -41,12 +41,17 @@
                     <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />                        
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
+                    @if(!$functionAud)
+                    <div class="col text-end">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#functionAdjutment">Add +</button>
+                    </div>
+                    @endif
                 </div>
                 <!-- start -->
-                
+
                 <div class="principleRelation">
-                    <div class="conditionBlock">
-                        <div class="blockProblem">
+                    <div class="conditionBlock space_rem">
+                        <!-- <div class="blockProblem">
                             <div class="projectBlock text-center">
                                 <h2>Improper Function</h2>
                                 <div class="projectList text-center min-height-250">
@@ -61,24 +66,46 @@
                                 </div>
                                
                             </div>
-                        </div>
-                        <div class="long-border"></div>
+                        </div> -->
+                        <!-- <div class="long-border"></div> -->
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
                                 <h2>Improper Function</h2>
                                 <div class="projectList text-center min-height-250">
+                                    <div class="imgWrp">
+                                        @if($Solution_function -> solution_type == 0)
+                                                    @if(strlen($Solution_function -> file) < 15)
+                                                        <img class="mx-auto" src="{{ asset('assets-new/solFunction/'.$Solution_function->file)}}"  width="100%" height="128px">
+                                                    @endif
+                                                @elseif($Solution_function -> solution_type == 1)
+                                                    <video class="mx-auto" controls="controls" preload="metadata"  width="100%" height="128px" preload="metadata">
+                                                        <source src="{{ asset("assets-new/solFunction/" . $Solution_function -> file) }}#t=0.1" type="video/mp4">
+                                                    </video>
+                                                @elseif($Solution_function -> solution_type == 2)
+                                                        <iframe class="mx-auto" src="{{ $Solution_function -> file }}"  width="100%" height="128px"> </iframe>
+                                                @endif
+                                    </div>
                                     <div class="mt-5">
                                         <div class="margit-fifty">
                                         <p>{{ (@$functionAud->function_name) ? ucfirst(@$functionAud->function_name) : '' }}</p>
                                         </div>
                                     </div>
-                                    
+                                    <ul>
+                                        <li>
+                                              <a href="javaScript:Void(0)" class="editBtn" data-id="8" data-name="Dirty Oil Problem Rishav" data-type="0" data-file="1707228611.png" data-cat="1">
+                                                  <img src="http://127.0.0.1:8000/assets-new/images/editIcon.png" alt="">
+                                              </a>
+                                        </li>
+                                        <li><a data-id="8" class="delProblemBtn" title="Delete"><img src="http://127.0.0.1:8000/assets-new/images/deleteIcon.png" alt=""></a></li>
+                                        <li><a href="#"><img src="http://127.0.0.1:8000/assets-new/images/uploadIcon.png" alt=""></a></li>
+                                      </ul>
                                 </div>
                                
                             </div>
                         </div>
-                        <div class="long-arrow">
+                        <div class="long-arrow text-center">
                             <!-- add arrow Image over here -->
+                                <span>Cause</span>
                                 <img src="{{ asset('assets-new/images/arrowRight.png') }}">
                             <!-- add arrow Image over here -->
                         </div>
@@ -86,14 +113,35 @@
                             <div class="projectBlock text-center">
                                 <h2>Problem</h2>
                                 <div class="projectList text-center min-height-250">
+                                    <div class="imgWrp">
+                                        @if($problem -> type == 0)
+                                            @if(strlen($problem -> file) < 15)
+                                                <img class="mx-auto" src="{{ asset("assets-new/problem/" . $problem -> file) }}" width="100%" height="128px">
+                                            @endif
+                                        @elseif($problem -> type == 1)
+                                            <video class="mx-auto" controls="controls" preload="metadata" width="100%" height="128px" preload="metadata">
+                                                <source src="{{ asset("assets-new/problem/" . $problem -> file) }}#t=0.1" type="video/mp4">
+                                            </video>
+                                        @elseif($problem -> type == 2)
+                                                <iframe class="mx-auto" src="{{ $problem -> file }}" width="100%" height="128px"> </iframe>
+                                        @endif
+                                    </div>
                                     <div class="mt-5">
                                         <div class="margit-fifty">
-                                            <p>{{ $problem->name }}</p>
+                                            <p>{{ (@$functionAud->problem_name) ? ucfirst(@$functionAud->problem_name) : '' }}</p>
                                          </div>
                                     </div>
-                                    
+                                    <ul>
+                                        <li>
+                                              <a href="javaScript:Void(0)" class="editBtn" data-id="8" data-name="Dirty Oil Problem Rishav" data-type="0" data-file="1707228611.png" data-cat="1">
+                                                  <img src="http://127.0.0.1:8000/assets-new/images/editIcon.png" alt="">
+                                              </a>
+                                      </li>
+                                        <li><a data-id="8" class="delProblemBtn" title="Delete"><img src="http://127.0.0.1:8000/assets-new/images/deleteIcon.png" alt=""></a></li>
+                                        <li><a href="#"><img src="http://127.0.0.1:8000/assets-new/images/uploadIcon.png" alt=""></a></li>
+                                      </ul>
                                 </div>
-                               
+                                
                             </div>
                         </div>
                     </div>
@@ -115,7 +163,7 @@
 
 <!-- Modal Start -->
     
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="functionAdjutment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -134,18 +182,25 @@
             <input type="hidden" name="fileType" id="fileType">
             <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
             <div class="form-group">
+                <label for="compensator">Solution Function</label>
+                <select name="solution_function" class="form-control form-select" id="solution_function">
+                    <option value="">Please select..</option>
+                    <option value="{{ $Solution_function->id }}">{{ $Solution_function->name }}</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="compensator">Function Name</label>
                 <input type="text" name="function_name" class="form-control" id="fun_name">
             </div>
             <div class="form-group">
                 <label for="feedback">Problem Name</label>
-                <input type="text" disabled name="problem_name" value="{{ $problem->name }}" class="form-control" id="fun_name">
+                <input type="text"  name="problem_name" value="" class="form-control" id="problem_name">
                 
             </div>
            
             <div class="form-group">
-                <label for="from-person">Actual Problem Name</label>
-                <input type="text" disabled name="problem_name" value="{{ $problem->name }}" class="form-control" id="fun_name">
+                <label for="from-person">Actual Problem</label>
+                <input type="text" disabled name="problem_name" value="{{ $problem->name }}" class="form-control">
             </div>
             
           </form>
@@ -165,11 +220,11 @@
    .min-height-250{
         min-height: 250px;
    }
-   .long-border{
+   /* .long-border{
         border-left: 3px solid #000;
         height: 320px;
         border-color: #28a745;
-    }
+    } */
     .imgWrp a{
         cursor: pointer;
     }
@@ -178,6 +233,12 @@
     }
     .margit-fifty p{
         color: red;
+    }
+    .space_rem{
+        justify-content:center;
+    }
+    .long-arrow{
+        display: inline-grid;
     }
 </style>
 @endsection
@@ -238,7 +299,6 @@ $('.dashboard').click(function(){
 
 
 $('#btnSave').click(function(e){
-    
     e.preventDefault();
        var dv = new FormData($('#function-adjustment-form')[0]);
        $.ajaxSetup({
@@ -282,7 +342,12 @@ $('#btnSave').click(function(e){
         });
 
    });
-
+   $('.editBtn').click(function(){
+        $('#solution_function').val('{{$Solution_function->id}}')
+        $('#fun_name').val('{{$functionAud->function_name}}')
+        $('#problem_name').val('{{$functionAud->problem_name}}')
+        $('#functionAdjutment').modal('toggle')
+   })
 
 
 </script>

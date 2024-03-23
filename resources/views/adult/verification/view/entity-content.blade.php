@@ -174,7 +174,10 @@
                                     @endforeach    
                                     </tbody>
                                 </table>
-                                
+                                <div class="title">
+                                    <h2>Entity Given</h2>
+
+                                </div>
                                 <table class="table slp-tbl text-center">
                                     <thead>
                                     <td>Principle Count</td>

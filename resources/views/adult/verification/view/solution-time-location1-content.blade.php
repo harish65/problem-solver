@@ -180,6 +180,7 @@
                                         <th>Date</th>
                                         <th>Solution Function</th>
                                         <th>Date</th>
+                                        <th>People</th>
                                     </thead>
                                     <tbody>
                                         <tr>
@@ -187,6 +188,13 @@
                                             <td style="color: red;">{{ date('d/m/Y', strtotime($problem->created_at))}}</td>
                                             <td style="color: rgba(0, 161, 76, 0.5)">{{ $Solution_function->name }}</td>
                                             <td style="color: rgba(0, 161, 76, 0.5)">{{ date('d/m/Y', strtotime($Solution_function->created_at))}}</td>
+                                             <td style="color: rgba(0, 161, 76, 0.5)">
+                                                <ul>
+                                                    @foreach($custommers as $user)
+                                                    <li>{{ $user->name }}</li>
+                                                    @endforeach    
+                                                </ul>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>

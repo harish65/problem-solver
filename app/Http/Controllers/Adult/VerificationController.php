@@ -18,6 +18,7 @@ use App\Models\VerificationEntity;
 use App\Models\ErrorCorrection;
 use App\Models\BeforeAndAfter;
 use App\Models\PastAndPresentTime;
+use App\Models\Customer;
 use DB;
 use Auth;
 use Redirect;
@@ -410,6 +411,13 @@ class VerificationController extends BaseController
                         );
                     }
                 }
+                $communications = DB::table('people_communication_flow')
+                        ->select('people_communication_flow.*' , 'customers.name AS customer_name' )
+                        ->leftJoin('customers', 'people_communication_flow.customer_id', '=', 'customers.id')
+                        ->where('people_communication_flow.user_id' , Auth::user()->id)->where('people_communication_flow.project_id' , $project_id)->where('people_communication_flow.problem_id' , $problem_id)
+                        
+                        ->get();
+            
                 return view(
                     "adult.verification.view.people-communication-content",
                     compact(
@@ -423,14 +431,20 @@ class VerificationController extends BaseController
                         "solution_id",
                         "Solution_function",
                         "verifiationTypeText",
-                        "users"
+                        "users" , "communications"
                     )
                 );
                 break;
             case 12:
-                $users = DB::table("customers")
-                    ->where("project_id", "=", $project_id)
-                    ->get();
+
+
+                $users = DB::table('customers')
+                        ->select('customers.*' , 'people_communication_flow.title' ,  'people_communication_flow.comment')
+                        ->leftJoin('people_communication_flow', 'customers.id', '=', 'people_communication_flow.customer_id')
+                        ->where('customers.project_id' , $project_id)
+                        ->get();
+
+                   
                 if (!$verification) {
                     $verification = Verification::where(
                         "verification_type_id",
@@ -443,6 +457,7 @@ class VerificationController extends BaseController
                         );
                     }
                 }
+              
                 return view(
                     "adult.verification.view.communication-flow-content",
                     compact(
@@ -598,12 +613,13 @@ class VerificationController extends BaseController
                     }
                     
                     $errorcorrection = DB::table('error_correction')->get();
-                    // $problemDevelopment = DB::table('problem_development')->get();
+                   
 
-                    $problemDevelopment = db::table('problem_development')->select('problem_development.*' , 'error_correction.compensator' )
+                    $problemDevelopment = db::table('problem_development')->select('problem_development.*' , 'error_correction.compensator' ,'error_correction.compensator_date' , 'error_correction.id as error_correction_id' )
                                         ->leftJoin('error_correction', 'problem_development.id', '=', 'error_correction.error_id')
                                         ->get();
-                    //   echo "<pre>";print_r($data);die;                      
+                      
+                          
                     return view(
                         "adult.verification.view.error-correction-approach",
                         compact(
@@ -655,7 +671,7 @@ class VerificationController extends BaseController
                                             ->leftJoin('error_correction', 'problem_development.id', '=', 'error_correction.error_id')
                                             ->get();
                         $functionAud  = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
-                        
+                            
                         return view(
                             "adult.verification.view.function-adjustment",
                             compact(
@@ -1299,7 +1315,7 @@ class VerificationController extends BaseController
             }
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
@@ -1347,7 +1363,7 @@ class VerificationController extends BaseController
                 return $this->sendResponse($error, "Something Wrong.");
             }
         } catch (Exception $e) {
-            return $this->sendError("Error.", ["error" => $e->getMessage()]);
+            return $this->sendError("Error.", ["error" => $e->getMessage()()]);
         }
     }
     public function delete(Request $request)
@@ -1376,7 +1392,7 @@ class VerificationController extends BaseController
             }
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
@@ -1428,7 +1444,7 @@ class VerificationController extends BaseController
             }
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
@@ -1478,7 +1494,7 @@ class VerificationController extends BaseController
             }
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
@@ -1502,7 +1518,7 @@ class VerificationController extends BaseController
             }
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
@@ -1526,7 +1542,7 @@ class VerificationController extends BaseController
             }
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
@@ -1617,7 +1633,7 @@ class VerificationController extends BaseController
                 );
             }
         } catch (Exception $e) {
-            return $this->sendError("Error!", $e->getMessage());
+            return $this->sendError("Error!", $e->getMessage()());
         }
     }
     public function deleteTimeVerification(Request $request)
@@ -1637,13 +1653,12 @@ class VerificationController extends BaseController
             }
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
 
     public function StorePastPresentTime(Request $request){
-        // echo "<pre>";print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "past_time" => "required",
         ]);
@@ -1676,11 +1691,31 @@ class VerificationController extends BaseController
             }
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
 
+    public function DeletePastPresentTime(Request $request){
+        try{
+            $data = $request->all();
+
+            if($data['data']){
+                $delete = PastAndPresentTime::whereIn('id' , $data['data'])->delete();
+                if($delete){
+                    $success["delete_verification"] = true;
+                return $this->sendResponse( $success,"Verification deleted successfully." );
+                }else{
+                    $success["delete_verification"] = false;
+                     return $this->sendResponse($success, "Something Wrong.");
+                }
+            }
+        }catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
+            ]);
+        }
+    }
 
     public function storePricipleVerification(Request $request)
     {
@@ -1730,7 +1765,7 @@ class VerificationController extends BaseController
             );
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
@@ -1767,7 +1802,7 @@ class VerificationController extends BaseController
             );
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
@@ -1890,7 +1925,7 @@ class VerificationController extends BaseController
             );
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
@@ -1913,7 +1948,7 @@ class VerificationController extends BaseController
             }
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
@@ -1952,7 +1987,7 @@ class VerificationController extends BaseController
             );
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
@@ -1980,7 +2015,7 @@ class VerificationController extends BaseController
             }
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
@@ -2016,7 +2051,7 @@ class VerificationController extends BaseController
             );
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
@@ -2053,25 +2088,39 @@ class VerificationController extends BaseController
             );
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
 
     public function storeCommunicationFlow(Request $request)
     {
+        // echo "<pre>";print_r($request->all());die;
+        $validator = Validator::make($request->all(), [
+            "person_to" => "required",
+            "subject" => "required",
+            "comment" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError("Validation Error.", $validator->errors());
+        }
+
         try {
             $data = $request->all();
             
             $insert = DB::table(
                 "people_communication_flow"
             )->updateOrInsert(
-                ["customer_id" => @$request->user_id],
-                [
-                    "customer_id" => $data["user_id"],
+                ["id" => @$request->id],
+                [   
+                    "project_id" => $data["project_id"],
+                    "problem_id" => $data["problem_id"],
+                    "customer_id" => $data["person_one"],
                     "person_to" => $data["person_to"],
-                    "title" => $data["title"],
+                    "title" => $data["subject"],
                     "comment" => $data["comment"],
+                    "user_id" => Auth::user()->id,
+
                 ]
             );
             $success["entity"] = $insert;
@@ -2081,7 +2130,36 @@ class VerificationController extends BaseController
             );
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
+            ]);
+        }
+    }
+
+
+
+    public function deleteCommunicationFlow(Request $request){        
+        $validator = Validator::make($request->all(), [
+            "id" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError("Validation Error.", $validator->errors());
+        }
+        try {
+            $delete = Db::table("people_communication_flow")
+                ->where("id", "=", $request->id)
+                ->delete();
+            if ($delete) {
+                $success["delete_"] = $delete;
+                return $this->sendResponse(
+                    $success,
+                    "Record deleted successfully."
+                );
+            } else {
+                return $this->sendResponse($error, "Something Wrong.");
+            }
+        } catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
             ]);
         }
     }
@@ -2098,6 +2176,9 @@ class VerificationController extends BaseController
         }
         try {
             $data =  $request->all();
+
+
+
             $insert = DB::table(
                 "problem_development"
             )->updateOrInsert(
@@ -2119,7 +2200,7 @@ class VerificationController extends BaseController
             );
         }catch(Exception $e){
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         } 
     }
@@ -2147,7 +2228,7 @@ class VerificationController extends BaseController
             }
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
@@ -2155,16 +2236,38 @@ class VerificationController extends BaseController
     /////////Error Correction Aproach/////////////
 
     public function addErrorCorectionAproach(Request $request){
-        // echo "<pre>";print_r($request->all());die;
+        
+        $validator = Validator::make($request->all(), [
+                "compensator" => "required",
+                "compensator_date" => "required|date",
+            ]);
+
+            if ($validator->fails()) {
+                return $this->sendError("Validation Error.", $validator->errors());
+            }
         try{
+            $problemDevelopment_count =  DB::table('problem_development')->get();
+            $error_correction_count = ErrorCorrection::all();
             
-            $ErrorCorrection = new ErrorCorrection();
+            // if($error_correction_count->count() <= $problemDevelopment_count->count() && $request->id == ''){
+            //     return $this->sendError("Compensator Error.", ['Compensator can not exceed more than errors!']);
+            // }
+
+            if($request->id != ''){
+                $ErrorCorrection = ErrorCorrection::find($request->id);
+            }else{
+                $ErrorCorrection = new ErrorCorrection();
+            }
+            
+            // $ErrorCorrection = new ErrorCorrection();
             $ErrorCorrection->project_id = $request->project_id;
             $ErrorCorrection->problem_id = $request->problem_id;
             $ErrorCorrection->user_id = Auth::user()->id;
             $ErrorCorrection->error_id = $request->error_id;
-            $ErrorCorrection->compensator = $request->compensator;            
+            $ErrorCorrection->compensator = $request->compensator;  
+            $ErrorCorrection->compensator_date = date('Y-m-d H:i:s' , strtotime($request->compensator_date));  
             $ErrorCorrection->save();
+            DB::table('problem_development')->where('id' , $request->error_id)->update(['compensator'=>1]);
             $success["error-corection"] = $ErrorCorrection;
             return $this->sendResponse(
                 $success,
@@ -2172,19 +2275,22 @@ class VerificationController extends BaseController
             );
         }catch(\Illuminate\Database\QueryException $e){
             return $this->sendError("Database Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
 
 
-    public function feedbackIdentification(){
+    public function feedbackIdentification(Request $request){
+        $params = $request->all();
+        
         $problemDevelopment = DB::table('problem_development')->get();
-        // $feedBack = DB::table('feedback_identifications')->get();
+        
         $feedBack = db::table('feedback_identifications')->select('feedback_identifications.*' , 'problem_development.error_name' )
                     ->leftJoin('problem_development', 'feedback_identifications.error_id', '=', 'problem_development.id')
-                    ->get();   
-        return view("adult.verification.view.feed-back-identification" , compact("problemDevelopment" , "feedBack" ));
+                    ->get();
+        
+        return view("adult.verification.view.feed-back-identification" , compact("problemDevelopment" , "feedBack" , 'params' ));
     }
 
     public function storeFeedbackIdentification(Request $request){
@@ -2217,25 +2323,97 @@ class VerificationController extends BaseController
             );
         }catch(Exception $e){
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         } 
     }
 
+    public function DeleteFeedbackIdentification($id){
+        try {            
+            $delete = Db::table("feedback_identifications")
+                ->where("id", "=", $id)
+                ->delete();
+            if ($delete) {
+                $success["delete_verification"] = $delete;
+                return $this->sendResponse(
+                    $success,
+                    "Record deleted successfully."
+                );
+            } else {
+                return $this->sendResponse($error, "Something Wrong.");
+            }
+        } catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
+            ]);
+        }
+    }
+
     public function errorCorrection(Request $request){
-        $problemDevelopment = DB::table('problem_development')->get();
-        $compensator = DB::table('error_correction')->get();
-        $feedBack = DB::table('feedback_identifications')->get();
         
-        $errorcorrections = db::table('error_correction_type')->select('error_correction_type.*' , 'problem_development.error_name','error_correction.compensator' )
-                ->leftJoin('problem_development', 'error_correction_type.error', '=', 'problem_development.id')
-                ->leftJoin('error_correction', 'error_correction_type.error', '=', 'error_correction.id')
-                ->get();
-        return view("adult.verification.view.error-corection" ,  compact("problemDevelopment" ,"compensator" , "feedBack" , "errorcorrections"));
+        $params = $request->all();
+        $problemDevelopment = DB::table('problem_development')->get();
+        $compensators = DB::table('error_correction')->get();
+        $feedBack = DB::table('feedback_identifications')->get();
+        $error_correction_type = db::table('error_correction_type')->get();
+        
+             $errors = []; 
+             $compensator = [];  
+        foreach($error_correction_type as $key => $errorcorrection){
+            $errorcorrection->error =  json_decode($errorcorrection->error);
+            $array_keys_val =  array_values($errorcorrection->error);
+            $pd = DB::table('problem_development')->whereIn('id' , $errorcorrection->error)->get(); 
+            //Error 
+            if($pd){
+                $index= 0;
+                foreach($pd as $keys =>$pds){
+                    $errors[$index]['id'] = $errorcorrection->id;
+                    $errors[$index]['error_id'] = $pds->id;
+                    $errors[$index]['feedback'] = $errorcorrection->feedback;
+                    $errors[$index]['feedback_applied'] = $errorcorrection->feedback_applied;
+                    $errors[$index]['error_name'] = $pds->error_name;
+                    $index++;
+                }
+                
+            }
+            
+            //compensator
+            $errorcorrection->compensator =  json_decode($errorcorrection->compensator);
+            $compensator_ids = DB::table('error_correction')->whereIn('id' , $errorcorrection->compensator)->get();
+            
+            
+            
+            if($compensator_ids){
+                $index_ = 0;
+                foreach($compensator_ids as $keys => $compensator_id){
+                    $compensator[$index_]['id'] = $compensator_id->id;
+                    $compensator[$index_]['compensator'] = $compensator_id->compensator;
+                    $compensator[$index_]['feedback'] = $errorcorrection->feedback;
+                    $compensator[$index_]['feedback_applied'] = $errorcorrection->feedback_applied;
+                    $compensator[$index_]['error_name'] = $pds->error_name;
+                    $index_++;
+                }
+                
+            }
+                
+        }        
+        // echo "<pre>";print_r($errors);die;
+        
+
+        
+        $errorcorrections = db::table('error_correction_type')
+        // ->select('error_correction_type.*' , 'problem_development.error_name' , 'feedback_identifications.feedback as feedback_given' )
+        // ->leftJoin('problem_development', 'error_correction_type.error', '=', 'problem_development.id')
+        // ->leftJoin('error_correction', 'error_correction_type.error', '=', 'error_correction.id')
+        // ->leftJoin('feedback_identifications', 'error_correction_type.feedback', '=', 'feedback_identifications.error_id')
+        ->get();
+        //  echo "<pre>";print_r($errorcorrections);die;
+               
+        return view("adult.verification.view.error-corection" ,  compact("problemDevelopment" ,"compensators" , "feedBack" , "errorcorrections" , "errors" , "compensator" ,'params'));
     }
 
 
-    public function storeErrorCorrection(Request $request){
+    public function storeErrorCorrection(Request $request){        
         $validator = Validator::make($request->all(), [
             "error" => "required",
             "feedback" => "required",
@@ -2247,16 +2425,24 @@ class VerificationController extends BaseController
         }
 
         //error_correction_type
-
+        // echo "<pre>";print_r($request->all());die;
         try {
             $data =  $request->all();
+            $error = null;
+            $compensator = null;
+            if(is_array($data['error'])){
+                $error =  json_encode($data['error']);          
+            }
+            if(is_array($data['compensator'])){
+                $compensator =  json_encode($data['compensator']);          
+            }
             $insert = DB::table(
                 "error_correction_type"
             )->updateOrInsert(
                 ["id" => @$request->id],
                 [
-                    "error" => $data["error"],
-                    "compensator" => $data["compensator"],
+                    "error" => $error,
+                    "compensator" => $compensator,
                     "feedback" => $data["feedback"],
                     "feedback_applied" => $data["feedback_applied"]
                 ]
@@ -2268,18 +2454,40 @@ class VerificationController extends BaseController
             );
         }catch(Exception $e){
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         }
     }
 
-
+    public function deleteErrorCorrection(Request $request){
+        try {            
+            
+            $delete = Db::table(''.$request->table_name.'')->where("id", "=", $request->id)
+                ->delete();
+            if ($delete) {
+                $success["delete_verification"] = true;
+                return $this->sendResponse(
+                    $success,
+                    "Record deleted successfully."
+                );
+            } else {
+                $success["delete_verification"] = false;
+                return $this->sendResponse($success, "Something Wrong.");
+            }
+        } catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
+            ]);
+        }
+    }
 
     ///function Function Adjustment
     public function storeFunctionAdjustment(Request $request){
         // echo "<pre>";print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "function_name" => "required",
+            "problem_name" => "required",
+            "solution_fun_id" => "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError("Validation Error.", $validator->errors());
@@ -2295,6 +2503,7 @@ class VerificationController extends BaseController
                     "project_id" => $data["project_id"],
                     "solution_id" => $data["solution_id"],
                     "solution_function_id" => $data["solution_fun_id"],
+                    "problem_name" => $data["problem_name"],
                     "user_id" => Auth::user()->id,                   
                     "function_name" => $data["function_name"],
                     
@@ -2307,7 +2516,7 @@ class VerificationController extends BaseController
             );
         }catch(Exception $e){
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         } 
     }
@@ -2350,7 +2559,7 @@ class VerificationController extends BaseController
             );
         }catch(Exception $e){
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         } 
     }
@@ -2391,7 +2600,7 @@ class VerificationController extends BaseController
             );
         }catch(Exception $e){
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         } 
     }
@@ -2424,7 +2633,7 @@ class VerificationController extends BaseController
             );
         }catch(Exception $e){
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         } 
         try {
@@ -2451,7 +2660,7 @@ class VerificationController extends BaseController
             );
         }catch(Exception $e){
             return $this->sendError("Validation Error.", [
-                "error" => $e->getMessage,
+                "error" => $e->getMessage(),
             ]);
         } 
     }

@@ -59,6 +59,7 @@
                             <div class="entity">
                                 <table class="table slp-tbl text-center">
                                     <thead>
+                                        <td><input type="checkbox" class="checkbox" id="check_all" value="0"></td>
                                         <th>Date</th>
                                         <th>Problem name</th>
                                         <th>Action</th>
@@ -67,27 +68,34 @@
                                     <?php $lastDate = null ?>
                                         @foreach($pastAndPresentTime as $varification)
                                         <tr>
-                                            <td>{{ date('d/m/Y' , strtotime($varification->time))}}</td>
+                                            <td><input type="checkbox" class="checkbox_single" name="_delete[]" data-checkbox_id="{{$varification->id}}" value="0"></td>
+                                            <td>{{ date('m/d/Y' , strtotime($varification->time))}}</td>
                                             <td>{{ $problem->name }}</td>
                                             <td>
-                                                <a href="javaScript:void(0)" class="deleteVoucablaryBtn" data-id="{{  $varification->id }}">
+                                                <a href="javaScript:void(0)" class="delete_ action_single"  data-id="{{  $varification->id }}">
                                                     <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
                                                 </a>
-                                                <a href="javaScript:void(0)" class="editVocabularyBtn" data-id="{{  $varification->id }}" data-key="{{ date('d/m/Y' ,  strtotime($varification->time) )}}">
+                                                <a href="javaScript:void(0)" class="editVocabularyBtn" data-id="{{  $varification->id }}" data-key="{{ date('m/d/Y' ,  strtotime($varification->time) )}}">
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
                                                 </a>
 
                                             </td>
                                         </tr>
-                                        <?php $lastDate = date('Y-m-d' ,  strtotime($varification->time)) ;
+                                        <?php 
+                                        $lastDate = date('Y-m-d' ,  strtotime($varification->time)) ;
                                             
                                         ?>
                                         @endforeach
                                     </tbody>
                                 </table>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                    <button type="button" class="btn btn-danger" id="bulk_delete">Delete</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <input type="hidden" value="{{ $lastDate }}" id="last_date"> 
+                        <input type="hidden" value="{{ date('Y-m-d' , strtotime($lastDate.' + 1 days')) }}" id="last_date"> 
                         <h2>Validation Question</h2>
                         <br>
                         <form id="validation_form">
@@ -141,6 +149,7 @@
               <input type="hidden" name="solution_id" value="{{ $solution_id }}">
               <input type="hidden" name="solution_function_id" value="{{ $Solution_function->id }}">
               <input type="hidden" name="update"  value="">
+              <input type="hidden" name="id"  id="id" value="">
               <input type="text" id="date" name="past_time"  class="form-control"  id="name" placeholder="Enter Date">
           </div>
           <div class="form-group">
@@ -245,7 +254,7 @@ $('.validation').on('change',function(){
            data: {data : problem , value : validation , name : name},
            type: 'POST',
            success: function (response){                
-               console.log(response)
+            //    console.log(response)
             }
 
         })
@@ -337,76 +346,98 @@ $(document).on('click','#saveBtn',function(e){
 });
 
 $('.editVocabularyBtn').click(function(){
-  $('#verification_id').val($(this).data('id')) 
-    // $('#date').val($(this).data('key')).attr('disabled' , true)  
-  if($(this).data('val') === 'y'){
-   $('#solution_hold_y').prop('checked' , true)  
-  }else{
-   $('#solution_hold_n').prop('checked' , true)  
-  }
+  $('#id').val($(this).data('id')) 
+  $('#date').val($(this).data('key'))
  $('#exampleModal').modal('toggle'); 
 })
 
-$('.deleteVoucablaryBtn').click(function(e){
-   e.preventDefault();
-    var r = confirm("Are you sure to delete");
-    if (r == false) {
-        return false;
+$(document).ready(function () {
+    var lastDate = $('#last_date').val()
+    // console.log(lastDate);
+    console.log(lastDate)
+    $("#date").datepicker({ minDate: new Date(lastDate)  , maxDate: 0 });
+});
+   //   bulk check box delete
+$('#check_all').on('change',function(){
+    if($(this).prop('checked') == true){
+        $('.checkbox_single').prop('checked' , true)
+    }else{
+        $('.checkbox_single').prop('checked' , false).removeAttr('checked')   
     }
-    
-var id =  $(this).data('id')
-$.ajaxSetup({
-  headers: {
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          }
-  });
-$.ajax({
-      url: "{{route('adult.delete-time-verification')}}" ,
-      
-      data: { 'id' : id},
-      dataType: 'json',
-      type: 'POST',
-      beforeSend: function(){
-        $('#saveBtn').attr('disabled',true);
-        $('#saveBtn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-      },
-      error: function (xhr, status, error) {
-          $('#saveBtn').attr('disabled',false);
-          $('#saveBtn').html('Submit');
-          $.each(xhr.responseJSON.data, function (key, item) {
-              toastr.error(item);
-          });
-      },
-      success: function (response){
-        if(response.success == false)
-        {
-            $('#saveBtn').attr('disabled',false);
-            $('#saveBtn').html('Login');
-            var errors = response.data;
-            $.each( errors, function( key, value ) {
-                toastr.error(value)
-            });
-        } else {
-           
-            toastr.success(response.message);
-            location.reload()
-         }
-      }
-  });
 })
 
+var checkedRecords =  [];
+$('.delete_ ').on('click',function(e){
+    e.preventDefault();
+            var r = confirm("Are you sure to delete all records");
+            if (r == false) {
+                return false;
+            } 
+    checkedRecords = [];
+    checkedRecords.push($(this).data('id'));
+    deletRecords(checkedRecords);
+})
 
+$('#bulk_delete').on('click',function(e){      
+    if($(".checkbox_single").filter(':checked').length > 0){
+        
+        e.preventDefault();
+            var r = confirm("Are you sure to delete all records");
+            if (r == false) {
+                return false;
+            } 
+            checkedRecords = [];
+            $(".checkbox_single").filter(':checked').each(function(){
+                checkedRecords.push($(this).attr('data-checkbox_id'))
+            })  
+           
+            deletRecords(checkedRecords);
+    }else{
+            toastr.error('No record selected'); return false;
+    }
+})
+ 
 
-$(document).ready(function () {
-var lastDate = $('#last_date').val()
-console.log(lastDate);
-$("#date").datepicker({ minDate: new Date(lastDate)  , maxDate: 0 });
-
-
-});
-   
-   
-   
+function deletRecords(data){
+            $.ajaxSetup({
+                headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                });
+            $.ajax({
+                url: "{{route('adult.delete-past-present-time')}}" ,
+                
+                data: { 'data' : checkedRecords},
+                dataType: 'json',
+                type: 'POST',
+                beforeSend: function(){
+                    $('.c_delete_').attr('disabled',true);
+                    $('.c_delete_').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+                },
+                error: function (xhr, status, error) {
+                    $('.c_delete_').attr('disabled',false);
+                    $('.c_delete_').html('Delete');
+                    $.each(xhr.responseJSON.data, function (key, item) {
+                        toastr.error(item);
+                    });
+                },
+                success: function (response){
+                    if(response.success == false)
+                    {
+                        $('.c_delete_').attr('disabled',false);
+                        $('.c_delete_').html('Delete');
+                        var errors = response.data;
+                        $.each( errors, function( key, value ) {
+                            toastr.error(value)
+                        });
+                    } else {
+                    
+                        toastr.success(response.message);
+                        location.reload()
+                    }
+                }
+            });
+}
 
 
 </script>

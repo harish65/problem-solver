@@ -26,19 +26,7 @@
 <script src="{{ asset('assets-new/toastar/toastr.min.js') }}"></script>
 <script src="{{asset('assets-new/js/sweetalert.min.js')}}"></script>
 <script src="{{ asset('assets-new/js/main.js') }}"></script>
-    @if($errors->any())
-        <script>
-            swal({
-                title: "Error ! Not indentified exception",
-                text:   "{{$errors->first()}}",
-                type: "error",
-                showCancelButton: true,
-                confirmButtonColor: '#00A14C',
-                timer: 1500
-            });
-            
-        </script>
-        @endif
+    
         <script>
             $('#saveValidations').on('click',function(){
                 var fd = new FormData($('#validation_form')[0]);
@@ -84,5 +72,17 @@
         })
         </script>
 @yield('scripts')
+<script>
+    // $('.modal').on('hidden.bs.modal', function (e) {
+    // $(this)
+    // .find("input,textarea,select")
+    //    .val('')
+    //    .end()
+    // .find("input[type=checkbox], input[type=radio]")
+    //    .prop("checked", "")
+    //    .end();
+    //     })
+
+</script>
 </body>
 </html>

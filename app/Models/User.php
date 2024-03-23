@@ -81,4 +81,7 @@ class User extends Authenticatable
     public function verificationTypeText(){
         return $this->hasMany(VerificationTypeText::class);
     }
+
+
+   
 }

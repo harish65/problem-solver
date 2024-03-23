@@ -27,7 +27,7 @@
                                 <input type="text" name="value"  id="value" name="value" class="form-control" placeholder="Identified Information">
                             </div>
                             <div class="form-group">
-                                <label>Please State If Given Information Matches Given Information</label>
+                                <label>Please State If Identified Information Matches Given Information</label>
                                     <select name="point_to" id="point_to"  class="form-control form-select">
                                         <option value="to">Yes</option>
                                         <option value="not">No</option>
