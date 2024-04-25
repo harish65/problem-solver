@@ -91,7 +91,7 @@
                                             @foreach($users as $k=>$user)
                                                 <li class="custom_li">
                                                     <div class="person_name_ ">
-                                                        <button class="btn btn-success _communication" data-comment="{{ $user->comment }}" data-title="{{ $user->title }}" > {{ $user->name }} : Communication</button>
+                                                        <button class="btn btn-success _communication" data-com-date="{{ date('m/d/Y' , strtotime($user->created_at) ) }}" data-comment="{{ $user->comment }}" data-title="{{ $user->title }}" data-id="{{ $user->id }}" data-person_one="{{ $user->customer_id }}"  data-person_two="{{ $user->person_to }}"  > {{ $user->name }} : Communication</button>
                                                     </div>
                                     </li>  
                                     @endforeach      
@@ -147,27 +147,31 @@
                 <input type="hidden" id="problem_id" name="problem_id" value="{{ $problem_id}}">
                 <input type="hidden" id="user_id" name="user_id" value="">
                 <input type="hidden" id="id" name="id" value="">
-                        <!-- <div class="from-group mt-2">
+                        <div class="from-group mt-2">
                             <label for="person_1">From Person : Person 1<span></span></label>
-                            <select name="person_one" class="form-control form-select" id="person_1">
-                                    <option value=''>Please select</option>
-                                        @foreach($users as $user)
+                            <select name="person_one" class="form-control form-select" id="person_1" disabled>
+                                    <option value="">Please select</option>
+                                        @foreach($customers as $user)
                                             <option value="{{ $user->id}}">{{ $user->name }}</option>
                                         @endforeach
                             </select>
                         </div>
                         <div class="from-group mt-2">
                             <label for="person_2">To Persone : Person 2<span></span></label>
-                            <select name="person_to" class="form-control form-select" id="person_2">
+                            <select name="person_to" class="form-control form-select" id="person_2" disabled>
                                     <option value="">Please select</option>
-                                        @foreach($users as $user)
+                                        @foreach($customers as $user)
                                             <option value="{{ $user->id}}">{{ $user->name }}</option>
                                         @endforeach
                             </select>
-                        </div>-->
+                        </div>
+                        <div class="from-group mt-2">
+                            <label for="title_">Communication Date</label>
+                            <input type="text" name="communication_date" class="form-control" id="communication_date" value="" placeholder="mm/dd/YY" disabled>
+                        </div> 
                         <div class="from-group mt-2">
                             <label for="title_">Subject</label>
-                            <input type="text" name="subject" class="form-control" id="title_" placeholder="Subject">
+                            <input type="text" name="subject" class="form-control" id="title_" placeholder="Subject" disabled>
                         </div> 
                         <div class="from-group mt-3">
                                 <label for="msg">Message</label>
@@ -319,6 +323,7 @@ $('.validation').on('change',function(){
 //.editSolFunBtn
 
 $('.editverBtn').click(function(){
+        
    $('#createVerification').modal('toggle')
 })
 
@@ -387,8 +392,14 @@ $('.editverBtn').click(function(){
    });
 
    $('._communication').on('click',function(){
+        $('#person_1').val($(this).data('person_one'));       
+        $('#person_2').val($(this).data('person_two'))
         $('#title_').val($(this).data('title'))
+        $('#id').val($(this).data('id'))
+        $('#communication_date').val($(this).data('com-date'))
         tinyMCE.activeEditor.setContent($(this).data('comment'));
+        tinymce.activeEditor.getBody().setAttribute('contenteditable', false);
+       
         $('#exampleModal').modal('toggle');
    })
 </script>

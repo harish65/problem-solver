@@ -63,9 +63,9 @@
                                 <div class="arrow">
                                     <ul>
                                         @if(isset($problemPart->problem_part)  && !is_null($problemPart->problem_part))
-                                        @for($i = 1; $i<= $problemPart->problem_part; $i++)
-                                        <li><img src="{{ asset('assets-new/images/arrow_sm.png')}}"></li>
-                                        @endfor 
+                                            @for($i = 1; $i<= $problemPart->problem_part; $i++)
+                                            <li><img src="{{ asset('assets-new/images/arrow_sm.png')}}"></li>
+                                            @endfor 
                                         @endif       
                                     </ul>
                                 </div>
@@ -75,9 +75,9 @@
                                         <div class="problem-list">
                                             <ul class="text-center p-2">
                                                 @if(isset($problemPart->problem_part)  && !is_null($problemPart->problem_part))
-                                                @for($i = 1; $i<= $problemPart->problem_part; $i++)
-                                                    <li class="form-control btn btn-success">{{ __('Part ') . $i}}</li>
-                                                @endfor
+                                                    @for($i = 1; $i<= $problemPart->problem_part; $i++)
+                                                        <li class="form-control btn btn-success">{{ __('Part ') . $i}}</li>
+                                                    @endfor
                                                 @endif       
                                             </ul>
                                         </div>
@@ -98,7 +98,7 @@
                             <h2>Validation Question</h2>
                         <br>
                         <form id="validation_form">
-                        <input type="hidden" name="id" value="{{ @$problemPart->id }}"> 
+                            <input type="hidden" name="id" value="{{ @$verification->id }}"> 
                             <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
                             <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
                             <input type="hidden" name="project_id" value="{{ $project_id }}">

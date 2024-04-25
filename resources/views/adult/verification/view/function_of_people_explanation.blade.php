@@ -56,7 +56,12 @@
                                     <p class="redText">{{ $Solution_function->name }}</p>
                                 </div>
                                 <div class="projectList">
-                                   
+                                <ul>
+                                        <li><p>&nbsp;&nbsp;&nbsp;&nbsp;</p></li>
+                                        <li>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                                        <li>&nbsp;&nbsp;&nbsp;</li>
+                                       
+                                    </ul>
                                     
                                 </div>
                             </div>
@@ -77,7 +82,15 @@
                                     <p class="redText">{{ $problem->name }}</p>
                                 </div>
                                 <div class="projectList">
-                                   
+                                
+                                    
+                                    <ul>
+                                        <li><p>&nbsp;&nbsp;&nbsp;&nbsp;</p></li>
+                                        <li>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                                        <li>&nbsp;&nbsp;&nbsp;</li>
+                                       
+                                    </ul>
+                                
                                     
                                 </div>
                             </div>
@@ -95,32 +108,29 @@
                                 <h2>People</h2>
                                 <div class="projectList text-center">
                                     <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                                        <ol class="carousel-indicators">
+                                        
+                                        <div class="carousel-inner" role="listbox">
+                                            @php $index = 1; @endphp
+                                                @foreach($custommers as $user)
+                                                    <div class="carousel-item {{ ($index == 1) ? 'active':'' }} " data-entity_id="{{$user->id}}" data-file="{{ $user->file }}" >
+                                                        <img  src="{{ asset('assets-new/users/'.$user->file)}}" alt="Chania" width="80%" height="128px">
+                                                        <div class="carousel-caption custom">{{ $user->name }}</div>
+                                                    </div>
+                                                @php $index++; @endphp
+                                            @endforeach    
+                                               
+                                        </div>
+                                        <ol class="carousel-indicators custom">
                                             @php $index = 0; @endphp
                                                 @foreach($custommers as $user)
                                                         <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
                                                 @php $index++; @endphp
                                             @endforeach 
                                         </ol>
-                                        <div class="imgWrp carousel-inner" role="listbox">
-                                            @php $index = 1; @endphp
-                                                @foreach($custommers as $user)
-                                                    <div class="carousel-item {{ ($index == 1) ? 'active':'' }} " data-entity_id="{{$user->id}}" data-file="{{ $user->file }}" >
-                                                        <img  src="{{ asset('assets-new/users/'.$user->file)}}" alt="Chania" width="80%" height="128px">
-                                                    </div>
-                                                @php $index++; @endphp
-                                            @endforeach    
-                                               
-                                        </div>
                                     </div>
                                     <p class="redText" style="color:red">People</p>
                                 </div>
-                                <div class="projectList">
-                                    
-                                    <ul>
-                                        
-                                    </ul>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -301,6 +311,12 @@
 @section('css')
 
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+<style>
+     .carousel{
+        height :auto;
+        min-height: 258px;
+    }
+</style>
 @endsection
 @section('scripts')
 

@@ -51,32 +51,29 @@
                                 <h2>People</h2>
                                 <div class="projectList text-center">
                                     <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                                        <ol class="carousel-indicators">
+                                        
+                                        <div class="carousel-inner" role="listbox">
+                                            @php $index = 1; @endphp
+                                                @foreach($custommers as $user)
+                                                    <div class="carousel-item {{ ($index == 1) ? 'active':'' }} " data-entity_id="{{$user->id}}" data-file="{{ $user->file }}" >
+                                                        <img  src="{{ asset('assets-new/users/'.$user->file)}}" alt="Chania" width="80%" height="128px">
+                                                        <div class="carousel-caption custom">{{ $user->name }}</div>
+                                                    </div>
+                                                @php $index++; @endphp
+                                            @endforeach    
+                                               
+                                        </div>
+                                        <ol class="carousel-indicators custom">
                                             @php $index = 0; @endphp
                                                 @foreach($custommers as $user)
                                                         <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
                                                 @php $index++; @endphp
                                             @endforeach 
                                         </ol>
-                                        <div class="imgWrp carousel-inner" role="listbox">
-                                            @php $index = 1; @endphp
-                                                @foreach($custommers as $user)
-                                                    <div class="carousel-item {{ ($index == 1) ? 'active':'' }} " data-entity_id="{{$user->id}}" data-file="{{ $user->file }}" >
-                                                        <img  src="{{ asset('assets-new/users/'.$user->file)}}" alt="Chania" width="80%" height="128px">
-                                                    </div>
-                                                @php $index++; @endphp
-                                            @endforeach    
-                                               
-                                        </div>
                                     </div>
-                                    <p class="redText" style="color:red">People</p>
-                                </div>
-                                <div class="projectList">
                                     
-                                    <ul>
-                                        
-                                    </ul>
                                 </div>
+                                
                             </div>
                         </div>
                         <div class="long-arrow">
@@ -154,15 +151,13 @@
                             <h2>Validation Question</h2>
                             <br>
                             <form id="validation_form">
-                            <input type="hidden" name="id" id="function_ad_id" value="{{ @$problemreplaced->id }}">
+                            <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                            <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
                             <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
                             <input type="hidden" name="project_id" value="{{ $project_id }}">
                             <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
                             <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
-                            <input type="hidden" name="fileType" id="fileType">
-                            <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
-                            <input type="hidden" name="verification_type_id" id="verification_type_id" value="{{ @$verificationType->id }}">
-                            <input type="hidden" name="name"  value="taking_advantegs">
+                            <input type="hidden" name="name" id="name_" value="averaging_approach">
                                 
                                 <h5>Do you understand that the only advantage that exists is to solve the underlying problem?  </h5>
                                 <ul class="validate_que" style="list-style:none;">
@@ -201,7 +196,7 @@
 
 @endsection
 @section('css')
-<link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+
 <style>
     .entity{
         display: flex;
@@ -260,10 +255,14 @@
     .redText{
         color: red;
     }
+    .carousel{
+        height :auto;
+        min-height: 258px;
+    }
 </style>
 @endsection
 @section('scripts')
-<script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+
 <script>
    
 $('#verification_types').on('change',function(){
@@ -317,72 +316,6 @@ $('.dashboard').click(function(){
 
 })
 </script>
-<script>
-function calculte(){
-    var solval = $('#sol_val').val();
-    var problempart = Math.round(solval/2);
-     $('#problem_part_front , #problem_parts').val(problempart);
-     $('#result').val(2);
-
-}
-//sol-fun-av
-$(document).on('click','#replace_sol',function(e){
-       e.preventDefault();
-       var fd = new FormData($('#replace-problem')[0]);
-       $.ajaxSetup({
-       headers: {
-                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-               }
-       });
-       
-       $.ajax({
-           url: "{{route('adult.replace-problem-by-problem')}}",
-           data: fd,
-           processData: false,
-           contentType: false,
-           dataType: 'json',
-           type: 'POST',
-           beforeSend: function(){
-             $('#btnSave').attr('disabled',true);
-             $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-           },
-           error: function (xhr, status, error) {
-               $('#btnSave').attr('disabled',false);
-               $('#btnSave').html('Submit');
-               $.each(xhr.responseJSON.data, function (key, item) {
-                   toastr.error(item);
-               });
-           },
-           success: function (response){
-             if(response.success == false)
-             {
-                 $('#btnSave').attr('disabled',false);
-                 $('#btnSave').html('Login');
-                 var errors = response.data;
-                 $.each( errors, function( key, value ) {
-                     toastr.error(value)
-                 });
-             } else {
-                
-                 toastr.success(response.message);
-                 location.reload()
-                //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                //  }else{
-
-
-                    
-                    // window.location.href = "{{ route('adult.dashboard')}}"
-                //  }
-                 
-              }
-           }
-       });
-   });
-
-</script>
-
-
 
 
 @endsection

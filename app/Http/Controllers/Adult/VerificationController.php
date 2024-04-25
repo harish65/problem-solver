@@ -7,6 +7,7 @@ use App\Http\Controllers\BaseController as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Problem;
+use App\Models\Project;
 use App\Models\Solution;
 use App\Models\SolutionType;
 use App\Models\SolutionFunction;
@@ -19,6 +20,7 @@ use App\Models\ErrorCorrection;
 use App\Models\BeforeAndAfter;
 use App\Models\PastAndPresentTime;
 use App\Models\Customer;
+use App\Models\TimeVerification;
 use DB;
 use Auth;
 use Redirect;
@@ -28,29 +30,27 @@ class VerificationController extends BaseController
 {
     public function index($data = null, $type = null)
     {
+        
         $params = Crypt::decrypt($data);
         $problem_id = $params["problem_id"];
         $project_id = $params["project_id"];
-
-        if ($problem_id == "") {
-            return Redirect::back()->withErrors([
-                "msg" =>
-                    "Verificatioon must have Solution function identified.",
-            ]);
+       
+        if ($problem_id == "" && $project_id  != '') {
+            $problem_id = Problem::where("project_id", "=", $project_id)->where('user_id' , Auth::user()->id)->pluck('id')->first();
         }
-
         $verificationType = null;
         $verifiationTypeText = null;
         $verification = null;
         $entity = null;
         //get problem
+        
         $problem = Problem::where("id", "=", $problem_id)->first();
-
         if ($problem) {
             $problem_name = $problem->name;
         }
         //get solution
         $solution = Solution::where("problem_id", "=", $problem_id)->first();
+       
         //get solution function
         $Solution_function = SolutionFunction::where(
             "problem_id",
@@ -107,7 +107,9 @@ class VerificationController extends BaseController
         $solutionTypes = DB::table("solution_types")->get();
 
         $types = VerificationType::orderBy("id", "asc")->get();
-        
+        $custommers = DB::table("customers")
+                    ->where("project_id", "=", $project_id)
+                    ->get();
         switch ($type) {
             case 1:
                 return view("adult.verification.view.vocabulary-content", [
@@ -203,16 +205,13 @@ class VerificationController extends BaseController
                         "solution_id",
                         "Solution_function",
                         "verifiationTypeText",
-                        "entity"
+                        "entity" , "custommers"
                     )
                 );
                 break;
             case 5:
-                $allVarifications = Verification::where(
-                    "verification_type_id",
-                    "=",
-                    5
-                )->get();
+                $timeVerifications =  TimeVerification::where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->get();
+            
                 if (!$verification) {
                     $verification = Verification::where(
                         "verification_type_id",
@@ -225,6 +224,7 @@ class VerificationController extends BaseController
                         );
                     }
                 }
+               
                 return view(
                     "adult.verification.view.time-verification-content",
                     compact(
@@ -239,7 +239,7 @@ class VerificationController extends BaseController
                         "Solution_function",
                         "verifiationTypeText",
                         "entity",
-                        "allVarifications"
+                        "timeVerifications"
                     )
                 );
                 break;
@@ -273,6 +273,7 @@ class VerificationController extends BaseController
                 );
                 break;
             case 7:
+               
                 $givenSet = DB::table("verifications")
                     ->where("verification_type_id", "=", 14)
                     ->first();
@@ -287,6 +288,10 @@ class VerificationController extends BaseController
                 $allVarifications = DB::table("principle_identification")
                     ->where("type", "=", $principle_identification_type)
                     ->get();
+
+                $content =     DB::table("principle_identification_drived_principle")
+                ->where("project_id", $project_id)->where('user_id' , Auth::user()->id)
+                ->first();
                 
                 return view(
                     "adult.verification.view.entity-content",
@@ -304,7 +309,7 @@ class VerificationController extends BaseController
                         "givenSet",
                         "entities",
                         "entitiesAvailable",                        
-                        "allVarifications"
+                        "allVarifications" , "content"
                     )
                 );
                 break;
@@ -414,10 +419,13 @@ class VerificationController extends BaseController
                 $communications = DB::table('people_communication_flow')
                         ->select('people_communication_flow.*' , 'customers.name AS customer_name' )
                         ->leftJoin('customers', 'people_communication_flow.customer_id', '=', 'customers.id')
-                        ->where('people_communication_flow.user_id' , Auth::user()->id)->where('people_communication_flow.project_id' , $project_id)->where('people_communication_flow.problem_id' , $problem_id)
+                        ->where('people_communication_flow.user_id' , Auth::user()->id)
+                        ->where('people_communication_flow.project_id' , $project_id)
+                        ->where('people_communication_flow.problem_id' , $problem_id)
+                        
                         
                         ->get();
-            
+          
                 return view(
                     "adult.verification.view.people-communication-content",
                     compact(
@@ -439,9 +447,13 @@ class VerificationController extends BaseController
 
 
                 $users = DB::table('customers')
-                        ->select('customers.*' , 'people_communication_flow.title' ,  'people_communication_flow.comment')
+                        ->select('customers.*' , 'people_communication_flow.*')
                         ->leftJoin('people_communication_flow', 'customers.id', '=', 'people_communication_flow.customer_id')
                         ->where('customers.project_id' , $project_id)
+                        ->whereNotNull('people_communication_flow.comment')
+                        ->get();
+                $customers = DB::table("customers")
+                        ->where("project_id", "=", $project_id)
                         ->get();
 
                    
@@ -457,7 +469,7 @@ class VerificationController extends BaseController
                         );
                     }
                 }
-              
+                // echo '<pre>';print_r($users);die;
                 return view(
                     "adult.verification.view.communication-flow-content",
                     compact(
@@ -471,12 +483,12 @@ class VerificationController extends BaseController
                         "solution_id",
                         "Solution_function",
                         "verifiationTypeText",
-                        "users"
+                        "users" , "customers"
                     )
                 );
                 break;
             case 13:
-                $entities = DB::table("partition_approach")->get();
+                $entities = DB::table("partition_approach")->where('user_id' , Auth::user()->id)->get();
                 if (!$verification) {
                     $verification = Verification::where(
                         "verification_type_id",
@@ -513,7 +525,7 @@ class VerificationController extends BaseController
                 )->get();
                 $users = DB::table("customers")
                     ->where("project_id", "=", $project_id)
-                    ->first();
+                    ->get();
                    
                 if (!$verification) {
                     $verification = Verification::where(
@@ -527,6 +539,7 @@ class VerificationController extends BaseController
                         );
                     }
                 }
+                $content =  DB::table('principle_identification_drived_principle')->where('project_id' , $project_id)->where('problem_id' , $problem_id)->where('user_id' , Auth::user()->id)->first();
                 
                 return view(
                     "adult.verification.view.principle-identification-content",
@@ -542,7 +555,8 @@ class VerificationController extends BaseController
                         "Solution_function",
                         "verifiationTypeText",
                         "allVarifications",
-                        "users"
+                        "users" , 
+                        "content"
                     )
                 );
                 break;
@@ -567,7 +581,7 @@ class VerificationController extends BaseController
                     }
                 }
 
-                $problemDevelopment = DB::table('problem_development')->get();
+                $problemDevelopment = DB::table('problem_development')->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->get();
 
 
                 return view(
@@ -612,13 +626,13 @@ class VerificationController extends BaseController
                         )->first();
                     }
                     
-                    $errorcorrection = DB::table('error_correction')->get();
-                   
-
-                    $problemDevelopment = db::table('problem_development')->select('problem_development.*' , 'error_correction.compensator' ,'error_correction.compensator_date' , 'error_correction.id as error_correction_id' )
+                    $errorcorrection = DB::table('error_correction')->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->get();
+                    $problemDevelopment = db::table('problem_development')
+                                        ->select('problem_development.*' , 'error_correction.compensator' ,'error_correction.compensator_date' , 'error_correction.id as error_correction_id' )
                                         ->leftJoin('error_correction', 'problem_development.id', '=', 'error_correction.error_id')
+                                        ->where('problem_development.project_id' , $project_id)->where('problem_development.user_id' , Auth::user()->id)
                                         ->get();
-                      
+                           
                           
                     return view(
                         "adult.verification.view.error-correction-approach",
@@ -717,12 +731,11 @@ class VerificationController extends BaseController
                             
                             $errorcorrection = DB::table('error_correction')->get();
                             $people = db::table('function_belong_to_people')->select('function_belong_to_people.*' , 'customers.name' )
-                            ->leftJoin('customers', 'function_belong_to_people.customer_id', '=', 'customers.id')
-                            ->where('function_belong_to_people.problem_id' , $problem_id)->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , Auth::user()->id)->get();
-        
-                            $problemDevelopment = db::table('problem_development')->select('problem_development.*' , 'error_correction.compensator' )
-                                                ->leftJoin('error_correction', 'problem_development.id', '=', 'error_correction.error_id')
-                                                ->get();
+                                        ->leftJoin('customers', 'function_belong_to_people.customer_id', '=', 'customers.id')
+                                        ->where('function_belong_to_people.problem_id' , $problem_id)
+                                        ->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , Auth::user()->id)->get();
+                            
+                            
                             $functionAud  = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
                                
                             return view(
@@ -740,7 +753,7 @@ class VerificationController extends BaseController
                                     "verifiationTypeText",
                                     "allVarifications",
                                     "custommers",
-                                    'errorcorrection','problemDevelopment','functionAud','people'
+                                    'errorcorrection','functionAud','people'
                                 )
                             );
                             break;
@@ -797,7 +810,7 @@ class VerificationController extends BaseController
                                     $allVarifications = DB::table(
                                         "principle_identification"
                                     )->get();
-                                    
+                                   
                                     if (!$verification) {
                                         $verification = Verification::where(
                                             "verification_type_id", "=", 16
@@ -807,6 +820,7 @@ class VerificationController extends BaseController
                                                 $verification->validations
                                             );
                                         }
+                                        
                                     }
                                     if(!$verificationType){
                                         $verificationType = VerificationType::where(
@@ -815,7 +829,7 @@ class VerificationController extends BaseController
                                     }
                                     $problemPart = DB::table("averaging_approach")->select('problem_part' , 'id') ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
                                    
-                                    // echo "<pre>";print_r($problemPart);die;
+                                    
                                     return view(
                                         "adult.verification.view.average-aparoach-calculation",
                                         compact(
@@ -985,8 +999,9 @@ class VerificationController extends BaseController
                                                         }
                                                     }
                                                     $entities = DB::table("entity_available")
-                                                    ->where("type", "=", 0)
-                                                    ->where("user_id", "=", Auth::user()->id)
+                                                        ->where("type", "=", 0)
+                                                        ->where("user_id", "=", Auth::user()->id)
+                                                        ->where("project_id", $project_id)
                                                     ->get();
 
                                                     $entitiestbl = DB::table("entities")->get();
@@ -1599,6 +1614,7 @@ class VerificationController extends BaseController
 
     public function storeTimeVerification(Request $request)
     {
+        
         $validator = Validator::make($request->all(), [
             "date" => "required",
             "solution_hold" => "required",
@@ -1607,23 +1623,19 @@ class VerificationController extends BaseController
             return $this->sendError("Validation Error.", $validator->errors());
         }
 
+        // echo "<pre>";print_r());die;
         try {            
-            if ($request->verification_id == "") {
-                $verification = new Verification();
+            if ($request->id == "") {
+                $verification = new TimeVerification();
             } else {
-                $verification = Verification::find($request->verification_id);
+                $verification = TimeVerification::find($request->id);
             }
-
-            $verification->name = "time-verification";
             $verification->user_id = Auth::user()->id;
+            $verification->project_id = $request->project_id;
             $verification->problem_id = $request->problem_id;
-            $verification->verification_type_id =  $request->verification_type_id;
-            $verification->solution_id = $request->solution_id;
-            $verification->solution_function_id = $request->solution_function_id;
-            $verification->verification_type_text_id = 1; //static
-            $verification->type = 0;
-            $verification->key = strtotime($request->date);
-            $verification->val = $request->solution_hold;
+            $verification->date = date('Y-m-d H:i:s',strtotime($request->date));
+
+            $verification->solution_hold = $request->solution_hold;
             $verification->save();
             if ($verification->id) {
                 $success["verification"] = $verification;
@@ -1640,7 +1652,7 @@ class VerificationController extends BaseController
     {
         try {
             //echo "<pre>";print_r($request->all());die;
-            $delete = Verification::where("id", "=", $request->id)->delete();
+            $delete = TimeVerification::where("id", "=", $request->id)->delete();
             if ($delete) {
                 $success["delete_verification"] = true;
                 return $this->sendResponse(
@@ -1772,12 +1784,27 @@ class VerificationController extends BaseController
 
     public function storePricipleIdentification(Request $request)
     {
+       
         if (isset($request->content) && $request->content !== "") {
-            $verification = DB::table("principle_identification")->update([
-                "content" => $request->content,
-            ]);
+           
+            $data = $request->all();
+            $insert = DB::table("principle_identification_drived_principle")->updateOrInsert(
+                    ["id" => $request->content_id],
+                    [
+                        "user_id"=> Auth::user()->id,
+                        "project_id" => $data["project_id"],
+                        "problem_id" => $data["problem_id"],
+                        "solution_function_id" => $data["solution_fun_id"],
+                        "solution_id" => $data["solution_id"],
+                        "content"=> $data["content"]
+                        
+                        
+                    ]
+                );
+
             return Redirect::back()->withSuccess(["msg" => "The Message"]);
         }
+        
         $validator = Validator::make($request->all(), [
             "applicable" => "required",
         ]);
@@ -1785,6 +1812,8 @@ class VerificationController extends BaseController
             return $this->sendError("Validation Error.", $validator->errors());
         }
         try {
+           
+
             $verification = DB::table("principle_identification")
                 ->where("id", "=", $request->pricple_identify_id)
                 ->update(["applicable" => $request->applicable]);
@@ -2022,7 +2051,7 @@ class VerificationController extends BaseController
 
     public function createPartitionApproach(Request $request)
     {
-        // echo "<pre>";print_r($request->all());die;
+       
         $validator = Validator::make($request->all(), [
             "word" => "required",
             "given" => "required",
@@ -2036,7 +2065,9 @@ class VerificationController extends BaseController
             $insert = DB::table("partition_approach")->updateOrInsert(
                 ["id" => $request->id],
                 [
+                    "user_id" => Auth::user()->id,
                     "verification_type_id" => 13,
+                    'project_id' => $data["project_id"],
                     "word" => $data["word"],
                     "given" => $data["given"],
                     "solution_id" => $data["solution_id"],
@@ -2060,9 +2091,9 @@ class VerificationController extends BaseController
     {
         try {
             $input = $request->all();
-            
+           
             $verification = Verification::find($input["id"]);
-
+           
             // unset($input["id"]);
             // unset($input["id"]);
             if (!$verification) {
@@ -2075,11 +2106,13 @@ class VerificationController extends BaseController
                 $verification->user_id = Auth::user()->id;
                 $verification->name = $input["name"];
             }else{
+                
                 $verification = Verification::Find($input["id"]);
             
             }
-
+            
             $verification->validations = json_encode($input);
+            
             $verification->save();
             $success["verification"] = $verification;
             return $this->sendResponse(
@@ -2186,6 +2219,7 @@ class VerificationController extends BaseController
                 [
                     "problem_id" => $data["problem_id"],
                     "project_id" => $data["project_id"],
+                    "user_id" => Auth::user()->id,
                     "verification_type_id" => 15,
                     "error_name" => $data["error_name"],
                     "error_date" =>  date('Y-m-d H:i:s',strtotime($data["error_date"])),
@@ -2284,16 +2318,21 @@ class VerificationController extends BaseController
     public function feedbackIdentification(Request $request){
         $params = $request->all();
         
-        $problemDevelopment = DB::table('problem_development')->get();
+        $project_id = $params['project_id'];
+        $problem_id = $params['problem_id'];
+        $problemDevelopment = DB::table('problem_development')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->get();
         
         $feedBack = db::table('feedback_identifications')->select('feedback_identifications.*' , 'problem_development.error_name' )
                     ->leftJoin('problem_development', 'feedback_identifications.error_id', '=', 'problem_development.id')
+                    ->where('feedback_identifications.user_id' , Auth::user()->id)
+                    ->where('feedback_identifications.project_id' , $project_id)
                     ->get();
         
-        return view("adult.verification.view.feed-back-identification" , compact("problemDevelopment" , "feedBack" , 'params' ));
+        return view("adult.verification.view.feed-back-identification" , compact("problemDevelopment" , "feedBack" , 'params' ,'problem_id' , 'project_id' ));
     }
 
     public function storeFeedbackIdentification(Request $request){
+       
         $validator = Validator::make($request->all(), [
             "error" => "required",
             "feedback" => "required",
@@ -2303,6 +2342,7 @@ class VerificationController extends BaseController
         if ($validator->fails()) {
             return $this->sendError("Validation Error.", $validator->errors());
         }
+        
         try {
             $data =  $request->all();
             $insert = DB::table(
@@ -2313,7 +2353,9 @@ class VerificationController extends BaseController
                     "error_id" => $data["error"],
                     "feedback" => $data["feedback"],
                     "feedback_date" => date('Y-m-d H:i:s', strtotime($data["date"])),
-                    "user_id" => $data["from-person"]
+                    "user_id" => Auth::user()->id,
+                    "from_person" => $data["from-person"],
+                    "project_id" => $data["project_id"] 
                 ]
             );
             $success["entity"] = $insert;
@@ -2352,10 +2394,11 @@ class VerificationController extends BaseController
     public function errorCorrection(Request $request){
         
         $params = $request->all();
-        $problemDevelopment = DB::table('problem_development')->get();
-        $compensators = DB::table('error_correction')->get();
-        $feedBack = DB::table('feedback_identifications')->get();
-        $error_correction_type = db::table('error_correction_type')->get();
+        $project_id = $params['project_id'];
+        $problemDevelopment = DB::table('problem_development')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->get();
+        $compensators = DB::table('error_correction')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->get();
+        $feedBack = DB::table('feedback_identifications')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->get();
+        $error_correction_type = db::table('error_correction_type')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->get();
         
              $errors = []; 
              $compensator = [];  
@@ -2379,7 +2422,7 @@ class VerificationController extends BaseController
             
             //compensator
             $errorcorrection->compensator =  json_decode($errorcorrection->compensator);
-            $compensator_ids = DB::table('error_correction')->whereIn('id' , $errorcorrection->compensator)->get();
+            $compensator_ids = DB::table('error_correction')->whereIn('id' , $errorcorrection->compensator)->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->get();
             
             
             
@@ -2390,7 +2433,7 @@ class VerificationController extends BaseController
                     $compensator[$index_]['compensator'] = $compensator_id->compensator;
                     $compensator[$index_]['feedback'] = $errorcorrection->feedback;
                     $compensator[$index_]['feedback_applied'] = $errorcorrection->feedback_applied;
-                    $compensator[$index_]['error_name'] = $pds->error_name;
+                    // $compensator[$index_]['error_name'] = $errorcorrection->error_name;
                     $index_++;
                 }
                 
@@ -2401,15 +2444,11 @@ class VerificationController extends BaseController
         
 
         
-        $errorcorrections = db::table('error_correction_type')
-        // ->select('error_correction_type.*' , 'problem_development.error_name' , 'feedback_identifications.feedback as feedback_given' )
-        // ->leftJoin('problem_development', 'error_correction_type.error', '=', 'problem_development.id')
-        // ->leftJoin('error_correction', 'error_correction_type.error', '=', 'error_correction.id')
-        // ->leftJoin('feedback_identifications', 'error_correction_type.feedback', '=', 'feedback_identifications.error_id')
-        ->get();
+        $errorcorrections = db::table('error_correction_type')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->get();
+       
         //  echo "<pre>";print_r($errorcorrections);die;
                
-        return view("adult.verification.view.error-corection" ,  compact("problemDevelopment" ,"compensators" , "feedBack" , "errorcorrections" , "errors" , "compensator" ,'params'));
+        return view("adult.verification.view.error-corection" ,  compact("problemDevelopment" ,"compensators" , "feedBack" , "errorcorrections" , "errors" , "compensator" ,'params' ,'project_id'));
     }
 
 
@@ -2444,7 +2483,9 @@ class VerificationController extends BaseController
                     "error" => $error,
                     "compensator" => $compensator,
                     "feedback" => $data["feedback"],
-                    "feedback_applied" => $data["feedback_applied"]
+                    "feedback_applied" => $data["feedback_applied"],
+                    "user_id" => Auth::user()->id,
+                    "project_id" => $data["project_id"] 
                 ]
             );
             $success["error"] = $insert;
@@ -2668,9 +2709,10 @@ class VerificationController extends BaseController
 
     public function deletePeopleFromProject(Request $request){
         try {            
-            
+            $deletCommunication  = DB::table('people_communication_flow')->where('customer_id' , $request->id)->orWhere('person_to' , $request->id)->delete();
             $delete = Db::table('customers')->where("id", "=", $request->id)
                 ->delete();
+
             if ($delete) {
                 $success["delete_verification"] = true;
                 return $this->sendResponse(
@@ -2687,5 +2729,8 @@ class VerificationController extends BaseController
             ]);
         }
     }
+
+
+    
 
 }

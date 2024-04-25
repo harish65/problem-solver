@@ -120,6 +120,7 @@ $(document).ready(function () {
     }
 
     var hrefverification = localStorage.getItem("varification");
+    
     if (typeof hrefverification !== 'undefined') {
         $('.nav-varification').attr('href', hrefverification)
     }

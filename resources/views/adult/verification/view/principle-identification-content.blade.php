@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+<?php $ShowMessage =  true; ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -43,25 +43,39 @@
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
+                @if($users->count() > 0)
+                <?php $ShowMessage =  false; ?>
                 <div class="principleRelation">
                     <div class="conditionBlock">
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
                                 <h2>People</h2>
                                 <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto"
-                                            src="{{ asset('assets-new/users/'.@$users->file)}}" width="100%"
-                                            height="128px">
-                                    </div>
-                                    <p class="redText" style="color:red">{{ @$users->type }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date"></p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                <div class="imgWrp">
+                                        <div id="myCarousel" class="carousel slide " data-ride="carousel">
+                                            <div class="carousel-inner" role="listbox">
+                                                @php $index = 1; @endphp
+                                                @foreach($users as $entity)
+                                                    <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
+                                                        <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">
+                                                        <div class="carousel-caption custom">{{ $entity->name }}</div>
+                                                    </div>
+                                                    @php $index++; @endphp
+                                                @endforeach 
+                                            </div>
+                                            <ol class="carousel-indicators custom">
+                                                @php $index = 0; @endphp
+                                                    @foreach($users as $entity)
+                                                            <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
+                                                    @php $index++; @endphp
+                                                @endforeach 
+                                            </ol>
+                                        </div>
+                                    
                                 </div>
                             </div>
                         </div>
+                    </div>
                         <div class="long-arrow">
                             <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
                             <!-- add arrow Image over here -->
@@ -174,12 +188,12 @@
                                                     <td>{{ $data->number }}</td>
                                                     <td>{{ $data->text }}</td>
                                                     <td> {{ ($data->applicable == 0) ? 'YES' :'NO'   }}</td>
-                                                    <td> <a href="javaScript:Void(0)" class="editEntity"
-                                                        data-id="{{ $data->id }}"
-                                                        data-priciple="{{ $data->text }}"
-                                                        data-applicable="{{ $data->applicable }}"
-                                                        data-number="{{ $data->number }}"
-                                                        >
+                                                    <td> <a href="javascript:void(0)" class="editEntity"
+                                                                    data-id="{{ $data->id }}"
+                                                                    data-priciple="{{ $data->text }}"
+                                                                    data-applicable="{{ $data->applicable }}"
+                                                                    data-number="{{ $data->number }}"
+                                                                    >
                                                                 <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
                                                         </a>
                                                     </td>
@@ -199,8 +213,14 @@
                         
                         <form id="content" action="{{ url('adult/store-priciple-identification')}}" method="post">
                             @csrf
+                            <input type="hidden" name="content_id" value="{{ @$content->id}}">
+                            <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                            <input type="hidden" name="project_id" value="{{ $project_id }}">
+                            <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                            <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                            
                                 <div class="row">
-                                    <textarea name="content"> {{ @$allVarifications[0]->content }}</textarea>
+                                    <textarea name="content">{{ @$content->content }}</textarea>
                                 </div>
                                 
                                 <div class="row mt-3 text-right">
@@ -226,9 +246,11 @@
                         </form>
                         </div>
                         
-                    </div>
                 </div>
-                <!-- End -->
+                @endif
+                <!-- End principleRelation-->
+            </div>
+                <!-- End row-->
                 
             </div>
         </div>
@@ -291,6 +313,10 @@
         font-size: 24px;
         line-height: 29px;
         color: #000000;
+    }
+    .carousel{
+        height :auto;
+        min-height: 258px;
     }
 </style>
 @endsection
@@ -392,7 +418,8 @@ $('.validation').on('change',function(){
 //.editSolFunBtn
 
 $('.editEntity').click(function(){
-    $('#pricple_identify_id').val($(this).attr('data-id'))
+    
+    $('#pricple_identify_id').val($(this).data('id'))
     var counter = $(this).attr('data-number') + '.  ' + $(this).attr('data-priciple')
     $('#principle').val(counter)
     if($(this).attr('data-applicable')){
@@ -522,5 +549,18 @@ $('.editEntity').click(function(){
       plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
       toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
     });
+
+    var ShowMessage =  "{{$ShowMessage}}";
+        if(ShowMessage){
+            
+        swal({
+            title: "Information",
+            text: 'People in project are must be identified before Identification of principle.Pricnciple ',
+            type: "Error",
+            showCancelButton: true,
+            confirmButtonColor: '#00A14C',
+        });
+    
+        }
   </script>
 @endsection

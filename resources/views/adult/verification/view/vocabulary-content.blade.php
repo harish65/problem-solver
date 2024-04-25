@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
-
+@php $showMessage = true @endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -30,6 +30,7 @@
         </div>
     </div>
     @if(@$verification->id)
+    
     <!-- Content Section Start -->
     <div class="relationshipContent">
         <div class="container">
@@ -234,18 +235,28 @@
 @include('adult.verification.modal.voucablary.entity.create')
 @include('adult.verification.modal.voucablary.delete-verification')
 @include('adult.verification.modal.voucablary.edit-verification')
-
+<?php $showMessage =  false; ?>
 @else
-<div class="relationshipContent" style="height: 280px;">
+
+<div class="relationshipContent">
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <button class="btn btn-success" id="add-varification-button"><i class="fa fa-plus"></i>  Create Verificatoin</button>
+                <h1>{{ @$verificationType->page_main_title }}</h1>
+                <div class="relationImage text-center">
+                <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />                        
                 </div>
                 
             </div>
+            <div class="col-sm-12">
+                <button class="btn btn-success" id="add-varification-button"><i class="fa fa-plus"></i> Create Verificatoin</button>
+            </div>
+            </div>
         </div>
-    </div>
+        
+</div>
+
+   
 @include('adult.verification.modal.voucablary.add-verification')
 @endif
     <!-- Modal End -->
@@ -272,6 +283,7 @@
 </style>
 @endsection
 @section('scripts')
+
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
 <script>
    
@@ -377,6 +389,7 @@ $('#saveValidations').on('click',function(){
             toastr.error('Please select verification type first');
             return false;
         }
+       
         $('#createVerification').modal('toggle')
    })
 
@@ -750,6 +763,20 @@ $('.editVocabularyBtn').click(function(){
                }
            });
      });
-
+     
+    var showMessage = "{{$showMessage}}"
+    var text_ = 'The solution of a problem is given with its own vocabulary.  If the problem has not been identified as well as its solution, then the vocabulary of that solution is not present.  Please, identify the problem ant the solution in order to verify the vocabulary for the solution.'
+     if(showMessage){
+    //   function showMessage (){  
+        swal({
+            title: "Vocabulary",
+            text: text_,
+            type: "Error",
+            showCancelButton: true,
+            confirmButtonColor: '#00A14C',
+        });
+    }
+    // }
 </script>
+
 @endsection

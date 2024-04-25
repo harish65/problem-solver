@@ -2,6 +2,7 @@
 @section('title', 'Home | Admin')
 
 @section('content')
+<?php $showMessage =  false; ?>
 <div class="container">
 
     <div class="row spl-row">
@@ -20,6 +21,7 @@
             </p>
         </div>
                         <?php 
+                        
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                         ?>
@@ -131,7 +133,7 @@
             </table>
         </div>
     </div>
-
+    
 
 
     <div class="row pt-5">
@@ -154,8 +156,6 @@
             </div>
             
         </div>
-    </div>
-    <div class="row pt-5">
         <p>Does the (solution name pull from the database) solve the (problem name pull from the database)?</p>
         <div class="form-group pl-5 pb-5">
             <div class="form-check">
@@ -171,7 +171,11 @@
             </div>
             
         </div>
+        <div class=" col-sm-3 mb-3">
+            <button type="button" class="btn btn-success" id="saveValidations" onclick='saveValidations()'>Save Validations</button>
+        </div>
     </div>
+   
 
 
 
@@ -182,6 +186,7 @@
                 <button class="btn btn-success" data-toggle="modal" data-target="#add-sol-modal" type="button" id="add-solution">Add Solution</button>
             </div>
     </div>
+    <?php $showMessage =  true; ?>
 @endif 
 
 
@@ -207,7 +212,19 @@
 
 @section('scripts')
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
-
+<script>
+    var shoMessage = '{{ $showMessage }}'
+        if(shoMessage){
+            var solutionMsg = "A project is created to solve a problem.  A solution of problem is identified in that project to solve the identified problem.  Please, go back to open/create a project before identifying the solution for the problem"
+            swal({
+            title: "No Solution Created",
+            text: solutionMsg,
+            type: "info",
+            showCancelButton: true,
+            confirmButtonColor: '#00A14C',
+            })
+        }
+    </script>
 <script>
     $('.dropify').dropify();
     $(".solutionType").change(function(){
@@ -414,8 +431,13 @@ $('.validation').on('change',function(){
 
         })
 
-
+       
 
    })
+   function saveValidations(){
+            toastr.success('Validations Saved');
+            location.reload();
+
+        }
 </script>
 @endsection

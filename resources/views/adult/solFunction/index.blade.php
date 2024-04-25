@@ -2,6 +2,7 @@
 @section('title', 'Solution Function | Adult')
 
 @section('content')
+
     <div class="min-height-200px">
         <div class="card-box pd-20 height-100-p mb-30">
             <div class="row align-items-center">
@@ -12,10 +13,19 @@
                     <h4 class="font-20 weight-500 mb-10 text-capitalize">
                         Welcome back <div class="weight-600 font-30 text-blue" style="display: inline-block">{{ Auth::user() -> name}}</div>
                     </h4>
-                    <p class="font-18 max-width-600">This is Solution Function panel</p>
+                    <p class="font-18 max-width-600">This is Solution Function panel </p>
                 </div>
             </div>
         </div>
+        <?php 
+        
+                            $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
+                            $parameter =  Crypt::encrypt($parameters);
+                        ?>
+                            <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
+                            <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
+                            <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
+                            <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>
         <div class="pd-20 bg-white border-radius-4 box-shadow mb-30">
             <div class="row clearfix progress-box">
 
@@ -127,13 +137,13 @@
 							<span class="d-block text-primary"><i class="icon-copy dw dw-support-1"></i> {{ $item -> user -> name }} </span>
 							<div class="btn-group mb-15">
 								<button type="button" data-toggle="tooltip" title="Edit" class="btn btn-sm btn-light float-left updateSolFunctionBtn" 
-								data-id="{{ $item -> id }}"
-                                data-type="{{ $item -> type }}"
-								data-file="{{ $item -> file }}"
-								data-problem="{{ $item -> problem_id }}"
-								data-solution="{{ $item -> solution_id }}"
-								data-solfunction="{{ $item -> solution_function_type_id }}"
-								data-name="{{ $item -> name }}"
+                                                    data-id="{{ $item -> id }}"
+                                                    data-type="{{ $item -> type }}"
+                                                    data-file="{{ $item -> file }}"
+                                                    data-problem="{{ $item -> problem_id }}"
+                                                    data-solution="{{ $item -> solution_id }}"
+                                                    data-solfunction="{{ $item -> solution_function_type_id }}"
+                                                    data-name="{{ $item -> name }}"
 								><i class="icon-copy fa fa-edit" aria-hidden="true"></i></button>
 								<button type="button" data-toggle="tooltip" title="Delete" class="btn btn-sm btn-light float-right delSolFunctionBtn" data-id="{{ $item -> id }}"><i class="icon-copy fa fa-trash" aria-hidden="true"></i></button>
 							</div>
@@ -477,7 +487,41 @@
 		@csrf
 	</form>
     @endif
+    @section('scripts')
+    <script>
+    $('.nav-problem').click(function(){
+    $(this).attr('href' , ''); 
+    localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));   
+    $(this).attr('href' ,$('#problem_nav').attr('href'))
+    })
+    $('.nav-solution').click(function(){
+        $(this).attr('href' , ''); 
+        localStorage.setItem("sol", $('#solution_nav').attr('href'));   
+        $(this).attr('href' ,$('#solution_nav').attr('href'))
+    })
+    $('.nav-solution-func').click(function(){
+        $(this).attr('href' , '');
+        localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
+        $(this).attr('href' ,$('#solution_fun_nav').attr('href'))
+    })
 
+
+    $('.dashboard').click(function(){
+        //Solution
+        $('.nav-solution').attr('href' , '');
+        localStorage.setItem("sol", $('#solution_nav').attr('href'));   
+        $('.nav-solution').attr('href' ,$('#solution_nav').attr('href'))
+        //Problem
+        $('.nav-problem').attr('href' , '');
+        localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));       
+        $('.nav-problem').attr('href' ,$('#problem_nav').attr('href'))
+        //Sol fun
+        $('.nav-solution-func').attr('href' , '');
+        localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
+        $('.nav-solution-func').attr('href' ,$('#solution_fun_nav').attr('href'))
+
+    })
+    </script>
     <script>
         $(document).ready(function(){
             $("#createSolFunctionBtn").click(function(){

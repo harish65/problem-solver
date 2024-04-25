@@ -795,3 +795,26 @@ button.btn.btn-primary.login-btn a {
     border-bottom: 1px solid rgba(0, 161, 76, 0.5);
     border-radius: 0 0 10px 10px;
 }
+.swal-text{
+    color: #000;
+    font-size:20px;
+}
+
+
+
+.carousel-caption{
+        
+    position: relative;
+    padding-bottom: 0px !important;
+    padding-top: 10% !important;
+    color: #000;
+    text-align: center;
+    left: 0%;
+    margin-top: 15%;
+}
+.projectBlock.text-center.sepration-step {
+        height:80%;
+}
+.carousel-indicators.custom{
+background-color: #198754;
+}

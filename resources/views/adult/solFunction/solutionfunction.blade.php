@@ -2,6 +2,7 @@
 @section('title', 'Home | Admin')
 
 @section('content')
+<?php $showMessage =  false; ?>
 <div class="container">
     <div class="row spl-row">
         <h4>Solution Function</h4>
@@ -21,11 +22,14 @@
             vulputate velit
         </p>
     </div>
-
+                    
 @if(isset($solFunctions->id))
-                        <?php 
+                        <?php
+                           
                             $parameters = ['project_id' => $project_id , 'problem_id'=> $problem_id , 'solution_id' => $solution_id];
+                            
                             $parameter =  Crypt::encrypt($parameters);
+                            
                         ?>
 
                 <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
@@ -199,7 +203,7 @@
 
         </div>
     </div>
-    <div class="row pt-5">
+    <div class="row">
         <p>Does the solution function enable the solving of the ProblemName?</p>
         <div class="form-group pl-5 pb-5">
             <div class="form-check">
@@ -209,14 +213,18 @@
                 </label>
             </div>
         </div>
+        <div class=" col-sm-3 mb-3">
+            <button type="button" class="btn btn-success" id="saveValidations" onclick='saveValidations()'>Save Validations</button>
+        </div>
     </div>
-    
+
     @else
     <div class="row" style="margin-bottom: 10%;">
         <div class="col-md-6 align-middle">
             <button class="btn btn-success" data-toggle="modal" data-target="#updateSolFunctionModal" type="button" id="add-solution-function">Identity Solution Function</button>
         </div>
     </div>
+    <?php $showMessage =  true; ?>
     @endif
     
 </div>
@@ -228,11 +236,28 @@
 @section('scripts')
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
 <script>
+  function saveValidations(){
+            toastr.success('Validations Saved');
+            location.reload();
 
+        }
 
 $(".dropify").dropify();
 
 </script>
+<script>
+    var shoMessage = '{{ $showMessage }}'
+        if(shoMessage){
+            var solutionMsg = "The solution function for a problem enabled both the problem and the solution to be identified.  If the problem and the solution have not been identified, then there is no solution function for that problem.  Please, refer to the problem and/or solution pages to identify the problem and/or the solution.  Then return here to identify the solution function for the problem."
+            swal({
+            title: "No Solution Function Created",
+            text: solutionMsg,
+            type: "info",
+            showCancelButton: true,
+            confirmButtonColor: '#00A14C',
+            })
+        }
+    </script>
 <script>
     $(".updateSolFunctionType").change(function(){
         var type = $(this).val();
@@ -467,7 +492,7 @@ $('.dashboard').click(function(){
     //verification
     $('.nav-varification').attr('href' , '');
     localStorage.setItem("varification", $('#verification').attr('href'));   
-    $('.nav-varification').attr('href' ,$('#solution_fun_nav').attr('href'))
+    $('.nav-varification').attr('href' ,$('#verification').attr('href'))
 
 })
  </script>

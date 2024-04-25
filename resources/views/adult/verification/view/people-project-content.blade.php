@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+<?php $ShowMessage =  false; ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -48,9 +48,7 @@
                 <div class="blockProblem">
                     <div class="projectBlock text-center">
                       <h2>People</h2>
-                      <div class="projectList text-center"> 
-        
-                                                
+                      <div class="projectList text-center">          
                         <div class="imgWrp">
                             <img class="mx-auto" src="{{ asset('assets-new/users/'.$user->file) }}" width="100%" height="128px">
                         </div>
@@ -68,6 +66,8 @@
                 <div class="modal-btn">
                     <a type="button" href="#" class="btn btn-success float-right mb-3"  id="add_people">+ Add New User</a>
                 </div>
+                @if($users->count() > 0)
+                <?php $ShowMessage =  true; ?>
                 <table class="table slp-tbl text-center">
                     <thead>
                         <tr>
@@ -98,6 +98,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                @endif
             </div>
             <div class="questionWrap">
         
@@ -473,5 +474,17 @@ $('.delProblemBtn').click(function(e){
            }
        });
     })
+    var ShowMessage =  "{{$ShowMessage}}";
+        if(!ShowMessage){
+            
+        // swal({
+        //     title: "People in Project",
+        //     text: 'To solve a problem, the problem must be identified, the solution of that problem, as well as people who are working to solve that problem.  In terms of identification, it is good to show the people who are working in that project to solve that problem.  If the people have not been identified, then it is not possible for them to be identified in a project to work to solve the underlying problem.  Please, refer to the Person/People page to first identify the people before showing them the project.',
+        //     type: "Error",
+        //     showCancelButton: true,
+        //     confirmButtonColor: '#00A14C',
+        // });
+    
+        }
 </script>
 @endsection

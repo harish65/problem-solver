@@ -2,6 +2,7 @@
 @section('title', 'Home | Admin')
 
 @section('content')
+<?php $showMessage =  false; ?>
 <div class="container">
 
     <div class="row spl-row">
@@ -61,6 +62,7 @@
                                                                                     data-type="{{ $problem -> type }}"
                                                                                     data-file="{{ $problem -> file }}"
                                                                                     data-cat="{{ $problem -> category_id }}"
+                                                                                    data-actual_problrm_name = "{{ $problem ->actual_problrm_name}}"
                         >
                             <img src="{{ asset('/assets-new/images/editIcon.png')}}" alt=""/>
                         </a>
@@ -95,7 +97,10 @@
                 <input type="radio" class="form-check-input validation" {{ ($problem->validation == '1') ? 'checked' : ''}} value="1" data-id="{{ $parameter  }}" name="optradio">No, I have not performed analysis to identify the problem correctly
                 </label>
             </div>
-            
+            <div class="row col-sm-3 mt-5">
+                <button type="button" class="btn btn-success" id="saveValidations" onclick='saveValidations()'>Save Validations</button>
+            </div>
+           
         </div>
     </div>
 @else
@@ -104,7 +109,7 @@
                         <button class="btn btn-success" data-toggle="modal" data-target="#add-problem-modal" type="button" id="add-problem">Add Problem</button>
             </div>
     </div>
-
+    <?php $showMessage =  true; ?>
 @endif
  </div>   
 
@@ -128,7 +133,19 @@
 @endsection
 @section('scripts')
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
-
+<script>
+    var shoMessage = '{{ $showMessage }}'
+        if(shoMessage){
+            var solutionMsg = "A project is created to solve a problem.  If the project has not been created, then a problem cannot be identified to be solved.  The way to look at it, a project exists to solve a problem.  Please, go back to open a project or create a project in order to identify the problem to be solved."
+            swal({
+            title: "No Problem Defined",
+            text: solutionMsg,
+            type: "info",
+            showCancelButton: true,
+            confirmButtonColor: '#00A14C',
+            })
+        }
+    </script>
 <script>
     
     $('.dropify').dropify();
@@ -242,7 +259,7 @@
        $("#updateProblemId").val($(this).data("id"));
        $("#updateProblemName").val($(this).data("name"));
        $('#category_id').val($(this).attr('data-cat'))
-
+       $('#actual_problrm_name').val($(this).data("actual_problrm_name"))
        if($(this).data("type") == 2){
            $("#updateProblemType").val("2");
            $("#updateProblemFileType").css("display", "none");
@@ -252,6 +269,7 @@
            $("#updateProblemLinkRadio").attr("checked", true);
 
            $("#updateProblemLinkFile").val($(this).data("file"));
+           
        }else{
            $("#updateProblemType").val("0");
            $("#updateProblemFileType").css("display", "block");
@@ -352,5 +370,10 @@ $('.dashboard').click(function(){
 })
 })
 
+function saveValidations(){
+    toastr.success('Validations Saved');
+    location.reload();
+
+}
 </script>
 @endsection

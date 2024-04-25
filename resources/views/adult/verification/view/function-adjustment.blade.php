@@ -343,9 +343,9 @@ $('#btnSave').click(function(e){
 
    });
    $('.editBtn').click(function(){
-        $('#solution_function').val('{{$Solution_function->id}}')
-        $('#fun_name').val('{{$functionAud->function_name}}')
-        $('#problem_name').val('{{$functionAud->problem_name}}')
+        $('#solution_function').val('{{@$Solution_function->id}}')
+        $('#fun_name').val('{{@$functionAud->function_name}}')
+        $('#problem_name').val('{{@$functionAud->problem_name}}')
         $('#functionAdjutment').modal('toggle')
    })
 

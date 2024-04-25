@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+@php $showMessage = true @endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -44,6 +44,9 @@
                 </div>
                 <!-- start -->
                 <div class="principleRelation">
+                    <!-- Start -->
+                    @if($custommers->count() > 0)
+                    <?php $showMessage = false ?>
                     <div class="conditionBlock-solution">
                         <div class="solutioone-card">
                            <div class="location-card">
@@ -52,46 +55,36 @@
                             </div>
                             <div class="left-side float-left mt-4">
                                 <div class="imgWrp">
-                                    <div id="myCarousel" class="carousel slide " data-ride="carousel">
-                                    <ol class="carousel-indicators">
-                                    @php $index = 0; @endphp
-                                        @foreach($custommers as $entity)
-                                                <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
-                                        @php $index++; @endphp
-                                    @endforeach 
-                                    </ol>
-                                        <div class="imgWrp  carousel-inner" role="listbox">
-                                            @php $index = 1; @endphp
-                                            @foreach($custommers as $entity)
-                                                <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
-                                                    <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">
-                                                </div>
-                                                @php $index++; @endphp
-                                            @endforeach 
-                                        </div>
-                                    </div>
+                                                    <div id="myCarousel" class="carousel slide " data-ride="carousel">
+                                                       
+                                                       <div class="carousel-inner" role="listbox">
+                                                           @php $index = 1; @endphp
+                                                           @foreach($custommers as $entity)
+                                                               <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
+                                                                   <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">                                                                        
+                                                                   <div class="carousel-caption">{{ $entity->name }}</div>
+                                                               </div>                                                                  
+                                                               @php $index++; @endphp
+                                                           @endforeach 
+                                                       </div>                                                  
+                                                       <ol class="carousel-indicators">
+                                                           @php $index = 0; @endphp
+                                                               @foreach($custommers as $entity)
+                                                                       <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
+                                                               @php $index++; @endphp
+                                                           @endforeach 
+                                                       </ol>
+                                                      
+                                                      
+                                                   </div>
                                    
                                 </div>
                                 
                                 <div class="projectList text-center">
-                                    <p class="redText" style="color: red;">Adult</p>
+                                    <p class="redText" style="color: red;"></p>
                                     <p class="date"></p>
                                     <ul>
-                                        <!-- <li>
-                                            <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
-                                                <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a data-id="1" class="editverBtn" title="Delete">
-                                                <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
-                                                    alt=""></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><img
-                                                    src="{{ asset('assets-new/images/uploadIcon.png') }}"
-                                                    alt=""></a>
-                                        </li> -->
+                                        
                                     </ul>
                                 </div>
                             </div>
@@ -164,11 +157,14 @@
                             </div>
                         </div>
                     </div>
+                    @endif
+                    <!-- End  conditionBlock-solution-->
                     <div class="questionWrap">
                         <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
                             tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
                             nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
                             Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
+                            @if($custommers->count() > 0)
                         <div class="row">
                             <div class="title">
                                 <h2>Solution time location1 Identification</h2>
@@ -200,6 +196,7 @@
                                 </table>
                             </div>
                         </div>
+                        @endif
                         <h2>Validation Question</h2>
                         <br>
                         <form id="validation_form">
@@ -244,8 +241,9 @@
 <style>
     .carousel{
         height: 128px;
-        overflow: hidden;
+        /* overflow: hidden; */
         width: 200px;
+        text-align:center;
     }
 </style>
 @endsection
@@ -418,5 +416,17 @@ $('.editverBtn').click(function(){
    $('.carousel').carousel({
         interval: 2000
     })
+
+    var showMessage = "{{$showMessage}}"
+    var text_ = 'The solution of a problem is located farther away from that problem.  In terms of time, we first identify the problem and then the solution of the problem.  We can look at the solution of a problem as our destination to solve that problem.  In terms of time, the problem is where we start and the solution is where we finish.  In order to show the relationship between the time we start and the time we finish, we must first identify the problem then the solution of the problem.  If the problem and the solution have not been identified, then there is no destination to solve that problem.  Please, refer to the problem page and the solution page to identify the problem and the solution in order to show the relationship that we start with problem and we finish with solution.'
+    if(showMessage){
+        swal({
+            title: "Solution Time Location 1 ",
+            text: text_,
+            type: "Error",
+            showCancelButton: true,
+            confirmButtonColor: '#00A14C',
+        });
+    }
 </script>
 @endsection

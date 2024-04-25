@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+@php $showMessage = true @endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -56,6 +56,9 @@
                                 </div>
                             </div>
                             <div class="entity">
+                            <?php $lastDate = null ?>
+                                @if($timeVerifications->count() > 0)
+                                <?php $showMessage =  false; ?>
                                 <table class="table slp-tbl text-center">
                                     <thead>
                                         <th>Date</th>
@@ -63,17 +66,17 @@
                                         <th>Action</th>
                                     </thead>
                                     <tbody>
-                                        <?php $lastDate = null ?>
-                                        @foreach($allVarifications as $varification)
+                                        
+                                        @foreach($timeVerifications as $varification)
                                         <tr>
-                                            <td>{{ date('d/m/Y' , $varification->key)}}</td>
-                                            <td>{{ ($varification->val == 'n') ? 'NO' : 'YES' }}</td>
+                                            <td>{{ date('m/d/Y' , strtotime($varification->date))}}</td>
+                                            <td>{{ ($varification->solution_hold) ? 'Yes' : 'No' }}</td>
                                             <td>
                                                
                                                 <a href="javaScript:Void(0)" class="deleteVoucablaryBtn" data-id="{{  $varification->id }}">
                                                     <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
                                                 </a>
-                                                <a href="javaScript:Void(0)" class="editVocabularyBtn" data-id="{{  $varification->id }}" data-key="{{ date('d/m/Y' ,  $varification->key )}}" data-val="{{ $varification->val }}">
+                                                <a href="javaScript:Void(0)" class="editVocabularyBtn" data-id="{{  $varification->id }}" data-key="{{ date('Y-m-d' ,  strtotime($varification->date) )}}" data-val="{{ $varification->solution_hold }}">
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
                                                 </a>
 
@@ -84,6 +87,7 @@
                                         ?>
                                         @endforeach
                                     </tbody>
+                                    @endif
                                 </table>
                             </div>
                         </div>
@@ -138,17 +142,19 @@
               <input type="hidden" name="verification_type_id" value="{{ $verificationType->id }}">
               <input type="hidden" name="solution_id" value="{{ $solution_id }}">
               <input type="hidden" name="solution_function_id" value="{{ $Solution_function->id }}">
-              <input type="hidden" name="verification_id" id="verification_id" value="">
+              <input type="hidden" name="id" id="id" value="">
               
+              <input type="hidden" name="project_id" id="project_id" value="{{ $project_id}}">
+              <input type="hidden" id="date_edit" name="date"  class="form-control"  id="name" placeholder="Enter Date">
               <input type="text" id="date" name="date"  class="form-control"  id="name" placeholder="Enter Date">
           </div>
           <div class="form-group ">
             <label class="radio-inline">Solution Hold</label>
             <label class="radio-inline">
-                <input type="radio" value="y" class="solution-hold ml-3" id="solution_hold_y" name="solution_hold" checked>  Yes
+                <input type="radio" value="1" class="solution-hold ml-3" id="solution_hold_y" name="solution_hold" checked>  Yes
               </label>
               <label class="radio-inline">
-                <input type="radio" value="n"   class="solution-hold ml-3" id="solution_hold_n" name="solution_hold">  No
+                <input type="radio" value="0"   class="solution-hold ml-3" id="solution_hold_n" name="solution_hold">  No
               </label>
           </div>
           
@@ -229,37 +235,6 @@ $('.dashboard').click(function(){
 
 })
 
-$('.validation').on('change',function(){
-        var problem = $(this).attr('data-id');
-        var validation  = $(this).val();
-        var name = $(this).attr('name')
-        $.ajaxSetup({
-               headers: {
-                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                       }
-               }); 
-        $.ajax({
-           url: "{{route('adult.sol-validation')}}",
-           data: {data : problem , value : validation , name : name},
-           type: 'POST',
-           success: function (response){                
-               console.log(response)
-            }
-
-        })
-
-   })
-
-
-   $('#add-varification-button').click(function(){
-   
-        if($('#verification_types').val() == ''){
-            toastr.error('Please select verification type first');
-            return false;
-        }
-
-        $('#createVerification').modal('toggle')
-   })
 
    $(document).on('click','#saveBtn',function(e){
        e.preventDefault();
@@ -307,13 +282,15 @@ $('.validation').on('change',function(){
    });
 
    $('.editVocabularyBtn').click(function(){
-       $('#verification_id').val($(this).data('id')) 
-            $('#date').val($(this).data('key')).attr('disabled' , true)  
-       if($(this).data('val') === 'y'){
+       $('#id').val($(this).data('id')) 
+        $('#date').val($(this).data('key')).attr('disabled' , true)
+        $('#date_edit').val($(this).data('key'))
+       if($(this).data('val') === 1){
         $('#solution_hold_y').prop('checked' , true)  
        }else{
         $('#solution_hold_n').prop('checked' , true)  
        }
+
       $('#exampleModal').modal('toggle'); 
    })
 
@@ -369,7 +346,7 @@ $('.deleteVoucablaryBtn').click(function(e){
 
 $(document).ready(function () {
     var lastDate = $('#last_date').val()
-    $("#date").datepicker({ minDate: new Date(lastDate)  });
+    $("#date").datepicker({ minDate: new Date(lastDate) });
 });
 
 $('.addVocabularyBtn').click(function(){
@@ -379,6 +356,16 @@ $('.addVocabularyBtn').click(function(){
     $('#date').attr('disabled' , false)
     $('#exampleModal').modal('toggle')
 })
-
+var showMessage = "{{$showMessage}}"
+    var text_ = 'In order for the solution of a problem to be valid, it must hold related to time.  In this case, the solution of the problem must be first identified at a time, then later at another time it must hold.  If the solution of the problem has not been identified, it is not possible to show the time hold relationship.  Please, go back to identify the solution before showing that it holds related to time.'
+    // if(showMessage){
+    //     swal({
+    //         title: "Time Verification",
+    //         text: text_,
+    //         type: "Error",
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#00A14C',
+    //     });
+    // }
 </script>
 @endsection

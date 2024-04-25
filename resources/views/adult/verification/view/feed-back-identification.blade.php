@@ -44,9 +44,9 @@
                                         <td>{{ $data->error_name }}</td>
                                         <td>{{ $data->feedback }}</td>
                                         <td>{{ date('d/m/Y' , strtotime($data->feedback_date)) }} </td>
-                                        <td>{{ $data->user_id }}</td>
+                                        <td>{{ $data->from_person }}</td>
                                         <td>
-                                                <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  data-error_id="{{$data->error_id}}" data-feedback_date="{{date('d-m-Y' , strtotime($data->feedback_date))}}"  data-feedback="{{$data->feedback}}" data-from_person="{{$data->user_id}}"  data-error_name="{{ $data->error_name}}"class="btn btn-success editBtn"><i class="fa fa-pencil"></i></a>
+                                                <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  data-error_id="{{$data->error_id}}" data-feedback_date="{{date('d-m-Y' , strtotime($data->feedback_date))}}"  data-feedback="{{$data->feedback}}" data-from_person="{{$data->from_person}}"  data-error_name="{{ $data->error_name}}"class="btn btn-success editBtn"><i class="fa fa-pencil"></i></a>
                                                 <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  class="btn btn-danger delete-btn"><i class="fa fa-trash"></i></a>
                                         </td>
                                     </tr>
@@ -73,6 +73,9 @@
         <div class="modal-body">
           <form method="post" id="feedback-identification-form" >
           <input type="hidden"  name="id" id="f_id">
+          <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+            <input type="hidden" name="project_id" value="{{ $project_id }}">
+            
             <div class="form-group">
                 <label for="compensator">Select Error</label>
                 <select class="form-control" name="error" id="error_name">

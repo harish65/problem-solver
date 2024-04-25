@@ -135,6 +135,7 @@
                                         <th>Entity</th>
                                         <th>Actual Entity</th>
                                         <th>Entity Fucntion</th>
+                                        <th>Actions</th>
                                     </thead>
                                     <tbody>
 
@@ -145,6 +146,11 @@
                                             <td>
                                                 {{ $Solution_function->name}}
                                             </td>
+                                            <td>
+                                                <a  href=""><img src="{{ url('/assets-new/images/deleteIcon.png') }}" width="15" height="20"></a>
+                                                <a  href=""><img src="{{ url('/assets-new/images/editicon.png') }}" width="15" height="20"></a>
+                                            </td>
+
                                         </tr>
                                     @endforeach    
                                     </tbody>

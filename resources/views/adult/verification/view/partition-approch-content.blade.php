@@ -125,7 +125,7 @@
                             <h2>Validation Question</h2>
                         <br>
                         <form id="validation_form">
-                        <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                            <input type="hidden" name="id" value="{{ @$verification->id }}"> 
                             <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
                             <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
                             <input type="hidden" name="project_id" value="{{ $project_id }}">
@@ -170,6 +170,8 @@
                             <input type="text" disabled value="{{$problem->name}}" class="form-control">
                             <input type="hidden" name="problem_id" value="{{$problem->id}}">
                             <input type="hidden" name="part" value="{{$part}}" id="part">
+                            <input type="hidden" name="project_id" value="{{ $project_id }}">
+                            
                         </div>
                         <div class="from-group">
                             <label for="problem">Solution Part : {{ $part }}</label>
@@ -214,6 +216,7 @@
                             <input type="hidden" name="problem_id" value="{{$problem->id}}">
                             <input type="hidden" name="part" value="" id="part_update">
                             <input type="hidden" name="solution_id" value="{{$solution->id}}">
+                            <input type="hidden" name="project_id" value="{{ $project_id }}">
                         </div>
                         <div class="from-group">
                             <label for="word">Edit Solution Part:</label>

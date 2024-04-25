@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+@php $showMessage = true @endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -30,6 +30,7 @@
         </div>
     </div>
     @if(isset($verification->id))
+    <?php $showMessage = false ?>
     <!-- Content Section Start -->
     <div class="relationshipContent">
         <div class="container">
@@ -226,13 +227,19 @@
     <!-- Content Section End -->
     
     @else
-    <div class="relationshipContent" style="height: 280px;">
+    <div class="relationshipContent">
+   
         <div class="container">
             <div class="row">
-                <div class="col-sm-12">
-                    <button class="btn btn-success" id="add-info-varification-button"><i class="fa fa-plus"></i>  Create Verificatoin</button>
+            <div class="col-sm-12">
+                    <h1>{{ @$verificationType->page_main_title }}</h1>
+                    <div class="relationImage text-center">
+                    <img src="{{ asset("assets-new/images/verification-banners/info_var.png")}}" alt="relationImage" />
+                        
                     </div>
-                    
+                    <p>{{ @$verificationType->explanation }}</p>
+                    <button class="btn btn-success" id="add-info-varification-button"><i class="fa fa-plus"></i>  Create Verificatoin</button>
+                </div>
                 </div>
             </div>
     </div>
@@ -628,5 +635,17 @@ $('.deleteverBtn').click(function(e){
                }
            });
 })
+
+var showMessage = "{{$showMessage}}"
+    var text_ = 'The information to solve a problem is given to solve that problem and it is a part of the given solution.  If the problem has not been identified and the solution for that problem, then the information which is part of the solution can not be identified.  Please, identify the problem and the solution in order to verify the information.'
+    if(showMessage){
+        swal({
+            title: "Information",
+            text: text_,
+            type: "Error",
+            showCancelButton: true,
+            confirmButtonColor: '#00A14C',
+        });
+    }
 </script>
 @endsection

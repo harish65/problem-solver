@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title">Add New Problem</h4>
+            <h4 class="modal-title">Identify Problem</h4>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         </div>
         <form id="updateProlemForm" method="post" enctype="multipart/form-data">
@@ -27,6 +27,7 @@
                                     <label class="custom-control-label" for="updateProblemLinkRadio"> Link</label>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                     <div class="form-group" id="updateProblemFileType">
@@ -37,8 +38,13 @@
                         <input type="url" name="updateProblemFileLink" id="updateProblemLinkFile" class="form-control" placeholder="Link">
                     
                     </div>
+                    
                     <div class="form-group">
-                        <input type="text" name="updateProblemName" id="updateProblemName" class="form-control" placeholder="Actual Problem">
+                        <input type="text" name="updateProblemName" id="updateProblemName" class="form-control" placeholder="Problem Name">
+                        
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="actual_problrm_name" id="actual_problrm_name" class="form-control" placeholder="Actual Problem">
                         
                     </div>
                     <div class="form-group">

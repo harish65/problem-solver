@@ -68,7 +68,7 @@
                         </div>
                        
                         <div class="solutioone-card">
-                            <div class="location-card">
+                            <div class="location-card" style="min-height: 368px;">
                                 <div class="location-head text-center">
                                     <h2>Destination</h2>
                                 </div>
@@ -101,27 +101,31 @@
                                 </div>
                                 <div class="right-side float-right mt-4">
                                     <div class="imgWrp">
-                                        <div id="myCarousel" class="carousel slide " data-ride="carousel">
-                                        <ol class="carousel-indicators">
-                                            @php $index = 0; @endphp
-                                                @foreach($custommers as $entity)
-                                                        <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
-                                                @php $index++; @endphp
-                                            @endforeach 
-                                            </ol>
-                                            <div class="imgWrp  carousel-inner" role="listbox">
-                                                @php $index = 1; @endphp
-                                                @foreach($custommers as $entity)
-                                                    <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
-                                                        <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">
-                                                    </div>
-                                                    @php $index++; @endphp
-                                                @endforeach 
-                                            </div>
-                                        </div>
+                                            <div id="myCarousel" class="carousel slide " data-ride="carousel">
+                                                       
+                                                       <div class="carousel-inner" role="listbox">
+                                                           @php $index = 1; @endphp
+                                                           @foreach($custommers as $entity)
+                                                               <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
+                                                                   <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">                                                                        
+                                                                   <div class="carousel-caption">{{ $entity->name }}</div>
+                                                               </div>                                                                  
+                                                               @php $index++; @endphp
+                                                           @endforeach 
+                                                       </div>                                                  
+                                                       <ol class="carousel-indicators">
+                                                           @php $index = 0; @endphp
+                                                               @foreach($custommers as $entity)
+                                                                       <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
+                                                               @php $index++; @endphp
+                                                           @endforeach 
+                                                       </ol>
+                                                      
+                                                      
+                                                   </div>
                                     </div>
                                     <div class="projectList text-center">
-                                        <p class="redText" style="color: red;">Adult</p>
+                                        <p class="redText" style="color: red;"></p>
                                         <p class="date"></p>
                                         <ul>
                                             <!-- <li>
@@ -226,8 +230,9 @@
 <style>
     .carousel{
         height: 128px;
-        overflow: hidden;
+        /* overflow: hidden; */
         width: 200px;
+        text-align:center;
     }
 </style>
 @endsection

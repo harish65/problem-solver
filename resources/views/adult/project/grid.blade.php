@@ -20,7 +20,7 @@
                             </div>
                         </a>
                     <div class="projectList">
-                        <p class="date">{{ date("d/m/Y" , strtotime($item->created_at))}}</p>
+                        <p class="date">{{ date("m/d/Y" , strtotime($item->created_at))}}</p>
                         <ul>
                             <li><a href="javaScript:void(0)" class="editBtn" data-id="{{ $item->id }}" data-title="{{ $item->name }}"><img src="{{ url('/') }}/assets-new/images/editIcon.png" alt="" /></a></li>
                             <li><a href="javaScript:void(0)" class="deleteBtn" data-id="{{ $item->id }}" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" alt="" /></a>

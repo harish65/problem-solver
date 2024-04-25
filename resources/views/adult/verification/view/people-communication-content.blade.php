@@ -73,6 +73,7 @@
                     <div class="title d-flex">
                         <h2>People Communation</h2>
                     </div>
+                    @if($users->count()>0)
                         <table class="table slp-tbl text-center">
                         <thead>      
                             <th>From Person</th>
@@ -94,9 +95,9 @@
                                                 <a href="javaScript:void(0)" class="delete_"  data-id="{{ $communication->id }}">
                                                     <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
                                                 </a>
-                                                <a href="javaScript:void(0)" class="edit" data-id="{{ $communication->id }}" data-person_one="{{ $communication->customer_id }}"  data-person_two="{{ $communication->person_to }}" data-title="{{ $communication->title }}" data-comment="{{ $communication->comment }}" >
+                                                <!-- <a href="javaScript:void(0)" class="edit" data-id="{{ $communication->id }}" data-person_one="{{ $communication->customer_id }}"  data-person_two="{{ $communication->person_to }}" data-title="{{ $communication->title }}" data-comment="{{ $communication->comment }}" >
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
-                                                </a>
+                                                </a> -->
                                                 <a href="javaScript:void(0)" class="view" data-id="{{ $communication->id }}" data-person_one="{{ $communication->customer_id }}"  data-person_two="{{ $communication->person_to }}" data-title="{{ $communication->title }}" data-comment="{{ $communication->comment }}" >
                                                     <i class="fa fa-eye"></i>
                                                 </a>
@@ -106,6 +107,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        @endif
                     </div>
                     <div class="questionWrap">
                         <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
@@ -327,8 +329,8 @@ $('.communicate').on('click',function(){
 
 })
     $('.edit').on('click',function(){
-        $('#person_1').val($(this).data('person_one')).attr('disabled' , false)
-        $('#person_2').val($(this).data('person_two')).attr('disabled' , false)
+        $('#person_1').val($(this).data('person_one')).attr('disabled' , true)
+        $('#person_2').val($(this).data('person_two')).attr('disabled' , true)
         $('#title_').val($(this).data('title')).attr('disabled' , false)
         $('#id').val($(this).data('id'))
         tinyMCE.activeEditor.setContent($(this).data('comment'));
@@ -341,6 +343,7 @@ $('.communicate').on('click',function(){
         $('#title_').val($(this).data('title')).attr('disabled' , true)
         $('#id').val($(this).data('id'))
         tinyMCE.activeEditor.setContent($(this).data('comment'));
+        tinymce.activeEditor.getBody().setAttribute('contenteditable', false);
         
         $('#btnSave').hide();
        $('#exampleModal').modal('toggle');

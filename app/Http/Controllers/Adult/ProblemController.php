@@ -21,14 +21,14 @@ class ProblemController extends BaseController
        
         $cat = DB::table('problem_categories')->get();
         $problemID = Crypt::decrypt($id);
-            $problem =  DB::table('problems')->where('id','=',$problemID)->first();
+        $problem =  DB::table('problems')->where('id','=',$problemID)->first();
            
-            if($problem){
-                    return view ('adult.problem.problem',compact('problem','cat','projectID'));
-                }else{
-                    $problem = null;
-                    return view ('adult.problem.problem',compact('problem','cat','projectID'));
-            }
+        if($problem){
+                return view ('adult.problem.problem',compact('problem','cat','projectID'));
+            }else{
+                $problem = null;
+                return view ('adult.problem.problem',compact('problem','cat','projectID'));
+        }
         
     }
 
@@ -63,6 +63,8 @@ class ProblemController extends BaseController
                         'project_id' => $project_id,
                         'category_id' => $request ->category_id,
                         'name' => $request -> updateProblemName,
+                        'name' => $request -> updateProblemName,
+                        'actual_problrm_name' => $request->actual_problrm_name,
                         'file' => $file,
                         'type' => $type,
                         'created_at' => date('Y-m-d h:i:s')
@@ -74,6 +76,7 @@ class ProblemController extends BaseController
                         'project_id' => $project_id,
                         'category_id' => $request ->category_id,
                         'name' => $request -> updateProblemName,
+                        'actual_problrm_name' => $request->actual_problrm_name,
                         'created_at' => date('Y-m-d h:i:s')
                     ]);
                 }

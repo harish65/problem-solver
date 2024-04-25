@@ -41,15 +41,7 @@
                     <p>{{ @$verificationType->explanation }}</p>
                     <div class="relationImage text-center">
                         <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                            <ol class="carousel-indicators">
-                                <li data-target="#myCarousel" data-slide-to="1" class="active"></li>
-                                <li data-target="#myCarousel" data-slide-to="2" class=""></li>
-                                <li data-target="#myCarousel" data-slide-to="3" class=""></li>
-                                <li data-target="#myCarousel" data-slide-to="4" class=""></li>
-                                <li data-target="#myCarousel" data-slide-to="5" class=""></li>
-                                <li data-target="#myCarousel" data-slide-to="6" class=""></li>
-                                <li data-target="#myCarousel" data-slide-to="7" class=""></li>
-                            </ol>
+                            
                             <div class="imgWrp carousel-inner" role="listbox">
                                
                                         <div class="carousel-item active"  >
@@ -77,6 +69,15 @@
                                
                                    
                             </div>
+                            <ol class="carousel-indicators custom">
+                                <li data-target="#myCarousel" data-slide-to="1" class="active"></li>
+                                <li data-target="#myCarousel" data-slide-to="2" class=""></li>
+                                <li data-target="#myCarousel" data-slide-to="3" class=""></li>
+                                <li data-target="#myCarousel" data-slide-to="4" class=""></li>
+                                <li data-target="#myCarousel" data-slide-to="5" class=""></li>
+                                <li data-target="#myCarousel" data-slide-to="6" class=""></li>
+                                <li data-target="#myCarousel" data-slide-to="7" class=""></li>
+                            </ol>
                         </div>
                         <!-- <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" /> -->
                     </div>
@@ -247,6 +248,11 @@
 @section('css')
 
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+<style>
+.carousel-indicators{
+    position:relative;
+}
+</style>
 @endsection
 @section('scripts')
 

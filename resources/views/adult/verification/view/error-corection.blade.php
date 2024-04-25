@@ -22,6 +22,8 @@
                             <div class="projectBlock text-center">
                                 <h2>Error</h2>
                                 <div class="projectList text-center">
+
+                               
                                     @foreach($errors as $data)
                                     <button class="btn btn-danger  mt-3">
                                         {{ $data['error_name'] }}
@@ -165,6 +167,7 @@
         <div class="modal-body">
           <form method="post" id="error-correction-form" >
             <input type="hidden" name="id" id="id" value="">
+            <input type="hidden" name="project_id" value="{{ $project_id }}">
             <div class="form-group">
                 <label for="compensator">Select Error</label>
                 <select class="form-control" name="error[]" id="error_ara" multiple>

@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+@php $showMessage = true @endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -57,6 +57,9 @@
                                
                             </div>
                             <div class="entity">
+                            <?php $lastDate = null ?>
+                                @if($pastAndPresentTime->count() > 0)
+                                <?php $showMessage = false; ?>
                                 <table class="table slp-tbl text-center">
                                     <thead>
                                         <td><input type="checkbox" class="checkbox" id="check_all" value="0"></td>
@@ -65,7 +68,7 @@
                                         <th>Action</th>
                                     </thead>
                                     <tbody>
-                                    <?php $lastDate = null ?>
+                                    
                                         @foreach($pastAndPresentTime as $varification)
                                         <tr>
                                             <td><input type="checkbox" class="checkbox_single" name="_delete[]" data-checkbox_id="{{$varification->id}}" value="0"></td>
@@ -88,14 +91,17 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                               
                                 <div class="row">
                                     <div class="col-md-12">
                                     <button type="button" class="btn btn-danger" id="bulk_delete">Delete</button>
                                     </div>
                                 </div>
+                                <input type="hidden" value="{{ date('Y-m-d' , strtotime($lastDate.' + 1 days')) }}" id="last_date"> 
+                                @endif
                             </div>
                         </div>
-                        <input type="hidden" value="{{ date('Y-m-d' , strtotime($lastDate.' + 1 days')) }}" id="last_date"> 
+                        
                         <h2>Validation Question</h2>
                         <br>
                         <form id="validation_form">
@@ -294,11 +300,35 @@ $('.editVocabularyBtn').click(function(){
  $('#exampleModal').modal('toggle'); 
 })
 
+
+
+
 $(document).ready(function () {
+
+    //If the user did not enter any past time then There will be any time from past till todays date
     var lastDate = $('#last_date').val();
-    console.log(lastDate)
-    $("#date").datepicker({ minDate: new Date()  , maxDate: new Date(lastDate) });
+    if(typeof lastDate == 'undefined'){
+        $("#date").datepicker({ 
+            dateFormat : 'm/d/yy',
+            minDate: new Date(2007, 1 - 1, 1) , 
+            maxDate:  0
+        });
+    }else{
+        $("#date").datepicker({ 
+            dateFormat : 'm/d/yy',
+            minDate: new Date(lastDate) , 
+            maxDate:  0
+        });
+    }
+
+    
+    
+    // $("#date").datepicker({ minDate: new Date()  , maxDate: new Date(lastDate) });
 });
+
+
+
+
    //   bulk check box delete
 $('#check_all').on('change',function(){
     if($(this).prop('checked') == true){
@@ -387,6 +417,16 @@ $('.addVocabularyBtn').click(function(){
     $('#exampleModal').modal('toggle')
 })
 
-
+var showMessage = "{{$showMessage}}"
+    // var text_ = 'In order to identify a problem properly, it must hod its identity related to time.  For instance, if we identify the problem yesterday and today it changes, then we misidentified the problem.  The past and present time problem identification enables us to identify problem properly related to time.  It is not possible to show past and present problem identification, if the problem has not been identified.  Please, refer to the problem identification page to identify the problem before determining if its identity holds related to time'
+    // if(showMessage){
+    //     swal({
+    //         title: "Past Time Present Time",
+    //         text: text_,
+    //         type: "Error",
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#00A14C',
+    //     });
+    // }
 </script>
 @endsection

@@ -42,6 +42,7 @@
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
+                @if($problemDevelopment->count() > 0)
                 <!-- start -->
                 <div class="principleRelation">
                     <div class="conditionBlock problem-development">
@@ -104,11 +105,11 @@
                             <div class="entity">
                                 <div class="row">
                                     <div class="col text-end">
-                                    @if(isset($data->id))
-                                        <button class="btn btn-success mt-3 compensator" data-error-id="{{ $data->id }}" >
+                                    
+                                        <!-- <button class="btn btn-success mt-3 compensator"  >
                                             + Identify Compensator
-                                        </button>
-                                    @endif
+                                        </button> -->
+                                    
                                     </div>
                                 </div>
                                 <table class="table slp-tbl text-center">
@@ -133,7 +134,11 @@
                                                 {{($data->compensator_date != '') ?  date('d-m-Y' , strtotime($data->compensator_date)) : 'Not Identified' }}
                                             </td>
                                             <td>
-                                                <a href="javaScript:void(0)" data-id ="{{ $data->error_correction_id }}"  data-error_id="{{ $data->id }}" data-error_name="{{$data->compensator}}" data-error_date="{{ ($data->compensator_date != '') ? date('d-m-Y' , strtotime($data->compensator_date)) : ''}}" data-problem="{{$data->problem_name}}" data-problem_date="{{date('d-m-Y' , strtotime($data->problem_date))}} " class="btn btn-success editBtn"><i class="fa fa-pencil"></i></a>
+                                                <a href="javaScript:void(0)" data-id ="{{ $data->error_correction_id }}"  
+                                                                            data-error_id="{{ $data->id }}" data-error_name="{{$data->compensator}}" 
+                                                                            data-error_date="{{ ($data->compensator_date != '') ? date('d-m-Y' , strtotime($data->compensator_date)) : ''}}" 
+                                                                            data-problem="{{$data->problem_name}}" data-problem_date="{{date('d-m-Y' , strtotime($data->problem_date))}} " 
+                                                                            class="btn btn-success editBtn"><i class="fa fa-pencil"></i></a>
                                                 <a href="javaScript:void(0)" data-id ="{{ $data->error_correction_id }}"  class="btn btn-danger deleteBtn"><i class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
@@ -173,6 +178,7 @@
                             <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
                         </form> -->
                 </div>
+                @endif
             </div>
             <!-- End -->
             

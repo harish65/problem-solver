@@ -96,22 +96,25 @@
                                 <div class="projectList text-center min-height-250">
                                     <div class="imgWrp">
                                         <div id="myCarousel" class="carousel slide " data-ride="carousel">
-                                        <ol class="carousel-indicators">
-                                        @php $index = 0; @endphp
-                                            @foreach($custommers as $entity)
-                                                    <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
-                                            @php $index++; @endphp
-                                        @endforeach 
-                                        </ol>
-                                            <div class="imgWrp  carousel-inner" role="listbox">
+                                        
+                                            <div class="carousel-inner" role="listbox">
                                                 @php $index = 1; @endphp
                                                 @foreach($custommers as $entity)
                                                     <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
                                                         <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">
+                                                        <div class="carousel-caption custom">{{ $entity->name }}</div>
                                                     </div>
                                                     @php $index++; @endphp
                                                 @endforeach 
                                             </div>
+
+                                            <ol class="carousel-indicators custom">
+                                                @php $index = 0; @endphp
+                                                    @foreach($custommers as $entity)
+                                                            <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
+                                                    @php $index++; @endphp
+                                                @endforeach 
+                                        </ol>
                                         </div>
                                        
                                     </div>
@@ -158,13 +161,43 @@
                     </thead>
                     <tbody>
                        @foreach($people as $data)
-                       <tr>
-                        <td>{{ $data->name }}</td>
-                        <td>{{ $Solution_function->name }}</td>
-                       </tr>
+                        @if($data->name != '')
+                            <tr>
+                                    <td>{{ $data->name }}</td>
+                                    <td>{{ $Solution_function->name }}</td>
+                            </tr>
+                       @endif
                        @endforeach     
                     </tbody>
                 </table>
+            </div>
+            <div class="validations">
+                    <h2>Validation Question</h2>
+                        <br>
+                        <form id="validation_form">
+                            <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                            <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
+                            <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                            <input type="hidden" name="project_id" value="{{ $project_id }}">
+                            <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                            <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                            <input type="hidden" name="name" id="name" value="People_in_Project">     
+                        <h5>Do I target the right function?</h5>
+                        <ul class="validate_que" style="list-style:none;">
+                            
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} value="1">&nbsp;&nbsp;Yes, I target the right function</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2">&nbsp;&nbsp;No, I don’t target the right function</label></li>
+                           
+                        </ul>
+                        <h5>Do I understand that I can only look at functions that belong to me when trying to solve a problem?</h5>
+                        <ul class="validate_que" style="list-style:none;">
+                            
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} value="1">&nbsp;&nbsp;Yes, I understand that I can only look at functions that belong to me when trying to solve a problem</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} value="2">&nbsp;&nbsp;No, I don’t understand that I can only look at functions that belong to me when trying to solve a problem</label></li>
+                           
+                        </ul>
+                    <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                    </form>
             </div>
         </div>
 </div>
@@ -202,6 +235,7 @@
             </div>
            
             <div class="form-group">
+            <label for="compensator">Users</label>
                 <select name="customer" class="form-control" id="customer">
                     <option value="">Please Select....</option>
                     @foreach($custommers as $custommer)
@@ -240,6 +274,10 @@
     }
     .margit-fifty p{
         color: red;
+    }
+    .carousel{
+        height :auto;
+        min-height: 258px;
     }
 </style>
 @endsection

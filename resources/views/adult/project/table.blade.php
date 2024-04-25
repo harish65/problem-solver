@@ -18,7 +18,7 @@
                         
                     @foreach ($project as $item)
                         <tr>
-                            <td>{{ date('d/m/Y' , strtotime($item->created_at))}}</td>
+                            <td>{{ date('m/d/Y' , strtotime($item->created_at))}}</td>
 
                             <?php 
                             $parameters = ['problem_id'=> $item->problem_id , 'project_id' => $item->id];

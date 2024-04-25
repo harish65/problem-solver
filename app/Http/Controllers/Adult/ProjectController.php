@@ -120,9 +120,13 @@ class ProjectController extends BaseController
     public function destroy(Request $request)
     {
         try{
+            $data  = $request->all();
+           
+           
             $project  = DB::table('projects')->where('id', $request->input('id'))->delete();
+             
             $problem = DB::table('problems')->where('project_id', $request->input('id'))->first();
-
+            
             if(isset($problem->id)){
                 $solution = DB::table('solutions')->where('problem_id', $problem->id)->first();  
                 DB::table('problems')->where('project_id',$problem->id)->delete();
@@ -135,16 +139,19 @@ class ProjectController extends BaseController
                     }
             }
             
-            if($project){
-                $success['project'] =  $project;
+            // echo "<pre>";print_r();die;
+            if($project){                
+                $success['success'] =  'true';
                 $success['token'] = $request->header('Authorization');
                 return $this->sendResponse($success, 'Project deleted successfully.');  
             }else{
-                return $this->sendError('Error.', ['error'=> 'Project not exist!']);
+                $success['success'] =  false;
+                return $this->sendError($success,  'Project can not deleted13.');
             }           
             
-            }catch(Exception $e){
-                return $this->sendError('Error.', ['error'=> $e->getMessage()]);
+            }catch(\Illuminate\Database\QueryException $e){
+                $success['success'] =  false;
+                return $this->sendResponse($success, 'Project can not deleted.');  
             }
     }
     

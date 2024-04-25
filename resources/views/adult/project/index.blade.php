@@ -116,7 +116,8 @@
          if (r == false) {
              return false;
          }
-         var id = $(this).attr('data-id')
+         var id = $(this).data('id')
+         
          $.ajaxSetup({
                headers: {
                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -124,15 +125,16 @@
                });      
          $.ajax({
                url: "{{route('adult.delete')}}",
-               data:{id :  id},         
-              
-               type: 'post',           
+               data:{id:id}, 
+               type: 'post',   
+               async: false,        
                error: function (xhr, status, error) {
                    $.each(xhr.responseJSON.data, function (key, item) {
                        toastr.error(item);
                    });
                },
                success: function (response){
+                console.log(response.success)
                    if(response.success == false)
                    {
                        var errors = response.data;
@@ -140,8 +142,8 @@
                            toastr.error(value)
                        });
                    } else {
-                       toastr.success('Problem deleted successfully!');
-                       window.location.href = "{{route('adult.dashboard')}}";
+                       toastr.success(response.message);
+                      //  window.location.href = "{{route('adult.dashboard')}}";
                    }
                }
            });

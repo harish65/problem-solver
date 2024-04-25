@@ -26,7 +26,7 @@ class SolutionFunctionController extends BaseController
                     ->join('problems' , 'solutions.problem_id' , '=' , 'problems.id')
                     ->select('solutions.*' , 'problems.name as problem_name')
                     ->where('solutions.problem_id', $problem_id)->first();
-            if(! isset($solution_id->id)){
+            if(!isset($solution_id->id)){
     
                 return Redirect::back()->withErrors(['msg' => 'Solution Function must have solution identified.' , 'error' => 'Solution not identified']);
             }        
@@ -45,15 +45,16 @@ class SolutionFunctionController extends BaseController
                         ->where('solution_functions.problem_id','=' ,$problem_id )
                         ->where('solution_functions.solution_id','=' ,$solutionID )
                         ->first();
-            // echo"<pre>";print_r($solFunctions);die;
-            return view("adult.solFunction.solutionfunction", [
-                        "solFunctions" => $solFunctions,
-                        "solutionName" => $solutionName,
-                        "solutionProblemName" => $solutionProblemName,
-                        'project_id' => $project_id,
-                        'problem_id' => $problem_id,
-                        'solution_id' => $solutionID,
-                    ]);
+           
+                return view("adult.solFunction.solutionfunction", [
+                            "solFunctions" => $solFunctions,
+                            "solutionName" => $solutionName,
+                            "solutionProblemName" => $solutionProblemName,
+                            'project_id' => $project_id,
+                            'problem_id' => $problem_id,
+                            'solution_id' => $solutionID,
+                        ]);
+               
         
     }
 

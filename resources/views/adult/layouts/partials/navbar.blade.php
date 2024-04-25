@@ -14,7 +14,7 @@
               <a class="nav-link nav-problem"  id="nav-problem" href="">Problem</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link nav-solution" id="nav-solution" href="">Soluton</a>
+              <a class="nav-link nav-solution" id="nav-solution" href="">Solution</a>
             </li>    
             <li class="nav-item">
               <a class="nav-link nav-solution-func" id="nav-solution-func" href="">Solution Function</a>

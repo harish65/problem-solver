@@ -1,6 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
+@php $showMessage = true @endphp
 
 <div class='relationshipPage'>
     <div class="container">
@@ -43,6 +44,8 @@
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
+                @if($entitiesAvailable->count() > 0)
+                <?php $showMessage = false ?>
                 <div class="principleRelation">
                     <div class="conditionBlock">
                         <div class="blockProblem">
@@ -57,7 +60,7 @@
                                                 @php $index++; @endphp
                                             @endforeach 
                                         </ol>
-                                        <div class="imgWrp carousel-inner" role="listbox">
+                                        <div class="carousel-inner" role="listbox">
                                             @php $index = 1; @endphp
                                                 @foreach($entitiesAvailable as $entity)
                                                     <div class="carousel-item {{ ($index == 1) ? 'active':'' }} " data-entity_id="{{$entity->id}}" data-file="{{ $entity->media }}" data-name="{{ $entity->entity }}" data-actualname="{{ $entity->actual_entity }}">
@@ -203,8 +206,15 @@
                                         @if($type == 2)
                                             <form id="content" action="{{ url('adult/store-priciple-identification')}}" method="post">
                                                 @csrf
+                                                <input type="hidden" name="content_id" value="{{ $content->id }}">
+                                                    <input type="hidden" name="project_id" value="{{ $project_id }}">
+                                                    <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                                                    <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                                                    <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
                                                     <div class="row">
-                                                        <textarea name="content"> {{ @$allVarifications[0]->content }}</textarea>
+                                                    
+                                                   
+                                                        <textarea name="content"> {{ $content->content }}</textarea>
                                                     </div>
                                                     
                                                     <div class="row mt-3 text-right">
@@ -214,6 +224,8 @@
                                                     </div>
                                             </form>
                                          @endif
+
+
                             </div>
                         </div>
 
@@ -240,7 +252,14 @@
                     </div>
                 </div>
                 <!-- End -->
+                @else
+               
+                <div class="col-md-10">
+                    <button type="button"  class="btn btn-success add-entity" id="add-entity">Add <i class="fa fa-plus"></i></button>
+                </div>                       
                 
+                                   
+                @endif
             </div>
         </div>
     </div>
@@ -308,7 +327,7 @@
                         <input name="actual_entity" class="form-control" id="actual_entity" placeholder="Actual Entity">
                     </div>
                     <div class="form-group">
-                         <input type="text" class="form-control" name="verificationType" disabled value="{{ ($givenSet->type == 1) ? 'The Given Set' : 'Drived Principle'  }}">
+                         <input type="text" class="form-control" name="verificationType" disabled value="{{ ($givenSet->type == 0 ) ? 'Principle' : 'Drived Principle'  }}">
                     </div>
                     <div class="form-group">
                         <select class="form-control" name="formula">
@@ -718,5 +737,17 @@ $('.deleteEntityAvailable').on('click' , function(e){
       plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
       toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
     });
+
+    var showMessage = "{{$showMessage}}"
+    var text_ = 'The information to solve a problem is given to solve that problem and it is a part of the given solution.  If the problem has not been identified and the solution for that problem, then the information which is part of the solution can not be identified.  Please, identify the problem and the solution in order to verify the information.'
+    // if(showMessage){
+    //     swal({
+    //         title: "Information",
+    //         text: text_,
+    //         type: "Error",
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#00A14C',
+    //     });
+    // }
   </script>
 @endsection

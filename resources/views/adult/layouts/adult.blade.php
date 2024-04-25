@@ -28,6 +28,7 @@
 <script src="{{ asset('assets-new/js/main.js') }}"></script>
     
         <script>
+            
             $('#saveValidations').on('click',function(){
                 var fd = new FormData($('#validation_form')[0]);
                 $.ajaxSetup({
@@ -70,6 +71,7 @@
                 }
             });
         })
+       
         </script>
 @yield('scripts')
 <script>
