@@ -29,7 +29,7 @@
             </div>
         </div>
     </div>
-   
+    
     <!-- Content Section Start -->
     <div class="relationshipContent">
         <div class="container">
@@ -91,9 +91,7 @@
                                             src=" {{ asset('assets-new/verification_types/pi/pi-card.jpg')}}" width="100%"
                                             height="250px">
                                     </div>
-                                    
                                 </div>
-                                
                             </div>
                         </div>
                         <div class="long-arrow">
@@ -116,19 +114,13 @@
                                 <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
                                     <ul>
                                         <li>
-                                            <!-- <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
-                                                <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
-                                            </a> -->
+                                           
                                         </li>
                                         <li>
-                                            <!-- <a data-id="1" class="editverBtn" title="Delete">
-                                                <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
-                                                    alt=""></a> -->
+                                            
                                         </li>
                                         <li>
-                                            <!-- <a href="#"><img
-                                                    src="{{ asset('assets-new/images/uploadIcon.png') }}"
-                                                    alt=""></a> -->
+                                          
                                         </li>
                                     </ul>
                                 </div>
@@ -161,68 +153,52 @@
                                     <td>Action</td>
                                     </thead>
                                     <tbody>
-                                    @php $index = 1 @endphp
-                                           @foreach($allVarifications as $data)
-                                                @if($data->type == 1)
-                                                <tr class="given-set {{ ($verification->type == 0) ? 'show':'d-none' }}">
-                                                    <td>{{ $data->number }}</td>
+                                        @foreach($allVarifications as $key=> $data)
+                                                @php
+                                                    
+                                                $applicable = \App\Models\PrincipleIdentificationMain::getApplicable($project_id , @$content->principle_type ,  $data->id);
+                                                
+
+                                                @endphp
+                                                
+                                                @if(isset($content->principle_type) &&  $content->principle_type == 0 && ($data->id == 4 || $data->id == 5 || $data->id == 10) ) 
+                                                <tr class="table-active">
+                                                    <td>{{ ++$key }}</td>
                                                     <td>{{ $data->text }}</td>
-                                                    <td> {{ ($data->applicable == 0) ? 'YES' :'NO'   }}</td>
-                                                    <td> <a href="javaScript:Void(0)" class="editEntity"
-                                                        data-id="{{ $data->id }}"
-                                                        data-priciple="{{ $data->text }}"
-                                                        data-applicable="{{ $data->applicable }}"
-                                                        data-index="{{ $index }}"
-                                                        >
-                                                                <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
-                                                        </a>
+                                                    <td>{{ ($applicable == 1) ? 'Yes':'No' }}</td>
+                                                    <td scope="row">
+                                                    <!-- <img src="{{ asset('assets-new/images/editIcon.png')}}" alt=""> -->
                                                     </td>
                                                 </tr>
-                                                @php $index++ @endphp
-                                                @endif
-                                                @endforeach
-                                        @php $index = 1 @endphp
-                                           @foreach($allVarifications as $data)
-                                                @if($data->type == 2)
-                                                <tr class="derived-principle {{ ($verification->type == 1) ? 'show':'d-none' }}">
-                                                    <td>{{ $data->number }}</td>
+                                                @else
+                                                <tr>
+                                                    <td>{{ ++$key }}</td>
                                                     <td>{{ $data->text }}</td>
-                                                    <td> {{ ($data->applicable == 0) ? 'YES' :'NO'   }}</td>
-                                                    <td> <a href="javascript:void(0)" class="editEntity"
-                                                                    data-id="{{ $data->id }}"
-                                                                    data-priciple="{{ $data->text }}"
-                                                                    data-applicable="{{ $data->applicable }}"
-                                                                    data-number="{{ $data->number }}"
-                                                                    >
-                                                                <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
-                                                        </a>
+                                                    <td>{{ ($applicable == 1) ? 'Yes':'No'  }}</td>
+                                                    <td>
+                                                    <a href="javaScript:Void(0)" class="editEntity" data-number="{{$data->id }}" data-priciple="{{$data->text }}"
+                                                    ><img src="{{ asset('assets-new/images/editIcon.png')}}" alt=""></a>
                                                     </td>
                                                 </tr>
-                                                @php $index++ @endphp
                                                 @endif
-                                           @endforeach
-                                        
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        @if($verification->type == 1)
+                        @if(@$content->principle_type == 1)
                         <div class="title">
                         <h2>Derived Principle</h2>
                         </div>
-                        
-                        <form id="content" action="{{ url('adult/store-priciple-identification')}}" method="post">
+                        <form id="content" method="post">
                             @csrf
-                            <input type="hidden" name="content_id" value="{{ @$content->id}}">
-                            <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
-                            <input type="hidden" name="project_id" value="{{ $project_id }}">
-                            <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
-                            <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
-                            
+                            <input type="hidden" name="id" value="{{ @$content->id}}">
+                            <input type="hidden" name="problem_id" id="problem_id" value="{{ Crypt::encrypt($problem_id) }}">
+                            <input type="hidden" name="project_id" value="{{ Crypt::encrypt($project_id) }}">
+                            <input type="hidden" name="principle_type" value="{{ (@$content->principle_type) ? @$content->principle_type : '0' }}">
                                 <div class="row">
-                                    <textarea name="content">{{ @$content->content }}</textarea>
+                                    <textarea name="content">{{ $content->content }}</textarea>
                                 </div>
-                                
                                 <div class="row mt-3 text-right">
                                     <div class="form-group">
                                             <button class="btn btn-success" id="update-content"  type="submit">Update Content</button>
@@ -263,43 +239,39 @@
     <!-- Modal End -->
     <div class="modal fade" id="pricipleIdentfyModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
     aria-hidden="true" enctype="multipart/form-data">
-
-    <form method="POST" id="pricipleIdentfy" enctype="multipart/form-data">
-        @csrf
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Principle dentification</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <?php 
-           
-                        $problem_id =  Crypt::encrypt($problem_id);
-                        $project_id =  Crypt::encrypt($project_id);
-                        $solution_id =  Crypt::encrypt($solution_id);
-                    ?>
-                <div class="modal-body">
-                    <input type="hidden" name="id" id="ver_id" value="{{ @$verification->id}}">
-                    <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
-                    <input type="hidden" name="project_id" value="{{ $project_id }}">
-                    <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
-                    <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
-                    <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
-                    <div class="form-group">
-                        <select class="form-control" name="applicable">
-                            <option value='0'>THE GIVEN SET</option>
-                            <option value='1'>DERIVED PRINCIPLE</option>
-                        </select>
+        <form method="POST" id="pricipleIdentfy"  enctype="multipart/form-data">
+            @csrf
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Principle dentification</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
+                    <?php 
+            
+                            $problem_id =  Crypt::encrypt($problem_id);
+                            $project_id =  Crypt::encrypt($project_id);
+                            $solution_id =  Crypt::encrypt($solution_id);
+                        ?>
+                    <div class="modal-body">
+                        <input type="hidden" name="id" value="{{ @$content->id}}">
+                        <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                        <input type="hidden" name="project_id" value="{{ $project_id }}">
+                        <div class="form-group">
+                            <select class="form-control" name="principle_type">
+                                <option {{ (@$content->principle_type == 0) ? 'selected':'' }} value='0'>THE GIVEN SET</option>
+                                <option  {{ (@$content->principle_type == 1) ? 'selected':'' }} value='1'>DERIVED PRINCIPLE</option>
+                            </select>
+                        </div>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" id="btnSave" class="btn btn-success">Select</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="btnSave" class="btn btn-success">Select</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
 </div>
 @endsection
 @section('css')
@@ -417,17 +389,17 @@ $('.validation').on('change',function(){
    })
 //.editSolFunBtn
 
-$('.editEntity').click(function(){
-    
+$('.editEntity').click(function(){    
     $('#pricple_identify_id').val($(this).data('id'))
     var counter = $(this).attr('data-number') + '.  ' + $(this).attr('data-priciple')
     $('#principle').val(counter)
+    $('#principle_identification_id').val($(this).attr('data-number'))
     if($(this).attr('data-applicable')){
         $('#applicable').val($(this).attr('data-applicable'))
     }else{
         $('#applicable').val('0')
     }
-    
+    $('#id_').val($(this).attr('data-number'));
    $('#createVerification').modal('toggle')
 })
    $('.addVocabularyBtn').click(function(){
@@ -443,7 +415,7 @@ $('.editEntity').click(function(){
                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                }
        });
-       
+      
        $.ajax({
            url: "{{route('adult.store-priciple-verification')}}",
            data: fd,
@@ -562,5 +534,53 @@ $('.editEntity').click(function(){
         });
     
         }
+    $(document).on('click','#update-content',function(e){
+       e.preventDefault();
+       
+       var fd = new FormData($('#content')[0]);
+       fd.delete('content');
+       fd.append('content' , tinyMCE.activeEditor.getContent())
+       
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+       
+       $.ajax({
+           url: "{{route('adult.store-priciple-verification')}}",
+           data: fd,
+           processData: false,
+           contentType: false,
+           dataType: 'json',
+           type: 'POST',
+           beforeSend: function(){
+             $('#update-content').attr('disabled',true);
+             $('#update-content').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+           },
+           error: function (xhr, status, error) {
+               $('#update-content').attr('disabled',false);
+               $('#update-content').html('Submit');
+               $.each(xhr.responseJSON.data, function (key, item) {
+                   toastr.error(item);
+               });
+           },
+           success: function (response){
+             if(response.success == false)
+             {
+                 $('#update-content').attr('disabled',false);
+                 $('#update-content').html('Update Content');
+                 var errors = response.data;
+                 $.each( errors, function( key, value ) {
+                     toastr.error(value)
+                 });
+             } else {
+                 toastr.success(response.message);
+                 location.reload()
+              }
+           }
+       });
+   });
+       
   </script>
 @endsection

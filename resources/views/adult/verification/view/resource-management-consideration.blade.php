@@ -10,10 +10,10 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                      <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
+                        <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
+                        <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
+                        <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
+                        <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
 
                 <div class="col-sm-12">
                     <div class="d-flex align-items-center">
@@ -42,33 +42,86 @@
                 <!-- start -->
                 <div class="principleRelation container">
                     <!-- Condition block start -->
-                    @if(isset($problemreplaced) && !empty($problemreplaced->id))
+                   
                     <div class="solutionconditionBlock justify-content-center">
-                        
-                        
-                          
-                
-                    </div>
-                    @else
-                    <div class="conditionBlock justify-content-center">
+                        @if($resources)
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
-                                <h2>Function</h2>
-                                <div class="projectList text-center min-height-250">
+                                <h2>Solution</h2>
+                                <div class="projectList text-center">
                                     <div class="imgWrp">
-                                        <a class="cursor" id="replace_sol">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="#28a745" class="bi bi-plus" viewBox="0 0 16 16">
-                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                                          </svg>
-                                        </a>
+                                        <img class="mx-auto" src="{{ asset('assets-new/verification/1680525564.png')}}"
+                                            width="100%" height="128px">
                                     </div>
+                                    <p class="redText">{{ $solution->name }}</p>
+                                </div>
+                                <div class="projectList">
+                                    <p class="date">{{   date('d/m/Y', strtotime($solution->created_at)) }}</p>
                                     
                                 </div>
-                               
                             </div>
                         </div>
+                        <div class="long-arrow">
+                            <!-- <p style="position:relative; top:35px;left:25px;">through</p> -->
+                            <!-- add arrow Image over here -->
+                            <img src="{{ asset('assets-new/images/arrowRight.png') }}">
+                            <!-- add arrow Image over here -->
+                        </div>
+                        <div class="blockProblem">
+                            <div class="projectBlock text-center">
+                                <h2>Problem</h2>
+                                <div class="projectList text-center">
+                                    <div class="imgWrp">
+                                        <img class="mx-auto" src="{{ asset('assets-new/problem/'.$problem->file)}}"
+                                            width="100%" height="128px">
+                                    </div>
+                                    <p class="redText" style="color:red">{{ $problem->name }}</p>
+                                </div>
+                                <div class="projectList">
+                                <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="long-arrow">
+                            <!-- <p style="position:relative; top:35px;left:25px;">through</p> -->
+                            <!-- add arrow Image over here -->
+                            <img src="{{ asset('assets-new/images/arrowRight.png') }}">
+                            <!-- add arrow Image over here -->
+                        </div>
+                        <div class="blockProblem">
+                            <div class="projectBlock text-center">
+                                <h2>Natural Resources</h2>
+                                <div class="projectList text-center">
+                                    <div class="imgWrp">
+                                        <img class="mx-auto" src="{{ asset('assets-new/verification_types/resource-managment/'.$resources->file)}}"
+                                            width="100%" height="128px">
+                                    </div>
+                                    <p class="redText" style="color:red">{{ date('d/m/Y', strtotime($resources->created_at))}}</p>
+                                </div>
+                                <div class="projectList">
+                                <p class="date"> &nbsp;&nbsp;&nbsp;</p>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        @else
+                        <div class="col-md-12">
+                            <button type="button"  class="btn btn-success add-entity" data-toggle="modal" data-target="#resource_management_model" >Add <i class="fa fa-plus"></i></button>
+                        </div>
+                        @endif
+
+
+
+
+
+
+
+
+
+                                 
                     </div>
-                    @endif
+                    
                     <!-- Condition block end -->
                         <div class="questionWrap">
                             
@@ -102,21 +155,15 @@
                                 </ul>
                                 <h5>Do you use resources or physical entities to solve ProblemName?</h5>
                                 <ul class="validate_que" style="list-style:none;">
-                                    
                                     <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, I use resources or natural entities to solve ProblemName</label></li>
                                     <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, I do not use resources or natural entities to solve ProblemName</label></li>
-                                
                                 </ul>
                                 <h5>Are usage of resources or physical entities required to solve ProblemName?</h5>
                                 <ul class="validate_que" style="list-style:none;">
-                                    
                                     <li><label>&nbsp;&nbsp;<input type="radio" name="validation_4" {{ (@$verification->validations->validation_4 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, usage of resources or physical entities required to solve ProblemName</label></li>
                                     <li><label>&nbsp;&nbsp;<input type="radio" name="validation_4" {{ (@$verification->validations->validation_4 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, usage of resources or physical entities required to solve ProblemName</label></li>
                                 
                                 </ul>
-        
-        
-                                
                                 <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
                             </form>
                         </div>
@@ -127,14 +174,62 @@
         </div>
     </div>
     <!-- Content Section End -->
-<form id="replace-problem">    
-    <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
-    <input type="hidden" name="project_id" value="{{ $project_id }}">
-    <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
-    <input type="hidden" name="solution_function_id" id="solution_function_id" value="{{ $Solution_function->id }}">   
-    <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
-</form>
+    <form id="replace-problem">    
+        <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+        <input type="hidden" name="project_id" value="{{ $project_id }}">
+        <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+        <input type="hidden" name="solution_function_id" id="solution_function_id" value="{{ $Solution_function->id }}">   
+        <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
+    </form>
 </div>
+
+<!----Model Start-->
+<div class="modal fade" id="resource_management_model" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Resource Managment</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="resource_management-form" >
+            <input type="hidden" name="id" id="id" value="">
+            <input type="hidden" name="project_id" value="{{ $project_id }}">
+            <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">   
+            <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+            <div class="form-group">
+            <label for="compensator">Upload File</label>
+            <input type="file" name="file" data-height="150" id="file" class="dropify" accept="image/*, video/*">
+            </div>
+            <div class="form-group">
+                <label for="compensator">Problem</label>
+               <input type="text" class="form-control" value="{{ $problem->name}}" disabled>
+            </div>
+            <div class="form-group">
+                <label for="feedback">Solution</label>
+                <input type="text" class="form-control" value="{{ $solution->name}}" disabled>
+                
+            </div>
+            <div class="form-group">
+                <label for="date">Entity Usage</label>
+                <input type="text" class="form-control" value="{{ $entity->entity}}" disabled>
+            </div>
+            
+            
+          </form>
+        </div> 
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success" id="btnSave">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Model End-->
+
+
 
 @endsection
 @section('css')
@@ -263,9 +358,9 @@ function calculte(){
 
 }
 //sol-fun-av
-$(document).on('click','#replace_sol',function(e){
+$(document).on('click','#btnSave',function(e){
        e.preventDefault();
-       var fd = new FormData($('#replace-problem')[0]);
+       var fd = new FormData($('#resource_management-form')[0]);
        $.ajaxSetup({
        headers: {
                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -273,7 +368,7 @@ $(document).on('click','#replace_sol',function(e){
        });
        
        $.ajax({
-           url: "{{route('adult.replace-problem-by-problem')}}",
+           url: "{{route('adult.resource-managment')}}",
            data: fd,
            processData: false,
            contentType: false,
@@ -303,15 +398,6 @@ $(document).on('click','#replace_sol',function(e){
                 
                  toastr.success(response.message);
                  location.reload()
-                //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                //  }else{
-
-
-                    
-                    // window.location.href = "{{ route('adult.dashboard')}}"
-                //  }
-                 
               }
            }
        });

@@ -22,23 +22,32 @@
                             <div class="projectBlock text-center">
                                 <h2>Error</h2>
                                 <div class="projectList text-center">
-
+                                @php $arrow = 0 @endphp    
+                                @foreach($errorcorrections as $errorcorrection)
+                                @php
+                                    $errors = json_decode($errorcorrection->error);
+                                    $errors_ =  DB::table('problem_development')->whereIn('id' , $errors)->get();
+                                @endphp
                                
-                                    @foreach($errors as $data)
-                                    <button class="btn btn-danger  mt-3">
-                                        {{ $data['error_name'] }}
-                                    </button>
-                                    @endforeach
+                                    @foreach ($errors_ as $error_)
+                                        @php $arrow++ @endphp    
+                                            <button class="btn btn-danger  mt-3">
+                                            {{ $error_->error_name }}
+                                            </button>
+                                        @endforeach
+                                @endforeach
+
                                 </div>
                               
                             </div>
                         </div>
                        
                         <div class="arrow">
+
                                 <ul>
-                                    @foreach($compensator as $entity)
+                                    @for($i = 0; $i < $arrow; $i++)
                                         <li><img src="{{ asset('assets-new/images/arrow_sm.png')}}"></li>
-                                    @endforeach
+                                    @endfor
                                 </ul>
                         </div>
                         
@@ -46,32 +55,37 @@
                             <div class="projectBlock text-center">
                                 <h2>Compensator</h2>
                                 <div class="projectList text-center">
-                                    @foreach($compensator as $data)
-                                    <button class="btn btn-success mt-3 compensator">
-                                        {{($data['compensator'] == null) ? 'No Compensator' : $data['compensator'] }}
-                                    </button>
-                                    
 
-                                    @endforeach
+                                @foreach($errorcorrections as $errorcorrection)
+                                    @php
+                                        $comp = json_decode($errorcorrection->compensator);
+                                        $compensators_ = DB::table('error_correction')->whereIn('id' , $comp)->get();
+                                    @endphp
+                                        @foreach ($compensators_ as $compensator_)
+                                                <button class="btn btn-success mt-3 compensator">
+                                                    {{( $compensator_->compensator  == null) ? 'No Compensator' :  $compensator_->compensator }} 
+                                                </button>
+                                        @endforeach
+                                @endforeach
                                 </div>
                                
                             </div>
                         </div>
-                        <div class="arrow">
+                                <div class="arrow">
                                     <ul>
-                                        @foreach($compensator as $entity)
+                                        @for($i = 0; $i < $arrow; $i++)
                                             <li><img src="{{ asset('assets-new/images/arrow_sm.png')}}"></li>
-                                        @endforeach
+                                        @endfor
                                     </ul>
-                            </div>
+                                </div>
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
                                 <h2>Feedback</h2>
                                 <div class="projectList text-center">
                                     @foreach($compensator as $data)
-                                    <button class="btn btn-success mt-3 compensator">
-                                        {{($data['feedback_applied'] == 0) ? 'Yes' : 'No' }}
-                                    </button>
+                                        <button class="btn btn-success mt-3 compensator">
+                                            {{($data['feedback_applied'] == 0) ? 'Yes' : 'No' }}
+                                        </button>
                                     @endforeach
                                 </div>
                                

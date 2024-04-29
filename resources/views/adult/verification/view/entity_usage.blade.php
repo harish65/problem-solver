@@ -2,7 +2,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+<?php $showMessage = false; ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -58,7 +58,7 @@
                                                 @php $index++; @endphp
                                             @endforeach 
                                         </ol>
-                                        <div class="imgWrp carousel-inner" role="listbox">
+                                        <div class="carousel-inner" role="listbox">
                                             @php $index = 1; @endphp
                                                 @foreach($custommers as $user)
                                                     <div class="carousel-item {{ ($index == 1) ? 'active':'' }} " data-entity_id="{{$user->id}}" data-file="{{ $user->file }}" >
@@ -86,16 +86,57 @@
                             <!-- add arrow Image over here -->
                         </div>
                         <div class="blockProblem">
-                            <div class="projectBlock">
-                                <h2>Entity Usage</h2>
-                                <div class="projectList">
-                                            @foreach ($entities as $entity)
-                                             <button class="btn btn-success mt-3">{{ $entity->entity }}</button>
-                                            @endforeach
-                                    <p class="redText"></p>
+                        <div class="blockProblem">
+                            <div class="projectBlock text-center">
+                                <h2>Available</h2>
+                                <div class="projectList text-center">
+                                    @if($entities->count() > 0)
+                                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                                        <ol class="carousel-indicators">
+                                            @php $index = 0; @endphp
+                                                @foreach($entities as $entity)
+                                                        <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
+                                                @php $index++; @endphp
+                                            @endforeach 
+                                        </ol>
+                                        <div class="carousel-inner" role="listbox">
+                                            @php $index = 1; @endphp
+                                                @foreach($entities as $entity)
+                                                    <div class="carousel-item {{ ($index == 1) ? 'active':'' }} " data-entity_id="{{$entity->id}}" data-file="{{ $entity->media }}" data-name="{{ $entity->entity }}" data-actualname="{{ $entity->actual_entity }}">
+                                                        <img  src="{{ asset('assets-new/verification_types/entity-available/'.$entity->media)}}" alt="Chania" width="80%" height="128px">
+                                                    </div>
+                                                @php $index++; @endphp
+                                            @endforeach    
+                                               
+                                        </div>
+                                    </div>
+                                    @else
+                                    <p>No Entity Available</p>
+                                    <?php $showMessage = true; ?>
+                                    @endif
+                                    <p class="redText" style="color:red">Available</p>
                                 </div>
-                                
+                                <div class="projectList">
+                                    
+                                    <ul>
+                                        <li>
+                                            <!-- <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
+                                                <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
+                                            </a> -->
+                                        </li>
+                                        <li>
+                                            <!-- <a data-id="1" class="deleteverBtn" title="Delete">
+                                                <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
+                                                    alt=""></a> -->
+                                        </li>
+                                        <li>
+                                            <!-- <a href="javascript:void(0)"  class="btn btn-success add-entity" id="add-entity"><i class="fa fa-plus"></i></a>
+                                            <a href="javascript:void(0)"  class="btn btn-primary editButton"><i class="fa fa-pencil"></i></a> -->
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
+                        </div>
                         </div>
                         <div class="long-arrow">
                             <!-- <p style="position:relative; top:35px;left:25px;">through</p> -->
@@ -202,6 +243,11 @@
 @section('css')
 
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+<style>
+    .carousel-item img{
+        border-radius:15px;
+    }
+</style>
 @endsection
 @section('scripts')
 
@@ -648,7 +694,17 @@ $('.editEnityTable').click(function(){
     $('#ent_id').val($(this).attr('data-id'))
     $('#exampleModal').modal('toggle')
 })
-
+var showMessage = "{{$showMessage}}"
+    var text_ = 'Entity Availble is must for Entity Usage.'
+    if(showMessage){
+        swal({
+            title: "Information",
+            text: text_,
+            type: "Error",
+            showCancelButton: true,
+            confirmButtonColor: '#00A14C',
+        });
+    }
 </script>
 
 @endsection

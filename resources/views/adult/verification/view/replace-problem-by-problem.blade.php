@@ -104,24 +104,11 @@
                 
                     </div>
                     @else
-                    <div class="conditionBlock justify-content-center">
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Function</h2>
-                                <div class="projectList text-center min-height-250">
-                                    <div class="imgWrp">
-                                        <a class="cursor" id="replace_sol">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="#28a745" class="bi bi-plus" viewBox="0 0 16 16">
-                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                                          </svg>
-                                        </a>
-                                    </div>
-                                    
-                                </div>
-                               
-                            </div>
+
+                        <div class="add-entity mb-3">
+                            <button type="button" class="btn btn-success" class="cursor" id="replace_sol" >+</button>
                         </div>
-                    </div>
+                   
                     @endif
                     <!-- Condition block end -->
                         <div class="questionWrap">

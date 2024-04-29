@@ -17,14 +17,15 @@
                         $solution_id =  Crypt::encrypt($solution_id);
                     ?>
                 <div class="modal-body">
-                    <input type="hidden" name="pricple_identify_id" id="pricple_identify_id" value="">
+                    <input type="hidden" name="id" id="id_" value="">
+                    <input type="hidden" name="principle_main_id" id="principle_main_id" value="{{ @$content->id}}">
+                    <input type="hidden" name="principle_identification_id" id="principle_identification_id" value="">
+                    <input type="hidden" name="principle_type" id="principle_type	" value="{{ @$content->principle_type	}}">
                     <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
                     <input type="hidden" name="project_id" value="{{ $project_id }}">
-                    <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
-                    <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
-                    <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
                     <div class="form-group">
-                        <input type="text" disabled value="{{ 'Problem : '.@$problem->name }}" class="form-control"  placeholder="Problem Name">
+                        <input type="text" disabled value="{{ 'Problem : '.@$problem->name }}" class="form-control"
+                            placeholder="Problem Name">
                     </div>
                     <div class="form-group">
                         <input type="text" disabled value="{{ 'Solution : '.@$solution->name }}" class="form-control"
@@ -34,31 +35,20 @@
                         <input type="text" disabled value="{{ 'Solution Function : '.@$Solution_function->name }}"
                             class="form-control" id="updateSolFunctionName" placeholder="Solution Function Name *"
                             required>
-
                     </div>
-                  
                     <div class="form-group">
                         <input type="text" disabled value="{{ 'varification Type : '.@$verificationType->name }}"
                             class="form-control" id="varificationType" placeholder="varification Type *" required>
                     </div>
                     <div class="form-group">
-
-                <input type="text" value="" disabled id="principle"  class="form-control">
-                    
-                </div>
-
-                    
-                    <div class="form-group">
-
-                        <select class="form-control" name="applicable" id="applicable">
-                            <option value='0'>YES</option>
-                            <option value='1'>NO</option>
-                            
-                        </select>
-
-
+                        <input type="text" value="" disabled id="principle" class="form-control">
                     </div>
-
+                    <div class="form-group">
+                        <select class="form-control" name="applicable" id="applicable">
+                            <option value='1'>YES</option>
+                            <option value='0'>NO</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

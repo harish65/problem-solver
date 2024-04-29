@@ -217,7 +217,7 @@
         </div>
         <div class="modal-body">
           <form method="post" id="function-adjustment-form" >
-            <input type="hidden" name="id" id="function_ad_id" value="{{ @$functionAud->id }}">
+            <input type="hidden" name="id" id="function_ad_id" value="">
             <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
             <input type="hidden" name="project_id" value="{{ $project_id }}">
             <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
@@ -365,6 +365,7 @@ $('#btnSave').click(function(e){
                 });
             },
             success: function (response){
+                
                 if(response.success == false)
                 {
                     $('#btnSave').attr('disabled',false);
@@ -373,6 +374,7 @@ $('#btnSave').click(function(e){
                     $.each( errors, function( key, value ) {
                         toastr.error(value)
                     });
+                    location.reload();
                 } else {
                     
                     toastr.success(response.message);

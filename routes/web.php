@@ -257,6 +257,10 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::post("sol-fun-av", [\App\Http\Controllers\Adult\VerificationController::class, 'SolutionFunctionAverage'])-> name("sol-fun-av");
         //	Replace Problem by Problem
         Route::post("replace-problem-by-problem", [\App\Http\Controllers\Adult\VerificationController::class, 'replaceProblemByProblem'])-> name("replace-problem-by-problem");
+        // Passive Voice
+        Route::post("passive-voice", [\App\Http\Controllers\Adult\VerificationController::class, 'storePassiveVoice'])-> name("passive-voice");
+        // Passive Voice
+        Route::post("resource-managment", [\App\Http\Controllers\Adult\VerificationController::class, 'storeResourceManagment'])-> name("resource-managment");
 
 
     });  

@@ -257,9 +257,7 @@
         margin-top: 17%;
         list-style: none;
     }
-    #ui-datepicker-div{
-        position: absolute !important;
-    }
+    
 
     
 </style>

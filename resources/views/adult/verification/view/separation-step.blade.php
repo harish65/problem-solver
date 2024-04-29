@@ -50,7 +50,7 @@
                                   
                                         <div class="blockProblem col-sm-3">
                                             <div class="projectBlock text-center">
-                                                <h2>Person</h2>
+                                                <h2>People</h2>
                                                 <div class="projectList text-center sepration-step">
                                                     <div class="imgWrp">
                                                         <div id="myCarousel" class="carousel slide " data-ride="carousel">

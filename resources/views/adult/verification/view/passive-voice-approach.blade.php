@@ -29,6 +29,8 @@
             </div>
         </div>
     </div>
+
+    
     <div class="relationshipContent">
         <div class="container">
             <div class="row">
@@ -41,6 +43,7 @@
                 </div>
                 <!-- start -->
                 <div class="principleRelation container">
+                    @if($voiceApproach && $voiceApproach->added == 1)
                     <div class="conditionBlock justify-content-center">
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
@@ -83,18 +86,11 @@
                             </div>
                         </div>
                         </div>
-
-
-
-
-
-
-                        <div class="add-entity mb-3">
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+</button>
-                        </div>
-                   
-
-                        
+                        @else
+                            <div class="add-entity mb-3">
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+</button>
+                            </div>
+                    @endif
                         <div class="questionWrap">
                             <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
                                 tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
@@ -106,13 +102,13 @@
                             <h2>Validation Question</h2>
                             <br>
                             <form id="validation_form">
-                            <input type="hidden" name="id" value="{{ @$verification->id }}"> 
-                            <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
-                            <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
-                            <input type="hidden" name="project_id" value="{{ $project_id }}">
-                            <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
-                            <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
-                            <input type="hidden" name="name" id="name_" value="averaging_approach">
+                                <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                                <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
+                                <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                                <input type="hidden" name="project_id" value="{{ $project_id }}">
+                                <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                                <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                                <input type="hidden" name="name" id="name_" value="averaging_approach">
                             
                                 
                                 <h5>Do you understand that a problem needs to be solved?</h5>
@@ -133,6 +129,9 @@
             </div>
         </div>
     </div>
+
+
+
     <!-- Content Section End -->
 <!-- Modal Start -->
     
@@ -146,7 +145,7 @@
           </button>
         </div>
         <div class="modal-body">
-             <form id="sol-fun-av-form" method="post">
+             <form id="passivevoice-form" method="post">
                 <input type="hidden" name="id" id="function_ad_id" value="{{ @$problemPart->id }}">
                 <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
                 <input type="hidden" name="project_id" value="{{ $project_id }}">
@@ -173,7 +172,8 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-success" data-dismiss="modal">Submit</button>
+             
+          <button type="button" class="btn btn-success" id="btnSave">Submit</button>
         </div>
       </div>
     </div>
@@ -307,7 +307,7 @@ function calculte(){
 //sol-fun-av
 $(document).on('click','#btnSave',function(e){
        e.preventDefault();
-       var fd = new FormData($('#sol-fun-av-form')[0]);
+       var fd = new FormData($('#passivevoice-form')[0]);
        $.ajaxSetup({
        headers: {
                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -315,7 +315,7 @@ $(document).on('click','#btnSave',function(e){
        });
        
        $.ajax({
-           url: "{{route('adult.sol-fun-av')}}",
+           url: "{{route('adult.passive-voice')}}",
            data: fd,
            processData: false,
            contentType: false,
