@@ -42,6 +42,7 @@
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
+                @if(!empty($users[0]->comment) )
                 <div class="principleRelation ">
                     <div class="heading_comm">
                         <div class="md-col-6">
@@ -125,7 +126,7 @@
                     </div>
                 </div>
                 <!-- End -->
-                
+                @endif
             </div>
         </div>
     </div>

@@ -22,6 +22,7 @@ use App\Models\PastAndPresentTime;
 use App\Models\Customer;
 use App\Models\TimeVerification;
 use App\Models\PrincipleIdentificationMain;
+use App\Models\AverageApproach;
 use DB;
 use Auth;
 use Redirect;
@@ -807,10 +808,7 @@ class VerificationController extends BaseController
                                 break;
                                 case 20:
                                    
-                                    $allVarifications = DB::table(
-                                        "principle_identification"
-                                    )->get();
-                                   
+                                    
                                     if (!$verification) {
                                         $verification = Verification::where(
                                             "verification_type_id", "=", 16
@@ -827,9 +825,7 @@ class VerificationController extends BaseController
                                             "id", "=", 16
                                         )->first();
                                     }
-                                    $problemPart = DB::table("averaging_approach")->select('problem_part' , 'id') ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
-                                   
-                                    
+                                    $problemPart = DB::table("average_approaches") ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
                                     return view(
                                         "adult.verification.view.average-aparoach-calculation",
                                         compact(
@@ -843,7 +839,7 @@ class VerificationController extends BaseController
                                             "solution_id",
                                             "Solution_function",
                                             "verifiationTypeText",
-                                            "allVarifications","problemPart"
+                                            "problemPart"
                                             
                                             
                                         )
@@ -1084,36 +1080,7 @@ class VerificationController extends BaseController
                                                         );
                                                         break;
                                                         case 26:
-                                   
-                                                            $allVarifications = DB::table(
-                                                                "principle_identification"
-                                                            )->get();
-                                                            $custommers = DB::table("customers")
-                                                                                    ->where("project_id", "=", $project_id)
-                                                                            ->get();
-                                                            if (!$verification) {
-                                                                $verification = Verification::where(
-                                                                    "verification_type_id", "=", 16
-                                                                )->first();
-                                                                if (isset($verification->validations)) {
-                                                                    $verification->validations = json_decode(
-                                                                        $verification->validations
-                                                                    );
-                                                                }
-                                                            }
-                                                            $entities = DB::table("entity_available")
-                                                            ->where("type", "=", 0)
-                                                            ->get();
-        
-                                                            $entitiestbl = DB::table("entities")->get();
-                                                            if(!$verificationType){
-                                                                $verificationType = VerificationType::where(
-                                                                    "id", "=", 16
-                                                                )->first();
-                                                            }
-                                                           
-                                                           
-                                                            
+                                                            $entiesBehind = DB::table('visibility_entity_behind_explanation')->where('user_id' , Auth::user()->id)->where('project_id',$project_id)->get();
                                                             return view(
                                                                 "adult.verification.view.visibility_and_entity_behind_explanation",
                                                                 compact(
@@ -1126,8 +1093,8 @@ class VerificationController extends BaseController
                                                                     "solution",
                                                                     "solution_id",
                                                                     "Solution_function",
-                                                                    "verifiationTypeText",
-                                                                    "allVarifications","entities" ,"entitiestbl","custommers"
+                                                                    "verifiationTypeText","entiesBehind"
+                                                                    
                                                                     
                                                                     
                                                                 )
@@ -2600,12 +2567,12 @@ class VerificationController extends BaseController
             return $this->sendError("Validation Error.", $validator->errors());
         }
         try {
+
+         
             $data =  $request->all();
            
-            $insert = DB::table(
-                "averaging_approach"
-            )->updateOrInsert(
-                ["id" => @$request->id],
+            $insert = AverageApproach::updateOrCreate(
+                ["id" => $request->id],
                 [
                     "problem_id" => $data["problem_id"],
                     "project_id" => $data["project_id"],
@@ -2614,9 +2581,27 @@ class VerificationController extends BaseController
                     "user_id" => Auth::user()->id,                   
                     "solution_value" => $data["solution_value"],
                     "problem_part" => $data["problem_part"],
+                    "solution_part_value" => 2,
+                    "created_at" => date('Y-m-d H:i:s')
                     
                 ]
             );
+            if($insert->id){
+                if($request->id){
+                        DB::table('averagin_aproach_parts')->where('average_approach_id' , $request->id)->where('project_id', $data["project_id"])->where('user_id' ,Auth::user()->id)->delete();
+                }
+                for($i=0; $i < $data["problem_part"];$i++ ){
+                        DB::table('averagin_aproach_parts')->updateOrInsert(['id' => $request->part_id],
+                            [
+                                "project_id" => $insert->project_id,
+                                "user_id" => Auth::user()->id,    
+                                "average_approach_id" => $insert->id,
+                                "solution_part_value" => 2
+                                
+                            ]
+                        );
+                }
+            }
             $success["entity"] = $insert;
             return $this->sendResponse(
                 $success,
@@ -2629,6 +2614,31 @@ class VerificationController extends BaseController
         } 
     }
 
+    public function UpdateSolutionFunctionAverage(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            "solution_part" => "required|numeric",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError("Validation Error.", $validator->errors());
+        }
+
+        try {
+            $data =  $request->all();
+           
+            $insert = DB::table("averagin_aproach_parts")->where('id' , $request->id)->update(['solution_part_value'=>$request->solution_part]);
+            $success["entity"] = $insert;
+            return $this->sendResponse(
+                $success,
+                "Record created successfully."
+            );
+        }catch(Exception $e){
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
+            ]);
+        } 
+
+    }
 
     //Replace Problem By Problem
 
@@ -2776,6 +2786,61 @@ class VerificationController extends BaseController
                 "error" => $e->getMessage(),
             ]);
         } 
+    }
+
+    public function storeVisibilityEntityBehindExplanation(Request $request){
+        $validator = Validator::make($request->all(), [
+            "entity_name" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError("Validation Error.", $validator->errors());
+        }
+        try {
+            $data =  $request->all();
+            $insert = DB::table(
+                "visibility_entity_behind_explanation"
+            )->updateOrInsert(
+                ["id" => $request->id],
+                [                   
+                    "project_id" => Crypt::decrypt($data["project_id"]),
+                    "user_id" => Auth::user()->id,                   
+                    "entity_name" => $data["entity_name"],
+                    "put_behind" => $data["put_behind"]
+                ]
+            );
+            $success["entity"] = $insert;
+            return $this->sendResponse(
+                $success,
+                "Record created successfully."
+            );
+        }catch(Exception $e){
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
+            ]);
+        } 
+
+    }
+
+
+
+    public function deleteVisibilityEntityBehindExplanation(Request $request){
+        try {            
+            
+            $delete = Db::table('visibility_entity_behind_explanation')->where("id", "=", $request->id)
+                ->delete();
+                
+            
+                $success["delete_verification"] = true;
+                return $this->sendResponse(
+                    $success,
+                    "Record deleted successfully."
+                );
+          
+        } catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
+            ]);
+        }
     }
 
 }

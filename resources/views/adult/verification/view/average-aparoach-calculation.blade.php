@@ -44,17 +44,25 @@
                             <div class="add-entity mb-3">
                                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+ Calculate</button>
                             </div>
+                            <?php
+                                $solutionParts = 0;
+                                if(isset($problemPart->problem_part)  && !is_null($problemPart->problem_part)){
+                                    $solutionParts = \App\Models\AverageApproach::getSolutionParts($problemPart->project_id, $problemPart->id);
+                                }
+                            ?>
                     <div class="partitionApp">
                             <div class="blockProblem">
                                     <div class="projectBlock text-center">
                                         <h2>Problem</h2>
                                        <div class="problem-list">
                                         <ul class="text-center p-2">
-                                            @if(isset($problemPart->problem_part)  && !is_null($problemPart->problem_part))
-                                                @for($i = 1; $i<= $problemPart->problem_part; $i++)
-                                                    <li class="form-control btn btn-success">{{ __('Part ') . $i}}</li>
-                                                @endfor  
-                                            @endif   
+                                            
+                                                @foreach($solutionParts as $key => $solutionPart)
+                                                    <li class="form-control btn btn-success">
+                                                        <span>{{ __('Part ') . ++$key}}</span>
+                                                    </li>
+                                                @endforeach  
+                                            
                                         </ul>
                                        </div>
                                             
@@ -62,11 +70,10 @@
                                 </div>
                                 <div class="arrow">
                                     <ul>
-                                        @if(isset($problemPart->problem_part)  && !is_null($problemPart->problem_part))
-                                            @for($i = 1; $i<= $problemPart->problem_part; $i++)
+                                        @foreach($solutionParts as $solutionPart)
                                             <li><img src="{{ asset('assets-new/images/arrow_sm.png')}}"></li>
-                                            @endfor 
-                                        @endif       
+                                        @endforeach 
+                                          
                                     </ul>
                                 </div>
                                 <div class="blockProblem">
@@ -75,9 +82,17 @@
                                         <div class="problem-list">
                                             <ul class="text-center p-2">
                                                 @if(isset($problemPart->problem_part)  && !is_null($problemPart->problem_part))
-                                                    @for($i = 1; $i<= $problemPart->problem_part; $i++)
-                                                        <li class="form-control btn btn-success">{{ __('Part ') . $i}}</li>
-                                                    @endfor
+                                                    @foreach ($solutionParts as $key => $solutionPart)
+                                                            <li class="form-control btn btn-success">
+                                                                <span class="text-part-val float-left">
+                                                                    {{ $solutionPart->solution_part_value  }}
+                                                                </span>
+                                                                <span>{{ __('Part ') . ++$key}}</span>
+                                                                <span class="text-part-val float-right edit-part" title="Edit" data-id="{{ $solutionPart->id }}" data-value="{{ $solutionPart->solution_part_value }}">
+                                                                    <i class="fa fa-pencil"></i>
+                                                                </span>
+                                                            </li>
+                                                        @endforeach
                                                 @endif       
                                             </ul>
                                         </div>
@@ -182,6 +197,40 @@
     </div>
   </div>
 <!-- Modal End -->
+<!---Start Update Solution Val-->
+<div class="modal fade" id="soulutionpartModels" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Solution Part</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form id="sol-form" method="post">
+                <input type="hidden" name="id" id="averagin_aproach_parts" value="{{ @$problemPart->id }}">
+                
+                <input type="hidden" name="project_id" value="{{ $project_id }}">
+               
+                
+                <div class="row">
+                    <div class="from-group">
+                        <label for="problem">Solution Part</label>
+                        <input type="text" value="" id="sol_part_val" name="solution_part" class="form-control" placeholder="Solution Value">
+                    </div>
+                  
+                </div>
+             </form>                 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" id="btnUpdate">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--- End Solution Va-->
 </div>
 
 @endsection
@@ -300,13 +349,12 @@ $('.dashboard').click(function(){
 })
 </script>
 <script>
-function calculte(){
-    var solval = $('#sol_val').val();
-    var problempart = Math.round(solval/2);
-     $('#problem_part_front , #problem_parts').val(problempart);
-     $('#result').val(2);
-
-}
+    function calculte(){
+        var solval = $('#sol_val').val();
+        var problempart = Math.round(solval/2);
+            $('#problem_part_front , #problem_parts').val(problempart);
+            $('#result').val(2);
+    }
 //sol-fun-av
 $(document).on('click','#btnSave',function(e){
        e.preventDefault();
@@ -347,20 +395,65 @@ $(document).on('click','#btnSave',function(e){
              } else {
                 
                  toastr.success(response.message);
-                 location.reload()
-                //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                //  }else{
-
-
-                    
-                    // window.location.href = "{{ route('adult.dashboard')}}"
-                //  }
-                 
+                 location.reload() 
               }
            }
        });
    });
+$('.edit-part').on('click',function(){
+        var row_id = $(this).data('id')
+        if(row_id){
+            $('#sol_part_val').val($(this).data('value'))
+            $('#averagin_aproach_parts').val(row_id)
+            $('#soulutionpartModels').modal('toggle')
+        }
+})
+
+$(document).on('click' , '#btnUpdate', function(e){
+   
+    e.preventDefault();
+       var fd = new FormData($('#sol-form')[0]);
+       $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+       
+       $.ajax({
+           url: "{{route('adult.update-solution-part')}}",
+           data: fd,
+           processData: false,
+           contentType: false,
+           dataType: 'json',
+           type: 'POST',
+           beforeSend: function(){
+             $('#btnUpdate').attr('disabled',true);
+             $('#btnUpdate').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+           },
+           error: function (xhr, status, error) {
+               $('#btnUpdate').attr('disabled',false);
+               $('#btnUpdate').html('Save changes');
+               $.each(xhr.responseJSON.data, function (key, item) {
+                   toastr.error(item);
+               });
+           },
+           success: function (response){
+             if(response.success == false)
+             {
+                 $('#btnUpdate').attr('disabled',false);
+                 $('#btnUpdate').html('Save changes');
+                 var errors = response.data;
+                 $.each( errors, function( key, value ) {
+                     toastr.error(value)
+                 });
+             } else {
+                
+                 toastr.success(response.message);
+                 location.reload() 
+              }
+           }
+       });
+})
 
 </script>
 

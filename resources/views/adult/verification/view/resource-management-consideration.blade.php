@@ -214,7 +214,7 @@
             </div>
             <div class="form-group">
                 <label for="date">Entity Usage</label>
-                <input type="text" class="form-control" value="{{ $entity->entity}}" disabled>
+                <input type="text" class="form-control" value="{{ @$entity->entity}}" disabled>
             </div>
             
             

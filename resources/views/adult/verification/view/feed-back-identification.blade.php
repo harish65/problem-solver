@@ -46,7 +46,7 @@
                                         <td>{{ date('d/m/Y' , strtotime($data->feedback_date)) }} </td>
                                         <td>{{ $data->from_person }}</td>
                                         <td>
-                                                <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  data-error_id="{{$data->error_id}}" data-feedback_date="{{date('d-m-Y' , strtotime($data->feedback_date))}}"  data-feedback="{{$data->feedback}}" data-from_person="{{$data->from_person}}"  data-error_name="{{ $data->error_name}}"class="btn btn-success editBtn"><i class="fa fa-pencil"></i></a>
+                                                <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  data-error_id="{{$data->error_id}}" data-feedback_date="{{date('d-m-Y' , strtotime($data->feedback_date))}}" data-date="{{$data->feedback_date}}"  data-feedback="{{$data->feedback}}" data-from_person="{{$data->from_person}}"  data-error_name="{{ $data->error_name}}"class="btn btn-success editBtn"><i class="fa fa-pencil"></i></a>
                                                 <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  class="btn btn-danger delete-btn"><i class="fa fa-trash"></i></a>
                                         </td>
                                     </tr>
@@ -81,21 +81,21 @@
                 <select class="form-control" name="error" id="error_name">
                     <option value="">Please Select ...</option>
                         @foreach($problemDevelopment as $error)
-                            <option value="{{ $error->id }}">{{ $error->error_name }}</option>
+                            <option value="{{ $error->id }}" data-date="{{ $error->error_date }}">{{ $error->error_name }}</option>
                         @endforeach
                 </select>
             </div>
             <div class="form-group">
                 <label for="feedback">Feedback</label>
-                <input type="text" class="form-control" name="feedback" id="feedback">
+                <input type="text" class="form-control" name="feedback" id="feedback" autocomplete="off">
             </div>
             <div class="form-group">
                 <label for="date">Date</label>
-                <input type="text" class="form-control" name="date" id="date">
+                <input type="text" class="form-control" name="date" id="date" autocomplete="off">
             </div>
             <div class="form-group">
                 <label for="from-person">From Person</label>
-                <input type="text" class="form-control" name="from-person" id="from-person">
+                <input type="text" class="form-control" name="from-person" id="from-person" autocomplete="off">
             </div>
             
           </form>
@@ -166,15 +166,22 @@ $(document).on('click' , '#btnSave', function(e){
         });
 
    });
-   $('#date').datepicker();
+   
    $('.editBtn').on('click',function(){
     
         $('#f_id').val($(this).data('id'))
         $('#error_name').val($(this).data('error_id'))
         $('#feedback').val($(this).data('feedback'))        
         $('#from-person').val($(this).data('from_person'))
-        $('#date').val($(this).data('feedback_date'))
+        $('#date').val($(this).data('feedback_date')).attr('disabled',false)
+        var date_selected = $('#error_name option:selected').data('date')
+
+        $('#date').datepicker({
+            minDate: new Date(date_selected),
+            maxDate:0
+        })
         $('#feedback_identification_modal').modal('toggle')
+        return;
    })
 
    $('.delete-btn').on('click',function(e){
@@ -228,6 +235,20 @@ $(document).on('click' , '#btnSave', function(e){
     $('#feedback-identification-form')[0].reset();  
     $('#feedback_identification_modal').modal('toggle')
 })
+$('#date').attr('disabled' , true)
+
+var option = null;
+$('#error_name').on('change',function(){
+    option = $('option:selected', this).data('date');
+    $('#date').datepicker({
+            minDate:new Date(option),
+            maxDate: 0
+    });
+    $('#date').attr('disabled' , false)
+})
+
+
+
 </script>
 
 @endsection

@@ -45,6 +45,8 @@
                 <!-- start -->
                 @if($users->count() > 0)
                 <?php $ShowMessage =  false; ?>
+                @if($content)
+                
                 <div class="principleRelation">
                     <div class="conditionBlock">
                         <div class="blockProblem">
@@ -140,7 +142,7 @@
                                 <h2>Principle Identification</h2>
                             </div>
                                 <div class="text-right w-50 pt-3">
-                                    <button type="button"  class="btn btn-success addVocabularyBtn" id="add-new-variant">Select</button>
+                                    <button type="button"  class="btn btn-success addVocabularyBtn" id="add-new-variant">Identify Princpal</button>
                                 </div>
                             </div>
                             </div>
@@ -162,23 +164,25 @@
                                                 @endphp
                                                 
                                                 @if(isset($content->principle_type) &&  $content->principle_type == 0 && ($data->id == 4 || $data->id == 5 || $data->id == 10) ) 
-                                                <tr class="table-active">
-                                                    <td>{{ ++$key }}</td>
-                                                    <td>{{ $data->text }}</td>
-                                                    <td>{{ ($applicable == 1) ? 'Yes':'No' }}</td>
-                                                    <td scope="row">
-                                                    <!-- <img src="{{ asset('assets-new/images/editIcon.png')}}" alt=""> -->
-                                                    </td>
-                                                </tr>
-                                                @else
                                                 <tr>
                                                     <td>{{ ++$key }}</td>
                                                     <td>{{ $data->text }}</td>
-                                                    <td>{{ ($applicable == 1) ? 'Yes':'No'  }}</td>
-                                                    <td>
-                                                    <a href="javaScript:Void(0)" class="editEntity" data-number="{{$data->id }}" data-priciple="{{$data->text }}"
-                                                    ><img src="{{ asset('assets-new/images/editIcon.png')}}" alt=""></a>
+                                                    <td>{{ ($applicable == 1) ? 'Yes':'No' }}</td>
+                                                    <td > 
+                                                            <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
                                                     </td>
+                                                </tr>
+                                                @else
+                                                <tr> 
+                                                    @if($data->id != 4 && $data->id != 5 && $data->id != 10)
+                                                        <td>{{ ++$key }}</td>
+                                                        <td>{{ $data->text }}</td>
+                                                        <td>{{ ($applicable == 1) ? 'Yes':'No'  }}</td>
+                                                        <td>
+                                                        <a href="javaScript:Void(0)" class="editEntity" data-number="{{$data->id }}" data-priciple="{{$data->text }}"
+                                                        ><img src="{{ asset('assets-new/images/editIcon.png')}}" alt=""></a>
+                                                        </td>
+                                                    @endif
                                                 </tr>
                                                 @endif
                                         @endforeach
@@ -223,6 +227,13 @@
                         </div>
                         
                 </div>
+                @else
+                    
+                        <div class="text-right w-50 pt-3">
+                            <button type="button"  class="btn btn-success addVocabularyBtn" id="add-new-variant">Identify Princpal</button>
+                        </div>
+                    
+                @endif
                 @endif
                 <!-- End principleRelation-->
             </div>

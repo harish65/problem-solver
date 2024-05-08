@@ -255,13 +255,17 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::post("store-function-adjustment", [\App\Http\Controllers\Adult\VerificationController::class, 'storeFunctionAdjustment'])-> name("store-function-adjustment");
         Route::post("function-sub-and-people", [\App\Http\Controllers\Adult\VerificationController::class, 'functionSustitutionAndPeople'])-> name("function-sub-and-people");
         Route::post("sol-fun-av", [\App\Http\Controllers\Adult\VerificationController::class, 'SolutionFunctionAverage'])-> name("sol-fun-av");
+        Route::post("update-solution-part", [\App\Http\Controllers\Adult\VerificationController::class, 'UpdateSolutionFunctionAverage'])-> name("update-solution-part");
         //	Replace Problem by Problem
         Route::post("replace-problem-by-problem", [\App\Http\Controllers\Adult\VerificationController::class, 'replaceProblemByProblem'])-> name("replace-problem-by-problem");
         // Passive Voice
         Route::post("passive-voice", [\App\Http\Controllers\Adult\VerificationController::class, 'storePassiveVoice'])-> name("passive-voice");
         // Passive Voice
         Route::post("resource-managment", [\App\Http\Controllers\Adult\VerificationController::class, 'storeResourceManagment'])-> name("resource-managment");
-
+        //visibility_entity_behind_explanation deleteVisibilityEntityBehindExplanation
+ 
+        Route::post("visibility_entity_behind_explanation", [\App\Http\Controllers\Adult\VerificationController::class, 'storeVisibilityEntityBehindExplanation'])-> name("visibility_entity_behind_explanation");
+        Route::post("del_visibility_entity_behind_explanation", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteVisibilityEntityBehindExplanation'])-> name("del_visibility_entity_behind_explanation");
 
     });  
 });
