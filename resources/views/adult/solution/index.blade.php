@@ -25,9 +25,9 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                         ?>
-                            <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                            <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                            <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
+                            <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                            <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                            <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
 @if(isset($problem->id))
  <!-- Start card main div -->
     <div class="solutionconditionBlock">
@@ -40,11 +40,11 @@
                 
                             @if($problem -> problem_type == 0)
                                     @if(strlen($problem -> problem_file) < 15)
-									    <img class="mx-auto aaa" src="{{ asset("assets-new/problem/" . $problem -> problem_file) }}" width="100%" height="128px">
+									    <img class="mx-auto aaa" src="{{ asset('assets-new/problem/' . $problem -> problem_file) }}" width="100%" height="128px">
                                     @endif
                             @elseif($problem -> problem_type == 1)
 									<video class="mx-auto" controls="controls" preload="metadata" width="300" height="320" preload="metadata">
-										<source src="{{ asset("assets-new/problem/" . $problem -> problem_file) }}#t=0.1" type="video/mp4">
+										<source src="{{ asset('assets-new/problem/' . $problem -> problem_file) }}#t=0.1" type="video/mp4">
 									</video>
                             @elseif($problem -> problem_type == 2)
 									    <iframe class="mx-auto" src="{{ $problem -> problem_file }}"width="300" height="320"> </iframe>
@@ -70,15 +70,15 @@
               <div class="imgWrp">
                 @if($problem -> type == 0)
 									@if(strlen($problem -> file) < 15)
-										<img class="mx-auto" src="{{ asset("assets-new/solution/" . $problem -> file) }}" width="100%" height="128px">
+										<img class="mx-auto" src="{{ asset('assets-new/solution/'.$problem -> file) }}" width="100%" height="128px">
 									@endif
-								@elseif($problem -> type == 1)
+								    @elseif($problem -> type == 1)
 									<video class="mx-auto" controls="controls" preload="metadata" width="100%" height="128px" preload="metadata">
-										<source src="{{ asset("assets-new/solution/" . $problem -> file) }}#t=0.1" type="video/mp4">
+										<source src="{{ asset('assets-new/solution/'.$problem -> file) }}#t=0.1" type="video/mp4">
 									</video>
-								@elseif($problem -> type == 2)
+								    @elseif($problem -> type == 2)
 									    <iframe class="mx-auto" src="{{ $problem -> file }}" width="100%" height="128px"> </iframe>
-								@endif 
+								    @endif 
               </div>
                 <p class="redText">{{ $problem->name }}</p>
               </div>
@@ -215,7 +215,7 @@
 <script>
     var shoMessage = '{{ $showMessage }}'
         if(shoMessage){
-            var solutionMsg = "A project is created to solve a problem.  A solution of problem is identified in that project to solve the identified problem.  Please, go back to open/create a project before identifying the solution for the problem"
+            var solutionMsg = "It is impossible to identify the solution to a problem that does not exist.  Please refer to the problem page to identify the problem first before identifying the solution for that problem."
             swal({
             title: "No Solution Created",
             text: solutionMsg,

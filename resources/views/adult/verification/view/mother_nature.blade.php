@@ -36,43 +36,151 @@
     <div class="relationshipContent">
         <div class="container">
             <div class="row">
-                <div class="col-sm-12">
-                    <h1>{{ @$verificationType->page_main_title }}</h1>
-                    <p>{{ @$verificationType->explanation }}</p>
-                    <div class="relationImage text-center">
-                        <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                            
-                            <div class="imgWrp carousel-inner" role="listbox">
-                               
-                                        <div class="carousel-item active"  >
-                                            <img  src="{{ asset('assets-new/verification_types/mn/mn1.png')}}" alt="Chania" width="100%">
+                
+                    <div class="col-sm-12">
+                        <h1>{{ @$verificationType->page_main_title }}</h1>
+                        <p>{{ @$verificationType->explanation }}</p>
+                            <div class="relationImage text-center">
+                                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                                        <div class="imgWrp carousel-inner" role="listbox">
+                                            <div class="carousel-item active"  >
+                                                <img  src="{{ asset('assets-new/verification_types/mn/mn1.png')}}" alt="Chania" width="100%">
+                                            </div>
+                                            <div class="carousel-item "  >
+                                                <img  src="{{ asset('assets-new/verification_types/mn/mn2.png')}}" alt="Chania" width="100%">
+                                            </div>
+                                            <div class="carousel-item "  >
+                                                <img  src="{{ asset('assets-new/verification_types/mn/mn3.png')}}" alt="Chania" width="100%">
+                                            </div>
+                                            <div class="carousel-item "  >
+                                                <img  src="{{ asset('assets-new/verification_types/mn/mn4.png')}}" alt="Chania" width="100%">
+                                            </div>
                                         </div>
-                                        <div class="carousel-item "  >
-                                            <img  src="{{ asset('assets-new/verification_types/mn/mn2.png')}}" alt="Chania" width="100%">
-                                        </div>
-                                        <div class="carousel-item "  >
-                                            <img  src="{{ asset('assets-new/verification_types/mn/mn3.png')}}" alt="Chania" width="100%">
-                                        </div>
-                                        <div class="carousel-item "  >
-                                            <img  src="{{ asset('assets-new/verification_types/mn/mn4.png')}}" alt="Chania" width="100%">
-                                        </div>
-                                   
+                                        <ol class="carousel-indicators custom">
+                                            <li data-target="#myCarousel" data-slide-to="1" class="active"></li>
+                                            <li data-target="#myCarousel" data-slide-to="2" class=""></li>
+                                            <li data-target="#myCarousel" data-slide-to="3" class=""></li>
+                                            <li data-target="#myCarousel" data-slide-to="4" class=""></li>
+                                        </ol>
+                                </div>
                             </div>
-                            <ol class="carousel-indicators custom">
-                                <li data-target="#myCarousel" data-slide-to="1" class="active"></li>
-                                <li data-target="#myCarousel" data-slide-to="2" class=""></li>
-                                <li data-target="#myCarousel" data-slide-to="3" class=""></li>
-                                <li data-target="#myCarousel" data-slide-to="4" class=""></li>
-                            </ol>
-                        </div>
-                        
                     </div>
-                    
-                   
-                </div>
+                @if($mother_nature)
                 <!-- start -->
                 <div class="principleRelation mt-3">
                     <div class="conditionBlock">
+                        <div class="solutionconditionBlock">
+                            <div class="blockProblem">
+                                <div class="projectBlock text-center">
+                                    <h2>Problem</h2>
+                                    <div class="projectList text-center">
+                                        <div class="imgWrp">
+                                            <img class="mx-auto"
+                                                src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
+                                                height="128px">
+                                        </div>
+                                        <p class="redText" style="color:red">{{ $problem->name }}</p>
+                                    </div>
+                                    <div class="projectList">
+                                        <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
+                                        <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="long-arrow">
+                                <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
+                                <!-- add arrow Image over here -->
+                                <img src="{{ asset('assets-new/images/arrowRight.png')}}" width="100px">
+                                <!-- add arrow Image over here -->
+                            </div>
+                            <div class="blockProblem">
+                                <div class="projectBlock text-center">
+                                    <h2>Solution</h2>
+                                    <div class="projectList text-center">
+                                        <div class="imgWrp">
+                                            <img class="mx-auto"
+                                                src=" {{ asset('assets-new/solution/'.$solution->file)}}" width="100%"
+                                                height="128px">
+                                        </div>
+                                        <p class="redText" style="color:#00A14C">{{ $solution->name }}</p>
+                                    </div>
+                                    <div class="projectList">
+                                        <p class="date">{{ date('d/m/Y', strtotime($solution->created_at))}}</p>
+                                        <ul>
+                                            <li>
+    
+                                            &nbsp;&nbsp;&nbsp;
+                                            </li>
+                                            <li>
+                                            &nbsp;&nbsp;&nbsp;
+                                                    
+                                            </li>
+                                            <li>
+                                            &nbsp;&nbsp;&nbsp;
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="long-arrow">
+                                <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
+                                <!-- add arrow Image over here -->
+                                <img src="{{ asset('assets-new/images/arrowRight.png')}}" width="100px">
+                                <!-- add arrow Image over here -->
+                            </div>
+                            <div class="blockProblem">
+                                <div class="projectBlock text-center">
+                                    <h2>Solution Function</h2>
+                                    <div class="projectList text-center">
+                                        <div class="imgWrp">
+                                            <img class="mx-auto"
+                                                src=" {{ asset('assets-new/solFunction/'.$Solution_function->file)}}" width="100%"
+                                                height="128px">
+                                        </div>
+                                        <p class="redText" style="color:#00A14C">{{ $Solution_function->name }}</p>
+                                    </div>
+                                    <div class="projectList">
+                                        <p class="date">{{ date('d/m/Y', strtotime($Solution_function->created_at))}}</p>
+                                        <ul>
+                                            <li>
+    
+                                            &nbsp;&nbsp;&nbsp;
+                                            </li>
+                                            <li>
+                                            &nbsp;&nbsp;&nbsp;
+                                                    
+                                            </li>
+                                            <li>
+                                            &nbsp;&nbsp;&nbsp;
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="long-arrow">
+                                <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
+                                <!-- add arrow Image over here -->
+                                <img src="{{ asset('assets-new/images/arrowRight.png')}}" width="100px">
+                                <!-- add arrow Image over here -->
+                            </div>
+                            <div class="blockProblem">
+                                <div class="projectBlock text-center">
+                                    <h2>Principle</h2>
+                                    <div class="projectList text-center">
+                                        <div class="imgWrp">
+                                            <img class="mx-auto"
+                                            src=" {{ asset('assets-new/verification_types/pi/pi-card.jpg')}}" width="100%"
+                                            height="250px">
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            
+                        </div>
+
+
                     </div>
                     <div class="questionWrap">
                         <h2>Validation Question</h2>
@@ -83,34 +191,51 @@
                                 <input type="hidden" name="solution_id" value="{{ @$solution->id }}">        
                                 <input type="hidden" name="solution_fun_id" value="{{ @$Solution_function->id }}">        
                                 <input type="hidden" name="name" value="entity_usage">        
-                        <ul style="list-style:none;">
-                            <h5>Do you understand the existing of mother nature in your problem solution?</h5>
-                            <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} >Yes, I do understand the existence of mother nature in my problem solution</label></li>
-                            <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} >No, I do not understand the existence of mother nature in my problem solution.</label></li>
-                        </ul>
-                        <ul style="list-style:none;">
-                            <h5>Do you take mother nature into consideration in your solution? </h5>
-                            <li><label><input type="radio"  name="validation_2" value="1" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} >Yes, I do take mother nature into consideration in my solution</label></li>
-                            <li><label><input type="radio"  name="validation_2" value="2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} >No, I do not take mother nature into consideration in my solution</label></li>
-                        </ul>
-                        <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                                <ul style="list-style:none;">
+                                    <h5>Do you understand the existing of mother nature in your problem solution?</h5>
+                                    <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} >Yes, I do understand the existence of mother nature in my problem solution</label></li>
+                                    <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} >No, I do not understand the existence of mother nature in my problem solution.</label></li>
+                                </ul>
+                                <ul style="list-style:none;">
+                                    <h5>Do you take mother nature into consideration in your solution? </h5>
+                                    <li><label><input type="radio"  name="validation_2" value="1" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} >Yes, I do take mother nature into consideration in my solution</label></li>
+                                    <li><label><input type="radio"  name="validation_2" value="2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} >No, I do not take mother nature into consideration in my solution</label></li>
+                                </ul>
+                                <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
                         </form>
                     </div>
                 </div>
                 <!-- End -->
+
+                @else
+                @if(is_null($principle_identifications))
+                <div class="col-sm-4">
+                    <button type="button" class="btn btn-success" onClick="messageFunction()"
+                     id="">+ Identify Entity Behind</button>
+                </div>
+                @else
+                <div class="col-sm-4">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#entityModal"
+                     id="">+ Identify Entity Behind</button>
+                </div>
+                @endif
+
+                @endif
                 
             </div>
+
+
         </div>
     </div>
     <!-- Content Section End -->
 <div class="modal fade" id="entityModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
     aria-hidden="true" enctype="multipart/form-data">
-    <form method="POST" id="entityForm" enctype="multipart/form-data">
+    <form method="POST" id="mn_form_" enctype="multipart/form-data">
         @csrf
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Entity Available</h4>
+                    <h4 class="modal-title">Mother Nature</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <?php 
@@ -122,62 +247,27 @@
                 <div class="modal-body">
                 <input type="hidden" name="updateProblemType" id="updateProblemType">
                     <input type="hidden" name="id" id="ver_id" value="{{ @$verification->id}}">
-                    <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
-                    <input type="hidden" name="project_id" value="{{ $project_id }}">
-                    <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
-                    <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                    <input type="hidden" name="problem" id="problem_id" value="{{ $problem_id }}">
+                    <input type="hidden" name="project" value="{{ $project_id }}">
                     <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
-                    <input type="hidden" name="entity_id" id="entity_id" value="">
-                    <!-- <div class="form-group">
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="custom-control custom-radio mb-5">
-                                    <input type="radio" id="updateProblemFileRadio" name="updateProblemType" class="custom-control-input updateProblemType" value="0" checked>
-                                    <label class="custom-control-label" for="updateProblemFileRadio"> File</label>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="custom-control custom-radio mb-5">
-                                    <input type="radio" id="updateProblemLinkRadio" name="updateProblemType" class="custom-control-input updateProblemType" value="2">
-                                    <label class="custom-control-label" for="updateProblemLinkRadio"> Link</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-                    <div class="form-group" id="updateProblemFileType">
-                        <input type="file" name="updateProblemFile" data-height="150" id="updateProblemFileFile" class="dropify" accept="image/*, video/*">
-                        
-                    </div>
-                    <div class="form-group" id="updateProblemLinkType" style="display: none">
-                        <input type="url" name="updateProblemFileLink" id="updateProblemLinkFile" class="form-control" placeholder="Link">
-                    
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="problem_name" disabled value="Problem : {{@$problem->name}}">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="verificationType" disabled value="Verification Type : {{@$verificationType->name}}">
+                        <input type="text" class="form-control" name="solution" disabled value="Solution : {{@$solution->name}}">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="verificationType" disabled value="Solution : {{@$solution->name}}">
+                        <input type="text" class="form-control" name="Solution_function" disabled value="Solution Function : {{@$Solution_function->name}}">
                     </div>
                     <div class="form-group">
-                        <input name="entity" class="form-control" id="entity" placeholder="Entity Name">
+                        <input type="text" class="form-control" name="principle_identified" disabled value="Principle Identified : {{ (@$principle_identifications->principle_type == 0) ? 'The Given Set' : 'Derived Pricipal' ; }}">
                     </div>
-                    <div class="form-group">
-                        <input name="actual_entity" class="form-control" id="actual_entity" placeholder="Actual Entity">
-                    </div>
-                    <div class="form-group">
-                         <input type="text" class="form-control" name="verificationType" disabled value="{{ (@$givenSet->type == 1) ? 'The Given Set' : 'Drived Principle'  }}">
-                    </div>
-                    <div class="form-group">
-                        <select class="form-control" name="formula">
-                            <option value='0'>Available + Given = Solution</option>
-                            <option value='1'>Natural Value + Natural value = Natural Value</option>
-                        </select>
-                    </div>
+                   
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" id="btnSave" class="btn btn-success">Select</button>
+                    <button type="button" id="btnSave" class="btn btn-success">Save</button>
                 </div>
             </div>
         </div>
@@ -188,46 +278,7 @@
     
     <!-- Modal End -->
 
-    <!----Modal start----->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="modal-title" id="exampleModalLabel">Creat Entity</h3>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <form id="entityTableform">
-            <input type="hidden" name="verificationID" id="ver_id" value="{{ @$verification->id}}">
-            <input type="hidden" name="id" id="ent_id" value="">
-            <div class="form-group">
-                <label for="email">Entity Name:</label>
-                <input type="text" name="entity_name" class="form-control" id="entity_name" placeholder="Entity Name">
-            </div>
-            <div class="form-group">
-                <label for="email">Actual Entity:</label>
-                <input type="text" class="form-control" id="actual_enity" name="actual_enity" placeholder="Actual Entity">
-            </div>
-            <div class="form-group">
-                <label for="email">Select:</label>
-               <select name="selection" class="form-control form-select" id="selection">
-                <option value="yes">YES</option>
-                <option value="no">NO</option>
-                </select>
-            </div> 
-           
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-success" id="saveEntity">Save changes</button>
-        </div>
-        </div>
-    </div>
-    </div>
-    <!----Modal End----->
+    
 </div>
 
 @endsection
@@ -242,13 +293,12 @@
 @endsection
 @section('scripts')
 
-<script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
-<script src="https://cdn.tiny.cloud/1/5f20xhd98muhs1m7cl3eud00r4ugz5hxk5cbblquuo02mfef/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
 <script>
    
 $('#verification_types').on('change',function(){
     var id = $(this).val();
-    window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
+    window.location.href = "{{ route('adult.varification',@$parameter) }}" + '/' + id;
 })
 $('.dropify').dropify();
 
@@ -297,4 +347,62 @@ $('.dashboard').click(function(){
 
 })
 
+$(document).on('click', '#btnSave', function (e) {
+        e.preventDefault();
+        var fd = new FormData($('#mn_form_')[0]);
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            url: "{{route('adult.mother-nature')}}",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            type: 'POST',
+            beforeSend: function () {
+                $('#btnSave').attr('disabled', true);
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#btnSave').attr('disabled', false);
+                $('#btnSave').html('Submit');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response) {
+                if (response.success == false) {
+                    $('#btnSave').attr('disabled', false);
+                    $('#btnSave').html('Login');
+                    var errors = response.data;
+                    $.each(errors, function (key, value) {
+                        toastr.error(value)
+                    });
+                } else {
+
+                    toastr.success(response.message);
+                    location.reload()
+                   
+
+                }
+            }
+        });
+    });
+
+    function messageFunction(){
+        
+        swal({
+            title: "Error",
+            text: 'Problem , solution , Solution function  And Priciple Identification are not done.',
+            type: "Error",
+            showCancelButton: true,
+            confirmButtonColor: '#00A14C',
+        });
+    }
+
+</script>
 @endsection

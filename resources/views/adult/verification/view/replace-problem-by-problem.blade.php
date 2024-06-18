@@ -10,19 +10,19 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                      <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
+                      <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                      <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                      <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                      <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>   
 
                 <div class="col-sm-12">
                     <div class="d-flex align-items-center">
                         <h2>Verification</h2>
                         <select class="form-control form-select" id="verification_types">
                                 <option value=''>Select Verification Type..</option>
-                            @foreach(@$types as $type)
-                                <option {{  (@$verificationType->id  == $type->id) ? 'selected' : '' }} value='{{ $type->id }}'>{{ $type->name }}</option>
-                            @endforeach
+                                @foreach(@$types as $type)
+                                    <option {{  (@$verificationType->id  == $type->id) ? 'selected' : '' }} value='{{ $type->id }}'>{{ $type->name }}</option>
+                                @endforeach
                         </select>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                 <div class="col-sm-12">
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
-                        <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />
+                        <img src="{{ asset('assets-new/verification_types/' . @$verificationType->banner)}}" alt="relationImage" />
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
@@ -72,8 +72,8 @@
                             </div>
                           </div>
                           <div class="long-arrow">            
-                                <p style="position:relative; top:35px;left:10px;">{{ $problem->output_slug }}</p>
-                            <img src="{{ asset('assets-new/images/arrowRight.png')}}">
+                                <p class="transitionPhrase">{{ _('is replaced by') }}</p>
+                                <img src="{{ asset('assets-new/images/arrowRight.png')}}">
                             <!-- add arrow Image over here -->
                           </div>
                           <div class="blockProblem">
@@ -103,13 +103,7 @@
                           </div>
                 
                     </div>
-                    @else
-
-                        <div class="add-entity mb-3">
-                            <button type="button" class="btn btn-success" class="cursor" id="replace_sol" >+</button>
-                        </div>
-                   
-                    @endif
+                    
                     <!-- Condition block end -->
                         <div class="questionWrap">
                             <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
@@ -144,6 +138,13 @@
                                 <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
                             </form>
                         </div>
+                        @else
+
+                        <div class="add-entity mb-3">
+                            <button type="button" class="btn btn-success" class="cursor" id="replace_sol" data-toggle="modal" data-target="#replace_problem_model" >+</button>
+                        </div>
+                   
+                    @endif
                 </div>
                 <!-- End -->
                 
@@ -151,18 +152,50 @@
         </div>
     </div>
     <!-- Content Section End -->
-<form id="replace-problem">    
-    <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
-    <input type="hidden" name="project_id" value="{{ $project_id }}">
-    <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
-    <input type="hidden" name="solution_function_id" id="solution_function_id" value="{{ $Solution_function->id }}">   
-    <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
-</form>
+    <!--Modal Start-->
+
+
+    <!--Modal End-->
+    <div class="modal fade" id="replace_problem_model" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form id="replace-problem">    
+                    <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                    <input type="hidden" name="project_id" value="{{ $project_id }}">
+                    <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                    <input type="hidden" name="solution_function_id" id="solution_function_id" value="{{ $Solution_function->id }}">   
+                    <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
+                    <div class="form-group">
+                        <label for="compensator">Problem Name</label>
+                        <input type="text" name="problem_name" class="form-control" id="problem_name" value="{{ $problem->name }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="compensator">Solution Name</label>
+                        <input type="text" name="solution_name" class="form-control" id="solution_name" value="{{ $solution->name }}" disabled>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success" id="replace_sol_form">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    
 </div>
 
 @endsection
 @section('css')
-<link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+
 <style>
     .entity{
         display: flex;
@@ -224,7 +257,7 @@
 </style>
 @endsection
 @section('scripts')
-<script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+
 <script>
    
 $('#verification_types').on('change',function(){
@@ -286,8 +319,11 @@ function calculte(){
      $('#result').val(2);
 
 }
-//sol-fun-av
 $(document).on('click','#replace_sol',function(e){
+
+})
+//sol-fun-av
+$(document).on('click','#replace_sol_form',function(e){
        e.preventDefault();
        var fd = new FormData($('#replace-problem')[0]);
        $.ajaxSetup({
@@ -326,20 +362,15 @@ $(document).on('click','#replace_sol',function(e){
              } else {
                 
                  toastr.success(response.message);
-                 location.reload()
-                //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                //  }else{
-
-
-                    
-                    // window.location.href = "{{ route('adult.dashboard')}}"
-                //  }
-                 
+                 location.reload()  
               }
            }
        });
    });
+
+
+
+
 
 </script>
 

@@ -40,15 +40,17 @@
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
+                @if(isset($problemPart->problem_part)  && !is_null($problemPart->problem_part))
                 <div class="principleRelation container">
                             <div class="add-entity mb-3">
                                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+ Calculate</button>
                             </div>
                             <?php
-                                $solutionParts = 0;
-                                if(isset($problemPart->problem_part)  && !is_null($problemPart->problem_part)){
+                                
+                                
                                     $solutionParts = \App\Models\AverageApproach::getSolutionParts($problemPart->project_id, $problemPart->id);
-                                }
+                                
+                                
                             ?>
                     <div class="partitionApp">
                             <div class="blockProblem">
@@ -56,13 +58,11 @@
                                         <h2>Problem</h2>
                                        <div class="problem-list">
                                         <ul class="text-center p-2">
-                                            
-                                                @foreach($solutionParts as $key => $solutionPart)
+                                                @foreach(@$solutionParts as $key => $solutionPart)
                                                     <li class="form-control btn btn-success">
                                                         <span>{{ __('Part ') . ++$key}}</span>
                                                     </li>
                                                 @endforeach  
-                                            
                                         </ul>
                                        </div>
                                             
@@ -70,10 +70,9 @@
                                 </div>
                                 <div class="arrow">
                                     <ul>
-                                        @foreach($solutionParts as $solutionPart)
+                                        @foreach(@$solutionParts as $solutionPart)
                                             <li><img src="{{ asset('assets-new/images/arrow_sm.png')}}"></li>
                                         @endforeach 
-                                          
                                     </ul>
                                 </div>
                                 <div class="blockProblem">
@@ -82,7 +81,7 @@
                                         <div class="problem-list">
                                             <ul class="text-center p-2">
                                                 @if(isset($problemPart->problem_part)  && !is_null($problemPart->problem_part))
-                                                    @foreach ($solutionParts as $key => $solutionPart)
+                                                        @foreach (@$solutionParts as $key => $solutionPart)
                                                             <li class="form-control btn btn-success">
                                                                 <span class="text-part-val float-left">
                                                                     {{ $solutionPart->solution_part_value  }}
@@ -141,7 +140,11 @@
                         </div>
                 </div>
                 <!-- End -->
-                
+                @else
+                    <div class="add-entity mb-3">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+ Calculate</button>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

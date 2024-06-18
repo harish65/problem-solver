@@ -6,10 +6,10 @@
     <div class="container">
         <div class="mainTitle">
             <div class="row">
-                <?php 
+                            <?php 
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
-                      ?>
+                            ?>
                 <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
                 <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
                 <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
@@ -66,12 +66,15 @@
                             <div class="projectList text-center">
                                 <div class="imgWrap container">
                                     <img class="mx-auto" src="{{ asset('assets-new/verification/t-shirt.png')}}" width="100%" height="300px">
-                                    <div class="centered">
+                                    <div class="centered" id="list_">
                                         <ol id="items">
                                             @foreach($entiesBehind as $key=>$data)
                                             <li>{{ $data->entity_name }}</li>
                                             @endforeach
                                         </ol>
+                                        <div class="d-none" id="black_img">
+                                            <img class="mx-auto" src="{{ asset('assets-new/verification/black_.png')}}" width="80%" height="200px">
+                                        </div>
                                     </div>
                                     <div class="form-check mt-3">
                                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
@@ -244,6 +247,10 @@
     color: #000;
     font-size: 25px;
 }
+#black_img img{
+    position: relative;
+    left:15px;
+}
 </style>
 @endsection
 @section('scripts')
@@ -364,9 +371,12 @@ $(document).ready(function() {
     $('#flexCheckDefault').prop('checked', true)
     $('#flexCheckDefault').change(function() {
         if(this.checked) {
+           
             $('#items').show();
+            $('#black_img').addClass('d-none');
         }else{
             $('#items').hide();
+            $('#black_img').removeClass('d-none');
         }
        
     });

@@ -818,3 +818,9 @@ button.btn.btn-primary.login-btn a {
 .carousel-indicators.custom{
 background-color: #198754;
 }
+.transitionPhrase{
+    position: relative;
+    font-size: 15px !important;
+    color: rgba(0, 161, 76, 0.5) !important;
+    top:30px;
+}

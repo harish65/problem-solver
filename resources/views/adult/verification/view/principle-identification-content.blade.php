@@ -60,7 +60,12 @@
                                                 @foreach($users as $entity)
                                                     <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
                                                         <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">
-                                                        <div class="carousel-caption custom">{{ $entity->name }}</div>
+                                                        <div class="carousel-caption custom">
+                                                                <ul style="display:block;list-style:none;">
+                                                                            <li>{{ $entity->name }}</li>
+                                                                            <li style="color:red">{{ $entity->type }}</li>
+                                                                    </ul>
+                                                        </div>
                                                     </div>
                                                     @php $index++; @endphp
                                                 @endforeach 

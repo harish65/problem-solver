@@ -10,10 +10,10 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                      <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
+                      <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                      <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                      <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                      <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>   
 
                 <div class="col-sm-12">
                     <div class="d-flex align-items-center">
@@ -42,6 +42,7 @@
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
+                @if($solutionTimeLocationTwo)
                 <!-- start -->
                 <div class="principleRelation">
                     <div class="conditionBlock-solution">
@@ -63,6 +64,7 @@
                             </div>
                         </div>
                         <div class="long-arrow">
+                        <p class="transitionPhrase">{{ $transitionPhrase->name }}</p>
                             <img src="{{ asset('assets-new/images/arrowRight.png')}}">
                             <!-- add arrow Image over here -->
                         </div>
@@ -81,21 +83,7 @@
                                         <p class="redText" style="color: #00A14C;">{{ $solution->name }}</p>
                                         <p class="date">{{ date('d/m/Y', strtotime($solution->created_at))}}</p>
                                         <ul>
-                                            <!-- <li>
-                                                <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
-                                                    <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a data-id="1" class="editverBtn" title="Delete">
-                                                    <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
-                                                        alt=""></a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><img
-                                                        src="{{ asset('assets-new/images/uploadIcon.png') }}"
-                                                        alt=""></a>
-                                            </li> -->
+                                            
                                         </ul>
                                     </div>
                                 </div>
@@ -108,7 +96,12 @@
                                                            @foreach($custommers as $entity)
                                                                <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
                                                                    <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">                                                                        
-                                                                   <div class="carousel-caption">{{ $entity->name }}</div>
+                                                                   <div class="carousel-caption">
+                                                                   <ul style="display:block;list-style:none;">
+                                                                            <li>{{ $entity->name }}</li>
+                                                                            <li style="color:red">{{ $entity->type }}</li>
+                                                                    </ul>
+                                                                   </div>
                                                                </div>                                                                  
                                                                @php $index++; @endphp
                                                            @endforeach 
@@ -128,21 +121,7 @@
                                         <p class="redText" style="color: red;"></p>
                                         <p class="date"></p>
                                         <ul>
-                                            <!-- <li>
-                                                <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
-                                                    <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a data-id="1" class="editverBtn" title="Delete">
-                                                    <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
-                                                        alt=""></a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><img
-                                                        src="{{ asset('assets-new/images/uploadIcon.png') }}"
-                                                        alt=""></a>
-                                            </li> -->
+                                            
                                         </ul>
                                     </div>
                                 </div>
@@ -212,7 +191,11 @@
                     </div>
                 </div>
                 <!-- End -->
-                
+                @else
+                <div class="col-sm-4">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
+                    </div>
+                @endif   
             </div>
         </div>
     </div>
@@ -223,7 +206,7 @@
     
     <!-- Modal End -->
 </div>
-
+@include('adult.verification.view.component.cards')
 @endsection
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
@@ -291,116 +274,55 @@ $('.dashboard').click(function(){
 
 })
 
-$('.validation').on('change',function(){
-        var problem = $(this).attr('data-id');
-        var validation  = $(this).val();
-        var name = $(this).attr('name')
+
+$(document).on('click', '#btnSave', function (e) {
+        e.preventDefault();
+        var fd = new FormData($('#entityForm')[0]);
+        fd.append('table_name', 'solution_time_locations');
+        fd.append('type', 2);
+        fd.app
         $.ajaxSetup({
-               headers: {
-                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                       }
-               }); 
-        $.ajax({
-           url: "{{route('adult.sol-validation')}}",
-           data: {data : problem , value : validation , name : name},
-           type: 'POST',
-           success: function (response){                
-               console.log(response)
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
 
-        })
+        $.ajax({
+            url: "{{route('adult.store-sep-steps')}}",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            type: 'POST',
+            beforeSend: function () {
+                $('#btnSave').attr('disabled', true);
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#btnSave').attr('disabled', false);
+                $('#btnSave').html('Apply');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response) {
+                if (response.success == false) {
+                    $('#btnSave').attr('disabled', false);
+                    $('#btnSave').html('Apply');
+                    var errors = response.data;
+                    $.each(errors, function (key, value) {
+                        toastr.error(value)
+                    });
+                } else {
+                    toastr.success(response.message);
+                    location.reload()
+                }
+            }
+        });
+    });
 
-
-
-   })
-
-
-   $('#add-varification-button').click(function(){
-   
-        if($('#verification_types').val() == ''){
-            toastr.error('Please select verification type first');
-            return false;
-        }
-        $('#createVerification').modal('toggle')
-   })
-//.editSolFunBtn
-
-$('.editverBtn').click(function(){
-   $('#createVerification').modal('toggle')
-})
-
-
-
-   $('.filetypeRadio').change(function(){
-        var type = $(this).val()
-        if(type == 0){
-            $('#fileType').val('0')
-            $('#imageFile').css("display", "block");
-            $('#youtubeLink').css("display", "none");
-        }if(type == 2){
-            $('#fileType').val('2')
-            $('#imageFile').css("display", "none");
-            $('#youtubeLink').css("display", "block");
-        }
-   })
-
-
-
-
-   $(document).on('click','#btnSave',function(e){
-       e.preventDefault();
-       var fd = new FormData($('#createVerificationForm')[0]);
-       $.ajaxSetup({
-       headers: {
-                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-               }
-       });
-       
-       $.ajax({
-           url: "{{route('adult.store-verification')}}",
-           data: fd,
-           processData: false,
-           contentType: false,
-           dataType: 'json',
-           type: 'POST',
-           beforeSend: function(){
-             $('#btnSave').attr('disabled',true);
-             $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-           },
-           error: function (xhr, status, error) {
-               $('#btnSave').attr('disabled',false);
-               $('#btnSave').html('Submit');
-               $.each(xhr.responseJSON.data, function (key, item) {
-                   toastr.error(item);
-               });
-           },
-           success: function (response){
-             if(response.success == false)
-             {
-                 $('#btnSave').attr('disabled',false);
-                 $('#btnSave').html('Login');
-                 var errors = response.data;
-                 $.each( errors, function( key, value ) {
-                     toastr.error(value)
-                 });
-             } else {
-                
-                 toastr.success(response.message);
-                 location.reload()
-                //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                //  }else{
-
-
-                    
-                    // window.location.href = "{{ route('adult.dashboard')}}"
-                //  }
-                 
-              }
-           }
-       });
-   });
-
+    $('#solutio_functio_div').addClass('d-none');
+    $('#solution_div').removeClass('d-none')
 
 </script>
 @endsection

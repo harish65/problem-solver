@@ -266,6 +266,12 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
  
         Route::post("visibility_entity_behind_explanation", [\App\Http\Controllers\Adult\VerificationController::class, 'storeVisibilityEntityBehindExplanation'])-> name("visibility_entity_behind_explanation");
         Route::post("del_visibility_entity_behind_explanation", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteVisibilityEntityBehindExplanation'])-> name("del_visibility_entity_behind_explanation");
+        Route::post("mother-nature", [\App\Http\Controllers\Adult\VerificationController::class, 'StoreMotherNature'])->name("mother-nature");
+        Route::post("me-and-you", [\App\Http\Controllers\Adult\VerificationController::class, 'StorMeVsYou'])->name("me-and-you");
+        Route::post("taking-advantage", [\App\Http\Controllers\Adult\VerificationController::class, 'StorTakingAdvantage'])->name("taking-advantage");
 
+        Route::post("store-sep-steps", [\App\Http\Controllers\Adult\VerificationController::class, 'StoreCommonVerifications'])->name("store-sep-steps");
+        Route::get("me-and-you-next/{id}", [\App\Http\Controllers\Adult\VerificationController::class, 'MeVsYouNextPage'])->name("me-and-you-next");
+        Route::post("me-and-you-next-store", [\App\Http\Controllers\Adult\VerificationController::class, 'MeVsYouNextPageStore'])->name("me-and-you-next-store");
     });  
 });

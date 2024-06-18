@@ -10,19 +10,19 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                      <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
+                      <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                      <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                      <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                      <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>   
 
                 <div class="col-sm-12">
                     <div class="d-flex align-items-center">
                         <h2>Verification</h2>
                         <select class="form-control form-select" id="verification_types">
-                                <option value=''>Select Verification Type..</option>
-                            @foreach(@$types as $type)
-                                <option {{  (@$verificationType->id  == $type->id) ? 'selected' : '' }} value='{{ $type->id }}'>{{ $type->name }}</option>
-                            @endforeach
+                                    <option value=''>Select Verification Type..</option>
+                                @foreach(@$types as $type)
+                                    <option {{  (@$verificationType->id  == $type->id) ? 'selected' : '' }} value='{{ $type->id }}'>{{ $type->name }}</option>
+                                @endforeach
                         </select>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                   
                     <div class="relationImage text-center">
-                    <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />                        
+                    <img src="{{ asset('assets-new/verification_types/' . @$verificationType->banner)}}" alt="relationImage" />                        
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                     @if(!$functionAud)
@@ -51,22 +51,7 @@
 
                 <div class="principleRelation">
                     <div class="conditionBlock space_rem">
-                        <!-- <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Improper Function</h2>
-                                <div class="projectList text-center min-height-250">
-                                    <div class="imgWrp">
-                                        <a class="cursor" data-toggle="modal" data-target="#exampleModal">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="#28a745" class="bi bi-plus" viewBox="0 0 16 16">
-                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                                          </svg>
-                                        </a>
-                                    </div>
-                                    
-                                </div>
-                               
-                            </div>
-                        </div> -->
+                        
                         <!-- <div class="long-border"></div> -->
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
@@ -93,11 +78,11 @@
                                     <ul>
                                         <li>
                                               <a href="javaScript:Void(0)" class="editBtn" data-id="8" data-name="Dirty Oil Problem Rishav" data-type="0" data-file="1707228611.png" data-cat="1">
-                                                  <img src="http://127.0.0.1:8000/assets-new/images/editIcon.png" alt="">
+                                                  <img src="{{ asset('assets-new/images/editIcon.png') }}" alt="">
                                               </a>
                                         </li>
-                                        <li><a data-id="8" class="delProblemBtn" title="Delete"><img src="http://127.0.0.1:8000/assets-new/images/deleteIcon.png" alt=""></a></li>
-                                        <li><a href="#"><img src="http://127.0.0.1:8000/assets-new/images/uploadIcon.png" alt=""></a></li>
+                                        <li><a data-id="8" class="delProblemBtn" title="Delete"><img src="{{ asset('assets-new/images/deleteIcon.png') }}" alt=""></a></li>
+                                        <li><a href="#"><img src="{{ asset('assets-new/images/uploadIcon.png') }}" alt=""></a></li>
                                       </ul>
                                 </div>
                                
@@ -134,11 +119,11 @@
                                     <ul>
                                         <li>
                                               <a href="javaScript:Void(0)" class="editBtn" data-id="8" data-name="Dirty Oil Problem Rishav" data-type="0" data-file="1707228611.png" data-cat="1">
-                                                  <img src="http://127.0.0.1:8000/assets-new/images/editIcon.png" alt="">
+                                                  <img src="{{ asset('assets-new/images/editIcon.png') }}" alt="">
                                               </a>
                                       </li>
-                                        <li><a data-id="8" class="delProblemBtn" title="Delete"><img src="http://127.0.0.1:8000/assets-new/images/deleteIcon.png" alt=""></a></li>
-                                        <li><a href="#"><img src="http://127.0.0.1:8000/assets-new/images/uploadIcon.png" alt=""></a></li>
+                                        <li><a data-id="8" class="delProblemBtn" title="Delete"><img src="{{ asset('assets-new/images/deleteIcon.png') }}" alt=""></a></li>
+                                        <li><a href="#"><img src="{{ asset('assets-new/images/uploadIcon.png') }}" alt=""></a></li>
                                       </ul>
                                 </div>
                                 

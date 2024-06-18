@@ -6,22 +6,23 @@
     <div class="container">
         <div class="mainTitle">
             <div class="row">
-                      <?php 
+                        <?php 
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
-                      ?>
-                      <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                      <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
+                        ?>
+                    <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                    <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                    <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                    <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>
 
                 <div class="col-sm-12">
                     <div class="d-flex align-items-center">
                         <h2>Verification</h2>
                         <select class="form-control form-select" id="verification_types">
-                                <option value=''>Select Verification Type..</option>
+                            <option value=''>Select Verification Type..</option>
                             @foreach(@$types as $type)
-                                <option {{  (@$verificationType->id  == $type->id) ? 'selected' : '' }} value='{{ $type->id }}'>{{ $type->name }}</option>
+                            <option {{ (@$verificationType->id == $type->id) ? 'selected' : '' }} value='{{ $type->id
+                                }}'>{{ $type->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -29,7 +30,7 @@
             </div>
         </div>
     </div>
-   
+
     <!-- Content Section Start -->
     <div class="relationshipContent">
         <div class="container">
@@ -37,89 +38,85 @@
                 <div class="col-sm-12">
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
-                        <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />
-                        
+                        <img src="{{ asset('assets-new/verification_types/' . @$verificationType->banner)}}"
+                        alt="relationImage" />
+
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
+                @if($solutionTimeLocationOne)
                 <div class="principleRelation">
                     <!-- Start -->
                     @if($custommers->count() > 0)
                     <?php $showMessage = false ?>
                     <div class="conditionBlock-solution">
                         <div class="solutioone-card">
-                           <div class="location-card">
-                            <div class="location-head text-center">
-                                <h2>My Location</h2>
-                            </div>
-                            <div class="left-side float-left mt-4">
-                                <div class="imgWrp">
-                                                    <div id="myCarousel" class="carousel slide " data-ride="carousel">
-                                                       
-                                                       <div class="carousel-inner" role="listbox">
-                                                           @php $index = 1; @endphp
-                                                           @foreach($custommers as $entity)
-                                                               <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
-                                                                   <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">                                                                        
-                                                                   <div class="carousel-caption">{{ $entity->name }}</div>
-                                                               </div>                                                                  
-                                                               @php $index++; @endphp
-                                                           @endforeach 
-                                                       </div>                                                  
-                                                       <ol class="carousel-indicators">
-                                                           @php $index = 0; @endphp
-                                                               @foreach($custommers as $entity)
-                                                                       <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
-                                                               @php $index++; @endphp
-                                                           @endforeach 
-                                                       </ol>
-                                                      
-                                                      
-                                                   </div>
-                                   
+                            <div class="location-card">
+                                <div class="location-head text-center">
+                                    <h2>My Location</h2>
                                 </div>
-                                
-                                <div class="projectList text-center">
-                                    <p class="redText" style="color: red;"></p>
-                                    <p class="date"></p>
-                                    <ul>
-                                        
-                                    </ul>
+                                <div class="left-side float-left mt-4">
+                                    <div class="imgWrp">
+                                        <div id="myCarousel" class="carousel slide " data-ride="carousel">
+
+                                            <div class="carousel-inner" role="listbox">
+                                                @php $index = 1; @endphp
+                                                @foreach($custommers as $entity)
+                                                <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
+                                                    <img src="{{ asset('assets-new/users/'.$entity->file)}}"
+                                                        alt="Chania" width="80%" height="128px">
+                                                    <div class="carousel-caption">
+                                                        <ul style="display:block;list-style:none;">
+                                                                <li>{{ $entity->name }}</li>
+                                                                <li style="color:red">{{ $entity->type }}</li>
+                                                            </ul>
+                                                    </div>
+                                                </div>
+                                                @php $index++; @endphp
+                                                @endforeach
+                                            </div>
+                                            <ol class="carousel-indicators">
+                                                @php $index = 0; @endphp
+                                                @foreach($custommers as $entity)
+                                                <li data-target="#myCarousel" data-slide-to="{{ $index  }}"
+                                                    class="{{ ($index == 0) ? 'active':'' }}"></li>
+                                                @php $index++; @endphp
+                                                @endforeach
+                                            </ol>
+
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="projectList text-center">
+                                        <p class="redText" style="color: red;"></p>
+                                        <p class="date"></p>
+                                        <ul>
+
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="right-side float-right mt-4 text-center">
-                                <div class="imgWrp">
-                                    <img class="mx-auto" src="{{ asset('assets-new/problem/'.$problem->file)}}"
-                                        width="100%" height="128px">
-                                </div>
-                                <p class="redText">{{ $problem->name }}</p>
-                                <div class="projectList text-center">
-                                    <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
-                                    <ul>
-                                        <!-- <li>
-                                            <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
-                                                <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a data-id="1" class="editverBtn" title="Delete">
-                                                <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
-                                                    alt=""></a>
-                                        </li>
-                                        <li>
-                                            <a href="javaScript:Void(0)"><img
-                                                    src="{{ asset('assets-new/images/uploadIcon.png') }}"
-                                                    alt=""></a>
-                                        </li> -->
-                                    </ul>
+                                <div class="right-side float-right mt-4 text-center">
+                                    <div class="imgWrp">
+                                        <img class="mx-auto" src="{{ asset('assets-new/problem/'.$problem->file)}}"
+                                            width="100%" height="128px">
+                                    </div>
+                                    <p class="redText">{{ $problem->name }}</p>
+                                    <div class="projectList text-center">
+                                        <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
+                                        <ul>
+
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
-                           </div>
-                                                 
+
                         </div>
-                       
-                        <div class="long-arrow">                            
+
+                        <div class="long-arrow">
+                        <p class="transitionPhrase">{{ $transitionPhrase->name }}</p>
                             <!-- add arrow Image over here -->
                             <img src="{{ asset('assets-new/images/arrowRight.png') }}">
                             <!-- add arrow Image over here -->
@@ -136,23 +133,7 @@
                                 </div>
                                 <div class="projectList">
                                     <p class="date">{{ date('d/m/Y' , strtotime($solution->created_at))}}</p>
-                                    <ul>
-                                        <!-- <li>
-                                            <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
-                                                <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a data-id="1" class="editverBtn" title="Delete">
-                                                <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
-                                                    alt=""></a>
-                                        </li>
-                                        <li>
-                                            <a href="javaScript:Void(0)"><img
-                                                    src="{{ asset('assets-new/images/uploadIcon.png') }}"
-                                                    alt=""></a>
-                                        </li> -->
-                                    </ul>
+
                                 </div>
                             </div>
                         </div>
@@ -164,7 +145,7 @@
                             tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
                             nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
                             Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
-                            @if($custommers->count() > 0)
+                        @if($custommers->count() > 0)
                         <div class="row">
                             <div class="title">
                                 <h2>Solution time location1 Identification</h2>
@@ -181,14 +162,16 @@
                                     <tbody>
                                         <tr>
                                             <td style="color: red;">{{ $problem->name }}</td>
-                                            <td style="color: red;">{{ date('d/m/Y', strtotime($problem->created_at))}}</td>
+                                            <td style="color: red;">{{ date('d/m/Y', strtotime($problem->created_at))}}
+                                            </td>
                                             <td style="color: rgba(0, 161, 76, 0.5)">{{ $Solution_function->name }}</td>
-                                            <td style="color: rgba(0, 161, 76, 0.5)">{{ date('d/m/Y', strtotime($Solution_function->created_at))}}</td>
-                                             <td style="color: rgba(0, 161, 76, 0.5)">
+                                            <td style="color: rgba(0, 161, 76, 0.5)">{{ date('d/m/Y',
+                                                strtotime($Solution_function->created_at))}}</td>
+                                            <td style="color: rgba(0, 161, 76, 0.5)">
                                                 <ul>
                                                     @foreach($custommers as $user)
                                                     <li>{{ $user->name }}</li>
-                                                    @endforeach    
+                                                    @endforeach
                                                 </ul>
                                             </td>
                                         </tr>
@@ -200,226 +183,148 @@
                         <h2>Validation Question</h2>
                         <br>
                         <form id="validation_form">
-                                <input type="hidden" name="id" value="{{ @$verification->id }}">      
-                                <h5>Have you separated the problem from yourself?</h5>
-                                <ul class="validate_que" style="list-style:none;">
-                                    
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;I have separated the problem from myself</label></li>
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2">&nbsp;&nbsp;No, I haven’t separated the problem from myself</label></li>
-                                
-                                </ul>
+                            <input type="hidden" name="id" value="{{ @$verification->id }}">
+                            <h5>Have you separated the problem from yourself?</h5>
+                            <ul class="validate_que" style="list-style:none;">
 
-                                <h5>Have you separated the problem from the people?</h5>
-                                <ul class="validate_que" style="list-style:none;">
-                                    
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I have separated the problem from the people</label></li>
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}  value="2">&nbsp;&nbsp;No, I haven’t separated the problem from the people</label></li>
-                                
-                                </ul>
-                                <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                                <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{
+                                            (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}
+                                        value="1">&nbsp;&nbsp;I have separated the problem from myself</label></li>
+                                <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{
+                                            (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}
+                                        value="2">&nbsp;&nbsp;No, I haven’t separated the problem from myself</label>
+                                </li>
+
+                            </ul>
+
+                            <h5>Have you separated the problem from the people?</h5>
+                            <ul class="validate_que" style="list-style:none;">
+
+                                <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{
+                                            (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}
+                                        value="1">&nbsp;&nbsp;Yes, I have separated the problem from the people</label>
+                                </li>
+                                <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{
+                                            (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}
+                                        value="2">&nbsp;&nbsp;No, I haven’t separated the problem from the
+                                        people</label></li>
+
+                            </ul>
+                            <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
                         </form>
-                        
+
                     </div>
                 </div>
                 <!-- End -->
-                
+                @else
+                <div class="col-sm-4">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
+                    </div>
+                @endif                    
             </div>
         </div>
     </div>
     <!-- Content Section End -->
-
     
-    
-    
-    <!-- Modal End -->
 </div>
-
+@include('adult.verification.view.component.cards')
 @endsection
 @section('css')
 
-<link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+
 <style>
-    .carousel{
+    .carousel {
         height: 128px;
         /* overflow: hidden; */
         width: 200px;
-        text-align:center;
+        text-align: center;
     }
 </style>
 @endsection
 @section('scripts')
 
-<script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+
 <script>
-   
-$('#verification_types').on('change',function(){
-    var id = $(this).val();
-    window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
-})
-$('.dropify').dropify();
 
-
+    $('#verification_types').on('change', function () {
+        var id = $(this).val();
+        window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
+    })
 </script>
 <script>
-$('.nav-problem').click(function(){
-    $(this).attr('href' , ''); 
-    localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));   
-    $(this).attr('href' ,$('#problem_nav').attr('href'))
-})
-$('.nav-solution').click(function(){
-    $(this).attr('href' , ''); 
-    localStorage.setItem("sol", $('#solution_nav').attr('href'));   
-    $(this).attr('href' ,$('#solution_nav').attr('href'))
-})
-$('.nav-solution-func').click(function(){
-    $(this).attr('href' , '');
-    localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
-    $(this).attr('href' ,$('#solution_fun_nav').attr('href'))
-})
-$('.verification').click(function(){
-    $(this).attr('href' , '');
-    localStorage.setItem("varification", $('#verification').attr('href'));   
-    $(this).attr('href' ,$('#verification').attr('href'))
-})
+    $('.nav-problem').click(function () {
+        $(this).attr('href', '');
+        localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));
+        $(this).attr('href', $('#problem_nav').attr('href'))
+    })
+    $('.nav-solution').click(function () {
+        $(this).attr('href', '');
+        localStorage.setItem("sol", $('#solution_nav').attr('href'));
+        $(this).attr('href', $('#solution_nav').attr('href'))
+    })
+    $('.nav-solution-func').click(function () {
+        $(this).attr('href', '');
+        localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));
+        $(this).attr('href', $('#solution_fun_nav').attr('href'))
+    })
+    $('.verification').click(function () {
+        $(this).attr('href', '');
+        localStorage.setItem("varification", $('#verification').attr('href'));
+        $(this).attr('href', $('#verification').attr('href'))
+    })
 
 
-$('.dashboard').click(function(){
-    //Solution
-    $('.nav-solution').attr('href' , '');
-    localStorage.setItem("sol", $('#solution_nav').attr('href'));   
-    $('.nav-solution').attr('href' ,$('#solution_nav').attr('href'))
-    //Problem
-    $('.nav-problem').attr('href' , '');
-    localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));       
-    $('.nav-problem').attr('href' ,$('#problem_nav').attr('href'))
-    //Sol fun
-    $('.nav-solution-func').attr('href' , '');
-    localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
-    $('.nav-solution-func').attr('href' ,$('#solution_fun_nav').attr('href'))
-    //verification
-    $('.nav-varification').attr('href' , '');
-    localStorage.setItem("varification", $('#verification').attr('href'));   
-    $('.nav-varification').attr('href' ,$('#solution_fun_nav').attr('href'))
+    $('.dashboard').click(function () {
+        //Solution
+        $('.nav-solution').attr('href', '');
+        localStorage.setItem("sol", $('#solution_nav').attr('href'));
+        $('.nav-solution').attr('href', $('#solution_nav').attr('href'))
+        //Problem
+        $('.nav-problem').attr('href', '');
+        localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));
+        $('.nav-problem').attr('href', $('#problem_nav').attr('href'))
+        //Sol fun
+        $('.nav-solution-func').attr('href', '');
+        localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));
+        $('.nav-solution-func').attr('href', $('#solution_fun_nav').attr('href'))
+        //verification
+        $('.nav-varification').attr('href', '');
+        localStorage.setItem("varification", $('#verification').attr('href'));
+        $('.nav-varification').attr('href', $('#solution_fun_nav').attr('href'))
 
-})
+    })
 
-$('.validation').on('change',function(){
+    $('.validation').on('change', function () {
         var problem = $(this).attr('data-id');
-        var validation  = $(this).val();
+        var validation = $(this).val();
         var name = $(this).attr('name')
         $.ajaxSetup({
-               headers: {
-                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                       }
-               }); 
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
         $.ajax({
-           url: "{{route('adult.sol-validation')}}",
-           data: {data : problem , value : validation , name : name},
-           type: 'POST',
-           success: function (response){                
-               console.log(response)
+            url: "{{route('adult.sol-validation')}}",
+            data: { data: problem, value: validation, name: name },
+            type: 'POST',
+            success: function (response) {
+                console.log(response)
             }
 
         })
 
+    })
 
 
-   })
+    
 
-
-   $('#add-varification-button').click(function(){
-   
-        if($('#verification_types').val() == ''){
-            toastr.error('Please select verification type first');
-            return false;
-        }
-        $('#createVerification').modal('toggle')
-   })
-//.editSolFunBtn
-
-$('.editverBtn').click(function(){
-   $('#createVerification').modal('toggle')
-})
-
-
-
-   $('.filetypeRadio').change(function(){
-        var type = $(this).val()
-        if(type == 0){
-            $('#fileType').val('0')
-            $('#imageFile').css("display", "block");
-            $('#youtubeLink').css("display", "none");
-        }if(type == 2){
-            $('#fileType').val('2')
-            $('#imageFile').css("display", "none");
-            $('#youtubeLink').css("display", "block");
-        }
-   })
-
-
-
-
-   $(document).on('click','#btnSave',function(e){
-       e.preventDefault();
-       var fd = new FormData($('#createVerificationForm')[0]);
-       $.ajaxSetup({
-       headers: {
-                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-               }
-       });
-       
-       $.ajax({
-           url: "{{route('adult.store-verification')}}",
-           data: fd,
-           processData: false,
-           contentType: false,
-           dataType: 'json',
-           type: 'POST',
-           beforeSend: function(){
-             $('#btnSave').attr('disabled',true);
-             $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-           },
-           error: function (xhr, status, error) {
-               $('#btnSave').attr('disabled',false);
-               $('#btnSave').html('Submit');
-               $.each(xhr.responseJSON.data, function (key, item) {
-                   toastr.error(item);
-               });
-           },
-           success: function (response){
-             if(response.success == false)
-             {
-                 $('#btnSave').attr('disabled',false);
-                 $('#btnSave').html('Login');
-                 var errors = response.data;
-                 $.each( errors, function( key, value ) {
-                     toastr.error(value)
-                 });
-             } else {
-                
-                 toastr.success(response.message);
-                 location.reload()
-                //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                //  }else{
-
-
-                    
-                    // window.location.href = "{{ route('adult.dashboard')}}"
-                //  }
-                 
-              }
-           }
-       });
-   });
-
-   $('.carousel').carousel({
+    $('.carousel').carousel({
         interval: 2000
     })
 
     var showMessage = "{{$showMessage}}"
     var text_ = 'The solution of a problem is located farther away from that problem.  In terms of time, we first identify the problem and then the solution of the problem.  We can look at the solution of a problem as our destination to solve that problem.  In terms of time, the problem is where we start and the solution is where we finish.  In order to show the relationship between the time we start and the time we finish, we must first identify the problem then the solution of the problem.  If the problem and the solution have not been identified, then there is no destination to solve that problem.  Please, refer to the problem page and the solution page to identify the problem and the solution in order to show the relationship that we start with problem and we finish with solution.'
-    if(showMessage){
+    if (showMessage) {
         swal({
             title: "Solution Time Location 1 ",
             text: text_,
@@ -428,5 +333,57 @@ $('.editverBtn').click(function(){
             confirmButtonColor: '#00A14C',
         });
     }
+
+
+    $(document).on('click', '#btnSave', function (e) {
+        e.preventDefault();
+        var fd = new FormData($('#entityForm')[0]);
+        fd.append('table_name', 'solution_time_locations');
+        fd.append('type', 1);
+        fd.app
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            url: "{{route('adult.store-sep-steps')}}",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            type: 'POST',
+            beforeSend: function () {
+                $('#btnSave').attr('disabled', true);
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#btnSave').attr('disabled', false);
+                $('#btnSave').html('Apply');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response) {
+                if (response.success == false) {
+                    $('#btnSave').attr('disabled', false);
+                    $('#btnSave').html('Apply');
+                    var errors = response.data;
+                    $.each(errors, function (key, value) {
+                        toastr.error(value)
+                    });
+                } else {
+
+                    toastr.success(response.message);
+                    location.reload()
+
+
+                }
+            }
+        });
+    });
+    $('#solutio_functio_div').addClass('d-none');
+    $('#solution_div').removeClass('d-none')
 </script>
 @endsection

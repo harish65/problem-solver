@@ -6,10 +6,10 @@
     <div class="container">
         <div class="mainTitle">
             <div class="row">
-                      <?php 
+                        <?php 
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
-                      ?>
+                        ?>
                       <a id="problem_nav" href='{{ route("adult.problem",@$parameter) }}'></a>
                       <a id="solution_nav" href='{{ route("adult.solution",@$parameter) }}'></a>
                       <a id="solution_fun_nav" href='{{ route("adult.solution-func",@$parameter) }}'></a>
@@ -42,6 +42,7 @@
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
+                @if($beforeAfter)
                 <div class="principleRelation">
                     <div class="solutionconditionBlock">
                         <div class="blockProblem">
@@ -111,11 +112,11 @@
                                 <h2>Before And After Verification</h2>
                             </div>
                             
-                            @if($beforeAfter == '')
+                           
                                 <div class="text-right w-50 pt-3">
                                     <button type="button"  class="btn btn-success addEntity" id="add-new-variant">+ Add New</button>
                                 </div>
-                            @endif    
+                           
                             </div>
 
                             </div>
@@ -182,6 +183,13 @@
                         </form>    
                     </div>
                 </div>
+                @else
+
+                <div class="text-right w-50 pt-3">
+                    <button type="button"  class="btn btn-success addEntity" id="add-new-variant">+ Add New</button>
+                </div>
+
+                @endif
                 <!-- End -->
                 
             </div>

@@ -57,7 +57,6 @@
                                 </div>
                                 <div class="projectList">
                                     <p class="date">{{   date('d/m/Y', strtotime($solution->created_at)) }}</p>
-                                    
                                 </div>
                             </div>
                         </div>
@@ -89,6 +88,54 @@
                             <img src="{{ asset('assets-new/images/arrowRight.png') }}">
                             <!-- add arrow Image over here -->
                         </div>
+                        @if($resources->entity_usage == 1)
+                        <div class="blockProblem">
+                            <div class="projectBlock text-center">
+                                <h2>Available</h2>
+                                <div class="projectList text-center">
+                                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                                        <ol class="carousel-indicators">
+                                            @php $index = 0; @endphp
+                                                @foreach($entities as $entity)
+                                                        <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
+                                                @php $index++; @endphp
+                                            @endforeach 
+                                        </ol>
+                                        <div class="carousel-inner" role="listbox">
+                                            @php $index = 1; @endphp
+                                                @foreach($entities as $entity)
+                                                    <div class="carousel-item {{ ($index == 1) ? 'active':'' }} " data-entity_id="{{$entity->id}}" data-file="{{ $entity->media }}" data-name="{{ $entity->entity }}" data-actualname="{{ $entity->actual_entity }}">
+                                                        <img  src="{{ asset('assets-new/verification_types/entity-available/'.$entity->media)}}" alt="Chania" width="80%" height="128px">
+                                                    </div>
+                                                @php $index++; @endphp
+                                            @endforeach    
+                                               
+                                        </div>
+                                    </div>
+                                    <p class="redText" style="color:red">Available</p>
+                                </div>
+                                <div class="projectList">
+                                    
+                                    <ul>
+                                        <li>
+                                            <!-- <a href="javaScript:Void(0)" class="editverBtn" data-file="1680525564.png" data-file="1680525564.png">
+                                                <img src="{{ asset('assets-new/images//editIcon.png') }}" alt="">
+                                            </a> -->
+                                        </li>
+                                        <li>
+                                            <!-- <a data-id="1" class="deleteverBtn" title="Delete">
+                                                <img src="{{ asset('assets-new/images/deleteIcon.png') }}"
+                                                    alt=""></a> -->
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)"  class="btn btn-success add-entity" id="add-entity"><i class="fa fa-plus"></i></a>
+                                            <a href="javascript:void(0)"  class="btn btn-primary editButton"><i class="fa fa-pencil"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        @else
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
                                 <h2>Natural Resources</h2>
@@ -105,21 +152,13 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
+                        
                         @else
                         <div class="col-md-12">
                             <button type="button"  class="btn btn-success add-entity" data-toggle="modal" data-target="#resource_management_model" >Add <i class="fa fa-plus"></i></button>
                         </div>
                         @endif
-
-
-
-
-
-
-
-
-
-                                 
                     </div>
                     
                     <!-- Condition block end -->
@@ -194,14 +233,18 @@
           </button>
         </div>
         <div class="modal-body">
-          <form method="post" id="resource_management-form" >
+          <form method="post" id="resource_management-form">
             <input type="hidden" name="id" id="id" value="">
             <input type="hidden" name="project_id" value="{{ $project_id }}">
             <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">   
             <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
-            <div class="form-group">
-            <label for="compensator">Upload File</label>
-            <input type="file" name="file" data-height="150" id="file" class="dropify" accept="image/*, video/*">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" value="0" id="entity_usage" name="entity_usage">
+                <label class="form-check-label" for="entity_usage">Use Entity Usage</label>
+            </div>
+            <div class="form-group" id="upload_file">
+                <label for="compensator">Upload File</label>
+                <input type="file" name="file" data-height="150" id="file" class="dropify" accept="image/*, video/*">
             </div>
             <div class="form-group">
                 <label for="compensator">Problem</label>
@@ -212,9 +255,9 @@
                 <input type="text" class="form-control" value="{{ $solution->name}}" disabled>
                 
             </div>
-            <div class="form-group">
+            <div class="form-group" id="available" style="display:none;">
                 <label for="date">Entity Usage</label>
-                <input type="text" class="form-control" value="{{ @$entity->entity}}" disabled>
+                <input type="text" class="form-control"  value="{{ @$entities[0]->entity}}" disabled>
             </div>
             
             
@@ -292,6 +335,13 @@
     .redText{
         color: red;
     }
+    .form-check-label{
+        right: 0px !important;
+       
+    }
+    .form-check{
+        padding-left:1.50rem !important;
+    }
 </style>
 @endsection
 @section('scripts')
@@ -365,7 +415,7 @@ $(document).on('click','#btnSave',function(e){
        headers: {
                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                }
-       });
+            });
        
        $.ajax({
            url: "{{route('adult.resource-managment')}}",
@@ -402,7 +452,17 @@ $(document).on('click','#btnSave',function(e){
            }
        });
    });
-
+$('#entity_usage').click(function(){
+    if($(this).is(":checked")){
+        $(this).val(1);
+        $("#upload_file").hide();
+        $("#available").show();
+    }else{
+        $(this).val(0);
+        $("#upload_file").show();
+        $("#available").hide();
+    }
+})
 </script>
 
 

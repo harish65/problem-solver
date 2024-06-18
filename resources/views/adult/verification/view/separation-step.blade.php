@@ -31,6 +31,7 @@
     </div>
    
     <!-- Content Section Start -->
+    
     <div class="relationshipContent">
         <div class="container">
             <div class="row">
@@ -42,6 +43,7 @@
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
+                @if($steps)
                 <div class="principleRelation">
                     <div class="container">
                         <div class="row justify-content-center">
@@ -60,7 +62,14 @@
                                                                 @foreach($custommers as $entity)
                                                                     <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
                                                                         <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">                                                                        
-                                                                        <div class="carousel-caption custom">{{ $entity->name }}</div>
+                                                                        <div class="carousel-caption custom">
+                                                                            <ul style="display:block">
+                                                                                <li>{{ $entity->name }}</li>
+                                                                                <li style="color:red">{{ $entity->type }}</li>
+                                                                            </ul>
+
+
+                                                                        </div>
                                                                     </div>                                                                  
                                                                     @php $index++; @endphp
                                                                 @endforeach 
@@ -97,8 +106,8 @@
                                                     src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
                                                     height="128px">
                                             </div>
-                                            <?php  $arr = explode(' ', trim($problem->name));  ?>
-                                            <p class="redText" title='{{  $problem->name }}' style="color:red">{{ $arr[0].' '.$arr[1].'..' }}</p>
+                                            
+                                            <p class="redText" title='{{  $problem->name }}' style="color:red">{{ $problem->name }}</p>
                                         </div>
                                         <div class="projectList">
                                             <p class="date" >{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
@@ -116,8 +125,8 @@
                                                 src=" {{ asset('assets-new/solution/'.$solution->file)}}" width="100%"
                                                 height="128px">
                                             </div>
-                                            <?php  $arr = explode(' ', trim($solution->name));  ?>
-                                            <p class="redText" title='{{  $solution->name }}' style="color:#00A14C">{{ $arr[0].' '.$arr[1].'..' }}</p>
+                                            
+                                            <p class="redText" title='{{  $solution->name }}' style="color:#00A14C">{{ $solution->name }}</p>
                                         </div>
                                         <div class="projectList">
                                             <p class="date">{{ date('d/m/Y', strtotime($solution->created_at))}}</p>
@@ -159,18 +168,20 @@
                     </div>
                 </div>
                 <!-- End -->
+                @else
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
+                    </div>
+                @endif
                 
             </div>
         </div>
     </div>
     <!-- Content Section End -->
-
-
-    
-    
-    
-    <!-- Modal End -->
+   
 </div>
+
+@include('adult.verification.view.component.cards')
 
 @endsection
 @section('css')
@@ -202,6 +213,54 @@
     window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
 })
 
+
+$(document).on('click', '#btnSave', function (e) {
+        e.preventDefault();
+        var fd = new FormData($('#entityForm')[0]);
+        fd.append('table_name', 'sepration_steps');
+        fd.app
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            url: "{{route('adult.store-sep-steps')}}",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            type: 'POST',
+            beforeSend: function () {
+                $('#btnSave').attr('disabled', true);
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#btnSave').attr('disabled', false);
+                $('#btnSave').html('Apply');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response) {
+                if (response.success == false) {
+                    $('#btnSave').attr('disabled', false);
+                    $('#btnSave').html('Apply');
+                    var errors = response.data;
+                    $.each(errors, function (key, value) {
+                        toastr.error(value)
+                    });
+                } else {
+
+                    toastr.success(response.message);
+                    location.reload()
+
+
+                }
+            }
+        });
+    });
     var showMessage = "{{$showMessage}}"
     var text_ = 'In order to solve a problem, we identify three entities: first we identify the problem; second, we identify the solution for that problem, and third we identify people who are working to solve that problem.  In this case, we identify and separate those 3 entities.  If all those 3 entities have not been identified, it is not possible to show the separation of those entities.  Please, refer to the appropriate page to identify the problem, the solution, and people who are working to solve the problem, before showing them as separate entities'
     if(showMessage){
@@ -213,5 +272,8 @@
             confirmButtonColor: '#00A14C',
         });
     }
+
+    $('#solutio_functio_div').addClass('d-none');
+    $('#solution_div').removeClass('d-none')
 </script>
 @endsection

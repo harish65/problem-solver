@@ -9,6 +9,7 @@
                       <?php 
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
+                            $showMessage = true;
                       ?>
                       <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
                       <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
@@ -43,6 +44,7 @@
                 </div>
                 <!-- start -->
                 @if(!empty($users[0]->comment) )
+                <?php $showMessage = false;?>
                 <div class="principleRelation ">
                     <div class="heading_comm">
                         <div class="md-col-6">
@@ -126,6 +128,7 @@
                     </div>
                 </div>
                 <!-- End -->
+
                 @endif
             </div>
         </div>
@@ -289,61 +292,6 @@ $('.dashboard').click(function(){
 
 })
 
-$('.validation').on('change',function(){
-        var problem = $(this).attr('data-id');
-        var validation  = $(this).val();
-        var name = $(this).attr('name')
-        $.ajaxSetup({
-               headers: {
-                           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                       }
-               }); 
-        $.ajax({
-           url: "{{route('adult.sol-validation')}}",
-           data: {data : problem , value : validation , name : name},
-           type: 'POST',
-           success: function (response){                
-               console.log(response)
-            }
-
-        })
-
-
-
-   })
-
-
-   $('#add-varification-button').click(function(){
-   
-        if($('#verification_types').val() == ''){
-            toastr.error('Please select verification type first');
-            return false;
-        }
-        $('#createVerification').modal('toggle')
-   })
-//.editSolFunBtn
-
-$('.editverBtn').click(function(){
-        
-   $('#createVerification').modal('toggle')
-})
-
-
-
-   $('.filetypeRadio').change(function(){
-        var type = $(this).val()
-        if(type == 0){
-            $('#fileType').val('0')
-            $('#imageFile').css("display", "block");
-            $('#youtubeLink').css("display", "none");
-        }if(type == 2){
-            $('#fileType').val('2')
-            $('#imageFile').css("display", "none");
-            $('#youtubeLink').css("display", "block");
-        }
-   })
-
-
 
 
    $(document).on('click','#btnSave',function(e){
@@ -411,5 +359,16 @@ $('.editverBtn').click(function(){
       toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
       height : "300"
     });
+    var msg = '{{$showMessage}}';
+    var text_ =  'Since there is not communication between the people in the project, there is no flow of communication from people in the project to people in the project';
+    if(msg){
+        swal({
+            title: "Communication Flow",
+            text: text_,
+            type: "Error",
+            showCancelButton: true,
+            confirmButtonColor: '#00A14C',
+        });
+    }
   </script>
 @endsection

@@ -64,7 +64,7 @@
                             </div>
                         </div>
                         <div class="long-arrow">
-                            <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
+                        <p class="transitionPhrase">of</p>
                             <!-- add arrow Image over here -->
                             <img src="{{ asset('assets-new/images/arrowRight.png')}}">
                             <!-- add arrow Image over here -->
@@ -87,7 +87,7 @@
                             </div>
                         </div>
                         <div class="long-arrow">
-                            <!-- <p style="position:relative; top:35px;left:25px;">through</p> -->
+                        <p class="transitionPhrase">{{ $transitionPhrase->name }}</p>
                             <!-- add arrow Image over here -->
                             <img src="{{ asset('assets-new/images/arrowRight.png') }}">
                             <!-- add arrow Image over here -->
@@ -107,7 +107,7 @@
                                     <p class="redText">Information</p>
                                 </div>
                                 <div class="projectList">
-                                    <p class="date"{{ date('d/m/Y' , strtotime($verification->created_at)) }}</p>
+                                    <p class="date">{{ date('d/m/Y' , strtotime($verification->created_at)) }}</p>
                                     <ul>
                                         <li>
                                             <a href="javaScript:Void(0)" class="editverBtn" 

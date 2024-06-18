@@ -53,6 +53,10 @@ Route::middleware('auth:api')->group( function () {
     //Solutionf function Type
     Route::get("solutiofunctiontype", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'index'])-> name("solutiofunctiontype");
 
+
+    //Verification_api's
+
+    
 });
 
 

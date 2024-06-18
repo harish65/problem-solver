@@ -82,16 +82,15 @@
 
                                             </td>
                                         </tr>
-                                        <?php $lastDate = date('Y-m-d H:i:0' ,  $varification->key) ;
-                                            
-                                        ?>
+                                        <?php $lastDate = date('Y-m-d H:i:s' ,  strtotime($varification->date)) ; ?>
                                         @endforeach
                                     </tbody>
                                     @endif
                                 </table>
                             </div>
                         </div>
-                        <?php  $lastDate =  date('Y,m,d' , strtotime($lastDate . '+1 day'));?>
+                      
+                        <?php  $lastDate =  date('Y,m,d' , strtotime($lastDate . '+ 1 day'));?>
                         <h2>Validation Question</h2>
                         <br>       
                         <input type="hidden" value="{{ $lastDate }}" id="last_date"> 
@@ -128,7 +127,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add New</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Time Verification</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -146,7 +145,7 @@
               
               <input type="hidden" name="project_id" id="project_id" value="{{ $project_id}}">
               <input type="hidden" id="date_edit" name="date"  class="form-control"  id="name" placeholder="Enter Date">
-              <input type="text" id="date" name="date"  class="form-control"  id="name" placeholder="Enter Date">
+              <input type="text" id="date" name="date"  class="form-control"  id="name" placeholder="Enter Date" autocomplete='off'>
           </div>
           <div class="form-group ">
             <label class="radio-inline">Solution Hold</label>

@@ -43,7 +43,7 @@
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
-                
+                @if($functionApplied)
                 <div class="principleRelation">
                     <div class="conditionBlock">
                         <div class="blockProblem">
@@ -102,7 +102,12 @@
                                                 @foreach($custommers as $entity)
                                                     <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
                                                         <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">
-                                                        <div class="carousel-caption custom">{{ $entity->name }}</div>
+                                                        <div class="carousel-caption custom">
+                                                                <ul style="display:block;list-style:none;">
+                                                                    <li>{{ $entity->name }}</li>
+                                                                    <li style="color:red">{{ $entity->type }}</li>
+                                                                </ul>
+                                                        </div>
                                                     </div>
                                                     @php $index++; @endphp
                                                 @endforeach 
@@ -132,6 +137,11 @@
                     </div>
 
                 </div>
+                @else
+                <div class="col-sm-4">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
+                    </div>
+                @endif  
             </div>
                 <!-- End -->
             
@@ -139,7 +149,7 @@
     </div>
 
 
-
+    @if($functionApplied)
     <div class="relationshipContent">
         <div class="container">
             <div class="row ">
@@ -201,6 +211,7 @@
             </div>
         </div>
 </div>
+@endif  
 </div>
 <!-- Content Section End -->
 
@@ -210,7 +221,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Function Adjustment</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Function and People Identification</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -253,10 +264,11 @@
       </div>
     </div>
   </div>
+  @include('adult.verification.view.component.cards')
 <!-- Modal End -->
 @endsection
 @section('css')
-<link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+
 <style>
    .min-height-250{
         min-height: 250px;
@@ -282,14 +294,14 @@
 </style>
 @endsection
 @section('scripts')
-<script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+
 <script>
    
 $('#verification_types').on('change',function(){
     var id = $(this).val();
     window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
 })
-$('.dropify').dropify();
+
 
 
 </script>
@@ -384,7 +396,54 @@ $('#btnSave').click(function(e){
         });
 
    });
+   $(document).on('click', '#btnSave', function (e) {
+        e.preventDefault();
+        var fd = new FormData($('#entityForm')[0]);
+        fd.append('table_name', 'function_sub_people');
+        
+        fd.app
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
+        $.ajax({
+            url: "{{route('adult.store-sep-steps')}}",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            type: 'POST',
+            beforeSend: function () {
+                $('#btnSave').attr('disabled', true);
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#btnSave').attr('disabled', false);
+                $('#btnSave').html('Apply');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response) {
+                if (response.success == false) {
+                    $('#btnSave').attr('disabled', false);
+                    $('#btnSave').html('Apply');
+                    var errors = response.data;
+                    $.each(errors, function (key, value) {
+                        toastr.error(value)
+                    });
+                } else {
+                    toastr.success(response.message);
+                    location.reload()
+                }
+            }
+        });
+    });
+
+    $('#solutio_functio_div').removeClass('d-none');
+    $('#solution_div').addClass('d-none')
 
 
 </script>

@@ -10,10 +10,10 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                      <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
+                      <a id="problem_nav" href='{{ route("adult.problem",@$parameter) }}'></a>
+                      <a id="solution_nav" href='{{ route("adult.solution",@$parameter) }}'></a>
+                      <a id="solution_fun_nav" href='{{ route("adult.solution-func",@$parameter) }}'></a>
+                      <a id="verification" href='{{ route("adult.varification",@$parameter) }}'></a>   
 
                 <div class="col-sm-12">
                     <div class="d-flex align-items-center">
@@ -40,6 +40,7 @@
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
+                @if($taking_ad)
                 <div class="principleRelation container">
                     <!-- Condition block start -->
                    
@@ -57,7 +58,12 @@
                                                 @foreach($custommers as $user)
                                                     <div class="carousel-item {{ ($index == 1) ? 'active':'' }} " data-entity_id="{{$user->id}}" data-file="{{ $user->file }}" >
                                                         <img  src="{{ asset('assets-new/users/'.$user->file)}}" alt="Chania" width="80%" height="128px">
-                                                        <div class="carousel-caption custom">{{ $user->name }}</div>
+                                                        <div class="carousel-caption custom">
+                                                            <ul style="display:block">
+                                                                <li>{{ $user->name }}</li>
+                                                                <li style="color:red">{{ $user->type }}</li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 @php $index++; @endphp
                                             @endforeach    
@@ -94,7 +100,7 @@
                                                     @endif
                                             @elseif($problem->problem_type == 1)
                                                     <video class="mx-auto" controls="controls" preload="metadata" width="300" height="320" preload="metadata">
-                                                        <source src="{{ asset("assets-new/problem/" . $problem->file) }}#t=0.1" type="video/mp4">
+                                                        <source src='{{ asset("assets-new/problem/" . $problem->file) }}#t=0.1' type="video/mp4">
                                                     </video>
                                             @elseif($problem -> problem_type == 2)
                                                         <iframe class="mx-auto" src="{{ $problem->file }}"width="300" height="320"> </iframe>
@@ -180,20 +186,67 @@
                         </div>
                 </div>
                 <!-- End -->
-                
+                @else
+                <div class="col-sm-4">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#entityModal"
+                        id="">+ Identify</button>
+                </div>
+                @endif
             </div>
         </div>
     </div>
     <!-- Content Section End -->
-<form id="replace-problem">    
-    <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
-    <input type="hidden" name="project_id" value="{{ $project_id }}">
-    <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
-    <input type="hidden" name="solution_function_id" id="solution_function_id" value="{{ $Solution_function->id }}">   
-    <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
-</form>
-</div>
 
+</div>
+<div class="modal fade" id="entityModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true" enctype="multipart/form-data">
+        <form method="POST" id="entityForm" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Me Vs You Approach</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <input type="hidden" name="updateProblemType" id="updateProblemType">
+                        <input type="hidden" name="id" id="ver_id" value="{{ @$verification->id}}">
+                        <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                        <input type="hidden" name="project_id" value="{{ $project_id }}">
+                        <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+
+
+
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="verificationType" disabled
+                                value="Problem : {{@$problem->name}}">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="verificationType" disabled
+                                value="Solution : {{@$solution->name}}">
+                        </div>
+                        @if(@$custommers->count() > 0)
+                            @foreach($custommers as $user) 
+                            <div class="form-group">
+                                
+                                <input type="text" class="form-control" name="verificationType" disabled
+                                    value="{{ $user->type }} : {{ @$user->name }}">
+                            </div>
+                            @endforeach
+                        @endif
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="btnSave" class="btn btn-success">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 @endsection
 @section('css')
 
@@ -315,6 +368,52 @@ $('.dashboard').click(function(){
     $('.nav-varification').attr('href' ,$('#solution_fun_nav').attr('href'))
 
 })
+
+$(document).on('click', '#btnSave', function (e) {
+        e.preventDefault();
+        var fd = new FormData($('#entityForm')[0]);
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            url: "{{route('adult.taking-advantage')}}",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            type: 'POST',
+            beforeSend: function () {
+                $('#btnSave').attr('disabled', true);
+                $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            },
+            error: function (xhr, status, error) {
+                $('#btnSave').attr('disabled', false);
+                $('#btnSave').html('Submit');
+                $.each(xhr.responseJSON.data, function (key, item) {
+                    toastr.error(item);
+                });
+            },
+            success: function (response) {
+                if (response.success == false) {
+                    $('#btnSave').attr('disabled', false);
+                    $('#btnSave').html('Login');
+                    var errors = response.data;
+                    $.each(errors, function (key, value) {
+                        toastr.error(value)
+                    });
+                } else {
+
+                    toastr.success(response.message);
+                    location.reload()
+
+
+                }
+            }
+        });
+    });
 </script>
 
 
