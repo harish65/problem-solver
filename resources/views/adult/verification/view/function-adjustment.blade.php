@@ -41,17 +41,13 @@
                     <img src="{{ asset('assets-new/verification_types/' . @$verificationType->banner)}}" alt="relationImage" />                        
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
-                    @if(!$functionAud)
-                    <div class="col text-end">
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#functionAdjutment">Add +</button>
-                    </div>
-                    @endif
+                   
                 </div>
                 <!-- start -->
 
                 <div class="principleRelation">
                     <div class="conditionBlock space_rem">
-                        
+                        @if($functionAud)
                         <!-- <div class="long-border"></div> -->
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
@@ -64,7 +60,7 @@
                                                     @endif
                                                 @elseif($Solution_function -> solution_type == 1)
                                                     <video class="mx-auto" controls="controls" preload="metadata"  width="100%" height="128px" preload="metadata">
-                                                        <source src="{{ asset("assets-new/solFunction/" . $Solution_function -> file) }}#t=0.1" type="video/mp4">
+                                                        <source src="{{ asset('assets-new/solFunction/' . $Solution_function -> file) }}#t=0.1" type="video/mp4">
                                                     </video>
                                                 @elseif($Solution_function -> solution_type == 2)
                                                         <iframe class="mx-auto" src="{{ $Solution_function -> file }}"  width="100%" height="128px"> </iframe>
@@ -77,7 +73,7 @@
                                     </div>
                                     <ul>
                                         <li>
-                                              <a href="javaScript:Void(0)" class="editBtn" data-id="8" data-name="Dirty Oil Problem Rishav" data-type="0" data-file="1707228611.png" data-cat="1">
+                                              <a href="javaScript:Void(0)" class="editBtn" data-id="{{$functionAud->id}}" data-sol-fun-id="{{$functionAud->solution_function_id}}" data-function_name="{{$functionAud->function_name}}" data-problem_name="{{$functionAud->problem_name}}" >
                                                   <img src="{{ asset('assets-new/images/editIcon.png') }}" alt="">
                                               </a>
                                         </li>
@@ -118,7 +114,7 @@
                                     </div>
                                     <ul>
                                         <li>
-                                              <a href="javaScript:Void(0)" class="editBtn" data-id="8" data-name="Dirty Oil Problem Rishav" data-type="0" data-file="1707228611.png" data-cat="1">
+                                              <a href="javaScript:Void(0)" class="editBtn" data-id="{{$functionAud->id}}" data-sol-fun-id="{{$functionAud->solution_function_id}}" data-function_name="{{$functionAud->function_name}}" data-problem_name="{{$functionAud->problem_name}}">
                                                   <img src="{{ asset('assets-new/images/editIcon.png') }}" alt="">
                                               </a>
                                       </li>
@@ -129,6 +125,8 @@
                                 
                             </div>
                         </div>
+                        
+
                     </div>
                     <div class="questionWrap">
                         <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
@@ -136,7 +134,11 @@
                             nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
                             Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
                     </div>
-
+                    @else
+                    <div class="col text-center">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#functionAdjutment">Add +</button>
+                    </div>
+                    @endif
                 </div>
             </div>
                 <!-- End -->
@@ -171,6 +173,7 @@
                 <select name="solution_function" class="form-control form-select" id="solution_function">
                     <option value="">Please select..</option>
                     <option value="{{ $Solution_function->id }}">{{ $Solution_function->name }}</option>
+                    <option value="0">New Function</option>
                 </select>
             </div>
             <div class="form-group">
@@ -183,10 +186,10 @@
                 
             </div>
            
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="from-person">Actual Problem</label>
                 <input type="text" disabled name="problem_name" value="{{ $problem->name }}" class="form-control">
-            </div>
+            </div> -->
             
           </form>
         </div> 
@@ -328,12 +331,38 @@ $('#btnSave').click(function(e){
 
    });
    $('.editBtn').click(function(){
-        $('#solution_function').val('{{@$Solution_function->id}}')
-        $('#fun_name').val('{{@$functionAud->function_name}}')
-        $('#problem_name').val('{{@$functionAud->problem_name}}')
+        var solutionfunction_id = $(this).data('sol-fun-id')
+        var fun_name = $(this).data('function_name')
+        var problem_name = $(this).data('problem_name')
+        
+        if(solutionfunction_id !== 0){
+            $('#solution_function').val(solutionfunction_id)
+            $('#fun_name').val(fun_name).attr('readonly' , true)
+            $('#problem_name').val(problem_name).attr('readonly' , true)
+        }else{
+           
+            $('#solution_function').val(solutionfunction_id).prop('selected', true); 
+            $('#fun_name').val(fun_name).removeAttr('readonly')
+            $('#problem_name').val(problem_name).removeAttr('readonly')
+        }
+       
         $('#functionAdjutment').modal('toggle')
    })
 
+
+   var solutioFunctionName =  '{{$Solution_function->name}}'
+   var problemName =  '{{$problem->name}}'
+
+   $('#solution_function').change(function(){
+     
+        if($(this).val() !== '0'){
+            $('#fun_name').val(solutioFunctionName).attr('readonly' , true)
+            $('#problem_name').val(problemName).attr('readonly' , true)
+        }else{
+            $('#fun_name').val('').attr('readonly' , false)
+            $('#problem_name').val('').attr('readonly' , false)
+        }
+   })
 
 </script>
 @endsection

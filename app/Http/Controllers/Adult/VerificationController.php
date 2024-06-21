@@ -2391,7 +2391,7 @@ class VerificationController extends BaseController
         $validator = Validator::make($request->all(), [
             "function_name" => "required",
             "problem_name" => "required",
-            "solution_fun_id" => "required",
+            "solution_function" => "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError("Validation Error.", $validator->errors());
@@ -2406,7 +2406,7 @@ class VerificationController extends BaseController
                     "problem_id" => $data["problem_id"],
                     "project_id" => $data["project_id"],
                     "solution_id" => $data["solution_id"],
-                    "solution_function_id" => $data["solution_fun_id"],
+                    "solution_function_id" => $data["solution_function"],
                     "problem_name" => $data["problem_name"],
                     "user_id" => Auth::user()->id,                   
                     "function_name" => $data["function_name"],
