@@ -209,7 +209,10 @@
     </div>
     <!-- Content Section End -->
 
-    @include('adult.verification.view.component.cards')
+    @php $verificationName ='Me Vs. You Approach';
+  
+  @endphp
+  @include('adult.verification.view.component.cards' , [$verificationName , $verificationType->id])
 </div>
 @endsection
 @section('css')

@@ -227,7 +227,10 @@
     <!-- Content Section End -->
     
 </div>
-@include('adult.verification.view.component.cards')
+@php $verificationName = ($verificationType->id  == 8) ? 'Solution Time Location One' : 'Functions Belong to People Explanation';
+  
+  @endphp
+  @include('adult.verification.view.component.cards' , [$verificationName , $verificationType->id])
 @endsection
 @section('css')
 

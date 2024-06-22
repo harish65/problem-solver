@@ -206,7 +206,10 @@
     
     <!-- Modal End -->
 </div>
-@include('adult.verification.view.component.cards')
+@php $verificationName = ($verificationType->id  == 9) ? 'Solution Time Location Two' : 'Functions Belong to People Explanation';
+  
+  @endphp
+  @include('adult.verification.view.component.cards' , [$verificationName , $verificationType->id])
 @endsection
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">

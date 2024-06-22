@@ -181,7 +181,11 @@
    
 </div>
 
-@include('adult.verification.view.component.cards')
+@php $verificationName = ($verificationType->id  == 4) ? 'Separation Step' : 'Functions Belong to People Explanation';
+  
+  @endphp
+  @include('adult.verification.view.component.cards' , [$verificationName , $verificationType->id])
+
 
 @endsection
 @section('css')
