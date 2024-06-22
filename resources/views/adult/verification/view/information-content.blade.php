@@ -48,29 +48,6 @@
                     <div class="conditionBlock">
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
-                                <h2>Problem</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto"
-                                            src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
-                                            height="128px">
-                                    </div>
-                                    <p class="redText" style="color:red">{{ $problem->name }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="long-arrow">
-                        <p class="transitionPhrase">of</p>
-                            <!-- add arrow Image over here -->
-                            <img src="{{ asset('assets-new/images/arrowRight.png')}}">
-                            <!-- add arrow Image over here -->
-                        </div>
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
                                 <h2>Solution</h2>
                                 <div class="projectList text-center">
                                     <div class="imgWrp">
@@ -82,6 +59,31 @@
                                 </div>
                                 <div class="projectList">
                                     <p class="date">{{ date('d/m/Y', strtotime($solution->created_at))}}</p>
+                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="long-arrow">
+                        <p class="transitionPhrase">of</p>
+                            <!-- add arrow Image over here -->
+                            <img src="{{ asset('assets-new/images/arrowRight.png')}}">
+                            <!-- add arrow Image over here -->
+                        </div>
+                        
+
+                        <div class="blockProblem">
+                            <div class="projectBlock text-center">
+                                <h2>Problem</h2>
+                                <div class="projectList text-center">
+                                    <div class="imgWrp">
+                                        <img class="mx-auto"
+                                            src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
+                                            height="128px">
+                                    </div>
+                                    <p class="redText" style="color:red">{{ $problem->name }}</p>
+                                </div>
+                                <div class="projectList">
+                                    <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
                                     <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
                                 </div>
                             </div>

@@ -11,10 +11,10 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                      <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
+                      <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                      <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                      <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                      <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>   
 
                 <div class="col-sm-12">
                     <div class="d-flex align-items-center">
@@ -44,7 +44,9 @@
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
+                 @if($entity_used)
                 <div class="principleRelation">
+
                     <div class="conditionBlock">
                         <div class="blockProblem">
                             <div class="projectBlock text-center">
@@ -91,11 +93,11 @@
                                 <h2>Available</h2>
                                 <div class="projectList text-center">
                                     @if($entities->count() > 0)
-                                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                                    <div id="available_slider" class="carousel slide" data-ride="carousel">
                                         <ol class="carousel-indicators">
                                             @php $index = 0; @endphp
                                                 @foreach($entities as $entity)
-                                                        <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
+                                                        <li data-target="#available_slider" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
                                                 @php $index++; @endphp
                                             @endforeach 
                                         </ol>
@@ -229,13 +231,70 @@
                         </form>
                     </div>
                 </div>
+                @else
+                        <div class="col-md-12">
+                            <button type="button"  class="btn btn-success add-entity" data-toggle="modal" data-target="#EntityUsageModal" >Add <i class="fa fa-plus"></i></button>
+                        </div>
+                        
+                @endif
                 <!-- End -->
                 
             </div>
         </div>
     </div>
     <!-- Content Section End -->
+<!-- Modal start -->
+<div class="modal fade" id="EntityUsageModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true" enctype="multipart/form-data">
+        <form method="POST" id="entityForm" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Entity Usage</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
 
+                    <div class="modal-body">
+                        <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                        <input type="hidden" name="project_id" value="{{ $project_id }}">
+                        <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+
+
+                       
+                        <div class="form-group">
+                            <label>People In Project</label>
+                        </div>
+                        @foreach($custommers as $entity)
+                        <div class="form-group">
+                           <input type="text" value="{{  $entity->name .':'. $entity->type }}" class="form-control" disabled>
+                        </div>
+                        @endforeach
+                        <div class="form-group">
+                            <label>Entity Usage</label>
+                        </div>
+                        @foreach($entities as $entity)
+                        <div class="form-group">
+                           <input type="text" value="{{  $entity->entity }}" class="form-control" disabled>
+                        </div>
+                        @endforeach
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="" disabled
+                                value="Problem : {{@$problem->name}}">
+                        </div>
+                        
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="btnSave" class="btn btn-success">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+<!-- Modal End -->
 
 </div>
 
@@ -362,7 +421,7 @@ $(document).on('click','#btnSave',function(e){
     });
     
     $.ajax({
-        url: "{{route('adult.store-entity-verification')}}",
+        url: "{{route('adult.entity-usage')}}",
         data: fd,
         processData: false,
         contentType: false,

@@ -734,7 +734,7 @@ class VerificationController extends BaseController
                             }
                             if(!$verificationType){
                                 $verificationType = VerificationType::where(
-                                    "id", "=", 16
+                                    "id", "=", 18
                                 )->first();
                             }
                             
@@ -746,7 +746,7 @@ class VerificationController extends BaseController
                             
                             
                             $functionAud  = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
-                            $functionApplied  = DB::table('function_sub_people')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
+                            $functionApplied  = DB::table('function_sub_people')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->where('verification_type' , $verificationType->id)->first();
                             return view(
                                 "adult.verification.view.function-sub-and-people",
                                 compact(
@@ -789,12 +789,12 @@ class VerificationController extends BaseController
                                         "id", "=", 16
                                     )->first();
                                 }
-                               
+                            
                                 $people = db::table('function_belong_to_people')->select('function_belong_to_people.*' , 'customers.name' )
                                             ->leftJoin('customers', 'function_belong_to_people.customer_id', '=', 'customers.id')
                                             ->where('function_belong_to_people.problem_id' , $problem_id)->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , Auth::user()->id)->get();
-                               
-                                            $functionApplied  = DB::table('function_sub_people')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
+                                
+                                $functionApplied  = DB::table('function_sub_people')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->where('verification_type' , 19)->first();
                                 return view(
                                     "adult.verification.view.function-sub-and-people",
                                     compact(
@@ -1016,6 +1016,10 @@ class VerificationController extends BaseController
                                                             "id", "=", 16
                                                         )->first();
                                                     }
+                                                    $entity_used = DB::table("entity_usage")
+                                                        ->where("user_id", "=", Auth::user()->id)
+                                                        ->where("project_id", $project_id)
+                                                    ->first();
                                                    
                                                    
                                                     return view(
@@ -1031,7 +1035,7 @@ class VerificationController extends BaseController
                                                             "solution_id",
                                                             "Solution_function",
                                                             "verifiationTypeText",
-                                                            "allVarifications","entities" ,"entitiestbl","custommers"
+                                                            "allVarifications","entities" ,"entitiestbl","custommers" , "entity_used"
                                                             
                                                             
                                                         )
@@ -2911,6 +2915,7 @@ class VerificationController extends BaseController
                         "problem_id" => $data["problem_id"],
                         "project_id" => $data["project_id"],
                         "solution_id" => $data["solution_id"],
+                        "verification_type" => $data["verification_type"],
                         "user_id" => Auth::user()->id, 
                         "created_at" => date('Y-m-d 00:00:00'),
                         "identified" => true,
@@ -2967,6 +2972,40 @@ class VerificationController extends BaseController
                 [
                     "problem_id" => $data["problem_id"],
                     "project_id" => $data["project_id"],                    
+                    "user_id" => Auth::user()->id, 
+                    "created_at" => date('Y-m-d 00:00:00'),
+                    "identified" => true,
+                ]
+            );
+            $success["entity"] = $insert;
+            return $this->sendResponse(
+                $success,
+                "Record created successfully."
+            );
+        }catch(Exception $e){
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
+            ]);
+        } 
+    }
+
+    public function StoreEntityUsage(Request $request){
+        try {
+            
+            $validator = Validator::make($request->all(), [
+                "problem_id" => "required",
+                "project_id" => "required",
+            ]);
+            if ($validator->fails()) {
+                return $this->sendError("Validation Error.", $validator->errors());
+            }
+            $data =  $request->all();
+            
+            $insert = DB::table("entity_usage")->updateOrInsert(
+                ["id" => @$request->id],
+                [
+                    "problem_id" => $data["problem_id"],
+                    "project_id" => $data["project_id"],
                     "user_id" => Auth::user()->id, 
                     "created_at" => date('Y-m-d 00:00:00'),
                     "identified" => true,
