@@ -2909,6 +2909,7 @@ class VerificationController extends BaseController
                     ]
                 );
             }else{
+                
                 $insert = DB::table($request->table_name)->updateOrInsert(
                     ["id" => @$request->id],
                     [
@@ -2937,6 +2938,7 @@ class VerificationController extends BaseController
     public function MeVsYouNextPage($id){
         $params = Crypt::decrypt($id);
         $problem = Problem::where("project_id", "=", $params['project_id'])->where('user_id' , Auth::user()->id)->first();
+        $verificationType = VerificationType::where("id","=",28)->first();
         $mevsyounext = DB::table('me_vs_you_next')->where('user_id' , Auth::user()->id)->where('project_id' , $params['project_id'])->first();
         $types = VerificationType::orderBy("id", "asc")->get();
         $solution = Solution::where("problem_id", "=", $params['problem_id'])->first();
@@ -2953,7 +2955,7 @@ class VerificationController extends BaseController
                     'project_id' => $params['project_id'] , 
                     'types'=>$types,
                     'Solution_function'=>$Solution_function , 
-                    'solution'=>$solution , 'solution_id'=>$solution->id , 'custommers'=>$custommers ,'parameter'=>$id]);
+                    'solution'=>$solution , 'solution_id'=>$solution->id , 'custommers'=>$custommers ,'parameter'=>$id, 'verificationType'=>$verificationType]);
     }
     public function MeVsYouNextPageStore(Request $request){
         try {
