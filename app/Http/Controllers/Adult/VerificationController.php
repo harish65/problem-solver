@@ -1046,29 +1046,10 @@ class VerificationController extends BaseController
                                                         $allVarifications = DB::table(
                                                             "principle_identification"
                                                         )->get();
-                                                        $custommers = DB::table("customers")
-                                                                                ->where("project_id", "=", $project_id)
-                                                                        ->get();
-                                                        if (!$verification) {
-                                                            $verification = Verification::where(
-                                                                "verification_type_id", "=", 16
-                                                            )->first();
-                                                            if (isset($verification->validations)) {
-                                                                $verification->validations = json_decode(
-                                                                    $verification->validations
-                                                                );
-                                                            }
-                                                        }
-                                                        $entities = DB::table("entity_available")
-                                                        ->where("type", "=", 0)
-                                                        ->get();
-    
-                                                        $entitiestbl = DB::table("entities")->get();
-                                                        if(!$verificationType){
-                                                            $verificationType = VerificationType::where(
-                                                                "id", "=", 16
-                                                            )->first();
-                                                        }
+                                                        $custommers = DB::table("customers")->where("project_id", "=", $project_id)->get();
+                                                        $functionOfPeople = DB::table("function_of_people_explanations")->where("project_id", "=", $project_id)->where('user_id' , Auth::user()->id)->first();
+                                                       
+                                                        
                                                        
                                                        
                                                         
@@ -1085,7 +1066,7 @@ class VerificationController extends BaseController
                                                                 "solution_id",
                                                                 "Solution_function",
                                                                 "verifiationTypeText",
-                                                                "allVarifications","entities" ,"entitiestbl","custommers"
+                                                                "allVarifications","custommers","functionOfPeople"
                                                                 
                                                                 
                                                             )
