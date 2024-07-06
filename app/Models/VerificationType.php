@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class VerificationType extends Model
 {
@@ -21,4 +22,9 @@ class VerificationType extends Model
     // public function verification_type_text(){
     //     return $this->hasMany(VerificationTypeText::class);
     // }
+
+
+    public static function verificationTypeCategories(){
+        return DB::table('verification_type_categories')->get();
+    }
 }

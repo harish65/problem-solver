@@ -663,7 +663,8 @@ button.btn.btn-primary.login-btn a {
     border: 1px solid #00A14C;
     border-radius: 10px;
     height: 50px;
-    width: 285px;
+    /* width: 285px; */
+    width: 50%;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;

@@ -19,17 +19,7 @@
                       <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
                       <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
 
-                <div class="col-sm-12">
-                    <div class="d-flex align-items-center">
-                        <h2>Verification</h2>
-                        <select class="form-control form-select" id="verification_types">
-                                <option value=''>Select Verification Type..</option>
-                            @foreach(@$types as $type)
-                                <option {{  (@$verificationType->id  == $type->id) ? 'selected' : '' }} value='{{ $type->id }}'>{{ $type->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+                      @include('adult.verification.view.component.verification_types')
             </div>
         </div>
     </div>

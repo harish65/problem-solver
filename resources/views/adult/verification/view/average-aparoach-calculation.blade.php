@@ -10,22 +10,12 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                      <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
+                      <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                      <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                      <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                      <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>   
 
-                <div class="col-sm-12">
-                    <div class="d-flex align-items-center">
-                        <h2>Verification</h2>
-                        <select class="form-control form-select" id="verification_types">
-                                <option value=''>Select Verification Type..</option>
-                            @foreach(@$types as $type)
-                                <option {{  (@$verificationType->id  == $type->id) ? 'selected' : '' }} value='{{ $type->id }}'>{{ $type->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+                      @include('adult.verification.view.component.verification_types')
             </div>
         </div>
     </div>
@@ -45,13 +35,7 @@
                             <div class="add-entity mb-3">
                                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+ Calculate</button>
                             </div>
-                            <?php
-                                
-                                
-                                    $solutionParts = \App\Models\AverageApproach::getSolutionParts($problemPart->project_id, $problemPart->id);
-                                
-                                
-                            ?>
+                            <?php $solutionParts = \App\Models\AverageApproach::getSolutionParts($problemPart->project_id, $problemPart->id);?>
                     <div class="partitionApp">
                             <div class="blockProblem">
                                     <div class="projectBlock text-center">
@@ -172,7 +156,7 @@
                 <div class="row">
                     <div class="from-group">
                         <label for="problem">Solution Value</label>
-                        <input type="text" value="10" id="sol_val" name="solution_value" class="form-control" placeholder="Solution Value">
+                        <input type="text" value="{{ ($countPartionAproach > 0) ? $countPartionAproach : 0;}}" id="sol_val" name="solution_value" class="form-control" placeholder="Solution Value">
                     </div>
                     <div class="from-group">
                         <label for="problem">Number of Part of Problem</label>
@@ -238,7 +222,7 @@
 
 @endsection
 @section('css')
-<link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
+
 <style>
     .entity{
         display: flex;
@@ -297,14 +281,14 @@
 </style>
 @endsection
 @section('scripts')
-<script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
+
 <script>
    
 $('#verification_types').on('change',function(){
     var id = $(this).val();
     window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
 })
-$('.dropify').dropify();
+
 
 
 </script>

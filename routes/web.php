@@ -241,7 +241,9 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::get("users", [\App\Http\Controllers\Adult\UserController::class, 'index'])-> name("users");
         Route::post("create-user", [\App\Http\Controllers\Adult\UserController::class, 'create'])-> name("create-user");
         Route::post("delete-user", [\App\Http\Controllers\Adult\VerificationController::class, 'deletePeopleFromProject'])-> name("delete-user");
-
+        //Outside from project
+        Route::post("create-people-ouside-project", [\App\Http\Controllers\Adult\VerificationController::class, 'storePeopleOutSideFromProject'])-> name("create-people-ouside-project");
+        Route::post("delete-people", [\App\Http\Controllers\Adult\VerificationController::class, 'deletePeopleOutSideProject'])-> name("delete-people");
         //Error Correction Aproach
         Route::post("create-error-correction-type", [\App\Http\Controllers\Adult\VerificationController::class, 'addErrorCorectionAproach'])-> name("create-error-correction-type");
         Route::get("feedback-identification", [\App\Http\Controllers\Adult\VerificationController::class, 'feedbackIdentification'])-> name("feedback-identification");
@@ -262,6 +264,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::post("passive-voice", [\App\Http\Controllers\Adult\VerificationController::class, 'storePassiveVoice'])-> name("passive-voice");
         // Passive Voice
         Route::post("resource-managment", [\App\Http\Controllers\Adult\VerificationController::class, 'storeResourceManagment'])-> name("resource-managment");
+        Route::post("probelm-at-location", [\App\Http\Controllers\Adult\VerificationController::class, 'storeProblemAtLocation'])-> name("probelm-at-location");
         //visibility_entity_behind_explanation deleteVisibilityEntityBehindExplanation
  
         Route::post("visibility_entity_behind_explanation", [\App\Http\Controllers\Adult\VerificationController::class, 'storeVisibilityEntityBehindExplanation'])-> name("visibility_entity_behind_explanation");

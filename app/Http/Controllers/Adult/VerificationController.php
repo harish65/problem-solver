@@ -108,7 +108,8 @@ class VerificationController extends BaseController
         $solution_id = $solution->id;
         $solutionTypes = DB::table("solution_types")->get();
 
-        $types = VerificationType::orderBy("id", "asc")->get();
+        $types = VerificationType::orderBy("category", "asc")->get();
+       
         $custommers = DB::table("customers")
                     ->where("project_id", "=", $project_id)
                     ->get();
@@ -828,12 +829,14 @@ class VerificationController extends BaseController
                                         }
                                         
                                     }
+                                    
                                     if(!$verificationType){
                                         $verificationType = VerificationType::where(
                                             "id", "=", 16
                                         )->first();
                                     }
                                     $problemPart = DB::table("average_approaches") ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
+                                    $countPartionAproach = DB::table("partition_approach") ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->get()->count();
                                     return view(
                                         "adult.verification.view.average-aparoach-calculation",
                                         compact(
@@ -847,7 +850,7 @@ class VerificationController extends BaseController
                                             "solution_id",
                                             "Solution_function",
                                             "verifiationTypeText",
-                                            "problemPart"
+                                            "problemPart" , "countPartionAproach"
                                             
                                             
                                         )
@@ -1156,6 +1159,55 @@ class VerificationController extends BaseController
                                                                                 "Solution_function",
                                                                                 "verifiationTypeText",
                                                                                 "custommers","taking_ad"
+                                                                                
+                                                                                
+                                                                            )
+                                                                        );
+                                                                        break;
+                                                                    case 30:
+                                   
+                                                                        $users = DB::table("people_outside_project")
+                                                                        ->where("project_id", "=", $project_id)->get();
+                                                                       
+                                                                        return view(
+                                                                            "adult.verification.view.people-outside-project-content",
+                                                                            compact(
+                                                                                "types",
+                                                                                "verificationType",
+                                                                                "verification",
+                                                                                "problem_id",
+                                                                                "project_id",
+                                                                                "problem",
+                                                                                "solution",
+                                                                                "solution_id",
+                                                                                "Solution_function",
+                                                                                "verifiationTypeText",
+                                                                                "users"
+                                                                               
+                                                                                
+                                                                                
+                                                                            )
+                                                                        );
+                                                                    break;
+                                                                    case 31:
+                                   
+                                                                     
+                                                                        $problrmAtLocatios  = DB::table('problrm_at_location_explantion')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
+                                                                       
+                                                                        return view(
+                                                                            "adult.verification.view.prolem_solution_at_location",
+                                                                            compact(
+                                                                                "types",
+                                                                                "verificationType",
+                                                                                "verification",
+                                                                                "problem_id",
+                                                                                "project_id",
+                                                                                "problem",
+                                                                                "solution",
+                                                                                "solution_id",
+                                                                                "Solution_function",
+                                                                                "verifiationTypeText",
+                                                                                "problrmAtLocatios"
                                                                                 
                                                                                 
                                                                             )
@@ -1976,7 +2028,6 @@ class VerificationController extends BaseController
 
     public function storeCommunicationFlow(Request $request)
     {
-        // echo "<pre>";print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "person_to" => "required",
             "subject" => "required",
@@ -2288,14 +2339,7 @@ class VerificationController extends BaseController
             }
                 
         }        
-       
-        
-
-        
         $errorcorrections = db::table('error_correction_type')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->get();
-       
-        //  echo "<pre>";print_r($errorcorrections);die;
-               
         return view("adult.verification.view.error-corection" ,  compact("problemDevelopment" ,"compensators" , "feedBack" , "errorcorrections" , "errors" , "compensator" ,'params' ,'project_id'));
     }
 
@@ -2372,7 +2416,6 @@ class VerificationController extends BaseController
 
     ///function Function Adjustment
     public function storeFunctionAdjustment(Request $request){
-        // echo "<pre>";print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "function_name" => "required",
             "problem_name" => "required",
@@ -2412,22 +2455,14 @@ class VerificationController extends BaseController
     public function functionAdjustment(Request $request){
         return view("adult.verification.view.error-corection" );
     }
-
-
-
     // Function Substitution and People
-
     public function functionSustitutionAndPeople(Request $request){
-        
         $validator = Validator::make($request->all(), [
             "customer" => "required",
         ]);
         if ($validator->fails()) {
-           
             return $this->sendError("Validation Error.", $validator->errors());
         }
-
-
         try {
 
             $data =  $request->all();
@@ -2465,8 +2500,6 @@ class VerificationController extends BaseController
             ]);
         } 
     }
-
-
 
     public function SolutionFunctionAverage(Request $request){
         
@@ -2992,6 +3025,114 @@ class VerificationController extends BaseController
                     "user_id" => Auth::user()->id, 
                     "created_at" => date('Y-m-d 00:00:00'),
                     "identified" => true,
+                ]
+            );
+            $success["entity"] = $insert;
+            return $this->sendResponse(
+                $success,
+                "Record created successfully."
+            );
+        }catch(Exception $e){
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
+            ]);
+        } 
+    }
+
+    public function storePeopleOutSideFromProject(Request $request){      
+        try{
+            // echo "<pre>";print_r($request->all());die;
+            if($request->hasFile('file')){
+                $file = time().'.'.$request -> file -> extension();
+                $request -> file -> move(public_path('assets-new/users/'), $file);
+                $mime = mime_content_type(public_path('assets-new/users/' . $file));
+                if(strstr($mime, "video/")){
+                    $type = 1;
+                }else if(strstr($mime, "image/")){
+                    $type = 0;
+                }
+                $insert = DB::table('people_outside_project')->updateOrInsert(['id'=> $request->id],
+                [
+                    'name' => $request->name,
+                    'project_id' => $request->project_id,
+                    'file' => $file,
+                    'type' => $request->type,
+                    'present_before' => $request->present_before,
+                    'present_after' => $request->present_after,
+                    'created_at' => date('Y-m-d h:i:s')
+                ]);
+            }else{
+                $insert = DB::table('people_outside_project')->updateOrInsert(['id'=> $request->id],
+                [
+                    'name' => $request->name,
+                    'type' => $request->type,
+                    'file' => null,
+                    'project_id' => $request->project_id,
+                    'present_before' => $request->present_before,
+                    'present_after' => $request->present_after,
+                    'created_at' => date('Y-m-d h:i:s')
+                ]);
+            }
+            $success['user'] = $insert;
+            return $this->sendResponse($success, 'Problem saved successfully.');
+        }catch(Exception $e){
+            return $this->sendError('Error.', ['error'=> $e->getMessage()]);
+        }
+    }
+
+    public function deletePeopleOutSideProject(Request $request){
+        try {            
+          
+            $delete = Db::table('people_outside_project')->where("id", "=", $request->id)
+                ->delete();
+
+            if ($delete) {
+                $success["delete_verification"] = true;
+                return $this->sendResponse(
+                    $success,
+                    "Record deleted successfully."
+                );
+            } else {
+                $success["delete_verification"] = false;
+                return $this->sendResponse($success, "Something Wrong.");
+            }
+        } catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
+            ]);
+        }
+    }
+
+
+
+
+    public function storeProblemAtLocation(Request $request){
+        try {
+            // echo "<pre>";print_r($request->all());die;
+            $data =  $request->all();
+            $file = null;
+            $type = null;
+            if(isset($request->file) && !empty($request->file)){
+                $file = time() . "." . $request->file->extension();
+                $request->file->move(public_path("assets-new/verification_types/problem_at_location/"),$file);
+                $mime = mime_content_type(public_path("assets-new/verification_types/problem_at_location/" .$file ));
+                if (strstr($mime, "video/")) {
+                    $type = 1;
+                } elseif (strstr($mime, "image/")) {
+                    $type = 0;
+                }
+            }
+           
+            $insert = DB::table("problrm_at_location_explantion")->updateOrInsert(
+                ["id" => @$request->id],
+                [
+                    "problem_id" => $data["problem_id"],
+                    "project_id" => $data["project_id"],
+                    "solution_id" => $data["solution_id"],
+                    "user_id" => Auth::user()->id, 
+                    "file" => $file,
+                    'type' => $type,
+                    'identified' => true ,
                 ]
             );
             $success["entity"] = $insert;

@@ -40,10 +40,14 @@
                       <h2>People</h2>
                       <div class="projectList text-center">          
                         <div class="imgWrp">
-                            <img class="mx-auto" src="{{ asset('assets-new/users/'.$user->file) }}" width="100%" height="128px">
+                            @if($user->file)
+                            <img class="mx-auto" src="{{ asset('assets-new/users/'.$user->file) }}" alt="User Image" width="100%" height="128px">
+                            @else
+                            <img class="mx-auto" src="{{ asset('assets-new/users/user_avtar.jpg') }}" alt="User Image" width="100%" height="128px">
+                            @endif
                         </div>
-                        <p class="redText">{{ ucfirst($user->name) }}</p>
-                        <p>{{ ucfirst($user->type) }}</p>
+                        <p class="redText">{{ ($user->name == '') ? 'No Name' : ucfirst($user->name) }}</p>
+                        <p>{{ ($user->type == '') ? 'No Title' : ucfirst($user->type) }}</p>
                       </div>
                       
                     </div>
@@ -61,8 +65,9 @@
                 <table class="table slp-tbl text-center">
                     <thead>
                         <tr>
-                            <td>Person Name</td>
-                            <td>Person Title</td>
+                            <td>People</td>
+                            <td>Present Before</td>
+                            <td>Present After</td>
                             <td>Actions</td>
                         </tr>
                     </thead>
@@ -73,16 +78,20 @@
                                 {{ ucfirst($user->name) }}
                             </td>
                             <td>
-                                {{ ucfirst($user->type) }}
+                                {{ ($user->present_before == 1) ? 'Yes' : 'No' }}
+                            </td>
+                            <td>
+                                {{ ($user->present_after == 1) ? 'Yes' : 'No' }}
                             </td>
                             <td>
                                 <a href="javaScript:Void(0)"  data-href="{{ route('problem.delete') }}" data-id = "{{ $user->id }}" class="delProblemBtn" title="Delete" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20"></a>
                                 &nbsp;
-                                <a href="javaScript:Void(0)"  class="editProblemBtn"
-                                                                                        data-id = {{ $user->id }}
-                                                                                        data-name = {{ $user->name }}
-                                                                                        data-type = {{ $user->type }}
-                                                                                        data-file = {{ $user->file }}><img src="{{ url('/') }}/assets-new/images/editIcon.png" width="15" height="20"></a>
+                                <a href="javaScript:Void(0)"  class="editProblemBtn" data-before ="{{$user->present_before}}" 
+                                                                                        data-present_after ="{{$user->present_after}}"
+                                                                                        data-id = "{{ $user->id }}"
+                                                                                        data-name = "{{ $user->name }}"
+                                                                                        data-type = "{{ $user->type }}"
+                                                                                        data-file = "{{ $user->file }}"><img src="{{ url('/') }}/assets-new/images/editIcon.png" width="15" height="20"></a>
                             </td>
                         </tr>
                         @endforeach
@@ -107,27 +116,14 @@
                             
 
                         
-                        <h5>Are you part of that project?</h5>
+                        <h5>Do you understand that people outside the project cannot be absent from life in order to solve the identified problem?</h5>
                         <ul class="validate_que" style="list-style:none;">
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I am part of that project</label></li>
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2">&nbsp;&nbsp;No, I am not part of that project</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I do understand that people outside the project cannot be absent from life in order to solve the identified problem.</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2">&nbsp;&nbsp;No, I do not understand that people outside the project cannot be absent from life in order to solve the identified problem.</label></li>
                         
                         </ul>
         
-                        <h5>Do you have a function in that project?</h5>
-                        <ul class="validate_que" style="list-style:none;">
-                            
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I do have a function in that project</label></li>
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}  value="2">&nbsp;&nbsp;No, I do not have a function in that project</label></li>
-                        
-                        </ul>
-                        <h5>Do you involve in that project?</h5>
-                        <ul class="validate_que" style="list-style:none;">
-                            
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I involve in that project</label></li>
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 2) ? 'checked' : '' }}  value="2">&nbsp;&nbsp;No, I don’t involve in that project</label></li>
-                        
-                        </ul>
+                       
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
                 </form>
                 
@@ -148,7 +144,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add People</h5>
+          <h5 class="modal-title" id="exampleModalLabel">People</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -168,6 +164,22 @@
           <div class="form-group">
               <label for="exampleInputEmail1">Title</label>
               <input type="text" name="type" id="type" class="form-control" placeholder="Title">
+          </div>
+          <div class="form-group">
+              <label for="exampleInputEmail1">Present Before</label>
+              <select  name="present_before" id="present_before" class="form-control">
+                <option value=''>Please select</option>
+                <option value='1'>Yes</option>
+                <option value='0'>No</option>
+              </select>
+          </div>
+          <div class="form-group">
+              <label for="exampleInputEmail1">Present After</label>
+              <select  name="present_after" id="present_after" class="form-control">
+                <option value=''>Please select</option>
+                <option value='1'>Yes</option>
+                <option value='0'>No</option>
+              </select>
           </div>
           
          
@@ -296,62 +308,6 @@ $('.editverBtn').click(function(){
 
 
 
-
-   $(document).on('click','#btnSave',function(e){
-       e.preventDefault();
-       var fd = new FormData($('#createVerificationForm')[0]);
-       $.ajaxSetup({
-       headers: {
-                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-               }
-       });
-       
-       $.ajax({
-           url: "{{route('adult.store-verification')}}",
-           data: fd,
-           processData: false,
-           contentType: false,
-           dataType: 'json',
-           type: 'POST',
-           beforeSend: function(){
-             $('#btnSave').attr('disabled',true);
-             $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-           },
-           error: function (xhr, status, error) {
-               $('#btnSave').attr('disabled',false);
-               $('#btnSave').html('Submit');
-               $.each(xhr.responseJSON.data, function (key, item) {
-                   toastr.error(item);
-               });
-           },
-           success: function (response){
-             if(response.success == false)
-             {
-                 $('#btnSave').attr('disabled',false);
-                 $('#btnSave').html('Login');
-                 var errors = response.data;
-                 $.each( errors, function( key, value ) {
-                     toastr.error(value)
-                 });
-             } else {
-                
-                 toastr.success(response.message);
-                 location.reload()
-                //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                //  }else{
-
-
-                    
-                    // window.location.href = "{{ route('adult.dashboard')}}"
-                //  }
-                 
-              }
-           }
-       });
-   });
-
-
 </script>
 <script>    
    
@@ -365,7 +321,7 @@ $('.editverBtn').click(function(){
        });
        
        $.ajax({
-           url: "{{route('adult.create-user')}}",
+           url: "{{route('adult.create-people-ouside-project')}}",
            data: fd,
            processData: false,
            contentType: false,
@@ -416,6 +372,9 @@ $('.editverBtn').click(function(){
                drEvent.destroy();
                drEvent.init();	
            }
+          
+           $('#present_before').val($(this).data('before'))
+           $('#present_after').val($(this).data('present_after'))
            $('#type').val($(this).attr('data-type'))       
            $('#user_id').val($(this).attr('data-id'))       
        
@@ -424,7 +383,7 @@ $('.editverBtn').click(function(){
     $('#add_people').on('click',function(){
         $('#formUsers')[0].reset();  
         $(".dropify-clear").trigger("click");
-        $('#exampleModalLabel').text('Add People') 
+        $('#exampleModalLabel').text('People Outside Project') 
         $('#exampleModal').modal('toggle')
     })
 
@@ -445,7 +404,7 @@ $('.delProblemBtn').click(function(e){
        });
        
        $.ajax({
-           url: "{{route('adult.delete-user')}}",
+           url: "{{route('adult.delete-people')}}",
            data: {'id': id},
            dataType: 'json',
            type: 'POST',
