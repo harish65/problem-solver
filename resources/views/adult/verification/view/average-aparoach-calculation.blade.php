@@ -92,7 +92,6 @@
                                 Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
                             <div class="row">
                             </div>
-
                             <h2>Validation Question</h2>
                         <br>
                         <form id="validation_form">
@@ -156,7 +155,8 @@
                 <div class="row">
                     <div class="from-group">
                         <label for="problem">Solution Value</label>
-                        <input type="text" value="{{ ($countPartionAproach > 0) ? $countPartionAproach : 0;}}" id="sol_val" name="solution_value" class="form-control" placeholder="Solution Value">
+                        <input type="text" value="10" id="sol_val"  name="solution_value" class="form-control" placeholder="Solution Value">
+                        <input type="hidden" id="parts_count" value="{{$countPartionAproach}}">
                     </div>
                     <div class="from-group">
                         <label for="problem">Number of Part of Problem</label>
@@ -338,9 +338,10 @@ $('.dashboard').click(function(){
 <script>
     function calculte(){
         var solval = $('#sol_val').val();
-        var problempart = Math.round(solval/2);
-            $('#problem_part_front , #problem_parts').val(problempart);
-            $('#result').val(2);
+        var parts = '{{$countPartionAproach}}';
+        var problempart = Math.round(solval/parts);
+            $('#problem_part_front , #problem_parts').val(parts);
+            $('#result').val(problempart);
     }
 //sol-fun-av
 $(document).on('click','#btnSave',function(e){

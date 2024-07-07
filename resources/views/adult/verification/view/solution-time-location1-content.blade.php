@@ -115,7 +115,7 @@
                                 <h2>Destination</h2>
                                 <div class="projectList text-center">
                                     <div class="imgWrp">
-                                        <img class="mx-auto" src="{{ asset('assets-new/verification/destination.png')}}"
+                                        <img class="mx-auto" src="{{ asset('assets-new/solution/'.$solution->file)}}"
                                             width="100%" height="128px">
                                     </div>
                                     <p class="redText">{{ $solution->name }}</p>

@@ -27,7 +27,7 @@
                 <div class="col-sm-12">
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
-                        <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />
+                        <img src="{{ asset('assets-new/verification_types/' . @$verificationType->banner)}}" alt="relationImage" />
                         
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
@@ -66,7 +66,7 @@
                                 </div>
                                 <div class="left-side float-left mt-4">
                                     <div class="imgWrp">
-                                        <img class="mx-auto" src="{{  asset('assets-new/verification/destination.png')}}"
+                                        <img class="mx-auto" src="{{ asset('assets-new/solution/'.$solution->file)}}"
                                             width="100%" height="128px">
                                     </div>
                                     <div class="projectList text-center">

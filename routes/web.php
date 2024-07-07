@@ -265,6 +265,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         // Passive Voice
         Route::post("resource-managment", [\App\Http\Controllers\Adult\VerificationController::class, 'storeResourceManagment'])-> name("resource-managment");
         Route::post("probelm-at-location", [\App\Http\Controllers\Adult\VerificationController::class, 'storeProblemAtLocation'])-> name("probelm-at-location");
+        Route::post("function-at-location", [\App\Http\Controllers\Adult\VerificationController::class, 'storeFunctionAtLocation'])-> name("function-at-location");
         //visibility_entity_behind_explanation deleteVisibilityEntityBehindExplanation
  
         Route::post("visibility_entity_behind_explanation", [\App\Http\Controllers\Adult\VerificationController::class, 'storeVisibilityEntityBehindExplanation'])-> name("visibility_entity_behind_explanation");

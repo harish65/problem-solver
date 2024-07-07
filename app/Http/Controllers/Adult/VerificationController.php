@@ -1213,6 +1213,33 @@ class VerificationController extends BaseController
                                                                             )
                                                                         );
                                                                     break;
+
+                                                                    case 32:
+                                   
+                                                                     
+                                                                        $function_at_location  = DB::table('function_at_locations')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
+                                                                        $custommers = DB::table("customers")
+                                                                        ->where("project_id", "=", $project_id)->get();
+                                                                        
+                                                                        return view(
+                                                                            "adult.verification.view.function_at_location",
+                                                                            compact(
+                                                                                "types",
+                                                                                "verificationType",
+                                                                                "verification",
+                                                                                "problem_id",
+                                                                                "project_id",
+                                                                                "problem",
+                                                                                "solution",
+                                                                                "solution_id",
+                                                                                "Solution_function",
+                                                                                "verifiationTypeText",
+                                                                                "function_at_location" , "custommers"
+                                                                                
+                                                                                
+                                                                            )
+                                                                        );
+                                                                    break;
                                                                     default:                
                                                                     return view(
                                                                         "adult.verification.index",
@@ -3133,6 +3160,42 @@ class VerificationController extends BaseController
                     "file" => $file,
                     'type' => $type,
                     'identified' => true ,
+                ]
+            );
+            $success["entity"] = $insert;
+            return $this->sendResponse(
+                $success,
+                "Record created successfully."
+            );
+        }catch(Exception $e){
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
+            ]);
+        } 
+    }
+
+
+
+    public function StoreFunctionAtLocation(Request $request){
+        try {
+            
+            $validator = Validator::make($request->all(), [
+                "problem_id" => "required",
+                "project_id" => "required",
+            ]);
+            if ($validator->fails()) {
+                return $this->sendError("Validation Error.", $validator->errors());
+            }
+            $data =  $request->all();
+            
+            $insert = DB::table("function_at_locations")->updateOrInsert(
+                ["id" => @$request->id],
+                [
+                    "problem_id" => $data["problem_id"],
+                    "project_id" => $data["project_id"],
+                    "user_id" => Auth::user()->id, 
+                    "created_at" => date('Y-m-d 00:00:00'),
+                    "identified" => true,
                 ]
             );
             $success["entity"] = $insert;
