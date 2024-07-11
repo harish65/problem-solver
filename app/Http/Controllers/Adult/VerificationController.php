@@ -1632,16 +1632,29 @@ class VerificationController extends BaseController
         $validator = Validator::make($request->all(), [
             "past_time" => "required",
         ]);
+        
+            $date =  date('Y-m-d 00:00:00' , strtotime($request->past_time));
+       
+            $time = PastAndPresentTime::where('time' , $date)->where('project_id' , $request->project_id)->where('user_id' , Auth::user()->id)->first();
 
-        if ($validator->fails()) {
-            return $this->sendError("Validation Error.", $validator->errors());
-        }
+
+            if($time  && $request->id == ''){
+                return $this->sendError("Error.", ['error'=>'Date is already selected']);
+            }
+
+            
+            
+            if ($validator->fails()) {
+                return $this->sendError("Validation Error.", $validator->errors());
+            }
+           
         try {
             if ($request->id) {
                 $PastAndPresentTime = PastAndPresentTime::find($request->id);
             } else {
                 $PastAndPresentTime = new PastAndPresentTime();
             }
+
             $data = $request->all();
             $PastAndPresentTime->problem_id = $data["problem_id"];            
             $PastAndPresentTime->project_id = $data["project_id"];
@@ -2538,8 +2551,7 @@ class VerificationController extends BaseController
             return $this->sendError("Validation Error.", $validator->errors());
         }
         try {
-
-         
+            
             $data =  $request->all();
            
             $insert = AverageApproach::updateOrCreate(
@@ -2552,11 +2564,12 @@ class VerificationController extends BaseController
                     "user_id" => Auth::user()->id,                   
                     "solution_value" => $data["solution_value"],
                     "problem_part" => $data["problem_part"],
-                    "solution_part_value" => 2,
+                    "solution_part_value" => $data['result_value'],
                     "created_at" => date('Y-m-d H:i:s')
                     
                 ]
             );
+            
             if($insert->id){
                 if($request->id){
                         DB::table('averagin_aproach_parts')->where('average_approach_id' , $request->id)->where('project_id', $data["project_id"])->where('user_id' ,Auth::user()->id)->delete();
@@ -2567,7 +2580,7 @@ class VerificationController extends BaseController
                                 "project_id" => $insert->project_id,
                                 "user_id" => Auth::user()->id,    
                                 "average_approach_id" => $insert->id,
-                                "solution_part_value" => 2
+                                "solution_part_value" => $data['result_value']
                                 
                             ]
                         );
@@ -2586,7 +2599,7 @@ class VerificationController extends BaseController
     }
 
     public function UpdateSolutionFunctionAverage(Request $request){
-
+        
         $validator = Validator::make($request->all(), [
             "solution_part" => "required|numeric",
         ]);

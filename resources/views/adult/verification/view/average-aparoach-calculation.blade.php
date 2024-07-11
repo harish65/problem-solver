@@ -166,7 +166,7 @@
 
                     <div class="from-group">
                         <label for="problem">Result</label>
-                        <input type="text" id="result"  value="" disabled class="form-control">
+                        <input type="text" id="result" name="result_value"  value="" readonly class="form-control">
                         
                     </div>
                   
