@@ -10,16 +10,16 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                      <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
+                      <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                      <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                      <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                      <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>   
 
                       @include('adult.verification.view.component.verification_types')
             </div>
         </div>
     </div>
-    @if(@$verification->id)
+    
     <!-- Content Section Start -->
     <div class="relationshipContent">
         <div class="container">
@@ -28,7 +28,7 @@
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                   
                     <div class="relationImage text-center">
-                    <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />                        
+                    <img src="{{ asset('assets-new/verification_types/' . @$verificationType->banner)}}" alt="relationImage" />                        
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
@@ -127,13 +127,19 @@
 
                     <h2>Validation Question</h2>
                     <form id="validation_form">
-                      
+                            <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                            <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
+                            <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                            <input type="hidden" name="project_id" value="{{ $project_id }}">
+                            <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                            <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                            <input type="hidden" name="name" id="name_" value="problem_development">
                             <ul class="validate_que">                        
                                 <br>
                                 <h5>Do you understand that errors or errors in communication develop problems?</h5>
-                                <input type="hidden" name="id" value="{{ $verification->id }}">
-                                <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1">Yes, I do understand that errors or errors in communication develop problems</label> </li>
-                                <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2">No, I do not understand that errors or errors in communication develop problems</label> </li>
+                                <input type="hidden" name="id" value="{{ @$verification->id }}">
+                                <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1">Yes, I do understand that errors or errors in communication develop problems</label> </li>
+                                <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2">No, I do not understand that errors or errors in communication develop problems</label> </li>
                                 
                             </ul>
                             <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
@@ -156,19 +162,7 @@
 <!-- Content Section End -->
 
 
-@else
-<div class="relationshipContent" style="height: 280px;">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <button class="btn btn-success" id="add-varification-button"><i class="fa fa-plus"></i>  Create Verificatoin</button>
-                </div>
-                
-            </div>
-        </div>
-    </div>
-@include('adult.verification.modal.voucablary.create-problem-development-verification')
-@endif
+
     <!-- Modal Start -->
     
     
@@ -190,6 +184,7 @@
             <input type="hidden" name="project_id" value="{{ $project_id }}">
             <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
             <input type="hidden" name="id" id="id" value="">
+            
             
             <div class="form-group">
                 <label for="error_name">Error Name</label>

@@ -13,7 +13,7 @@
                 <div class="form-group">
                     <label>Name</label>
                     <input type="hidden" name="id" id="project_id" id="id" value="">
-                    <input type="text" name="name" id="name" class="form-control" placeholder="Name">
+                    <input type="text" name="name" id="name" class="form-control" placeholder="Name" autocomlpete="off">
                 </div>
             </form>
         </div>

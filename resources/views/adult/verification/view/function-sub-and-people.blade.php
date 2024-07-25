@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
-
+@php $showMessage = false @endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -33,108 +33,112 @@
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
-                @if($functionApplied)
-                <div class="principleRelation">
-                    <div class="conditionBlock">
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Function</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto"
-                                            src="{{ asset('assets-new/solFunction/'.$Solution_function->file)}}" width="100%"
-                                            height="128px">
-                                    </div>
-                                    <p class="redText" style="color:red">{{ $Solution_function->name }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date">{{ date('d/m/Y', strtotime($Solution_function->created_at))}}</p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="long-arrow">
-                            <!-- add arrow Image over here -->
-                                <img src="{{ asset('assets-new/images/arrowRight.png') }}">
-                            <!-- add arrow Image over here -->
-                        </div>
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Problem</h2>
-                                <div class="projectList text-center">
-                                    <div class="imgWrp">
-                                        <img class="mx-auto"
-                                            src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
-                                            height="128px">
-                                    </div>
-                                    <p class="redText" style="color:red">{{ $problem->name }}</p>
-                                </div>
-                                <div class="projectList">
-                                    <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
-                                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="long-arrow">
-                            <!-- add arrow Image over here -->
-                                <img src="{{ asset('assets-new/images/arrowRight.png') }}">
-                            <!-- add arrow Image over here -->
-                        </div>
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>People</h2>
-                                <div class="projectList text-center min-height-250">
-                                    <div class="imgWrp">
-                                        <div id="myCarousel" class="carousel slide " data-ride="carousel">
-                                        
-                                            <div class="carousel-inner" role="listbox">
-                                                @php $index = 1; @endphp
-                                                @foreach($custommers as $entity)
-                                                    <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
-                                                        <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">
-                                                        <div class="carousel-caption custom">
-                                                                <ul style="display:block;list-style:none;">
-                                                                    <li>{{ $entity->name }}</li>
-                                                                    <li style="color:red">{{ $entity->type }}</li>
-                                                                </ul>
-                                                        </div>
-                                                    </div>
-                                                    @php $index++; @endphp
-                                                @endforeach 
-                                            </div>
-
-                                            <ol class="carousel-indicators custom">
-                                                @php $index = 0; @endphp
-                                                    @foreach($custommers as $entity)
-                                                            <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
-                                                    @php $index++; @endphp
-                                                @endforeach 
-                                        </ol>
+                @if($custommers->count() > 0) 
+                @php $showMessage = true @endphp
+                    @if($functionApplied)
+                    
+                    <div class="principleRelation">
+                        <div class="conditionBlock">
+                            <div class="blockProblem">
+                                <div class="projectBlock text-center">
+                                    <h2>Function</h2>
+                                    <div class="projectList text-center">
+                                        <div class="imgWrp">
+                                            <img class="mx-auto"
+                                                src="{{ asset('assets-new/solFunction/'.$Solution_function->file)}}" width="100%"
+                                                height="128px">
                                         </div>
-                                       
+                                        <p class="redText" style="color:red">{{ $Solution_function->name }}</p>
                                     </div>
-                                    
+                                    <div class="projectList">
+                                        <p class="date">{{ date('d/m/Y', strtotime($Solution_function->created_at))}}</p>
+                                        <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                    </div>
                                 </div>
-                               
+                            </div>
+                            <div class="long-arrow">
+                                <!-- add arrow Image over here -->
+                                    <img src="{{ asset('assets-new/images/arrowRight.png') }}">
+                                <!-- add arrow Image over here -->
+                            </div>
+                            <div class="blockProblem">
+                                <div class="projectBlock text-center">
+                                    <h2>Problem</h2>
+                                    <div class="projectList text-center">
+                                        <div class="imgWrp">
+                                            <img class="mx-auto"
+                                                src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
+                                                height="128px">
+                                        </div>
+                                        <p class="redText" style="color:red">{{ $problem->name }}</p>
+                                    </div>
+                                    <div class="projectList">
+                                        <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
+                                        <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="long-arrow">
+                                <!-- add arrow Image over here -->
+                                    <img src="{{ asset('assets-new/images/arrowRight.png') }}">
+                                <!-- add arrow Image over here -->
+                            </div>
+                            <div class="blockProblem">
+                                <div class="projectBlock text-center">
+                                    <h2>People</h2>
+                                    <div class="projectList text-center min-height-250">
+                                        <div class="imgWrp">
+                                            <div id="myCarousel" class="carousel slide " data-ride="carousel">
+                                            
+                                                <div class="carousel-inner" role="listbox">
+                                                    @php $index = 1; @endphp
+                                                    @foreach($custommers as $entity)
+                                                        <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
+                                                            <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">
+                                                            <div class="carousel-caption custom">
+                                                                    <ul style="display:block;list-style:none;">
+                                                                        <li>{{ $entity->name }}</li>
+                                                                        <li style="color:red">{{ $entity->type }}</li>
+                                                                    </ul>
+                                                            </div>
+                                                        </div>
+                                                        @php $index++; @endphp
+                                                    @endforeach 
+                                                </div>
+
+                                                <ol class="carousel-indicators custom">
+                                                    @php $index = 0; @endphp
+                                                        @foreach($custommers as $entity)
+                                                                <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
+                                                        @php $index++; @endphp
+                                                    @endforeach 
+                                            </ol>
+                                            </div>
+                                        
+                                        </div>
+                                        
+                                    </div>
+                                
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="questionWrap">
-                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
-                            tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
-                            nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
-                            Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
-                    </div>
+                        <div class="questionWrap">
+                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
+                                tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
+                                nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+                                Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
+                        </div>
 
-                </div>
-                @else
-               
-                <div class="col-sm-4">
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
                     </div>
-
+                    @else
                 
-                @endif  
+                    <div class="col-sm-4">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
+                        </div>
+
+                    
+                    @endif  
+                @endif
             </div>
                 <!-- End -->
             
@@ -442,6 +446,18 @@ $('#btnSave').click(function(e){
     $('#solutio_functio_div').removeClass('d-none');
     $('#solution_div').addClass('d-none')
 
+    var showMessage = "{{$showMessage}}"
+    
+    if (!showMessage) {
+        //   function showMessage (){  
+        swal({
+            title: "{{$verificationType->error_title}}",
+            text: "{{$verificationType->message}}",
+            type: "Error",
+            showCancelButton: true,
+            confirmButtonColor: '#00A14C',
+        });
+    }
 
 </script>
 @endsection

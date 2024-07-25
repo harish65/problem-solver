@@ -59,28 +59,5 @@ class AuthController extends BaseController
         return view('auth.login');
      }
  
-    //  public function login(Request $request)
-    //  {
-       
-    //      $validator = Validator::make($request->all(), [
-    //          'email'         => 'required|email|exists:users,email',
-    //          'password'      => 'required|min:6',
-    //      ]);
-         
-    //      if($validator->fails()){
-    //          return $this->sendError('Validation Error.', $validator->errors());       
-    //      }
-    //      if($user = User::where(['email' => $request->email])->first() ) {     
-    //              if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
-                   
-    //                  $success['user'] =  $user;
-    //                  return $this->sendResponse($success, 'User login successfully.');
-    //              } else { 
-    //                  return $this->sendError('Error.', ['error'=> 'Email and Password is Invalid.']);
-    //              }  
-            
-    //      } else { 
-    //          return $this->sendError('Error.', ['error'=> 'Email and Password is Invalid.']);
-    //      }       
-    //  }
+    
 }

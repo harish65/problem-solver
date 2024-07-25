@@ -5,11 +5,11 @@ $(function () {
         $("li .nav-link").not($(this)).removeClass('active');
         if ($(this).attr('href') == 'undefined') {
             $(this).attr('href', '')
-            swalMessage(problemMes);
+            swalMessage(problemMes , 'Project Problem');
             return false;
         }
         if (!$(this).attr('href')) {
-            swalMessage(problemMes);
+            swalMessage(problemMes , 'Project Problem');
         }
     })
 
@@ -18,7 +18,7 @@ $(function () {
         $("li .nav-link").not($(this)).removeClass('active');
         if ($(this).attr('href') == 'undefined') {
             $(this).attr('href', '')
-            swalMessage(solutionMsg);
+            swalMessage(solutionMsg , 'Project Solution');
             return false;
         }
         localStorage.setItem("selected_problem", $(this).attr('href'));
@@ -32,11 +32,11 @@ $(function () {
         var solutionMsg = "A project is created to solve a problem.  A solution of problem is identified in that project to solve the identified problem.  Please, go back to open/create a project before identifying the solution for the problem"
         if ($(this).attr('href') == 'undefined') {
             $(this).attr('href', '')
-            swalMessage(solutionMsg);
+            swalMessage(solutionMsg , 'Project Solution');
             return false;
         }
         if (!$(this).attr('href')) {
-            swalMessage(solutionMsg);
+            swalMessage(solutionMsg , 'Project Solution');
         }
     })
 
@@ -46,11 +46,11 @@ $(function () {
         var solutionFunMsg = "The existence of a project to solve a problem, enables a function to be executed to solve that project.The project itself is viewed as container that includes: problem, solution, and solution function.  In order to identify the solution function, go back to open or create a project."
         if ($(this).attr('href') == 'undefined') {
             $(this).attr('href', '')
-            swalMessage(solutionFunMsg);
+            swalMessage(solutionFunMsg, 'Project Solution Function');
             return false;
         }
         if (!$(this).attr('href')) {
-            swalMessage(solutionFunMsg);
+            swalMessage(solutionFunMsg , 'Project Solution Function');
         }
     })
 
@@ -60,11 +60,11 @@ $(function () {
         var verification = "A project is created to solve a problem.  If is possible to verify the solution of the problem as well as the problem itself.Without the existence of a project to solve a problem, it is not natural to verify or validate the solution of that problem.  Please go back to open or create a project before validating any project elements."
         if ($(this).attr('href') == 'undefined') {
             $(this).attr('href', '')
-            swalMessage(verification);
+            swalMessage(verification , 'Project Verification');
             return false;
         }
         if (!$(this).attr('href')) {
-            swalMessage(verification);
+            swalMessage(verification , 'Project Verification');
             return false;
         }
     })
@@ -76,11 +76,11 @@ $(function () {
 
         if ($(this).attr('href') == 'undefined') {
             $(this).attr('href', '')
-            swalMessage(relationship);
+            swalMessage(relationship , 'Project Relationship');
             return false;
         }
         if (!$(this).attr('href')) {
-            swalMessage(relationship);
+            swalMessage(relationship , 'Project Relationship');
             return false;
         }
     })
@@ -92,11 +92,11 @@ $(function () {
 
         if ($(this).attr('href') == 'undefined') {
             $(this).attr('href', '')
-            swalMessage(report);
+            swalMessage(report , 'Project Report ');
             return false;
         }
         if (!$(this).attr('href')) {
-            swalMessage(report);
+            swalMessage(report ,'Project Report ');
             return false;
         }
     })
@@ -125,9 +125,9 @@ $(document).ready(function () {
         $('.nav-varification').attr('href', hrefverification)
     }
 })
-function swalMessage(problemMes) {
+function swalMessage(problemMes , header) {
     swal({
-        title: "No project created",
+        title: header,
         text: problemMes,
         type: "info",
         showCancelButton: true,

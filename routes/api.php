@@ -55,7 +55,12 @@ Route::middleware('auth:api')->group( function () {
 
 
     //Verification_api's
+    Route::get("verifications", [\App\Http\Controllers\API\ApiVerificationController::class, 'GetAllVerifications'])-> name("verifications");
+    Route::get("/verification", [\App\Http\Controllers\API\ApiVerificationController::class, 'GetSingleVerification']);
 
+    //Verification Entity Routes
+    Route::post("addVocabularyEntity", [\App\Http\Controllers\Adult\VerificationController::class, 'addVocabularyEntity'])-> name("addVocabularyEntity");
+    Route::post("deleteVocabulary", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteVocabulary'])-> name("deleteVocabulary");
     
 });
 

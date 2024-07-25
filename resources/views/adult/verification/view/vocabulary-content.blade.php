@@ -180,7 +180,7 @@
                                                 <a href="javaScript:Void(0)" class="editVocabularyBtn"
                                                     data-id="{{ $ent->id }}" data-key="{{ $ent->verification_key }}"
                                                     data-value="{{ $ent->verification_value }}""
-                                                        data-point_to=" {{ $ent->point_to }}"
+                                                        data-point_to="{{ $ent->point_to }}"
                                                     >
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
                                                 </a>

@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
-
+@php $showMessage = false @endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -10,10 +10,10 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                      <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
+                      <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                      <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                      <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                      <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>   
 
                       @include('adult.verification.view.component.verification_types')
             </div>
@@ -28,11 +28,12 @@
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                   
                     <div class="relationImage text-center">
-                    <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />                        
+                    <img src="{{ asset('assets-new/verification_types/' . @$verificationType->banner)}}" alt="relationImage" />                        
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 @if($problemDevelopment->count() > 0)
+                @php $showMessage = true; @endphp
                 <!-- start -->
                 <div class="principleRelation">
                     <div class="conditionBlock problem-development">
@@ -154,19 +155,7 @@
                             </div>
                             </nav>
                         </div>
-                    <!-- <h2>Validation Question</h2>
-                        <form id="validation_form">
-                        
-                            <ul class="validate_que">                        
-                                <br>
-                                <h5>Do you understand that errors or errors in communication develop problems?</h5>
-                                <input type="hidden" name="id" value="{{ @$verification->id }}">
-                                <li><label><input  type="radio" data-id="{{ @$verification->id  }}" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1">Yes, I do understand that errors or errors in communication develop problems</label> </li>
-                                <li><label><input  type="radio" data-id="{{ @$verification->id  }}" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2">No, I do not understand that errors or errors in communication develop problems</label> </li>
-                                
-                            </ul>
-                            <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
-                        </form> -->
+                   
                 </div>
                 @endif
             </div>
@@ -218,7 +207,7 @@
         </div>
       </div>
     <!-- Modal End -->
-</div>
+
 
 @endsection
 @section('css')
@@ -258,7 +247,7 @@
 
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script>
-   
+ 
 $('#verification_types').on('change',function(){
     var id = $(this).val();
     window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
@@ -427,5 +416,20 @@ $(document).on('click' , '#btnSave', function(e){
     $('#error-correction-dev-form')[0].reset();  
     $('#error_correction_modal').modal('toggle')
 })
+
+
+
+var showMessage = "{{$showMessage}}"
+    
+    if (!showMessage) {
+        //   function showMessage (){  
+        swal({
+            title: "{{$verificationType->error_title}}",
+            text: "{{$verificationType->message}}",
+            type: "Error",
+            showCancelButton: true,
+            confirmButtonColor: '#00A14C',
+        });
+    }
 </script>
 @endsection

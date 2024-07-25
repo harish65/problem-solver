@@ -8,7 +8,7 @@
             <div class="logo-wrap">                
                 <img src="{{ URL::to('/') }}/assets/img/logos/new-logo-01.svg" width="300" height="300" alt="logo"/>
             </div>
-            <form method="POST" id="login-form">
+            <form method="POST" id="login-form" action="{{route('user.login')}}">
                 @csrf
                 <div class="form-group">
                   <input type="email" class="form-control" id="email" placeholder="Enter user name or email" name="email" autocomplete="off">
@@ -35,7 +35,7 @@
                         <a href="#"><img src="{{ URL::to('/') }}/assets-new/images/google.png" alt=""/></a>
                     </li>
                 </ul>
-                <a class="signup" href="{{ route("register") }}">Sign up</a>
+                <a class="signup" href="{{ route('register') }}">Sign up</a>
               </div>
         </div>
 

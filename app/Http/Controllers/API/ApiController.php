@@ -250,7 +250,7 @@ class ApiController extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
-        // echo "<pre>";print_r($request->all());die;
+        
         try{
             if(!isset($request->id)){
                 $checkSolutionExist = $solution = DB::table('solutions')->where('problem_id','=', $request->problem_id)->first();
@@ -506,5 +506,8 @@ public function storeSolutionFunction(Request $request){
             return true;
         }
     }
+
+
+    
 
 }

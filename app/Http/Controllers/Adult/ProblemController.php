@@ -15,13 +15,15 @@ class ProblemController extends BaseController
 {
    
     public function index($id = null){
+        
         $params = Crypt::decrypt($id);
+        
         $problemID = $params['problem_id'];
         $projectID = $params['project_id']; 
        
         $cat = DB::table('problem_categories')->get();
-        $problemID = Crypt::decrypt($id);
-        $problem =  DB::table('problems')->where('id','=',$problemID)->first();
+        // $problemID = Crypt::decrypt($id);
+        $problem =  DB::table('problems')->where('id','=',$problemID)->where('user_id' , Auth::user()->id)->where('project_id' , $projectID)->first();
            
         if($problem){
                 return view ('adult.problem.problem',compact('problem','cat','projectID'));

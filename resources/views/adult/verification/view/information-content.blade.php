@@ -10,10 +10,10 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                      <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
+                      <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                      <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                      <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                      <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>   
 
                       @include('adult.verification.view.component.verification_types')
             </div>
@@ -28,7 +28,7 @@
                 <div class="col-sm-12">
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
-                    <img src="{{ asset("assets-new/images/verification-banners/info_var.png")}}" alt="relationImage" />
+                    <img src="{{ asset('assets-new/images/verification-banners/info_var.png')}}" alt="relationImage" />
                         
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
@@ -200,6 +200,13 @@
                         <h2>Validation Question</h2>
                         <br> 
                         <form id="validation_form">   
+                            <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                            <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
+                            <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                            <input type="hidden" name="project_id" value="{{ $project_id }}">
+                            <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                            <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                            <input type="hidden" name="name" id="name_" value="averaging_approach">
                         <ul>
                             <h5>Does the identified information match the given information?</h5>
                             <input type="hidden" name="id" value="{{ $verification->id }}">
@@ -226,7 +233,7 @@
             <div class="col-sm-12">
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
-                    <img src="{{ asset("assets-new/images/verification-banners/info_var.png")}}" alt="relationImage" />
+                    <img src="{{ asset('assets-new/images/verification-banners/info_var.png')}}" alt="relationImage" />
                         
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>

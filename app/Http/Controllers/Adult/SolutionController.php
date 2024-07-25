@@ -13,6 +13,7 @@ use App\Models\Setting;
 use Auth;
 use DB;
 use Validator;
+use Redirect;
 
 class SolutionController extends BaseController
 {
@@ -26,23 +27,29 @@ class SolutionController extends BaseController
         }else{
             $problem_id = $params;
         }
-       
+        
         $project = DB::table('problems')->where('id' , '=' , $problem_id)->first();
+        if($project){
+
+       
         $project_id = $project->project_id;
         $problem_name = $project->name;
             
         $solutionTypes = DB::table('solution_types')->get();
         $problems = Problem::orderBy("id", "asc")
-            -> where("user_id", Auth::user() -> id)
-            -> get();
+                    ->where("user_id", Auth::user() -> id)
+                    ->get();
         $problem = DB::table('solutions')
                     ->join('problems' , 'solutions.problem_id' , 'problems.id')
                     ->join('solution_types' , 'solutions.solution_type_id' , 'solution_types.id')                    
                     ->select('solutions.*' , 'solution_types.output_slug','problems.name as problem_name', 'problems.project_id','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at')
                     ->where('solutions.problem_id','=' ,$problem_id )
                     ->first();
+                    return view('adult.solution.index' , compact('problem' ,'problems' , 'problem_id' , 'project_id' , 'problem_name','solutionTypes'));
+        }else{
+                    return Redirect::back()->withErrors(['msg' => 'Problem not found']);
+        }
         
-        return view('adult.solution.index' , compact('problem' ,'problems' , 'problem_id' , 'project_id' , 'problem_name','solutionTypes'));
     }
 
     public function store(Request $request){
@@ -80,15 +87,15 @@ class SolutionController extends BaseController
                             }
 
                 $insert = DB::table('solutions')->updateOrInsert(['id'=> $request->id],[
-                            'user_id' => Auth::user()->id,
-                            'type' => $type,
-                            'file' => $file,
-                            'project_id' => $project_id,
-                            'problem_id' => $problem_id,
-                            'name' => $request -> solutionName,
-                            'state' => 1,
-                            'solution_type_id' => $request -> solution_type_id,
-                            'created_at' => date('Y-m-d h:i:s')
+                                'user_id' => Auth::user()->id,
+                                'type' => $type,
+                                'file' => $file,
+                                'project_id' => $project_id,
+                                'problem_id' => $problem_id,
+                                'name' => $request -> solutionName,
+                                'state' => 1,
+                                'solution_type_id' => $request -> solution_type_id,
+                                'created_at' => date('Y-m-d h:i:s')
                         ]);
                 }else{
                     $insert = DB::table('solutions')->updateOrInsert(['id'=> $request->id],

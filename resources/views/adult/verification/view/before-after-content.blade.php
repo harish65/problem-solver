@@ -160,6 +160,7 @@
                                 <input type="hidden" name="problem_id" value="{{ @$problem->id }}">        
                                 <input type="hidden" name="solution_id" value="{{ @$solution->id }}">        
                                 <input type="hidden" name="solution_fun_id" value="{{ @$Solution_function->id }}">
+                                <input type="hidden" name="name" id="name" value="before_and_after">   
                                 <ul>
                                     <h5>The problem existed before, is the problem solved after?</h5>
                                     <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1">Yes, the problem existed before and after the problem is solved</label></li>

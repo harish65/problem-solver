@@ -10,10 +10,10 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                      <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
+                      <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                      <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                      <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                      <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>   
 
                       @include('adult.verification.view.component.verification_types')
             </div>
@@ -28,17 +28,18 @@
                 <div class="col-sm-12">
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
-                        <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />
+                        <img src="{{ asset('assets-new/verification_types/' . @$verificationType->banner)}}" alt="relationImage" />
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
+            @if($custommers->count() > 0)
+                <?php $showMessage = false; ?>
                 @if($steps)
                 <div class="principleRelation">
                     <div class="container">
                         <div class="row justify-content-center">
-                            @if($custommers->count() > 0)
-                                <?php $showMessage = false; ?>
+                           
                                   
                                         <div class="blockProblem col-sm-3">
                                             <div class="projectBlock text-center">
@@ -84,7 +85,7 @@
                                   
                                     
                                     <div class="line-border "></div>
-                                @endif
+                                
 
                                 
                                 <div class="blockProblem col-sm-3">
@@ -162,6 +163,7 @@
                     <div class="col-sm-4">
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
                     </div>
+                @endif
                 @endif
                 
             </div>
@@ -256,11 +258,11 @@ $(document).on('click', '#btnSave', function (e) {
         });
     });
     var showMessage = "{{$showMessage}}"
-    var text_ = 'In order to solve a problem, we identify three entities: first we identify the problem; second, we identify the solution for that problem, and third we identify people who are working to solve that problem.  In this case, we identify and separate those 3 entities.  If all those 3 entities have not been identified, it is not possible to show the separation of those entities.  Please, refer to the appropriate page to identify the problem, the solution, and people who are working to solve the problem, before showing them as separate entities'
+    
     if(showMessage){
         swal({
-            title: "Separtion Step Verification",
-            text: text_,
+            title: "{{$verificationType->error_title}}",
+            text: "{{$verificationType->message}}",
             type: "Error",
             showCancelButton: true,
             confirmButtonColor: '#00A14C',

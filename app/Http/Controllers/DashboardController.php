@@ -15,7 +15,7 @@ class DashboardController extends Controller
     }
 
     public function index(){ 
-        echo "<pre>";print_r(Auth::user());die;
+        
         return view('users.dashboard');
     }
 }

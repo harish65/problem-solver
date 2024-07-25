@@ -32,11 +32,11 @@ class VerificationController extends BaseController
 {
     public function index($data = null, $type = null)
     {
-        
+     
         $params = Crypt::decrypt($data);
         $problem_id = $params["problem_id"];
         $project_id = $params["project_id"];
-       
+        
         if ($problem_id == "" && $project_id  != '') {
             $problem_id = Problem::where("project_id", "=", $project_id)->where('user_id' , Auth::user()->id)->pluck('id')->first();
         }
@@ -47,26 +47,34 @@ class VerificationController extends BaseController
         //get problem
         
         $problem = Problem::where("id", "=", $problem_id)->first();
+       
         if ($problem) {
             $problem_name = $problem->name;
         }
         //get solution
         $solution = Solution::where("problem_id", "=", $problem_id)->first();
-       
+        
         //get solution function
         $Solution_function = SolutionFunction::where(
             "problem_id",
             "=",
             $problem_id
         )->first();
-
+        $types = VerificationType::orderBy("category", "asc")->get();
+       
         if (!isset($Solution_function->id)) {
-            return Redirect::back()->withErrors([
-                "msg" =>
-                    "Verificatioon must have Solution function identified.",
-            ]);
-        }
+            $verificationType = VerificationType::where("id","=",$type)->first();
+            
 
+            return view(
+                "adult.verification.index",
+                compact('types' , 'problem_id' , 'problem_id','project_id' , 'verificationType'));
+                // return Redirect::back()->withErrors([
+                //     "msg" =>
+                //         "Verificatioon must have Solution function identified.",
+                // ]);
+        }      
+        
         //get Verification
         $verification = Verification::where("problem_id", "=", $problem_id)
             ->where("verification_type_id", "=", $type)
@@ -87,15 +95,9 @@ class VerificationController extends BaseController
             )->get();
 
             if (@$verification->id != "") {
-                $entity = VerificationEntity::where("verTypeId", "=", $type)
-                    ->where("verId", "=", @$verification->id)
-                    ->get();
+                $entity = VerificationEntity::where("verTypeId", "=", $type)->where("verId", "=", @$verification->id)->get();
             } else {
-                $entity = VerificationEntity::where(
-                    "verTypeId",
-                    "=",
-                    $type
-                )->get();
+                $entity = VerificationEntity::where("verTypeId","=",$type)->get();
             }
         }
 
@@ -108,13 +110,20 @@ class VerificationController extends BaseController
         $solution_id = $solution->id;
         $solutionTypes = DB::table("solution_types")->get();
 
-        $types = VerificationType::orderBy("category", "asc")->get();
+      
        
         $custommers = DB::table("customers")
                     ->where("project_id", "=", $project_id)
                     ->get();
+
+        $verification = Verification::where("verification_type_id",$type)->first();
+                if($verification){
+                         if (isset($verification->validations)) {$verification->validations = json_decode($verification->validations);
+                    } 
+                }
         switch ($type) {
             case 1:
+                   
                 $transitionPhrase = DB::table('verification_type_texts')->where('verification_type_id' , 1)->first();
                 return view("adult.verification.view.vocabulary-content", [
                     "types" => $types,
@@ -147,17 +156,6 @@ class VerificationController extends BaseController
                 ]);
                 break;
             case 3:
-                if (!$verification) {
-                    $verification = Verification::where(
-                        "verification_type_id",
-                        "=",
-                        3
-                    )->first();
-                    $verification->validations = json_decode(
-                        $verification->validations
-                    );
-                }
-                
                 $beforeAfter =  DB::table('before_and_after')
                                 ->where('problem_id' , $problem->id)
                                 ->where('project_id' , $project_id)
@@ -219,19 +217,6 @@ class VerificationController extends BaseController
             case 5:
                 $timeVerifications =  TimeVerification::where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->get();
             
-                if (!$verification) {
-                    $verification = Verification::where(
-                        "verification_type_id",
-                        "=",
-                        5
-                    )->first();
-                    if (isset($verification->validations)) {
-                        $verification->validations = json_decode(
-                            $verification->validations
-                        );
-                    }
-                }
-              
                 return view(
                     "adult.verification.view.time-verification-content",
                     compact(
@@ -390,6 +375,7 @@ class VerificationController extends BaseController
                 $users = DB::table("customers")
                     ->where("project_id", "=", $project_id)
                     ->get();
+                
                 return view(
                     "adult.verification.view.people-project-content",
                     compact(
@@ -1240,7 +1226,8 @@ class VerificationController extends BaseController
                                                                             )
                                                                         );
                                                                     break;
-                                                                    default:                
+                                                                    default: 
+                                                                
                                                                     return view(
                                                                         "adult.verification.index",
                                                                         compact(
@@ -1382,13 +1369,8 @@ class VerificationController extends BaseController
             return $this->sendError("Validation Error.", $validator->errors());
         }
         try {
-            // dd($request);
-            // $type = $request->verificationType;
-            // $verId = $request->ver_id;
-            // $key = $request->key;
-            // $entity = $request->value;
-
-            // add new row to varification_entity table
+           
+            // add new row to varification_entity tablel
             if (!$request->id) {
                 $verificationEntity = new VerificationEntity();
                 $verificationEntity->verification_key = $request->key;
@@ -1396,22 +1378,43 @@ class VerificationController extends BaseController
                 $verificationEntity->verId = $request->ver_id;
                 $verificationEntity->verTypeId = $request->verificationType;
                 $verificationEntity->point_to = $request->point_to;
+                $verificationEntity->problem_id = $request->problem_id;
+                $verificationEntity->project_id = $request->project_id;
                 $verificationEntity->save();
             } else {
-                $verificationEntity = VerificationEntity::find($request->id);
+                $verificationEntity = VerificationEntity::findOrFail($request->id);
                 $verificationEntity->verification_key = $request->key;
                 $verificationEntity->verification_value = $request->value;
                 $verificationEntity->verId = $request->ver_id;
                 $verificationEntity->verTypeId = $request->verificationType;
                 $verificationEntity->point_to = $request->point_to;
+                $verificationEntity->problem_id = $request->problem_id;
+                $verificationEntity->project_id = $request->project_id;
                 $verificationEntity->save();
             }
+
+
+
+
+
             if ($verificationEntity->id) {
-                $success["verificationEntity"] = $verificationEntity;
-                return $this->sendResponse(
-                    $success,
-                    "Verification Entity Has created successfully."
-                );
+
+                if ($request->is('api/*')) {
+                    $verifications = VerificationType::all();
+                    $success["verificationEntity"] = $verificationEntity;
+                    $success["verifications"] = $verifications;
+                    $success["token"] = $request->header("Authorization");
+                    return $this->sendResponse($success, "true");
+                }else{
+                    $success["verificationEntity"] = $verificationEntity;
+                    return $this->sendResponse(
+                        $success,
+                        "Verification Entity Has created successfully."
+                    );
+                }
+
+
+               
             } else {
                 return $this->sendResponse($error, "Something Wrong.");
             }
@@ -1505,12 +1508,30 @@ class VerificationController extends BaseController
                 $request->id
             )->delete();
             if ($delete) {
-                $success["delete_verification"] = $delete;
-                return $this->sendResponse(
-                    $success,
-                    "Verification deleted successfully."
-                );
+                if ($request->is('api/*')) {
+                    $verifications = VerificationType::all();
+                    $success["verificationEntity"] = 'Entity deleted Successfully';
+                    $success["verifications"] = $verifications;
+                    $success["token"] = $request->header("Authorization");
+                    return $this->sendResponse($success, "true");
+                }else{
+
+
+                    $success["delete_verification"] = $delete;
+                    return $this->sendResponse(
+                        $success,
+                        "Verification deleted successfully."
+                    );
+                }
             } else {
+                if ($request->is('api/*')) {
+                    $verifications = VerificationType::all();
+                    $success["verificationEntity"] = 'Entity not found';
+                    $success["verifications"] = $verifications;
+                    $success["token"] = $request->header("Authorization");
+                    return $this->sendResponse($success, "false");
+                }
+
                 return $this->sendResponse($error, "Something Wrong.");
             }
         } catch (Exception $e) {
@@ -1785,7 +1806,7 @@ class VerificationController extends BaseController
         if ($validator->fails()) {
             return $this->sendError("Validation Error.", $validator->errors());
         }
-        
+            // echo "<pre>";print_r($request->all());die;
         try {
             $verificationID = null;
             //check if verificatoin type is added in verification table
@@ -1808,7 +1829,7 @@ class VerificationController extends BaseController
                 $verification->solution_id = Crypt::decrypt(
                     $data["solution_id"]
                 );
-                $verification->solution_function_id = $data["solution_fun_id"];
+                $verification->solution_function_id = $data["solution_function_id"];
                 $verification->user_id = Auth::user()->id;
                 $verification->type = 0;
                 $verification->save();
@@ -2029,6 +2050,7 @@ class VerificationController extends BaseController
 
     public function updateValidations(Request $request)
     {
+        // echo '<pre></pre>'
         try {
             $input = $request->all();
            

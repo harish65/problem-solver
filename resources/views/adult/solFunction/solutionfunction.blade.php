@@ -25,17 +25,17 @@
                     
 @if(isset($solFunctions->id))
                         <?php
-                           
+                        
                             $parameters = ['project_id' => $project_id , 'problem_id'=> $problem_id , 'solution_id' => $solution_id];
                             
                             $parameter =  Crypt::encrypt($parameters);
                             
                         ?>
 
-                <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>
+                <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>
     <div class="conditionBlock">
         <div class="blockProblem">
             <div class="projectBlock text-center">
@@ -79,7 +79,7 @@
                                         @endif
                                     @elseif($solFunctions -> solution_type == 1)
                                         <video class="mx-auto" controls="controls" preload="metadata"  width="100%" height="128px" preload="metadata">
-                                            <source src="{{ asset("assets-new/problem/" . $solFunctions -> solution_file) }}#t=0.1" type="video/mp4">
+                                            <source src="{{ asset('assets-new/problem/' . $solFunctions -> solution_file) }}#t=0.1" type="video/mp4">
                                         </video>
                                     @elseif($solFunctions -> solution_type == 2)
                                             <iframe class="mx-auto" src="{{ $solFunctions -> solution_file }}"  width="100%" height="128px"> </iframe>
@@ -110,7 +110,7 @@
                                 @endif
                             @elseif($solFunctions -> type == 1)
                                 <video class="mx-auto" controls="controls" preload="metadata"  width="100%" height="128px" preload="metadata">
-                                    <source src="{{ asset("assets-new/solFunction/" . $solFunctions -> file) }}#t=0.1" type="video/mp4">
+                                    <source src="{{ asset('assets-new/solFunction/' . $solFunctions -> file) }}#t=0.1" type="video/mp4">
                                 </video>
                             @elseif($solFunctions -> file == 2)
                                     <iframe class="mx-auto" src="{{ $solFunctions -> file }}" width="100%" height="128px"> </iframe>
@@ -451,9 +451,9 @@ $('.validation').on('change',function(){
         })
    })
 
+   
 
-
-$('.nav-problem').click(function(){
+$('.nav-problem').click(function(){ 
     $(this).attr('href' , '');
     localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));       
     $(this).attr('href' ,$('#problem_nav').attr('href'))

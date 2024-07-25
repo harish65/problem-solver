@@ -50,7 +50,7 @@ class LoginController extends BaseController
             'email'         => 'required|email|exists:users,email',
             'password'      => 'required|min:6',
         ]);
-   
+      
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }

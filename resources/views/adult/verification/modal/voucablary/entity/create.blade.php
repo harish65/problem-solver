@@ -13,9 +13,10 @@
 
                 <div class="modal-body">
                     <input type="hidden" name="id" id="id" value="">
+                    <input type="hidden" name="project_id" id="project_id" value="{{@$project_id}}">
+                    <input type="hidden" name="problem_id" id="problem_id" value="{{@$problem_id}}">
                     <input type="hidden" name="ver_id" id="ver_id" value="{{ @$verification->id }}">
-                    <input type="hidden" name="verificationType" id="verificationType"
-                        value="{{ @$verificationType->id }}">
+                    <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
                     <div class="form-group">
                         <div class="row">
                             <div class="form-group">

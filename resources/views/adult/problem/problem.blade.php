@@ -31,20 +31,20 @@
                             $parameters = ['problem_id'=> $problem->id , 'project_id' => $projectID];
                             $parameter =  Crypt::encrypt($parameters);
                         ?>
-                <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>
-                <a id="relationship" href="{{ route("adult.varification",@$parameter) }}"></a>
+                <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>
+                <a id="relationship" href="{{ route('adult.varification',@$parameter) }}"></a>
                 
                 <div class="imgWrp">
                                 @if($problem -> type == 0)
 									@if(strlen($problem -> file) < 15)
-										<img class="mx-auto" src="{{ asset("assets-new/problem/" . $problem -> file) }}" width="100%" height="128px">
+										<img class="mx-auto" src="{{ asset('assets-new/problem/' . $problem -> file) }}" width="100%" height="128px">
 									@endif
 								@elseif($problem -> type == 1)
 									<video class="mx-auto" controls="controls" preload="metadata" width="100%" height="128px" preload="metadata">
-										<source src="{{ asset("assets-new/problem/" . $problem -> file) }}#t=0.1" type="video/mp4">
+										<source src="{{ asset('assets-new/problem/' . $problem -> file) }}#t=0.1" type="video/mp4">
 									</video>
 								@elseif($problem -> type == 2)
 									    <iframe class="mx-auto" src="{{ $problem -> file }}" width="100%" height="128px"> </iframe>
