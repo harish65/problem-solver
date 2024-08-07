@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+@php $showMessage = true @endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -10,10 +10,10 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                      <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
+                      <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                      <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                      <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                      <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>   
 
                       @include('adult.verification.view.component.verification_types')
             </div>
@@ -27,7 +27,7 @@
                 <div class="col-sm-12">
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
-                        <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />
+                        <img src="{{ asset('assets-new/verification_types/' . @$verificationType->banner)}}" alt="relationImage" />
                         
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
@@ -64,6 +64,7 @@
                         <h2>People Communation</h2>
                     </div>
                     @if($users->count()>0)
+                    <?php $showMessage = false; ?>
                         <table class="table slp-tbl text-center">
                         <thead>      
                             <th>From Person</th>
@@ -381,5 +382,21 @@ $(document).on('click','.delete_',function(e){
       toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
       height : "300"
     });
+
+
+    var showMessage = "{{$showMessage}}"
+    
+    if(showMessage){
+        swal({
+            title: "{{$verificationType->error_title}}",
+            text: "{{$verificationType->message}}",
+            type: "Error",
+            showCancelButton: true,
+            confirmButtonColor: '#00A14C',
+        });
+    }
+
+    $('#solutio_functio_div').addClass('d-none');
+    $('#solution_div').removeClass('d-none')
   </script>
 @endsection

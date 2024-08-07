@@ -32,7 +32,7 @@ class VerificationController extends BaseController
 {
     public function index($data = null, $type = null)
     {
-     
+        
         $params = Crypt::decrypt($data);
         $problem_id = $params["problem_id"];
         $project_id = $params["project_id"];
@@ -94,10 +94,11 @@ class VerificationController extends BaseController
                 $type
             )->get();
 
-            if (@$verification->id != "") {
-                $entity = VerificationEntity::where("verTypeId", "=", $type)->where("verId", "=", @$verification->id)->get();
+            if (@$verification->id !== "") {
+                
+                $entity = VerificationEntity::where("verTypeId", "=", $type)->where("verId", "=", @$verification->id)->where('project_id', $project_id)->get();
             } else {
-                $entity = VerificationEntity::where("verTypeId","=",$type)->get();
+                $entity = VerificationEntity::where("verTypeId","=",$type)->where('project_id', $project_id)->get();
             }
         }
 
@@ -116,14 +117,15 @@ class VerificationController extends BaseController
                     ->where("project_id", "=", $project_id)
                     ->get();
 
-        $verification = Verification::where("verification_type_id",$type)->first();
+        $verification = Verification::where("verification_type_id",$type)->where('problem_id' , $problem_id)->first();
                 if($verification){
                          if (isset($verification->validations)) {$verification->validations = json_decode($verification->validations);
                     } 
                 }
+                
         switch ($type) {
             case 1:
-                   
+                  
                 $transitionPhrase = DB::table('verification_type_texts')->where('verification_type_id' , 1)->first();
                 return view("adult.verification.view.vocabulary-content", [
                     "types" => $types,
@@ -1258,11 +1260,24 @@ class VerificationController extends BaseController
             $type = $request->verificationType;
             switch ($type) {
                 case 1:
-                    //Vocablary Verification
+                    $validator = Validator::make($request->all(), [
+                        "verification_type_text_id" => "required",
+                        "file" => "required"
+                    ]);
+                    if ($validator->fails()) {
+                        return $this->sendError("Validation Error.", $validator->errors());
+                    }
                     $name = "Vocablary";
                     return $this->AddverificationVocablary($request, $name);
                     break;
                 case 2:
+                    $validator = Validator::make($request->all(), [
+                        "verification_type_text_id" => "required",
+                        "file" => "required"
+                    ]);
+                    if ($validator->fails()) {
+                        return $this->sendError("Validation Error.", $validator->errors());
+                    }
                     $name = "Information";
                     return $this->AddverificationVocablary($request, $name);
                     break;

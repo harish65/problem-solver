@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
-@php $showMessage = false @endphp
+@php $showMessage = true @endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -34,7 +34,7 @@
                 </div>
                 <!-- start -->
                 @if($custommers->count() > 0) 
-                @php $showMessage = true @endphp
+                @php $showMessage = false @endphp
                     @if($functionApplied)
                     
                     <div class="principleRelation">
@@ -445,11 +445,10 @@ $('#btnSave').click(function(e){
 
     $('#solutio_functio_div').removeClass('d-none');
     $('#solution_div').addClass('d-none')
-
+    
     var showMessage = "{{$showMessage}}"
     
-    if (!showMessage) {
-        //   function showMessage (){  
+    if(showMessage){
         swal({
             title: "{{$verificationType->error_title}}",
             text: "{{$verificationType->message}}",

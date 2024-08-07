@@ -106,15 +106,13 @@
                             <h2>Validation Question</h2>
                             <br>
                             <form id="validation_form">
-                            <input type="hidden" name="id" id="function_ad_id" value="{{ @$problemreplaced->id }}">
+                            <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                            <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
                             <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
                             <input type="hidden" name="project_id" value="{{ $project_id }}">
                             <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
                             <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
-                            <input type="hidden" name="fileType" id="fileType">
-                            <input type="hidden" name="verificationType" id="verificationType" value="{{ @$verificationType->id }}">
-                            <input type="hidden" name="verification_type_id" id="verification_type_id" value="{{ @$verificationType->id }}">
-                            <input type="hidden" name="name" id="verification_type_id" value="replace_problem_by_problem">
+                            <input type="hidden" name="name" id="name_" value="replace_problem_by_problem">
                                 
                                 <h5>Do you understand that a problem needs to be solved?</h5>
                                 <ul class="validate_que" style="list-style:none;">
