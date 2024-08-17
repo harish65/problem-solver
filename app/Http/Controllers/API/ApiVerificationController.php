@@ -117,6 +117,48 @@ class ApiVerificationController extends BaseController
         return $verifications;
      }
     
-    
+     public function AddverificationVocablary(Request $request)
+     {
+        echo "<pre>";print_r($request->all());die;
+         $validator = Validator::make($request->all(), [
+             "solution_fun_id" => "required",
+             "verificationType" => "required",
+             //'verification_type_text_id' => 'required'
+         ]);
+         if ($validator->fails()) {
+             return $this->sendError("Validation Error.", $validator->errors());
+         }
+ 
+         try {
+             $data = $request->all();
+             $verification = new Verification();
+             $verification->name = $name;
+             $verification->verification_type_id = $data["verificationType"];
+             $verification->verification_type_text_id = isset(
+                 $data["verification_type_text_id"]
+             )
+                 ? $data["verification_type_text_id"]
+                 : null;
+             $verification->problem_id = $data["problem_id"];
+             $verification->solution_id = $data["solution_id"];
+             $verification->solution_function_id = $data["solution_fun_id"];
+             $verification->user_id = Auth::user()->id;
+             $verification->type = 0;
+ 
+             $verification->file = isset($data["file"]) ? $data["file"] : null;
+             $verification->save();
+             if ($verification->id) {
+                 $success["verification"] = $verification;
+                 return $this->sendResponse(
+                     $success,
+                     "Verification created successfully."
+                 );
+             } else {
+                 return $this->sendResponse($error, "Something Wrong.");
+             }
+         } catch (Exception $e) {
+             return $this->sendError("Error.", ["error" => $e->getMessage()()]);
+         }
+     }
 
 }

@@ -2,7 +2,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+<?php $showMsg = false ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -34,6 +34,7 @@
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
+                 @if($custommers->count() > 0 )
                  @if($functionOfPeople)
                 <div class="principleRelation">
                     <div class="conditionBlock">
@@ -152,13 +153,18 @@
                 </div>
                 <!-- End -->
                 @else
-               
-               <div class="col-sm-4">
+
+                    <div class="col-sm-4">
                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
-                   </div>
+                    </div>
 
                
-               @endif  
+               @endif
+
+               @else
+
+               <?php $showMsg = true ?>
+               @endif
                 
             </div>
         </div>
@@ -342,5 +348,15 @@ $(document).on('click','#btnSave',function(e){
         }
     });
 });
+var msg = '{{$showMsg}}';
+if(msg) { 
+    swal({
+        title: "{{@$verificationType->error_title}}",
+        text:  "{{@$verificationType->message}}",
+        type: "Error",
+        showCancelButton: true,
+        confirmButtonColor: '#00A14C',
+    });
+}
 </script>
 @endsection

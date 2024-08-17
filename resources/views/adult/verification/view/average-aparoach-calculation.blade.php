@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
-
+<?php $showMsg = false ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -25,12 +25,14 @@
                 <div class="col-sm-12">
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
-                        <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />
+                        <img src="{{ asset('assets-new/verification_types/' . @$verificationType->banner)}}" alt="relationImage" />
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
+                
                 @if(isset($problemPart->problem_part)  && !is_null($problemPart->problem_part))
+                
                 <div class="principleRelation container">
                             <div class="add-entity mb-3">
                                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+ Calculate</button>
@@ -124,9 +126,14 @@
                 </div>
                 <!-- End -->
                 @else
-                    <div class="add-entity mb-3">
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+ Calculate</button>
-                    </div>
+                    @if($countPartionAproach)
+                        <div class="add-entity mb-3">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+ Calculate</button>
+                        </div>
+                    @else
+                        <?php $showMsg  = true ?>
+                    @endif    
+                    
                 @endif
             </div>
         </div>
@@ -339,6 +346,7 @@ $('.dashboard').click(function(){
     function calculte(){
         var solval = $('#sol_val').val();
         var parts = '{{$countPartionAproach}}';
+        console.log(solval)
         var problempart = Math.round(solval/parts);
             $('#problem_part_front , #problem_parts').val(parts);
             $('#result').val(problempart);
@@ -442,7 +450,16 @@ $(document).on('click' , '#btnUpdate', function(e){
            }
        });
 })
-
+var msg = '{{$showMsg}}';
+if(msg) { 
+    swal({
+        title: "{{@$verificationType->error_title}}",
+        text:  "{{@$verificationType->message}}",
+        type: "Error",
+        showCancelButton: true,
+        confirmButtonColor: '#00A14C',
+    });
+}
 </script>
 
 

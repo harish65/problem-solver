@@ -195,6 +195,7 @@
                             <input type="hidden" name="problem_id" id="problem_id" value="{{ Crypt::encrypt($problem_id) }}">
                             <input type="hidden" name="project_id" value="{{ Crypt::encrypt($project_id) }}">
                             <input type="hidden" name="principle_type" value="{{ (@$content->principle_type) ? @$content->principle_type : '0' }}">
+                            <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}">
                                 <div class="row">
                                     <textarea name="content">{{ $content->content }}</textarea>
                                 </div>
@@ -208,7 +209,12 @@
                         <div class="row">
                             <h2>Validation Question</h2>
                             <form id="validation_form">
-                                <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                            <input type="hidden" name="id" value="{{ @$verification->id }}">
+                            <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}">
+                            <input type="hidden" name="problem_id" value="{{ @$problem->id }}">
+                            <input type="hidden" name="solution_id" value="{{ @$solution->id }}">
+                            <input type="hidden" name="solution_fun_id" value="{{ @$Solution_function->id }}">
+                            <input type="hidden" name="name" value="principla_identification">
                             <ul style="list-style:none;">
                             <h5>Do you use principles to solve the underlying problem?</h5>
                                 <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="validation" value="1">Ye, I use principles to solve the underlying problem.</label></li>

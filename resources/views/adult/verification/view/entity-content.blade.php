@@ -1,11 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-<?php 
-    $showMessage = true; 
-    
-?>
-
+<?php $showMsg = false ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -14,10 +10,10 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                      <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>   
+                      <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                      <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                      <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                      <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>   
 
                       @include('adult.verification.view.component.verification_types')
             </div>
@@ -31,11 +27,12 @@
                 <div class="col-sm-12">
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
-                        <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />
+                        <img src="{{ asset('assets-new/verification_types/' . @$verificationType->banner)}}" alt="relationImage" />
                         
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
+                @if($principle_identifications)
                 <!-- start -->
                 @if($entitiesAvailable->count() > 0)
                 
@@ -208,18 +205,20 @@
                                             @if($givenSet->principle_type == 1)
                                                 <form id="content" action="{{ url('adult/store-priciple-identification')}}" method="post">
                                                     @csrf
-                                                    <input type="hidden" name="content_id" value="{{ $content->id }}">
+                                                        <input type="hidden" name="principle_identification_id" value="{{ $content->principle_identification_id }}">
+                                                        <input type="hidden" name="principle_main_id" value="{{ $content->principle_main_id }}">
                                                         <input type="hidden" name="project_id" value="{{ $project_id }}">
                                                         <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
                                                         <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
                                                         <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                                                        <input type="hidden" name="principle_type" id="principle_type" value="{{ $content->principle_type }}">
                                                         <div class="row">
                                                             <textarea name="content"> {{ $givenSet->content }}</textarea>
                                                         </div>
                                                         <div class="row mt-3 text-right">
-                                                            <div class="form-group">
+                                                            <!-- <div class="form-group">
                                                                     <button class="btn btn-success" id="update-content"  type="submit">Update Content</button>
-                                                            </div> 
+                                                            </div>  -->
                                                         </div>
                                                 </form>
                                             @endif
@@ -253,9 +252,11 @@
                
                 <div class="col-md-10">
                     <button type="button"  class="btn btn-success add-entity" id="add-entity">Add <i class="fa fa-plus"></i></button>
-                </div>                       
-                
-                                   
+                </div>                
+                @endif
+                @else
+                <?php $showMsg = true ?>
+
                 @endif
             </div>
         </div>
@@ -462,6 +463,7 @@ $('.dashboard').click(function(){
     $('.nav-varification').attr('href' ,$('#solution_fun_nav').attr('href'))
 
 })
+
 
 $('.validation').on('change',function(){
         var problem = $(this).attr('data-id');
@@ -715,18 +717,19 @@ $('.deleteEntityAvailable').on('click' , function(e){
       selector: 'textarea',
       plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
       toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+      readonly : true
     });
 
-    var showMessage = "{{$showMessage}}"
-    var text_ = 'To solve a problem, we identify the entities that are available to us and the entities that are given to us.  If we disregard one or both entities, then it is not possible for us to solve that problem.  For example, the principle is given to us, if we disregard it, then we have no solution for our problem.  Please, refer to the principal page to identify the principal fist before showing the relationship of what is available to us and what is given to us to solve our problem.'
-    if(showMessage){
-        swal({
-            title: "Information",
-            text: text_,
-            type: "Error",
-            showCancelButton: true,
-            confirmButtonColor: '#00A14C',
-        });
-    }
+    var msg = '{{$showMsg}}';
+        if(msg) { 
+            swal({
+                title: "{{@$verificationType->error_title}}",
+                text:  "{{@$verificationType->message}}",
+                type: "Error",
+                showCancelButton: true,
+                confirmButtonColor: '#00A14C',
+            });
+        }
+        
   </script>
 @endsection

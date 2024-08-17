@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
-
+<?php $showMsg = false ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -25,11 +25,12 @@
                 <div class="col-sm-12">
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
-                        <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />
+                        <img src="{{ asset('assets-new/verification_types/' . @$verificationType->banner)}}" alt="relationImage" />
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
+                 @if($custommers->count() > 0)
                 @if($taking_ad)
                 <div class="principleRelation container">
                     <!-- Condition block start -->
@@ -181,6 +182,10 @@
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#entityModal"
                         id="">+ Identify</button>
                 </div>
+                @endif
+
+                @else
+                <?php $showMsg = true ?>
                 @endif
             </div>
         </div>
@@ -404,6 +409,18 @@ $(document).on('click', '#btnSave', function (e) {
             }
         });
     });
+
+
+    var msg = '{{$showMsg}}';
+if(msg) { 
+    swal({
+        title: "{{@$verificationType->error_title}}",
+        text:  "{{@$verificationType->message}}",
+        type: "Error",
+        showCancelButton: true,
+        confirmButtonColor: '#00A14C',
+    });
+}
 </script>
 
 

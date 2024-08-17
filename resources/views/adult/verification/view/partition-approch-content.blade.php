@@ -1,7 +1,8 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+<?php $part = 1;
+ $showMsg = false ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -27,16 +28,18 @@
                 <div class="col-sm-12">
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
-                        <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />
+                        <img src="{{ asset('assets-new/verification_types/' . @$verificationType->banner)}}" alt="relationImage" />
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
+                 @if($entities->count() > 0)
                 <div class="principleRelation container">
                             <div class="add-entity mb-3">
                                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+ Add New</button>
                             </div>
                     <div class="partitionApp">
+
                             <div class="blockProblem">
                                     <div class="projectBlock text-center">
                                         <h2>Problem</h2>
@@ -57,6 +60,7 @@
                                             </div>
                                     </div>
                                 </div>
+
                                 <div class="arrow">
                                     <ul>
                                         @foreach($entities as $entity)
@@ -64,6 +68,7 @@
                                         @endforeach
                                     </ul>
                                 </div>
+
                                 <div class="blockProblem">
                                     <div class="projectBlock text-center">
                                         <h2>Solution</h2>
@@ -81,29 +86,7 @@
                                 </div>
                             </div>
 
-                        <!-- <ul>
-                            <li>
-                                    <div class="inner-section d-flex">
-                                        <input type="text" disabled class="form-control" value="Problem">
-                                        <img src="{{ asset('assets-new/images/arrow_sm.png')}}">
-                                        <input type="text" disabled class="form-control" value="Solution">
-                                    </div>
-                                </li>
-                                @php $part = 1;@endphp
-                                @foreach($entities as $entity)
-                                <li>
-                                    <div class="inner-section d-flex">                                        
-                                        <input type="text" readonly class="form-control" value="" >
-                                        <img src="{{ asset('assets-new/images/arrow_sm.png')}}">
-                                        <input type="text" readonly class="form-control" value="">
-                                    </div>
-                                </li>
-                                @php $part++;@endphp
-                                @endforeach
-                               
-                          
-                           
-                        </ul> -->
+                       
                         <div class="questionWrap">
                             <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
                                 tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
@@ -134,6 +117,12 @@
                         </form>
                         </div>
                 </div>
+                @else
+                <div class="add-entity mb-3">
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+ Add New</button>
+                            </div>
+                @php $showMsg =  true;@endphp
+                @endif
                 <!-- End -->
                 
             </div>
@@ -403,14 +392,7 @@ $('.validation').on('change',function(){
                 
                  toastr.success(response.message);
                  location.reload()
-                //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                //  }else{
-
-
-                    
-                    // window.location.href = "{{ route('adult.dashboard')}}"
-                //  }
+                
                  
               }
            }
@@ -464,19 +446,20 @@ $('.validation').on('change',function(){
                 
                  toastr.success(response.message);
                  location.reload()
-                //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                //  }else{
-
-
-                    
-                    // window.location.href = "{{ route('adult.dashboard')}}"
-                //  }
-                 
+               
               }
            }
        });
    })
-
+   var msg = '{{$showMsg}}';
+if(msg) { 
+    swal({
+        title: "{{@$verificationType->error_title}}",
+        text:  "{{@$verificationType->message}}",
+        type: "Error",
+        showCancelButton: true,
+        confirmButtonColor: '#00A14C',
+    });
+}
 </script>
 @endsection

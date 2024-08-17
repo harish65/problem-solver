@@ -36,7 +36,6 @@
                 @if($custommers->count() > 0) 
                 @php $showMessage = false @endphp
                     @if($functionApplied)
-                    
                     <div class="principleRelation">
                         <div class="conditionBlock">
                             <div class="blockProblem">

@@ -143,7 +143,7 @@
             <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Person Communication</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close close_mdl" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -183,7 +183,7 @@
                  </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary close_mdl" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-success" id="btnSave">Submit</button>
             </div>
             </div>
@@ -303,7 +303,7 @@ $('.dashboard').click(function(){
                      toastr.error(value)
                  });
              } else {
-                
+                    
                  toastr.success(response.message);
                  location.reload()
                 
@@ -398,5 +398,7 @@ $(document).on('click','.delete_',function(e){
 
     $('#solutio_functio_div').addClass('d-none');
     $('#solution_div').removeClass('d-none')
+
+    $('.close_mdl').click(function(){  location.reload()   })
   </script>
 @endsection

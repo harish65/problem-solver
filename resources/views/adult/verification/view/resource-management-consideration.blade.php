@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
-
+<?php $showMsg = false ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -29,6 +29,7 @@
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
+                @if ($entity_used)
                 <!-- start -->
                 <div class="principleRelation container">
                     <!-- Condition block start -->
@@ -198,7 +199,10 @@
                         </div>
                 </div>
                 <!-- End -->
-                
+                @else
+
+                <?php $showMsg = true ?>
+                @endif
             </div>
         </div>
     </div>
@@ -453,6 +457,19 @@ $('#entity_usage').click(function(){
         $("#available").hide();
     }
 })
+
+
+var msg = '{{$showMsg}}';
+if(msg) { 
+    swal({
+        title: "{{@$verificationType->error_title}}",
+        text:  "{{@$verificationType->message}}",
+        type: "Error",
+        showCancelButton: true,
+        confirmButtonColor: '#00A14C',
+    });
+}
+    
 </script>
 
 

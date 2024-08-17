@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
-
+<?php $showMsg = false ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -32,7 +32,9 @@
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
-
+                @if($problem_id == '' ||  $Solution_function->id == '' && $solution_id == '')
+                    <?php $showMsg = true; ?>
+                @else
                 @if($problemDevelopment->count() > 0)
                 <!-- start -->
                 <div class="principleRelation">
@@ -154,6 +156,9 @@
                 </div>
             </div>
 
+            @endif
+           
+            
             @endif
             
         </div>
@@ -423,5 +428,17 @@ $('.addVocabularyBtn').click(function(){
     $('#prob-dev-form')[0].reset();  
     $('#problem_development_').modal('toggle')
 })
+
+
+var msg = '{{$showMsg}}';
+if(msg) { 
+    swal({
+        title: "{{@$verificationType->error_title}}",
+        text:  "{{@$verificationType->message}}",
+        type: "Error",
+        showCancelButton: true,
+        confirmButtonColor: '#00A14C',
+    });
+}
 </script>
 @endsection

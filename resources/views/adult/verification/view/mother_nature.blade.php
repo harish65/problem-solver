@@ -3,7 +3,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+<?php $showMsg = false ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -55,163 +55,159 @@
                                 </div>
                             </div>
                     </div>
+
+            @if(!is_null($principle_identifications))    
                 @if($mother_nature)
-                <!-- start -->
-                <div class="principleRelation mt-3">
-                    <div class="conditionBlock">
-                        <div class="solutionconditionBlock">
-                            <div class="blockProblem">
-                                <div class="projectBlock text-center">
-                                    <h2>Problem</h2>
-                                    <div class="projectList text-center">
-                                        <div class="imgWrp">
-                                            <img class="mx-auto"
-                                                src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
-                                                height="128px">
+                    <!-- start -->
+                    <div class="principleRelation mt-3">
+                        <div class="conditionBlock">
+                            <div class="solutionconditionBlock">
+                                <div class="blockProblem">
+                                    <div class="projectBlock text-center">
+                                        <h2>Problem</h2>
+                                        <div class="projectList text-center">
+                                            <div class="imgWrp">
+                                                <img class="mx-auto"
+                                                    src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
+                                                    height="128px">
+                                            </div>
+                                            <p class="redText" style="color:red">{{ $problem->name }}</p>
                                         </div>
-                                        <p class="redText" style="color:red">{{ $problem->name }}</p>
-                                    </div>
-                                    <div class="projectList">
-                                        <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
-                                        <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                        <div class="projectList">
+                                            <p class="date">{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
+                                            <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="long-arrow">
-                                <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
-                                <!-- add arrow Image over here -->
-                                <img src="{{ asset('assets-new/images/arrowRight.png')}}" width="100px">
-                                <!-- add arrow Image over here -->
-                            </div>
-                            <div class="blockProblem">
-                                <div class="projectBlock text-center">
-                                    <h2>Solution</h2>
-                                    <div class="projectList text-center">
-                                        <div class="imgWrp">
-                                            <img class="mx-auto"
-                                                src=" {{ asset('assets-new/solution/'.$solution->file)}}" width="100%"
-                                                height="128px">
+                                <div class="long-arrow">
+                                    <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
+                                    <!-- add arrow Image over here -->
+                                    <img src="{{ asset('assets-new/images/arrowRight.png')}}" width="100px">
+                                    <!-- add arrow Image over here -->
+                                </div>
+                                <div class="blockProblem">
+                                    <div class="projectBlock text-center">
+                                        <h2>Solution</h2>
+                                        <div class="projectList text-center">
+                                            <div class="imgWrp">
+                                                <img class="mx-auto"
+                                                    src=" {{ asset('assets-new/solution/'.$solution->file)}}" width="100%"
+                                                    height="128px">
+                                            </div>
+                                            <p class="redText" style="color:#00A14C">{{ $solution->name }}</p>
                                         </div>
-                                        <p class="redText" style="color:#00A14C">{{ $solution->name }}</p>
-                                    </div>
-                                    <div class="projectList">
-                                        <p class="date">{{ date('d/m/Y', strtotime($solution->created_at))}}</p>
-                                        <ul>
-                                            <li>
-    
-                                            &nbsp;&nbsp;&nbsp;
-                                            </li>
-                                            <li>
-                                            &nbsp;&nbsp;&nbsp;
-                                                    
-                                            </li>
-                                            <li>
-                                            &nbsp;&nbsp;&nbsp;
-                                            </li>
-                                        </ul>
+                                        <div class="projectList">
+                                            <p class="date">{{ date('d/m/Y', strtotime($solution->created_at))}}</p>
+                                            <ul>
+                                                <li>
+        
+                                                &nbsp;&nbsp;&nbsp;
+                                                </li>
+                                                <li>
+                                                &nbsp;&nbsp;&nbsp;
+                                                        
+                                                </li>
+                                                <li>
+                                                &nbsp;&nbsp;&nbsp;
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="long-arrow">
-                                <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
-                                <!-- add arrow Image over here -->
-                                <img src="{{ asset('assets-new/images/arrowRight.png')}}" width="100px">
-                                <!-- add arrow Image over here -->
-                            </div>
-                            <div class="blockProblem">
-                                <div class="projectBlock text-center">
-                                    <h2>Solution Function</h2>
-                                    <div class="projectList text-center">
-                                        <div class="imgWrp">
-                                            <img class="mx-auto"
-                                                src=" {{ asset('assets-new/solFunction/'.$Solution_function->file)}}" width="100%"
-                                                height="128px">
+                                <div class="long-arrow">
+                                    <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
+                                    <!-- add arrow Image over here -->
+                                    <img src="{{ asset('assets-new/images/arrowRight.png')}}" width="100px">
+                                    <!-- add arrow Image over here -->
+                                </div>
+                                <div class="blockProblem">
+                                    <div class="projectBlock text-center">
+                                        <h2>Solution Function</h2>
+                                        <div class="projectList text-center">
+                                            <div class="imgWrp">
+                                                <img class="mx-auto"
+                                                    src=" {{ asset('assets-new/solFunction/'.$Solution_function->file)}}" width="100%"
+                                                    height="128px">
+                                            </div>
+                                            <p class="redText" style="color:#00A14C">{{ $Solution_function->name }}</p>
                                         </div>
-                                        <p class="redText" style="color:#00A14C">{{ $Solution_function->name }}</p>
-                                    </div>
-                                    <div class="projectList">
-                                        <p class="date">{{ date('d/m/Y', strtotime($Solution_function->created_at))}}</p>
-                                        <ul>
-                                            <li>
-    
-                                            &nbsp;&nbsp;&nbsp;
-                                            </li>
-                                            <li>
-                                            &nbsp;&nbsp;&nbsp;
-                                                    
-                                            </li>
-                                            <li>
-                                            &nbsp;&nbsp;&nbsp;
-                                            </li>
-                                        </ul>
+                                        <div class="projectList">
+                                            <p class="date">{{ date('d/m/Y', strtotime($Solution_function->created_at))}}</p>
+                                            <ul>
+                                                <li>
+        
+                                                &nbsp;&nbsp;&nbsp;
+                                                </li>
+                                                <li>
+                                                &nbsp;&nbsp;&nbsp;
+                                                        
+                                                </li>
+                                                <li>
+                                                &nbsp;&nbsp;&nbsp;
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="long-arrow">
-                                <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
-                                <!-- add arrow Image over here -->
-                                <img src="{{ asset('assets-new/images/arrowRight.png')}}" width="100px">
-                                <!-- add arrow Image over here -->
-                            </div>
-                            <div class="blockProblem">
-                                <div class="projectBlock text-center">
-                                    <h2>Principle</h2>
-                                    <div class="projectList text-center">
-                                        <div class="imgWrp">
-                                            <img class="mx-auto"
-                                            src=" {{ asset('assets-new/verification_types/pi/pi-card.jpg')}}" width="100%"
-                                            height="250px">
+                                <div class="long-arrow">
+                                    <!-- <p style="position:relative; top:35px;left:23px;">is replaced by</p> -->
+                                    <!-- add arrow Image over here -->
+                                    <img src="{{ asset('assets-new/images/arrowRight.png')}}" width="100px">
+                                    <!-- add arrow Image over here -->
+                                </div>
+                                <div class="blockProblem">
+                                    <div class="projectBlock text-center">
+                                        <h2>Principle</h2>
+                                        <div class="projectList text-center">
+                                            <div class="imgWrp">
+                                                <img class="mx-auto"
+                                                src=" {{ asset('assets-new/verification_types/pi/pi-card.jpg')}}" width="100%"
+                                                height="250px">
+                                            </div>
+                                            
                                         </div>
                                         
                                     </div>
-                                    
                                 </div>
+                                
                             </div>
-                            
+
+
                         </div>
-
-
+                        <div class="questionWrap">
+                            <h2>Validation Question</h2>
+                            <form id="validation_form">
+                                    <input type="hidden" name="id" value="{{ @$verification->id }}">        
+                                    <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}">        
+                                    <input type="hidden" name="problem_id" value="{{ @$problem->id }}">        
+                                    <input type="hidden" name="solution_id" value="{{ @$solution->id }}">        
+                                    <input type="hidden" name="solution_fun_id" value="{{ @$Solution_function->id }}">        
+                                    <input type="hidden" name="name" value="entity_usage">        
+                                    <ul style="list-style:none;">
+                                        <h5>Do you understand the existing of mother nature in your problem solution?</h5>
+                                        <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} >Yes, I do understand the existence of mother nature in my problem solution</label></li>
+                                        <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} >No, I do not understand the existence of mother nature in my problem solution.</label></li>
+                                    </ul>
+                                    <ul style="list-style:none;">
+                                        <h5>Do you take mother nature into consideration in your solution? </h5>
+                                        <li><label><input type="radio"  name="validation_2" value="1" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} >Yes, I do take mother nature into consideration in my solution</label></li>
+                                        <li><label><input type="radio"  name="validation_2" value="2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} >No, I do not take mother nature into consideration in my solution</label></li>
+                                    </ul>
+                                    <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                            </form>
+                        </div>
                     </div>
-                    <div class="questionWrap">
-                        <h2>Validation Question</h2>
-                        <form id="validation_form">
-                                <input type="hidden" name="id" value="{{ @$verification->id }}">        
-                                <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}">        
-                                <input type="hidden" name="problem_id" value="{{ @$problem->id }}">        
-                                <input type="hidden" name="solution_id" value="{{ @$solution->id }}">        
-                                <input type="hidden" name="solution_fun_id" value="{{ @$Solution_function->id }}">        
-                                <input type="hidden" name="name" value="entity_usage">        
-                                <ul style="list-style:none;">
-                                    <h5>Do you understand the existing of mother nature in your problem solution?</h5>
-                                    <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} >Yes, I do understand the existence of mother nature in my problem solution</label></li>
-                                    <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} >No, I do not understand the existence of mother nature in my problem solution.</label></li>
-                                </ul>
-                                <ul style="list-style:none;">
-                                    <h5>Do you take mother nature into consideration in your solution? </h5>
-                                    <li><label><input type="radio"  name="validation_2" value="1" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} >Yes, I do take mother nature into consideration in my solution</label></li>
-                                    <li><label><input type="radio"  name="validation_2" value="2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} >No, I do not take mother nature into consideration in my solution</label></li>
-                                </ul>
-                                <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
-                        </form>
-                    </div>
-                </div>
-                <!-- End -->
+                    <!-- End -->
 
-                @else
-                @if(is_null($principle_identifications))
-                <div class="col-sm-4">
-                    <button type="button" class="btn btn-success" onClick="messageFunction()"
-                     id="">+ Identify Entity Behind</button>
-                </div>
                 @else
                 <div class="col-sm-4">
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#entityModal"
                      id="">+ Identify Entity Behind</button>
                 </div>
                 @endif
-
-                @endif
-                
+            @else
+            <?php $showMsg = true ?>
+            @endif
             </div>
 
 
@@ -290,7 +286,7 @@ $('#verification_types').on('change',function(){
     var id = $(this).val();
     window.location.href = "{{ route('adult.varification',@$parameter) }}" + '/' + id;
 })
-$('.dropify').dropify();
+
 
 
 </script>
@@ -393,6 +389,15 @@ $(document).on('click', '#btnSave', function (e) {
             confirmButtonColor: '#00A14C',
         });
     }
-
+    var msg = '{{$showMsg}}';
+if(msg) { 
+    swal({
+        title: "{{@$verificationType->error_title}}",
+        text:  "{{@$verificationType->message}}",
+        type: "Error",
+        showCancelButton: true,
+        confirmButtonColor: '#00A14C',
+    });
+}
 </script>
 @endsection

@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-@php $showMessage = true @endphp
+<?php $showMsg = false ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -33,6 +33,8 @@
                     <p>{{ @$verificationType->explanation }}</p>
                     
                 </div>
+
+                @if($custommers->count() > 0)
                 <!-- start -->
                 @if($function_at_location)
                 <div class="principleRelation">
@@ -182,7 +184,10 @@
                 <div class="col-sm-4">
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#function_at_location_modal" id="">+ Identify</button>
                     </div>
-                @endif                    
+                @endif   
+                @else
+                <?php $showMsg = true ?>
+                @endif                 
             </div>
         </div>
     </div>
@@ -324,17 +329,7 @@
         interval: 2000
     })
 
-    // var showMessage = "{{$showMessage}}"
-    // var text_ = 'The solution of a problem is located farther away from that problem.  In terms of time, we first identify the problem and then the solution of the problem.  We can look at the solution of a problem as our destination to solve that problem.  In terms of time, the problem is where we start and the solution is where we finish.  In order to show the relationship between the time we start and the time we finish, we must first identify the problem then the solution of the problem.  If the problem and the solution have not been identified, then there is no destination to solve that problem.  Please, refer to the problem page and the solution page to identify the problem and the solution in order to show the relationship that we start with problem and we finish with solution.'
-    // if (showMessage) {
-    //     swal({
-    //         title: "Solution Time Location 1 ",
-    //         text: text_,
-    //         type: "Error",
-    //         showCancelButton: true,
-    //         confirmButtonColor: '#00A14C',
-    //     });
-    // }
+    
 
 
     $(document).on('click', '#btnSave', function (e) {
@@ -385,5 +380,17 @@
     });
     $('#solutio_functio_div').addClass('d-none');
     $('#solution_div').removeClass('d-none')
+
+
+    var msg = '{{$showMsg}}';
+if(msg) { 
+    swal({
+        title: "{{@$verificationType->error_title}}",
+        text:  "{{@$verificationType->message}}",
+        type: "Error",
+        showCancelButton: true,
+        confirmButtonColor: '#00A14C',
+    });
+}
 </script>
 @endsection

@@ -76,6 +76,7 @@ class VerificationController extends BaseController
         }      
         
         //get Verification
+        
         $verification = Verification::where("problem_id", "=", $problem_id)
             ->where("verification_type_id", "=", $type)
             ->where("solution_function_id", "=", $Solution_function->id)
@@ -117,11 +118,11 @@ class VerificationController extends BaseController
                     ->where("project_id", "=", $project_id)
                     ->get();
 
-        $verification = Verification::where("verification_type_id",$type)->where('problem_id' , $problem_id)->first();
-                if($verification){
-                         if (isset($verification->validations)) {$verification->validations = json_decode($verification->validations);
-                    } 
-                }
+        // $verification = Verification::where("verification_type_id",$type)->where('problem_id' , $problem_id)->first();
+        //         if($verification){
+        //                  if (isset($verification->validations)) {$verification->validations = json_decode($verification->validations);
+        //             } 
+        //         }
                 
         switch ($type) {
             case 1:
@@ -282,7 +283,10 @@ class VerificationController extends BaseController
                 $allVarifications = DB::table("principle_identification")->get();
 
                 $content =     DB::table("principle_identification_drived_principle")->where("project_id", $project_id)->where('user_id' , Auth::user()->id)->first();
-                
+                $principle_identifications = DB::table(
+                    "principle_identification_main"
+                )->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
+                // echo "<pre>";print_r($content);die;
                 return view(
                     "adult.verification.view.entity-content",
                     compact(
@@ -299,7 +303,7 @@ class VerificationController extends BaseController
                         "givenSet",
                         "entities",
                         "entitiesAvailable",                        
-                        "allVarifications" , "content"
+                        "allVarifications" , "content" , 'principle_identifications'
                     )
                 );
                 break;
@@ -823,8 +827,10 @@ class VerificationController extends BaseController
                                             "id", "=", 16
                                         )->first();
                                     }
+                                   
                                     $problemPart = DB::table("average_approaches") ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
                                     $countPartionAproach = DB::table("partition_approach") ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->get()->count();
+                                    
                                     return view(
                                         "adult.verification.view.average-aparoach-calculation",
                                         compact(
@@ -958,8 +964,11 @@ class VerificationController extends BaseController
                                                             ->where("user_id", "=", Auth::user()->id)
                                                             ->where("project_id", $project_id)
                                                         ->first();
-                                                  
-                                                //  echo "<pre>";print_r($entities);die;
+                                                $entity_used = DB::table("entity_usage")
+                                                        ->where("user_id", "=", Auth::user()->id)
+                                                        ->where("project_id", $project_id)
+                                                    ->first();
+                                                //  echo "<pre>";print_r($entity_used);die;
                                                 return view(
                                                     "adult.verification.view.resource-management-consideration",
                                                     compact(
@@ -972,7 +981,7 @@ class VerificationController extends BaseController
                                                         "solution",
                                                         "solution_id",
                                                         "Solution_function",
-                                                        "verifiationTypeText","entities","resources"
+                                                        "verifiationTypeText","entities","resources", "entity_used"
                                                         
                                                     )
                                                 );
@@ -1011,8 +1020,12 @@ class VerificationController extends BaseController
                                                         ->where("user_id", "=", Auth::user()->id)
                                                         ->where("project_id", $project_id)
                                                     ->first();
+
+                                                    $principle_identifications = DB::table(
+                                                        "principle_identification_main"
+                                                    )->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
                                                    
-                                                   
+                                                    
                                                     return view(
                                                         "adult.verification.view.entity_usage",
                                                         compact(
@@ -1026,7 +1039,8 @@ class VerificationController extends BaseController
                                                             "solution_id",
                                                             "Solution_function",
                                                             "verifiationTypeText",
-                                                            "allVarifications","entities" ,"entitiestbl","custommers" , "entity_used"
+                                                            "allVarifications","entities" ,"entitiestbl","custommers" , "entity_used",
+                                                            "principle_identifications"
                                                             
                                                             
                                                         )
@@ -1039,11 +1053,6 @@ class VerificationController extends BaseController
                                                         )->get();
                                                         $custommers = DB::table("customers")->where("project_id", "=", $project_id)->get();
                                                         $functionOfPeople = DB::table("function_of_people_explanations")->where("project_id", "=", $project_id)->where('user_id' , Auth::user()->id)->first();
-                                                       
-                                                        
-                                                       
-                                                       
-                                                        
                                                         return view(
                                                             "adult.verification.view.function_of_people_explanation",
                                                             compact(
@@ -1105,7 +1114,7 @@ class VerificationController extends BaseController
                                                                 break;
                                                                 case 28:
                                                                     $mevsyou = DB::table('me_vs_you')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();                                                                 
-                                                                    
+                                                                    $custommers = DB::table("customers")->where("project_id", "=", $project_id)->get();
                                                                     
                                                                     return view(
                                                                         "adult.verification.view.me_vs_you",
@@ -1119,7 +1128,7 @@ class VerificationController extends BaseController
                                                                             "solution",
                                                                             "solution_id",
                                                                             "Solution_function",
-                                                                            "verifiationTypeText",'mevsyou'
+                                                                            "verifiationTypeText",'mevsyou','custommers'
                                                                             
                                                                             
                                                                             
@@ -1156,7 +1165,7 @@ class VerificationController extends BaseController
                                    
                                                                         $users = DB::table("people_outside_project")
                                                                         ->where("project_id", "=", $project_id)->get();
-                                                                       
+                                                                        $custommers = DB::table("customers")->where("project_id", "=", $project_id)->get();
                                                                         return view(
                                                                             "adult.verification.view.people-outside-project-content",
                                                                             compact(
@@ -1170,7 +1179,7 @@ class VerificationController extends BaseController
                                                                                 "solution_id",
                                                                                 "Solution_function",
                                                                                 "verifiationTypeText",
-                                                                                "users"
+                                                                                "users" , "custommers"
                                                                                
                                                                                 
                                                                                 
@@ -1181,7 +1190,8 @@ class VerificationController extends BaseController
                                    
                                                                      
                                                                         $problrmAtLocatios  = DB::table('problrm_at_location_explantion')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
-                                                                       
+                                                                        $custommers = DB::table("customers")
+                                                                        ->where("project_id", "=", $project_id)->get();
                                                                         return view(
                                                                             "adult.verification.view.prolem_solution_at_location",
                                                                             compact(
@@ -1195,7 +1205,7 @@ class VerificationController extends BaseController
                                                                                 "solution_id",
                                                                                 "Solution_function",
                                                                                 "verifiationTypeText",
-                                                                                "problrmAtLocatios"
+                                                                                "problrmAtLocatios" , 'custommers'
                                                                                 
                                                                                 
                                                                             )
@@ -1250,6 +1260,7 @@ class VerificationController extends BaseController
 
     public function store(Request $request)
     {
+        // echo "<pre>";print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "verificationType" => "required",
         ]);
@@ -1793,8 +1804,8 @@ class VerificationController extends BaseController
                     ["id" => $request->id],
                     [
                         "user_id"=> Auth::user()->id,
-                        "project_id" => Crypt::decrypt($data["project_id"]),
-                        "problem_id" => Crypt::decrypt($data["problem_id"]),
+                        "project_id" => $data["project_id"],
+                        "problem_id" => $data["problem_id"],
                         "principle_type" => $data["principle_type"],
                         "principle_identification_id" => $data["principle_identification_id"],
                         "principle_main_id" => $data["principle_main_id"],
@@ -2027,7 +2038,7 @@ class VerificationController extends BaseController
 
     public function createPartitionApproach(Request $request)
     {
-       
+    //    echo "<pre>";print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "word" => "required",
             "given" => "required",
@@ -2035,7 +2046,7 @@ class VerificationController extends BaseController
         if ($validator->fails()) {
             return $this->sendError("Validation Error.", $validator->errors());
         }
-
+        
         try {
             $data = $request->all();
             $insert = DB::table("partition_approach")->updateOrInsert(

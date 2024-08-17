@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+<?php $showMsg = false ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -79,6 +79,7 @@
                    
 
                 </div>
+                @if($custommers->count() > 0 )
                 @if($mevsyou)
                 <!-- start -->
                 <div class="principleRelation mt-3">
@@ -194,7 +195,10 @@
                         id="">+ Identify</button>
                 </div>
                 @endif
+                @else
 
+                <?php $showMsg = true ?>
+                @endif
             </div>
         </div>
     </div>
@@ -363,5 +367,15 @@
             }
         });
     });
+var msg = '{{$showMsg}}';
+if(msg) { 
+    swal({
+        title: "{{@$verificationType->error_title}}",
+        text:  "{{@$verificationType->message}}",
+        type: "Error",
+        showCancelButton: true,
+        confirmButtonColor: '#00A14C',
+    });
+}
 </script>
 @endsection

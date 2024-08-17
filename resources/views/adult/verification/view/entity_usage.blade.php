@@ -2,7 +2,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-<?php $showMessage = false; ?>
+<?php $showMsg = false ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -28,11 +28,12 @@
                 <div class="col-sm-12">
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
-                        <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />
+                        <img src="{{ asset('assets-new/verification_types/' . @$verificationType->banner)}}" alt="relationImage" />
                         
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
+                @if($principle_identifications)
                 <!-- start -->
                  @if($entity_used)
                 <div class="principleRelation">
@@ -224,8 +225,10 @@
                 @else
                         <div class="col-md-12">
                             <button type="button"  class="btn btn-success add-entity" data-toggle="modal" data-target="#EntityUsageModal" >Add <i class="fa fa-plus"></i></button>
-                        </div>
-                        
+                        </div>  
+                @endif
+                @else
+                <?php $showMsg = true ?>
                 @endif
                 <!-- End -->
                 
@@ -743,17 +746,16 @@ $('.editEnityTable').click(function(){
     $('#ent_id').val($(this).attr('data-id'))
     $('#exampleModal').modal('toggle')
 })
-var showMessage = "{{$showMessage}}"
-    var text_ = 'Entity Availble is must for Entity Usage.'
-    if(showMessage){
-        swal({
-            title: "Information",
-            text: text_,
-            type: "Error",
-            showCancelButton: true,
-            confirmButtonColor: '#00A14C',
-        });
-    }
+var msg = '{{$showMsg}}';
+if(msg) { 
+    swal({
+        title: "{{@$verificationType->error_title}}",
+        text:  "{{@$verificationType->message}}",
+        type: "Error",
+        showCancelButton: true,
+        confirmButtonColor: '#00A14C',
+    });
+}
 </script>
 
 @endsection

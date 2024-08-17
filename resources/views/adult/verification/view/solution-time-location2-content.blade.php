@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+<?php $showMsg = false ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -32,6 +32,7 @@
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
+                @if($custommers->count() > 0)
                 @if($solutionTimeLocationTwo)
                 <!-- start -->
                 <div class="principleRelation">
@@ -186,6 +187,11 @@
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
                     </div>
                 @endif   
+                @else
+                <?php $showMsg = true; ?>
+                @endif
+
+
             </div>
         </div>
     </div>
@@ -316,6 +322,15 @@ $(document).on('click', '#btnSave', function (e) {
 
     $('#solutio_functio_div').addClass('d-none');
     $('#solution_div').removeClass('d-none')
-
+    var msg = '{{$showMsg}}';
+        if(msg) { 
+            swal({
+                title: "{{@$verificationType->error_title}}",
+                text:  "{{@$verificationType->message}}",
+                type: "Error",
+                showCancelButton: true,
+                confirmButtonColor: '#00A14C',
+            });
+        }
 </script>
 @endsection
