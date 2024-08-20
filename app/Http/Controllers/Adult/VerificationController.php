@@ -143,6 +143,7 @@ class VerificationController extends BaseController
                 ]);
                 break;
             case 2:
+                
                 $transitionPhrase = DB::table('verification_type_texts')->where('verification_type_id' , 2)->first();
                 return view("adult.verification.view.information-content", [
                     "types" => $types,
@@ -680,12 +681,12 @@ class VerificationController extends BaseController
                             )->first();
                         }
                         
-                        $errorcorrection = DB::table('error_correction')->get();
+                        // $errorcorrection = DB::table('error_correction')->get();
                        
     
-                        $problemDevelopment = db::table('problem_development')->select('problem_development.*' , 'error_correction.compensator' )
-                                            ->leftJoin('error_correction', 'problem_development.id', '=', 'error_correction.error_id')
-                                            ->get();
+                        // $problemDevelopment = db::table('problem_development')->select('problem_development.*' , 'error_correction.compensator' )
+                        //                     ->leftJoin('error_correction', 'problem_development.id', '=', 'error_correction.error_id')
+                        //                     ->get();
                         $functionAud  = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
                             
                         return view(
@@ -703,7 +704,8 @@ class VerificationController extends BaseController
                                 "verifiationTypeText",
                                 "allVarifications",
                                 "users",
-                                'errorcorrection','problemDevelopment','functionAud'
+                                // 'errorcorrection','problemDevelopment',
+                                'functionAud'
                             )
                         );
                         break;
@@ -737,7 +739,7 @@ class VerificationController extends BaseController
                                         ->where('function_belong_to_people.problem_id' , $problem_id)
                                         ->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , Auth::user()->id)->get();
                             
-                            
+                            // echo "<pre>";print_r($people);die;
                             $functionAud  = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
                             $functionApplied  = DB::table('function_sub_people')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->where('verification_type' , $verificationType->id)->first();
                             return view(
