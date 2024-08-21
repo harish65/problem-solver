@@ -165,57 +165,30 @@ switch ($type) {
                     return $this->sendResponse($success, "true");
                 break;
             case 4:
-                if (!$verification) {
-                    $verification = Verification::where(
-                        "verification_type_id",
-                        "=",
-                        4
-                    )->first();
-                    if (isset($verification->validations)) {
-                        $verification->validations = json_decode(
-                            $verification->validations
-                        );
-                    }
-                }
-
                 $steps = DB::table('sepration_steps')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
-                return view(
-                    "adult.verification.view.separation-step",
-                    compact(
-                        "types",
-                        "verificationType",
-                        "verification",
-                        "problem_id",
-                        "project_id",
-                        "problem",
-                        "solution",
-                        "solution_id",
-                        "Solution_function",
-                        "verifiationTypeText",
-                        "entity" , "custommers" , "steps"
-                    )
-                );
+                $custommers = DB::table("customers")->where("project_id", "=", $project_id)->get();
+                return $success =  [
+                        "project_id" => $project_id,
+                        "problem" => $problem,
+                        "solution" => $solution,
+                        "Solution_function" => $Solution_function,
+                        "verificationTypeText" => $verifiationTypeText,
+                        "custommers" => $custommers, 
+                        "steps" => $steps
+                    ];
+                    return $this->sendResponse($success, "true");
                 break;
             case 5:
                 $timeVerifications =  TimeVerification::where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->get();
-            
-                return view(
-                    "adult.verification.view.time-verification-content",
-                    compact(
-                        "types",
-                        "verificationType",
-                        "verification",
-                        "problem_id",
-                        "project_id",
-                        "problem",
-                        "solution",
-                        "solution_id",
-                        "Solution_function",
-                        "verifiationTypeText",
-                        "entity",
-                        "timeVerifications"
-                    )
-                );
+                return $success =  [
+                    "project_id" => $project_id,
+                    "problem" => $problem,
+                    "solution" => $solution,
+                    "Solution_function" => $Solution_function,
+                    "timeVerifications" => $timeVerifications, 
+                    
+                ];
+                return $this->sendResponse($success, "true");
                 break;
             case 6:
                 // die();
@@ -228,23 +201,16 @@ switch ($type) {
                 $pastAndPresentTime = PastAndPresentTime::where('problem_id' , $problem_id)
                                                         ->where('project_id' , $project_id)
                                                         ->where('user_id' , Auth::user()->id)->get();
-                return view(
-                    "adult.verification.view.past-present-content",
-                    compact(
-                        "types",
-                        "verificationType",
-                        "verification",
-                        "problem_id",
-                        "project_id",
-                        "problem",
-                        "solution",
-                        "solution_id",
-                        "Solution_function",
-                        "verifiationTypeText",
-                        "entity",
-                        "allVarifications" , 'pastAndPresentTime'
-                    )
-                );
+                return $success =  [
+                    "project_id" => $project_id,
+                    "problem" => $problem,
+                    "solution" => $solution,
+                    "Solution_function" => $Solution_function,
+                    "pastAndPresentTime" => $pastAndPresentTime, 
+                    
+                ];
+                return $this->sendResponse($success, "true");
+                
                 break;
             case 7:
                
@@ -259,330 +225,178 @@ switch ($type) {
                                         ->where('project_id' , $project_id)
                                         ->get();
                 $entities = DB::table("entities")->get();
-                $allVarifications = DB::table("principle_identification")->get();
+                $principle_identification = DB::table("principle_identification")->get();
 
                 $content =     DB::table("principle_identification_drived_principle")->where("project_id", $project_id)->where('user_id' , Auth::user()->id)->first();
                 $principle_identifications = DB::table(
                     "principle_identification_main"
                 )->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
-                // echo "<pre>";print_r($content);die;
-                return view(
-                    "adult.verification.view.entity-content",
-                    compact(
-                        "types",
-                        "verificationType",
-                        "verification",
-                        "problem_id",
-                        "project_id",
-                        "problem",
-                        "solution",
-                        "solution_id",
-                        "Solution_function",
-                        "verifiationTypeText",
-                        "givenSet",
-                        "entities",
-                        "entitiesAvailable",                        
-                        "allVarifications" , "content" , 'principle_identifications'
-                    )
-                );
+
+                return $success =  [
+                    "project_id" => $project_id,
+                    "problem" => $problem,
+                    "solution" => $solution,
+                    "Solution_function" => $Solution_function, 
+                    "givenSet" => $givenSet,
+                    "entities" => $entities,
+                    "entitiesAvailable" => $entitiesAvailable,                        
+                    "content" => $content , 
+                    'principle_identifications' => $principle_identifications
+                    
+                ];
+                return $this->sendResponse($success, "true");
+                
                 break;
             case 8:
                 $custommers = DB::table("customers")
                     ->where("project_id", "=", $project_id)
                     ->get();
-                if (!$verification) {
-                    $verification = Verification::where(
-                        "verification_type_id",
-                        "=",
-                        5
-                    )->first();
-                    if (isset($verification->validations)) {
-                        $verification->validations = json_decode(
-                            $verification->validations
-                        );
-                    }
-                }
+                
                 $transitionPhrase = DB::table('verification_type_texts')->where('verification_type_id' , 8)->first();
                 $solutionTimeLocationOne = DB::table('solution_time_locations')->where("type", 1)->where("project_id", $project_id)->where('user_id' , Auth::user()->id)->first();
-                return view(
-                    "adult.verification.view.solution-time-location1-content",
-                    compact(
-                        "types",
-                        "verificationType",
-                        "verification",
-                        "problem_id",
-                        "project_id",
-                        "problem",
-                        "solution",
-                        "solution_id",
-                        "Solution_function",
-                        "verifiationTypeText",
-                        "custommers","transitionPhrase","solutionTimeLocationOne"
-                    )
-                );
+                return $success =  [
+                    "project_id" => $project_id,
+                    "problem" => $problem,
+                    "solution" => $solution,
+                    "Solution_function" => $Solution_function, 
+                    "custommers" => $custommers,
+                    "transitionPhrase" => $transitionPhrase,
+                    "solutionTimeLocationOne" => $solutionTimeLocationOne
+                    
+                ];
+                return $this->sendResponse($success, "true");
+                
                 break;
             case 9:
                 $custommers = DB::table("customers")
                     ->where("project_id", "=", $project_id)
                     ->get();
-                if (!$verification) {
-                    $verification = Verification::where(
-                        "verification_type_id",
-                        "=",
-                        5
-                    )->first();
-                    if (isset($verification->validations)) {
-                        $verification->validations = json_decode(
-                            $verification->validations
-                        );
-                    }
-                }
+               
                 $transitionPhrase = DB::table('verification_type_texts')->where('verification_type_id' , 9)->first();
                 $solutionTimeLocationTwo = DB::table('solution_time_locations')->where("type", 2)->where("project_id", $project_id)->where('user_id' , Auth::user()->id)->first();;
-                return view(
-                    "adult.verification.view.solution-time-location2-content",
-                    compact(
-                        "types",
-                        "verificationType",
-                        "verification",
-                        "problem_id",
-                        "project_id",
-                        "problem",
-                        "solution",
-                        "solution_id",
-                        "Solution_function",
-                        "verifiationTypeText",
-                        "custommers" , "transitionPhrase", "solutionTimeLocationTwo"
-                    )
-                );
+                return $success =  [
+                    "project_id" => $project_id,
+                    "problem" => $problem,
+                    "solution" => $solution,
+                    "Solution_function" => $Solution_function, 
+                    "custommers" => $custommers,
+                    "transitionPhrase" => $transitionPhrase,
+                    "solutionTimeLocationTwo" => $solutionTimeLocationTwo
+                    
+                ];
+                return $this->sendResponse($success, "true");
                 break;
             case 10:
-                $users = DB::table("customers")
+                $custommers = DB::table("customers")
+                    ->where("project_id", "=", $project_id)
+                    ->get();
+                    return $success =  [
+                        "project_id" => $project_id,
+                        "problem" => $problem,
+                        "solution" => $solution,
+                        "Solution_function" => $Solution_function, 
+                        "custommers" => $custommers  
+                    ];
+                    return $this->sendResponse($success, "true");
+                break;
+            case 11:
+                $custommers = DB::table("customers")
                     ->where("project_id", "=", $project_id)
                     ->get();
                 
-                return view(
-                    "adult.verification.view.people-project-content",
-                    compact(
-                        "types",
-                        "verificationType",
-                        "verification",
-                        "problem_id",
-                        "project_id",
-                        "problem",
-                        "solution",
-                        "solution_id",
-                        "Solution_function",
-                        "verifiationTypeText",
-                        "users"
-                    )
-                );
-                break;
-            case 11:
-                $users = DB::table("customers")
-                    ->where("project_id", "=", $project_id)
-                    ->get();
-                if (!$verification) {
-                    $verification = Verification::where(
-                        "verification_type_id",
-                        "=",
-                        5
-                    )->first();
-                    if (isset($verification->validations)) {
-                        $verification->validations = json_decode(
-                            $verification->validations
-                        );
-                    }
-                }
                 $communications = DB::table('people_communication_flow')
                         ->select('people_communication_flow.*' , 'customers.name AS customer_name' )
                         ->leftJoin('customers', 'people_communication_flow.customer_id', '=', 'customers.id')
                         ->where('people_communication_flow.user_id' , Auth::user()->id)
                         ->where('people_communication_flow.project_id' , $project_id)
                         ->where('people_communication_flow.problem_id' , $problem_id)
-                        
-                        
                         ->get();
+                return $success =  [
+                    "project_id" => $project_id,
+                    "problem" => $problem,
+                    "solution" => $solution,
+                    "Solution_function" => $Solution_function, 
+                    "custommers" => $custommers,
+                    "communications" => $communications 
+                ];
+                return $this->sendResponse($success, "true");
           
-                return view(
-                    "adult.verification.view.people-communication-content",
-                    compact(
-                        "types",
-                        "verificationType",
-                        "verification",
-                        "problem_id",
-                        "project_id",
-                        "problem",
-                        "solution",
-                        "solution_id",
-                        "Solution_function",
-                        "verifiationTypeText",
-                        "users" , "communications"
-                    )
-                );
+                
                 break;
             case 12:
 
 
-                $users = DB::table('customers')
+                $customersFrom = DB::table('customers')
                         ->select('customers.*' , 'people_communication_flow.*')
                         ->leftJoin('people_communication_flow', 'customers.id', '=', 'people_communication_flow.customer_id')
                         ->where('customers.project_id' , $project_id)
                         ->whereNotNull('people_communication_flow.comment')
                         ->get();
-                $customers = DB::table("customers")
+                $customersTo = DB::table("customers")
                         ->where("project_id", "=", $project_id)
                         ->get();
 
-                   
-                if (!$verification) {
-                    $verification = Verification::where(
-                        "verification_type_id",
-                        "=",
-                        12
-                    )->first();
-                    if (isset($verification->validations)) {
-                        $verification->validations = json_decode(
-                            $verification->validations
-                        );
-                    }
-                }
-                // echo '<pre>';print_r($users);die;
-                return view(
-                    "adult.verification.view.communication-flow-content",
-                    compact(
-                        "types",
-                        "verificationType",
-                        "verification",
-                        "problem_id",
-                        "project_id",
-                        "problem",
-                        "solution",
-                        "solution_id",
-                        "Solution_function",
-                        "verifiationTypeText",
-                        "users" , "customers"
-                    )
-                );
+                return $success =  [
+                            "project_id" => $project_id,
+                            "problem" => $problem,
+                            "solution" => $solution,
+                            "Solution_function" => $Solution_function, 
+                            "customersFrom" => $customersFrom,
+                            "customersTo" => $customersTo 
+                        ];
+                        return $this->sendResponse($success, "true");        
                 break;
             case 13:
                 $entities = DB::table("partition_approach")->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->get();
-                if (!$verification) {
-                    $verification = Verification::where(
-                        "verification_type_id",
-                        "=",
-                        13
-                    )->first();
-                    if (isset($verification->validations)) {
-                        $verification->validations = json_decode(
-                            $verification->validations
-                        );
-                    }
-                }
-                return view(
-                    "adult.verification.view.partition-approch-content",
-                    compact(
-                        "types",
-                        "verificationType",
-                        "verification",
-                        "problem_id",
-                        "project_id",
-                        "problem",
-                        "solution",
-                        "solution_id",
-                        "Solution_function",
-                        "verifiationTypeText",
-                        "entities"
-                    )
-                );
+                return $success =  [
+                    "project_id" => $project_id,
+                    "problem" => $problem,
+                    "solution" => $solution,
+                    "Solution_function" => $Solution_function, 
+                    "entities" => $entities,
+                ];
+                return $this->sendResponse($success, "true");     
                 break;
             case 14:
             
-                $allVarifications = DB::table(
+                $principle_identification = DB::table(
                     "principle_identification"
                 )->get();
-               
-                
-                $users = DB::table("customers")
+                $customers = DB::table("customers")
                     ->where("project_id", "=", $project_id)
                     ->get();
-                   
-                if (!$verification) {
-                    $verification = Verification::where(
-                        "verification_type_id",
-                        "=",
-                        14
-                    )->first();
-                    if (isset($verification->validations)) {
-                        $verification->validations = json_decode(
-                            $verification->validations
-                        );
-                    }
-                }
-
                 $content =  DB::table('principle_identification_main')->where('project_id' , $project_id)->where('problem_id' , $problem_id)->where('user_id' , Auth::user()->id)->first();
+                return $success =  [
+                    "project_id" => $project_id,
+                    "problem" => $problem,
+                    "solution" => $solution,
+                    "Solution_function" => $Solution_function, 
+                    "content" => $content,
+                    "customers" => $customers,
+                    "principle_identification" => $principle_identification
+                ];
+                return $this->sendResponse($success, "true");    
                 
-                return view(
-                    "adult.verification.view.principle-identification-content",
-                    compact(
-                        "types",
-                        "verificationType",
-                        "verification",
-                        "problem_id",
-                        "project_id",
-                        "problem",
-                        "solution",
-                        "solution_id",
-                        "Solution_function",
-                        "verifiationTypeText",
-                        "allVarifications",
-                        "users" , 
-                        "content"
-                    )
-                );
                 break;
 
             case 15:
-                $allVarifications = DB::table(
+                $principle_identification = DB::table(
                     "principle_identification"
                 )->get();
-                $users = DB::table("customers")
+                $customers = DB::table("customers")
                     ->where("project_id", "=", $project_id)
                     ->first();
-                if (!$verification) {
-                    $verification = Verification::where(
-                        "verification_type_id",
-                        "=",
-                        15
-                    )->first();
-                    if (isset($verification->validations)) {
-                        $verification->validations = json_decode(
-                            $verification->validations
-                        );
-                    }
-                }
-
                 $problemDevelopment = DB::table('problem_development')->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->get();
 
-
-                return view(
-                    "adult.verification.view.problem-development",
-                    compact(
-                        "types",
-                        "verificationType",
-                        "verification",
-                        "problem_id",
-                        "project_id",
-                        "problem",
-                        "solution",
-                        "solution_id",
-                        "Solution_function",
-                        "verifiationTypeText",
-                        "allVarifications",
-                        "users",
-                        'problemDevelopment'
-                    )
-                );
+                return $success =  [
+                    "project_id" => $project_id,
+                    "problem" => $problem,
+                    "solution" => $solution,
+                    "Solution_function" => $Solution_function, 
+                    "customers" => $customers,
+                    "principle_identification" => $principle_identification, 'problemDevelopment'=>$problemDevelopment
+                ];
+                return $this->sendResponse($success, "true");    
                 break;
                 case 16:
                     

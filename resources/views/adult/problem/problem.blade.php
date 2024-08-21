@@ -134,17 +134,17 @@
 @section('scripts')
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
 <script>
-    var shoMessage = '{{ $showMessage }}'
-        if(shoMessage){
-            var solutionMsg = "A project is created to solve a problem.  If the project has not been created, then a problem cannot be identified to be solved.  The way to look at it, a project exists to solve a problem.  Please, go back to open a project or create a project in order to identify the problem to be solved."
-            swal({
-            title: "No Problem Defined",
-            text: solutionMsg,
-            type: "info",
-            showCancelButton: true,
-            confirmButtonColor: '#00A14C',
-            })
-        }
+    // var shoMessage = '{{ $showMessage }}'
+    //     if(shoMessage){
+    //         var solutionMsg = "A project is created to solve a problem.  If the project has not been created, then a problem cannot be identified to be solved.  The way to look at it, a project exists to solve a problem.  Please, go back to open a project or create a project in order to identify the problem to be solved."
+    //         swal({
+    //         title: "No Problem Defined",
+    //         text: solutionMsg,
+    //         type: "info",
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#00A14C',
+    //         })
+    //     }
     </script>
 <script>
     

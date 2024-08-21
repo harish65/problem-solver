@@ -246,17 +246,17 @@ $(".dropify").dropify();
 
 </script>
 <script>
-    var shoMessage = '{{ $showMessage }}'
-        if(shoMessage){
-            var solutionMsg = "The solution function for a problem enabled both the problem and the solution to be identified.  If the problem and the solution have not been identified, then there is no solution function for that problem.  Please, refer to the problem and/or solution pages to identify the problem and/or the solution.  Then return here to identify the solution function for the problem."
-            swal({
-            title: "No Solution Function Created",
-            text: solutionMsg,
-            type: "info",
-            showCancelButton: true,
-            confirmButtonColor: '#00A14C',
-            })
-        }
+    // var shoMessage = '{{ $showMessage }}'
+    //     if(shoMessage){
+    //         var solutionMsg = "The solution function for a problem enabled both the problem and the solution to be identified.  If the problem and the solution have not been identified, then there is no solution function for that problem.  Please, refer to the problem and/or solution pages to identify the problem and/or the solution.  Then return here to identify the solution function for the problem."
+    //         swal({
+    //         title: "No Solution Function Created",
+    //         text: solutionMsg,
+    //         type: "info",
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#00A14C',
+    //         })
+    //     }
     </script>
 <script>
     $(".updateSolFunctionType").change(function(){

@@ -213,17 +213,17 @@
 @section('scripts')
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
 <script>
-    var shoMessage = '{{ $showMessage }}'
-        if(shoMessage){
-            var solutionMsg = "It is impossible to identify the solution to a problem that does not exist.  Please refer to the problem page to identify the problem first before identifying the solution for that problem."
-            swal({
-            title: "No Solution Created",
-            text: solutionMsg,
-            type: "info",
-            showCancelButton: true,
-            confirmButtonColor: '#00A14C',
-            })
-        }
+    // var shoMessage = '{{ $showMessage }}'
+    //     if(shoMessage){
+    //         var solutionMsg = "It is impossible to identify the solution to a problem that does not exist.  Please refer to the problem page to identify the problem first before identifying the solution for that problem."
+    //         swal({
+    //         title: "No Solution Created",
+    //         text: solutionMsg,
+    //         type: "info",
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#00A14C',
+    //         })
+    //     }
     </script>
 <script>
     $('.dropify').dropify();
