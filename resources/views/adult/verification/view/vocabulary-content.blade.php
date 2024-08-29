@@ -101,11 +101,11 @@
                                             @elseif($verification -> type == 1)
                                             <video class="mx-auto" controls="controls" preload="metadata" width="100%"
                                                 height="128px" preload="metadata">
-                                                <source src="{{ asset(" assets-new/verification/" . $verification ->
+                                                <source src="{{ asset('assets-new/verification/' . $verification ->
                                                 file) }}#t=0.1" type="video/mp4">
                                             </video>
                                             @elseif($verification -> type == 2)
-                                            <iframe class="mx-auto" src="{{ $verification -> file }}" width="100%"
+                                            <iframe class="mx-auto" src="{{ $verification -> file }}' width="100%"
                                                 height="128px"> </iframe>
                                             @endif
                                     </div>
@@ -538,16 +538,8 @@
                 } else {
 
                     toastr.success(response.message);
-                    location.reload()
-                    //  if(response.data.params != '' && typeof response.data.params  != 'undefined'){
-                    //     window.location.href = "{{ route('adult.problem', )}}" + '/' + response.data.params 
-                    //  }else{
-
-
-
-                    // window.location.href = "{{ route('adult.dashboard')}}"
-                    //  }
-
+                    html.update();
+                    // location.reload()
                 }
             }
         });
