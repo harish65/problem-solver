@@ -1262,7 +1262,7 @@ class VerificationController extends BaseController
 
     public function store(Request $request)
     {
-        echo "<pre>";print_r($request->all());die;
+        // echo "<pre>";print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "verificationType" => "required",
         ]);
