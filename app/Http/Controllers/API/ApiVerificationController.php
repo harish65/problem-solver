@@ -52,52 +52,7 @@ class ApiVerificationController extends BaseController
 
     public function GetSingleVerification(Request $request){
 
-        // $verifications = VerificationType::all();
-        // if ($request->verification_id) {
             
-        //     $verification =  null;
-        //     $success = [];
-        //     $type = $request->verification_id;
-        //     switch ($type) {
-        //         case 1:
-        //             $transitionPhrase = DB::table('verification_type_texts')->where('verification_type_id' , $request->verification_id)->first();
-        //             $verification = Verification::where("verification_type_id",$request->verification_id)->where('problem_id', $request->problem_id)->where('user_id', Auth::user()->id)->first();
-        //             $entities = VerificationEntity::where("verTypeId", "=", $type)->where("verId", $request->verification_id)->get();
-        //             $success['transitionPhrase'] =  $transitionPhrase;
-        //             $success['entities'] =  $entities;
-        //         break;
-                
-        //         case 2:
-                    
-        //             $transitionPhrase = DB::table('verification_type_texts')->where('verification_type_id' , 2)->first();
-        //             $verification = Verification::where("verification_type_id",$request->verification_id)->where('problem_id', $request->problem_id)->where('user_id', Auth::user()->id)->first();
-        //             $entities = VerificationEntity::where("verTypeId", "=", $type)->where("project_id", $request->project_id)->where('problem_id',$request->problem_id)->get();
-        //             $success['transitionPhrase'] =  $transitionPhrase;
-        //             $success['entities'] =  $entities;
-        //         break;
-        //         case 3:
-                    
-                    
-        //             $verification = Verification::where("verification_type_id",$request->verification_id)->where('problem_id', $request->problem_id)->where('user_id', Auth::user()->id)->first();
-        //             $entities = VerificationEntity::where("verTypeId", "=", $type)->where("project_id", $request->project_id)->where('problem_id',$request->problem_id)->get();
-        //             $success['transitionPhrase'] =  $transitionPhrase;
-        //             $success['entities'] =  $entities;
-        //         break;
-
-        //         default:
-        //         $verification = null;
-
-        //     }
-        //     $success["verification"] = $verification;
-        //     $success["verifications"] = $verifications;
-        //     $success["token"] = $request->header("Authorization");
-        //     return $this->sendResponse($success, "true");
-        // }else {
-        //     $success["verifications"] = $verifications;
-        //     $success["token"] = $request->header("Authorization");
-        //     $success["solution"] = null;
-        //     return $this->sendResponse($success, "false");
-        // }        
         $data = $request->all();
         $problem_id = $data["problem_id"];
         $project_id = $data["project_id"];
@@ -324,8 +279,6 @@ switch ($type) {
                 
                 break;
             case 12:
-
-
                 $customersFrom = DB::table('customers')
                         ->select('customers.*' , 'people_communication_flow.*')
                         ->leftJoin('people_communication_flow', 'customers.id', '=', 'people_communication_flow.customer_id')
@@ -726,9 +679,9 @@ switch ($type) {
         return $verifications;
      }
     
-     public function AddverificationVocablary(Request $request)
+     public function AddverificationVocablary($request, $name)
      {
-        echo "<pre>";print_r($request->all());die;
+        // echo "<pre>";print_r($request->all());die;
          $validator = Validator::make($request->all(), [
              "solution_fun_id" => "required",
              "verificationType" => "required",
@@ -760,7 +713,7 @@ switch ($type) {
                  $success["verification"] = $verification;
                  return $this->sendResponse(
                      $success,
-                     "Verification created successfully."
+                     "Record saved successfully."
                  );
              } else {
                  return $this->sendResponse($error, "Something Wrong.");
@@ -769,5 +722,60 @@ switch ($type) {
              return $this->sendError("Error.", ["error" => $e->getMessage()()]);
          }
      }
+
+
+
+     public function store(Request $request)
+    {
+        
+        $validator = Validator::make($request->all(), [
+            "verificationType" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError("Validation Error.", $validator->errors());
+        }
+        try {
+            $type = $request->verificationType;
+            switch ($type) {
+                case 1:
+                    $validator = Validator::make($request->all(), [
+                        // "verification_type_text_id" => "required",
+                        "file" => "required"
+                    ]);
+                    if ($validator->fails()) {
+                        return $this->sendError("Validation Error.", $validator->errors());
+                    }
+                    $name = "Vocablary";
+                    return $this->AddverificationVocablary($request, $name);
+                    break;
+                case 2:
+                    $validator = Validator::make($request->all(), [
+                        // "verification_type_text_id" => "required",
+                        "file" => "required"
+                    ]);
+                    if ($validator->fails()) {
+                        return $this->sendError("Validation Error.", $validator->errors());
+                    }
+                    $name = "Information";
+                    return $this->AddverificationVocablary($request, $name);
+                    break;
+                default:
+                case 15:
+                    $name = "problem_development";
+                    return $this->AddverificationVocablary($request, $name);
+                    break;
+                    return true;
+            }
+        } catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
+            ]);
+        }
+    }
+
+
+
+
+    
 
 }

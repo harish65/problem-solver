@@ -1396,6 +1396,7 @@ class VerificationController extends BaseController
         if ($validator->fails()) {
             return $this->sendError("Validation Error.", $validator->errors());
         }
+        
         try {
            
             // add new row to varification_entity tablel
@@ -1423,16 +1424,16 @@ class VerificationController extends BaseController
 
 
 
-
+            
 
             if ($verificationEntity->id) {
 
                 if ($request->is('api/*')) {
-                    $verifications = VerificationType::all();
-                    $success["verificationEntity"] = $verificationEntity;
-                    $success["verifications"] = $verifications;
-                    $success["token"] = $request->header("Authorization");
-                    return $this->sendResponse($success, "true");
+                        // $verifications = VerificationType::all();
+                        $success["verificationEntity"] = $verificationEntity;
+                        // $success["verifications"] = $verifications;
+                        $success["token"] = $request->header("Authorization");
+                        return $this->sendResponse($success, "true");
                 }else{
                     $success["verificationEntity"] = $verificationEntity;
                     return $this->sendResponse(
@@ -1553,9 +1554,9 @@ class VerificationController extends BaseController
                 }
             } else {
                 if ($request->is('api/*')) {
-                    $verifications = VerificationType::all();
+                    // $verifications = VerificationType::all();
                     $success["verificationEntity"] = 'Entity not found';
-                    $success["verifications"] = $verifications;
+                    // $success["verifications"] = $verifications;
                     $success["token"] = $request->header("Authorization");
                     return $this->sendResponse($success, "false");
                 }
