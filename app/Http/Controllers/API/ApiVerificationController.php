@@ -35,7 +35,7 @@ class ApiVerificationController extends BaseController
     public function GetAllVerifications(Request $request){
         $verifications = $this->allVerifications();
         
-
+       
            if ($verifications) {
            
             $success["verifications"] = $verifications;
@@ -51,8 +51,6 @@ class ApiVerificationController extends BaseController
     // get Single verification
 
     public function GetSingleVerification(Request $request){
-
-            
         $data = $request->all();
         $problem_id = $data["problem_id"];
         $project_id = $data["project_id"];
@@ -61,26 +59,28 @@ class ApiVerificationController extends BaseController
         $Solution_function = SolutionFunction::where("problem_id",$problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
         $solution = Solution::where("problem_id", "=", $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
         $verifiationTypeText = VerificationTypeText::where( "verification_type_id",$type)->get();
-
         $entity = VerificationEntity::where("verTypeId","=",$type)->where('project_id', $project_id)->get();
+        $validation_data = Verification::where("problem_id", "=", $problem_id)
+                                ->where("verification_type_id", "=", $type)
+                                ->where("user_id", Auth::user()->id)
+                                ->pluck("validations")
+                                ->first();    
         
-
 switch ($type) {
             case 1:
+               
             $verification = Verification::where("problem_id", "=", $problem_id)
                     ->where("verification_type_id", "=", $type)
                     ->where("user_id", Auth::user()->id)
                     ->first();    
                 $transitionPhrase = DB::table('verification_type_texts')->where('verification_type_id' , 1)->first();
                  $success = [
-                    
-                    
                     "verification" => $verification,
                     "problem" => $problem,
                     "solution" => $solution,
                     "Solution_function" => $Solution_function,
                     "verificationTypeText" => $verifiationTypeText,
-                    "entity" => $entity,'transitionPhrase' => $transitionPhrase
+                    "entity" => $entity,'transitionPhrase' => $transitionPhrase , 'validation_data'=>$validation_data
                 ];
                 return $this->sendResponse($success, "true");
 
@@ -98,7 +98,7 @@ switch ($type) {
                     "solution" => $solution,
                     "Solution_function" => $Solution_function,
                     "verificationTypeText" => $verifiationTypeText,
-                    "entity" => $entity,'transitionPhrase' => $transitionPhrase
+                    "entity" => $entity,'transitionPhrase' => $transitionPhrase, 'validation_data'=>$validation_data
                 ];
                 return $this->sendResponse($success, "true");
                 break;
@@ -115,7 +115,7 @@ switch ($type) {
                     "solution" => $solution,
                     "Solution_function" => $Solution_function,
                     "verificationTypeText" => $verifiationTypeText,
-                    "beforeAfter" => $beforeAfter
+                    "beforeAfter" => $beforeAfter, 'validation_data'=>$validation_data
                     ];
                     return $this->sendResponse($success, "true");
                 break;
@@ -129,7 +129,7 @@ switch ($type) {
                         "Solution_function" => $Solution_function,
                         "verificationTypeText" => $verifiationTypeText,
                         "custommers" => $custommers, 
-                        "steps" => $steps
+                        "steps" => $steps, 'validation_data'=>$validation_data
                     ];
                     return $this->sendResponse($success, "true");
                 break;
@@ -140,7 +140,7 @@ switch ($type) {
                     "problem" => $problem,
                     "solution" => $solution,
                     "Solution_function" => $Solution_function,
-                    "timeVerifications" => $timeVerifications, 
+                    "timeVerifications" => $timeVerifications,  'validation_data'=>$validation_data
                     
                 ];
                 return $this->sendResponse($success, "true");
@@ -161,7 +161,7 @@ switch ($type) {
                     "problem" => $problem,
                     "solution" => $solution,
                     "Solution_function" => $Solution_function,
-                    "pastAndPresentTime" => $pastAndPresentTime, 
+                    "pastAndPresentTime" => $pastAndPresentTime, 'validation_data'=>$validation_data
                     
                 ];
                 return $this->sendResponse($success, "true");
@@ -196,7 +196,7 @@ switch ($type) {
                     "entities" => $entities,
                     "entitiesAvailable" => $entitiesAvailable,                        
                     "content" => $content , 
-                    'principle_identifications' => $principle_identifications
+                    'principle_identifications' => $principle_identifications, 'validation_data'=>$validation_data
                     
                 ];
                 return $this->sendResponse($success, "true");
@@ -216,7 +216,7 @@ switch ($type) {
                     "Solution_function" => $Solution_function, 
                     "custommers" => $custommers,
                     "transitionPhrase" => $transitionPhrase,
-                    "solutionTimeLocationOne" => $solutionTimeLocationOne
+                    "solutionTimeLocationOne" => $solutionTimeLocationOne, 'validation_data'=>$validation_data
                     
                 ];
                 return $this->sendResponse($success, "true");
@@ -236,7 +236,7 @@ switch ($type) {
                     "Solution_function" => $Solution_function, 
                     "custommers" => $custommers,
                     "transitionPhrase" => $transitionPhrase,
-                    "solutionTimeLocationTwo" => $solutionTimeLocationTwo
+                    "solutionTimeLocationTwo" => $solutionTimeLocationTwo, 'validation_data'=>$validation_data
                     
                 ];
                 return $this->sendResponse($success, "true");
@@ -272,7 +272,7 @@ switch ($type) {
                     "solution" => $solution,
                     "Solution_function" => $Solution_function, 
                     "custommers" => $custommers,
-                    "communications" => $communications 
+                    "communications" => $communications , 'validation_data'=>$validation_data
                 ];
                 return $this->sendResponse($success, "true");
           
@@ -295,7 +295,7 @@ switch ($type) {
                             "solution" => $solution,
                             "Solution_function" => $Solution_function, 
                             "customersFrom" => $customersFrom,
-                            "customersTo" => $customersTo 
+                            "customersTo" => $customersTo , 'validation_data'=>$validation_data
                         ];
                         return $this->sendResponse($success, "true");        
                 break;
@@ -306,7 +306,7 @@ switch ($type) {
                     "problem" => $problem,
                     "solution" => $solution,
                     "Solution_function" => $Solution_function, 
-                    "entities" => $entities,
+                    "entities" => $entities, 'validation_data'=>$validation_data
                 ];
                 return $this->sendResponse($success, "true");     
                 break;
@@ -326,7 +326,7 @@ switch ($type) {
                     "Solution_function" => $Solution_function, 
                     "content" => $content,
                     "customers" => $customers,
-                    "principle_identification" => $principle_identification
+                    "principle_identification" => $principle_identification, 'validation_data'=>$validation_data
                 ];
                 return $this->sendResponse($success, "true");    
                 
@@ -347,7 +347,7 @@ switch ($type) {
                     "solution" => $solution,
                     "Solution_function" => $Solution_function, 
                     "customers" => $customers,
-                    "principle_identification" => $principle_identification, 'problemDevelopment'=>$problemDevelopment
+                    "principle_identification" => $principle_identification, 'problemDevelopment'=>$problemDevelopment, 'validation_data'=>$validation_data
                 ];
                 return $this->sendResponse($success, "true");    
                 break;
@@ -366,7 +366,7 @@ switch ($type) {
                                 "problem" => $problem,
                                 "solution" => $solution,
                                 "Solution_function" => $Solution_function,
-                                'errorcorrection' => $errorcorrection,'problemDevelopment' => $problemDevelopment
+                                'errorcorrection' => $errorcorrection,'problemDevelopment' => $problemDevelopment, 'validation_data'=>$validation_data
                                 ];
                         return $this->sendResponse($success, "true"); 
                     
@@ -380,7 +380,7 @@ switch ($type) {
                             "problem" => $problem,
                             "solution" => $solution,
                             "Solution_function" => $Solution_function,
-                            'functionAud' => $functionAud
+                            'functionAud' => $functionAud, 'validation_data'=>$validation_data
                             ];
                         return $this->sendResponse($success, "true"); 
                         break;
@@ -400,7 +400,7 @@ switch ($type) {
                                 "Solution_function" => $Solution_function,
                                 'functionAud' => $functionAud , 
                                 'functionApplied' => $functionApplied , 
-                                'people' => $people
+                                'people' => $people, 'validation_data'=>$validation_data
                                 ];
                             return $this->sendResponse($success, "true"); 
                             break;
@@ -411,7 +411,7 @@ switch ($type) {
                                     "problem" => $problem,
                                     "solution" => $solution,
                                     "Solution_function" => $Solution_function,
-                                    'functionApplied' => $functionApplied , 
+                                    'functionApplied' => $functionApplied  , 'validation_data'=>$validation_data
                                     ];
                                 return $this->sendResponse($success, "true");                                
                                 break;
@@ -424,7 +424,7 @@ switch ($type) {
                                         "solution" => $solution,
                                         "Solution_function" => $Solution_function,
                                         'problemPart' => $problemPart,
-                                        'countPartionAproach' => $countPartionAproach
+                                        'countPartionAproach' => $countPartionAproach, 'validation_data'=>$validation_data
                                         ];
                                     return $this->sendResponse($success, "true");     
                                     break;
@@ -436,7 +436,7 @@ switch ($type) {
                                             "problem" => $problem,
                                             "solution" => $solution,
                                             "Solution_function" => $Solution_function,
-                                            'voiceApproach' => $voiceApproach,
+                                            'voiceApproach' => $voiceApproach,'validation_data'=>$validation_data
                                             ];
                                         return $this->sendResponse($success, "true"); 
                                         break;
@@ -447,7 +447,7 @@ switch ($type) {
                                                 "problem" => $problem,
                                                 "solution" => $solution,
                                                 "Solution_function" => $Solution_function,
-                                                'problemreplaced' => $problemreplaced,
+                                                'problemreplaced' => $problemreplaced,'validation_data'=>$validation_data
                                                 ];
                                             return $this->sendResponse($success, "true"); 
                                             break;
@@ -473,7 +473,7 @@ switch ($type) {
                                                         "Solution_function" => $Solution_function,
                                                         "entities"=>$entities,
                                                         "resources"=>$resources,
-                                                        "entity_used"=>$entity_used
+                                                        "entity_used"=>$entity_used, 'validation_data'=>$validation_data
                                                         ];
                                                     return $this->sendResponse($success, "true"); 
                                                 
@@ -506,7 +506,7 @@ switch ($type) {
                                                             "entity_used"=>$entity_used,
                                                             'custommers' => $custommers,
                                                             "entitiestbl" => $entitiestbl,
-                                                            "principle_identifications" => $principle_identifications
+                                                            "principle_identifications" => $principle_identifications, 'validation_data'=>$validation_data
                                                         ];
                                                     return $this->sendResponse($success, "true"); 
                                                     break;
@@ -519,7 +519,7 @@ switch ($type) {
                                                             "solution" => $solution,
                                                             "Solution_function" => $Solution_function,
                                                             'custommers' => $custommers,
-                                                            "functionOfPeople" => $functionOfPeople
+                                                            "functionOfPeople" => $functionOfPeople, 'validation_data'=>$validation_data
                                                         ];
                                                     return $this->sendResponse($success, "true"); 
                                                     break;
@@ -530,7 +530,7 @@ switch ($type) {
                                                                 "problem" => $problem,
                                                                 "solution" => $solution,
                                                                 "Solution_function" => $Solution_function,
-                                                                'entiesBehind' => $entiesBehind
+                                                                'entiesBehind' => $entiesBehind, 'validation_data'=>$validation_data
                                                             ];
                                                             return $this->sendResponse($success, "true"); 
                                                             break;
@@ -545,7 +545,7 @@ switch ($type) {
                                                                     "solution" => $solution,
                                                                     "Solution_function" => $Solution_function,
                                                                     'principle_identifications' => $principle_identifications,
-                                                                    "mother_nature" => $mother_nature
+                                                                    "mother_nature" => $mother_nature, 'validation_data'=>$validation_data
                                                                 ];
                                                                 return $this->sendResponse($success, "true"); 
                                                                 break;
@@ -558,7 +558,7 @@ switch ($type) {
                                                                         "solution" => $solution,
                                                                         "Solution_function" => $Solution_function,
                                                                         'mevsyou' => $mevsyou,
-                                                                        "custommers" => $custommers
+                                                                        "custommers" => $custommers, 'validation_data'=>$validation_data
                                                                     ];
                                                                     return $this->sendResponse($success, "true"); 
                                                                     break;
@@ -573,7 +573,7 @@ switch ($type) {
                                                                             "solution" => $solution,
                                                                             "Solution_function" => $Solution_function,
                                                                             "custommers" => $custommers,
-                                                                            "taking_ad" => $taking_ad
+                                                                            "taking_ad" => $taking_ad, 'validation_data'=>$validation_data
                                                                         ];
                                                                         return $this->sendResponse($success, "true"); 
                                                                         break;
@@ -588,7 +588,7 @@ switch ($type) {
                                                                             "solution" => $solution,
                                                                             "Solution_function" => $Solution_function,
                                                                             "custommers" => $custommers,
-                                                                            "people_outside_project" => $people_outside_project
+                                                                            "people_outside_project" => $people_outside_project, 'validation_data'=>$validation_data
                                                                         ];
                                                                         return $this->sendResponse($success, "true"); 
                                                                     break;
@@ -601,7 +601,7 @@ switch ($type) {
                                                                             "solution" => $solution,
                                                                             "Solution_function" => $Solution_function,
                                                                             "custommers" => $custommers,
-                                                                            "problrmAtLocatios" => $problrmAtLocatios
+                                                                            "problrmAtLocatios" => $problrmAtLocatios, 'validation_data'=>$validation_data
                                                                         ];
                                                                         return $this->sendResponse($success, "true");
                                                                     break;
@@ -616,7 +616,7 @@ switch ($type) {
                                                                             "solution" => $solution,
                                                                             "Solution_function" => $Solution_function,
                                                                             "custommers" => $custommers,
-                                                                            "function_at_location" => $function_at_location
+                                                                            "function_at_location" => $function_at_location, 'validation_data'=>$validation_data
                                                                         ];
                                                                         return $this->sendResponse($success, "true");
                                                                     break;
@@ -626,7 +626,7 @@ switch ($type) {
                                                                         "project_id" => $project_id,
                                                                         "problem" => $problem,
                                                                         "solution" => $solution,
-                                                                        "Solution_function" => $Solution_function
+                                                                        "Solution_function" => $Solution_function, 'validation_data'=>$validation_data
                                                                     ];
                                                                     return $this->sendResponse($success, "No verification type found");
                                                                 }
@@ -678,7 +678,7 @@ switch ($type) {
 
         return $verifications;
      }
-    
+    // This function stores voucab and information verifications 
      public function AddverificationVocablary($request, $name)
      {
         // echo "<pre>";print_r($request->all());die;
@@ -725,9 +725,8 @@ switch ($type) {
 
 
 
-     public function store(Request $request)
-    {
-        
+     public function store(Request $request){
+        // echo "<pre>";print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "verificationType" => "required",
         ]);
@@ -774,8 +773,48 @@ switch ($type) {
     }
 
 
+    public function StoreValidatoins(Request $request){
+        try {
+            
+            $input = $request->all();
+            $verification = Verification::find($input["id"]);
+            $mesaage = "";
+            if (!$verification) {
+                $verification = new Verification();
+                $verification->verification_type_id = $input["verification_type_id"];
+                // $verification->verification_type_text_id =  $input['verification_type_text_id'];
+                $verification->problem_id = $input["problem_id"];
+                // $verification->solution_id = $input["solution_id"];
+                // $verification->solution_function_id = $input["solution_fun_id"];
+                $verification->user_id = Auth::user()->id;
+                $verification->name = ($input["name"]) ? $input["name"]:'';
+                $mesaage = "Validation created successfully.";
+            }else{
+                $verification = Verification::Find($input["id"]);
+                $mesaage = "Validation updated successfully.";
+            }
+            
+            $verification->validations = json_encode($input);
+            
+            $verification->save();
+            $success["verification"] = $verification;
+            return $this->sendResponse(
+                $success,
+                $mesaage
+            );
+        } catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
+            ]);
+        }
+
+    }
 
 
+
+    public function storinformationVerification(){
+
+    }
     
 
 }

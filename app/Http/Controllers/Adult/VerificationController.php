@@ -585,8 +585,6 @@ class VerificationController extends BaseController
                 }
 
                 $problemDevelopment = DB::table('problem_development')->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->get();
-
-
                 return view(
                     "adult.verification.view.problem-development",
                     compact(
