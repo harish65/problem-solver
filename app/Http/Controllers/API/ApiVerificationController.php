@@ -60,10 +60,12 @@ class ApiVerificationController extends BaseController
         $solution = Solution::where("problem_id", "=", $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
         $verifiationTypeText = VerificationTypeText::where( "verification_type_id",$type)->get();
         $entity = VerificationEntity::where("verTypeId","=",$type)->where('project_id', $project_id)->get();
-        $validation_data = Verification::where("problem_id", "=", $problem_id)
+        $validation_data = Verification::
+                                select('id','validations')
+                                ->where("problem_id", "=", $problem_id)    
                                 ->where("verification_type_id", "=", $type)
                                 ->where("user_id", Auth::user()->id)
-                                ->pluck("validations")
+                                // ->pluck("validations")
                                 ->first();    
         
 switch ($type) {
