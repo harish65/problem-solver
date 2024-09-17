@@ -69,6 +69,8 @@ Route::middleware('auth:api')->group( function () {
     Route::post("add-vocabulary-entity", [\App\Http\Controllers\Adult\VerificationController::class, 'addVocabularyEntity'])->name("add-vocabulary-entity");
     Route::post("delete-vocabulary", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteVocabulary'])-> name("delete-vocabulary");
     Route::post("store-validations", [\App\Http\Controllers\API\ApiVerificationController::class, 'StoreValidatoins'])->name("store-validations");
+    Route::post("add-problem-development", [\App\Http\Controllers\Adult\VerificationController::class, 'storeProblemDevelopmnt'])-> name("add-problem-development");
+    Route::post("del-problem-development", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteProblemDevelopmnt'])-> name("del-problem-development");
 });
 
 

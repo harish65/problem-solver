@@ -2197,9 +2197,6 @@ class VerificationController extends BaseController
         }
         try {
             $data =  $request->all();
-
-
-
             $insert = DB::table(
                 "problem_development"
             )->updateOrInsert(
@@ -2215,11 +2212,20 @@ class VerificationController extends BaseController
                     "problem_name" => $data["problem_name"],
                 ]
             );
-            $success["entity"] = $insert;
-            return $this->sendResponse(
-                $success,
-                "Record created successfully."
-            );
+            
+            
+            if ($request->is('api/*')) {
+                    $id = DB::getPdo()->lastInsertId();
+                    $id = ($id > 0) ? $id : $request->id;
+                    $success["id"] = $id;
+                    $success["token"] = $request->header("Authorization");
+                    return $this->sendResponse($success, "true");
+                }else{
+                    return $this->sendResponse(
+                        $success,
+                        "Record created successfully."
+                    );
+                }
         }catch(Exception $e){
             return $this->sendError("Validation Error.", [
                 "error" => $e->getMessage(),
@@ -2228,14 +2234,9 @@ class VerificationController extends BaseController
     }
 
     // Problem development delete
-    public function deleteProblemDevelopmnt($id){
-        // $validator = Validator::make($id, [
-        //     "id" => "required",
-        // ]);
-        // if ($validator->fails()) {
-        //     return $this->sendError("Validation Error.", $validator->errors());
-        // }
+    public function deleteProblemDevelopmnt(Request $request){
         try {
+            $id = $request->id;
             $delete = Db::table("problem_development")
                 ->where("id", "=", $id)
                 ->delete();
@@ -2246,7 +2247,10 @@ class VerificationController extends BaseController
                     "Record deleted successfully."
                 );
             } else {
-                return $this->sendResponse($error, "Something Wrong.");
+                
+                $success['success'] = false;
+                $success['error'] = 'Record not found';
+                return $this->sendResponse($success, "Something Wrong.");
             }
         } catch (Exception $e) {
             return $this->sendError("Validation Error.", [

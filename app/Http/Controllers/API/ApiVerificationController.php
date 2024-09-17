@@ -780,6 +780,7 @@ switch ($type) {
             
             $input = $request->all();
             $verification = Verification::find($input["id"]);
+           
             $mesaage = "";
             if (!$verification) {
                 $verification = new Verification();

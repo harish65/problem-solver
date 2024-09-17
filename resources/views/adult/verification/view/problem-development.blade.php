@@ -388,14 +388,15 @@ $('#btnSave').click(function(e){
                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                }
        });
-       var route  =  "{{route('adult.del-problem-development' , ':id')}}"
-       route = route.replace(':id', id);
+       var route  =  "{{route('adult.del-problem-development')}}"
+    //    route = route.replace(':id', id);
        $.ajax({
             type: 'POST',
             url: route,
-            processData: false,
-            contentType: false,
-            dataType: 'json',            
+            data: {'id':id},
+            // processData: false,
+            // contentType: false,
+            // dataType: 'json',            
             success: function (response){
                 if(response.success == false)
                 {

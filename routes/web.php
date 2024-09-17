@@ -223,7 +223,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
 
 
         Route::post("add-problem-development", [\App\Http\Controllers\Adult\VerificationController::class, 'storeProblemDevelopmnt'])-> name("add-problem-development");
-        Route::post("del-problem-development/{id}", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteProblemDevelopmnt'])-> name("del-problem-development");
+        Route::post("del-problem-development", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteProblemDevelopmnt'])-> name("del-problem-development");
         //Verification Entity Routes
         Route::post("add-vocabulary-entity", [\App\Http\Controllers\Adult\VerificationController::class, 'addVocabularyEntity'])-> name("add-vocabulary-entity");
         Route::post("before-after", [\App\Http\Controllers\Adult\VerificationController::class, 'BeforeAndAfter'])-> name("before-after");
