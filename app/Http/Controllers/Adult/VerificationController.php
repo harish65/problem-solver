@@ -1456,8 +1456,8 @@ class VerificationController extends BaseController
     public function BeforeAndAfter(Request $request){
         
         $validator = Validator::make($request->all(), [
-            "verificationType" => "required",
-            "existing_after" => "required",
+            // "verificationType" => "required",
+            // "existing_after" => "required",
            
         ]);
         if ($validator->fails()) {
@@ -1620,27 +1620,31 @@ class VerificationController extends BaseController
 
     public function storeTimeVerification(Request $request)
     {
-        
+        // echo "<pre>";print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "date" => "required",
             "solution_hold" => "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError("Validation Error.", $validator->errors());
-        }
-
+        }   
         
+
         try {            
             if ($request->id == "") {
                 $verification = new TimeVerification();
             } else {
                 $verification = TimeVerification::find($request->id);
             }
+           
+            $last_date = $verification->orderBy('id','DESC')->pluck('date')->first();
+            if(strtotime($last_date) >= strtotime($request->date) && $request->id == ""){
+                return $this->sendError("Validation Error.", ['error'=>'Date should be bigger then last date entered']);
+            }
             $verification->user_id = Auth::user()->id;
             $verification->project_id = $request->project_id;
             $verification->problem_id = $request->problem_id;
             $verification->date = date('Y-m-d H:i:s',strtotime($request->date));
-
             $verification->solution_hold = $request->solution_hold;
             $verification->save();
             if ($verification->id) {
@@ -1677,20 +1681,17 @@ class VerificationController extends BaseController
     }
 
     public function StorePastPresentTime(Request $request){
+        //  echo "<pre>";print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "past_time" => "required",
         ]);
         
             $date =  date('Y-m-d 00:00:00' , strtotime($request->past_time));
-       
             $time = PastAndPresentTime::where('time' , $date)->where('project_id' , $request->project_id)->where('user_id' , Auth::user()->id)->first();
-
-
-            if($time  && $request->id == ''){
+            if($time){
                 return $this->sendError("Error.", ['error'=>'Date is already selected']);
             }
 
-            
             
             if ($validator->fails()) {
                 return $this->sendError("Validation Error.", $validator->errors());
@@ -1721,6 +1722,25 @@ class VerificationController extends BaseController
                 );
             }
         } catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function APIDeletePastPresentTime(Request $request){
+        try{
+            if($request->id){
+                $delete = PastAndPresentTime::where('id' , $request->id)->delete();
+                if($delete){
+                    $success["delete_verification"] = true;
+                return $this->sendResponse( $success,"Verification deleted successfully." );
+                }else{
+                    $success["delete_verification"] = false;
+                     return $this->sendResponse($success, "Something Wrong.");
+                }
+            }
+        }catch (Exception $e) {
             return $this->sendError("Validation Error.", [
                 "error" => $e->getMessage(),
             ]);
@@ -2698,6 +2718,7 @@ class VerificationController extends BaseController
 
     public function replaceProblemByProblem(Request $request){
         try {
+            // echo "<pre>";print_r($request->all());die;
             $data =  $request->all();
            
             $insert = DB::table(

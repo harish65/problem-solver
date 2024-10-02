@@ -65,7 +65,7 @@
                                             <td>{{ date('m/d/Y' , strtotime($varification->time))}}</td>
                                             <td>{{ $problem->name }}</td>
                                             <td>
-                                                <a href="javaScript:void(0)" class="delete_ action_single"  data-id="{{  $varification->id }}">
+                                                <a href="javaScript:void(0)" class="delete_action_single"  data-id="{{  $varification->id }}">
                                                     <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
                                                 </a>
                                                 <a href="javaScript:void(0)" class="editVocabularyBtn" data-id="{{  $varification->id }}" data-key="{{ date('m/d/Y' ,  strtotime($varification->time) )}}">
@@ -118,11 +118,6 @@
         </div>
     </div>
     <!-- Content Section End -->
-
-
-    
-    
-    
     <!-- Modal start -->
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

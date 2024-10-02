@@ -209,7 +209,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::post("delete-entity-available/{id}", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteEntityAvailable'])-> name("delete-entity-available");
 
         Route::post("store-priciple-identification", [\App\Http\Controllers\Adult\VerificationController::class, 'storePricipleIdentification'])-> name("store-priciple-identification");
-        Route::post("store-time-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'storeTimeVerification'])-> name("store-time-verification");
+        Route::post("store-time-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'storeTimeVerification'])->name("store-time-verification");
         Route::post("delete-time-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteTimeVerification'])-> name("delete-time-verification");
         Route::post("updateVerification", [\App\Http\Controllers\Adult\EditVerificationController::class, 'updateVerification'])-> name("updateVerification");
         Route::post("delete-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'delete'])-> name("delete-verification");

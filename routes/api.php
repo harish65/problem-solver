@@ -87,6 +87,16 @@ Route::middleware('auth:api')->group( function () {
         Route::post("update-solution-part", [\App\Http\Controllers\Adult\VerificationController::class, 'UpdateSolutionFunctionAverage'])-> name("update-solution-part");
 
         Route::post("store-sep-steps", [\App\Http\Controllers\Adult\VerificationController::class, 'StoreCommonVerifications'])->name("store-sep-steps");
+        Route::post("before-after", [\App\Http\Controllers\Adult\VerificationController::class, 'BeforeAndAfter'])-> name("before-after");
+        Route::post("delete-before-after", [\App\Http\Controllers\Adult\VerificationController::class, 'DeleteBeforeAndAfter'])-> name("delete-before-after");
+        Route::post("store-time-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'storeTimeVerification'])->name("store-time-verification");
+
+        Route::post("delete-time-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteTimeVerification'])-> name("delete-time-verification");
+       //Past and present time
+       Route::post("store-past-present-time", [\App\Http\Controllers\Adult\VerificationController::class, 'StorePastPresentTime'])->name("store-past-present-time");
+       Route::post("delete-past-present-time", [\App\Http\Controllers\Adult\VerificationController::class, 'APIDeletePastPresentTime'])->name("delete-past-present-time");
+       //	Replace Problem by Problem
+       Route::post("replace-problem-by-problem", [\App\Http\Controllers\Adult\VerificationController::class, 'replaceProblemByProblem'])-> name("replace-problem-by-problem");
 });
 
 
