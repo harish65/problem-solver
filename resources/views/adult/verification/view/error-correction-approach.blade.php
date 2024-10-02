@@ -33,130 +33,130 @@
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 @if($problemDevelopment->count() > 0)
-                @php $showMessage = true; @endphp
+                    @php $showMessage = true; @endphp
                 <!-- start -->
-                <div class="principleRelation">
-                    <div class="conditionBlock problem-development">
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Error</h2>
-                                <div class="projectList text-center">
-                                    @foreach($problemDevelopment as $data)
-                                    <button class="btn btn-danger  mt-3">
-                                        {{$data->error_name}}
-                                    </button>
+                    <div class="principleRelation">
+                        <div class="conditionBlock problem-development">
+                            <div class="blockProblem">
+                                <div class="projectBlock text-center">
+                                    <h2>Error</h2>
+                                    <div class="projectList text-center">
+                                        @foreach($problemDevelopment as $data)
+                                        <button class="btn btn-danger  mt-3">
+                                            {{$data->error_name}}
+                                        </button>
+                                        @endforeach
+                                    </div>
+                                
+                                </div>
+                            </div>
+                        
+                            
+                            <div class="arrow">
+                                <ul>
+                                    @foreach($problemDevelopment as $entity)
+                                    <li class="top"><img src="{{ asset('assets-new/images/arrow_sm.png')}}"></li>
                                     @endforeach
-                                </div>
-                              
+                                </ul>
                             </div>
-                        </div>
-                       
-                        
-                        <div class="arrow">
-                            <ul>
-                                @foreach($problemDevelopment as $entity)
-                                <li class="top"><img src="{{ asset('assets-new/images/arrow_sm.png')}}"></li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        
-                        <div class="blockProblem">
-                            <div class="projectBlock text-center">
-                                <h2>Compensator</h2>
-                                <div class="projectList text-center">
-                                    @foreach($problemDevelopment as $data)
-                                    <button class="btn btn-success mt-3 compensator" data-error-id="{{ $data->id }}">
-                                        {{($data->compensator == null) ? 'Identify Compensator' : $data->compensator }}
-                                    </button>
-                                    
+                            
+                            <div class="blockProblem">
+                                <div class="projectBlock text-center">
+                                    <h2>Compensator</h2>
+                                    <div class="projectList text-center">
+                                        @foreach($problemDevelopment as $data)
+                                        <button class="btn btn-success mt-3 compensator" data-error-id="{{ $data->id }}">
+                                            {{($data->compensator == null) ? 'Identify Compensator' : $data->compensator }}
+                                        </button>
+                                        
 
-                                    @endforeach
+                                        @endforeach
+                                    </div>
+                                
                                 </div>
-                               
                             </div>
-                        </div>
-                       
                         
-                    </div>
-                    <div class="questionWrap">
-                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
-                            tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
-                            nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
-                            Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
-                        <div class="row">
-                            <div class="title d-flex">
-                                <div class="text-left w-50 ">
-                                    <h2>Error Identification and Compensator</h2>
-                                </div>
-                                <div class="text-right w-50 pt-3">
-                                    <!-- <button type="button"  class="btn btn-success addVocabularyBtn" >+ Add Problem Development</button> -->
-                                </div>
-                            </div>
-
-                            <div class="entity">
-                                <div class="row">
-                                    <div class="col text-end">
-                                    
-                                        <!-- <button class="btn btn-success mt-3 compensator"  >
-                                            + Identify Compensator
-                                        </button> -->
-                                    
+                            
+                        </div>
+                        <div class="questionWrap">
+                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
+                                tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
+                                nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+                                Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
+                            <div class="row">
+                                <div class="title d-flex">
+                                    <div class="text-left w-50 ">
+                                        <h2>Error Identification and Compensator</h2>
+                                    </div>
+                                    <div class="text-right w-50 pt-3">
+                                        <!-- <button type="button"  class="btn btn-success addVocabularyBtn" >+ Add Problem Development</button> -->
                                     </div>
                                 </div>
-                                <table class="table slp-tbl text-center">
-                                    <thead>
-                                        <th>Error Identified</th>
-                                        <th>Compensator Identified</th>
-                                        <th>Date</th>  
-                                        <th>Action</th>                                      
-                                    </thead>
-                                    <tbody>
-                                @foreach($problemDevelopment as $data)
-                                  
-                                        <tr>
-                                            <td>
-                                                {{$data->error_name}}
-                                            </td>
-                                            
-                                            <td>
-                                                {{($data->compensator == null) ? 'Not Identified' : $data->compensator}}
-                                            </td>
-                                            <td>
-                                                {{($data->compensator_date != '') ?  date('d-m-Y' , strtotime($data->compensator_date)) : 'Not Identified' }}
-                                            </td>
-                                            <td>
-                                                <a href="javaScript:void(0)" data-id ="{{ $data->error_correction_id }}"  
-                                                                            data-error_id="{{ $data->id }}" data-error_name="{{$data->compensator}}" 
-                                                                            data-error_date="{{ ($data->compensator_date != '') ? date('d-m-Y' , strtotime($data->compensator_date)) : ''}}" 
-                                                                            data-problem="{{$data->problem_name}}" data-problem_date="{{date('d-m-Y' , strtotime($data->problem_date))}} " 
-                                                                            class="btn btn-success editBtn"><i class="fa fa-pencil"></i></a>
-                                                <a href="javaScript:void(0)" data-id ="{{ $data->error_correction_id }}"  class="btn btn-danger deleteBtn"><i class="fa fa-trash"></i></a>
-                                            </td>
-                                        </tr>
+
+                                <div class="entity">
+                                    <div class="row">
+                                        <div class="col text-end">
+                                        
+                                            <!-- <button class="btn btn-success mt-3 compensator"  >
+                                                + Identify Compensator
+                                            </button> -->
+                                        
+                                        </div>
+                                    </div>
+                                    <table class="table slp-tbl text-center">
+                                        <thead>
+                                            <th>Error Identified</th>
+                                            <th>Compensator Identified</th>
+                                            <th>Date</th>  
+                                            <th>Action</th>                                      
+                                        </thead>
+                                        <tbody>
+                                    @foreach($problemDevelopment as $data)
                                     
-                                @endforeach
-                                    </tbody>
-                                </table>
+                                            <tr>
+                                                <td>
+                                                    {{$data->error_name}}
+                                                </td>
+                                                
+                                                <td>
+                                                    {{($data->compensator == null) ? 'Not Identified' : $data->compensator}}
+                                                </td>
+                                                <td>
+                                                    {{($data->compensator_date != '') ?  date('d-m-Y' , strtotime($data->compensator_date)) : 'Not Identified' }}
+                                                </td>
+                                                <td>
+                                                    <a href="javaScript:void(0)" data-id ="{{ $data->error_correction_id }}"  
+                                                                                data-error_id="{{ $data->id }}" data-error_name="{{$data->compensator}}" 
+                                                                                data-error_date="{{ ($data->compensator_date != '') ? date('d-m-Y' , strtotime($data->compensator_date)) : ''}}" 
+                                                                                data-problem="{{$data->problem_name}}" data-problem_date="{{date('d-m-Y' , strtotime($data->problem_date))}} " 
+                                                                                class="btn btn-success editBtn"><i class="fa fa-pencil"></i></a>
+                                                    <a href="javaScript:void(0)" data-id ="{{ $data->error_correction_id }}"  class="btn btn-danger deleteBtn"><i class="fa fa-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                        
+                                    @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
-                        <div class="paginate" style="float:right;">
-                            <nav class="navbar navbar-expand-lg ">
-                            <div class="collapse navbar-collapse" id="navbarNav">
-                            @if(isset($data->id))
-                            <ul class="navbar-nav">
-                                <li class="nav-item active">
-                                    <a class="btn btn-success"  href="{{ route('adult.feedback-identification' , $parameters) }}">2. Feedback identification<span class="sr-only">(current)</span></a>
-                                </li>
-                                <li class="nav-item active">
-                                    <a class="btn btn-success" href="{{ route('adult.error-correction' ,  $parameters) }}">3. Continue With Error Correction<span class="sr-only">(current)</span></a>
-                                </li>
-                            </ul>
-                            @endif
+                            <div class="paginate" style="float:right;">
+                                <nav class="navbar navbar-expand-lg ">
+                                <div class="collapse navbar-collapse" id="navbarNav">
+                                @if(isset($data->id))
+                                <ul class="navbar-nav">
+                                    <li class="nav-item active">
+                                        <a class="btn btn-success"  href="{{ route('adult.feedback-identification' , $parameters) }}">2. Feedback identification<span class="sr-only">(current)</span></a>
+                                    </li>
+                                    <li class="nav-item active">
+                                        <a class="btn btn-success" href="{{ route('adult.error-correction' ,  $parameters) }}">3. Continue With Error Correction<span class="sr-only">(current)</span></a>
+                                    </li>
+                                </ul>
+                                @endif
+                                </div>
+                                </nav>
                             </div>
-                            </nav>
-                        </div>
-                   
-                </div>
+                    
+                    </div>
                 @endif
             </div>
             <!-- End -->
@@ -407,7 +407,7 @@ $(document).on('click' , '#btnSave', function(e){
                 } else {
                     
                     toastr.success(response.message);
-                    // location.reload();
+                    location.reload();
                 }
             }
         });

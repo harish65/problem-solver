@@ -71,6 +71,22 @@ Route::middleware('auth:api')->group( function () {
     Route::post("store-validations", [\App\Http\Controllers\API\ApiVerificationController::class, 'StoreValidatoins'])->name("store-validations");
     Route::post("add-problem-development", [\App\Http\Controllers\Adult\VerificationController::class, 'storeProblemDevelopmnt'])-> name("add-problem-development");
     Route::post("del-problem-development", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteProblemDevelopmnt'])-> name("del-problem-development");
+    //Error Correction Aproach
+    Route::post("create-error-correction-type", [\App\Http\Controllers\Adult\VerificationController::class, 'addErrorCorectionAproach'])->name("create-error-correction-type");
+    Route::get("feedback-identification", [\App\Http\Controllers\Adult\VerificationController::class, 'feedbackIdentification'])-> name("feedback-identification");
+    Route::post("store-feedback-identification", [\App\Http\Controllers\Adult\VerificationController::class, 'storeFeedbackIdentification'])-> name("store-feedback-identification");
+    Route::post("delete-feedback-identification/{id}", [\App\Http\Controllers\Adult\VerificationController::class, 'DeleteFeedbackIdentification'])->name("delete-feedback-identification");
+    Route::get("error-correction", [\App\Http\Controllers\Adult\VerificationController::class, 'errorCorrection'])-> name("error-correction");
+    Route::post("store-error-correction", [\App\Http\Controllers\Adult\VerificationController::class, 'storeErrorCorrection'])-> name("store-error-correction");
+    Route::post("delete-error-correction", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteErrorCorrection'])-> name("delete-error-correction");
+
+    //function Adjustments
+        Route::post("store-function-adjustment", [\App\Http\Controllers\Adult\VerificationController::class, 'storeFunctionAdjustment'])-> name("store-function-adjustment");
+        Route::post("function-sub-and-people", [\App\Http\Controllers\Adult\VerificationController::class, 'functionSustitutionAndPeople'])-> name("function-sub-and-people");
+        Route::post("sol-fun-av", [\App\Http\Controllers\Adult\VerificationController::class, 'SolutionFunctionAverage'])-> name("sol-fun-av");
+        Route::post("update-solution-part", [\App\Http\Controllers\Adult\VerificationController::class, 'UpdateSolutionFunctionAverage'])-> name("update-solution-part");
+
+        Route::post("store-sep-steps", [\App\Http\Controllers\Adult\VerificationController::class, 'StoreCommonVerifications'])->name("store-sep-steps");
 });
 
 

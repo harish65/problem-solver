@@ -2213,7 +2213,7 @@ class VerificationController extends BaseController
                 ]
             );
             
-            
+            $success = [];
             if ($request->is('api/*')) {
                     $id = DB::getPdo()->lastInsertId();
                     $id = ($id > 0) ? $id : $request->id;
@@ -2274,18 +2274,13 @@ class VerificationController extends BaseController
         try{
             $problemDevelopment_count =  DB::table('problem_development')->get();
             $error_correction_count = ErrorCorrection::all();
-            
-            // if($error_correction_count->count() <= $problemDevelopment_count->count() && $request->id == ''){
-            //     return $this->sendError("Compensator Error.", ['Compensator can not exceed more than errors!']);
-            // }
 
             if($request->id != ''){
                 $ErrorCorrection = ErrorCorrection::find($request->id);
             }else{
                 $ErrorCorrection = new ErrorCorrection();
             }
-            
-            // $ErrorCorrection = new ErrorCorrection();
+                       
             $ErrorCorrection->project_id = $request->project_id;
             $ErrorCorrection->problem_id = $request->problem_id;
             $ErrorCorrection->user_id = Auth::user()->id;
@@ -2294,11 +2289,19 @@ class VerificationController extends BaseController
             $ErrorCorrection->compensator_date = date('Y-m-d H:i:s' , strtotime($request->compensator_date));  
             $ErrorCorrection->save();
             DB::table('problem_development')->where('id' , $request->error_id)->update(['compensator'=>1]);
-            $success["error-corection"] = $ErrorCorrection;
-            return $this->sendResponse(
-                $success,
-                "Record created successfully."
-            );
+            
+            if ($request->is('api/*')) {
+                $success["verificationEntity"] = $ErrorCorrection;
+                $success["token"] = $request->header("Authorization");
+                return $this->sendResponse($success, "true");
+            }else{
+                    $success["error-corection"] = $ErrorCorrection;
+                    return $this->sendResponse(
+                        $success,
+                        "Record created successfully."
+                    );
+            }
+            
         }catch(\Illuminate\Database\QueryException $e){
             return $this->sendError("Database Error.", [
                 "error" => $e->getMessage(),
@@ -2324,7 +2327,7 @@ class VerificationController extends BaseController
     }
 
     public function storeFeedbackIdentification(Request $request){
-       
+      
         $validator = Validator::make($request->all(), [
             "error" => "required",
             "feedback" => "required",
@@ -2351,6 +2354,7 @@ class VerificationController extends BaseController
                 ]
             );
             $success["entity"] = $insert;
+            
             return $this->sendResponse(
                 $success,
                 "Record created successfully."
@@ -2437,7 +2441,8 @@ class VerificationController extends BaseController
     }
 
 
-    public function storeErrorCorrection(Request $request){        
+    public function storeErrorCorrection(Request $request){       
+        // echo "<pre>";print_r($request->all());die; 
         $validator = Validator::make($request->all(), [
             "error" => "required",
             "feedback" => "required",
@@ -2491,11 +2496,19 @@ class VerificationController extends BaseController
             $delete = Db::table(''.$request->table_name.'')->where("id", "=", $request->id)
                 ->delete();
             if ($delete) {
-                $success["delete_verification"] = true;
-                return $this->sendResponse(
-                    $success,
-                    "Record deleted successfully."
-                );
+
+                if ($request->is('api/*')) {
+                    $success["delete_verification"] = true;
+                    $success["token"] = $request->header("Authorization");
+                    return $this->sendResponse($success, "true");
+                }else{
+                    $success["delete_verification"] = true;
+                    return $this->sendResponse(
+                        $success,
+                        "Record deleted successfully."
+                    );
+                }
+               
             } else {
                 $success["delete_verification"] = false;
                 return $this->sendResponse($success, "Something Wrong.");
@@ -2509,6 +2522,7 @@ class VerificationController extends BaseController
 
     ///function Function Adjustment
     public function storeFunctionAdjustment(Request $request){
+        //  echo '<pre>';print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "function_name" => "required",
             "problem_name" => "required",
@@ -2517,6 +2531,7 @@ class VerificationController extends BaseController
         if ($validator->fails()) {
             return $this->sendError("Validation Error.", $validator->errors());
         }
+       
         try {
             $data =  $request->all();
             $insert = DB::table(
@@ -2535,6 +2550,7 @@ class VerificationController extends BaseController
                 ]
             );
             $success["entity"] = $insert;
+           
             return $this->sendResponse(
                 $success,
                 "Record created successfully."
@@ -2550,6 +2566,7 @@ class VerificationController extends BaseController
     }
     // Function Substitution and People
     public function functionSustitutionAndPeople(Request $request){
+        // echo "<pre>";print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "customer" => "required",
         ]);
@@ -2557,10 +2574,10 @@ class VerificationController extends BaseController
             return $this->sendError("Validation Error.", $validator->errors());
         }
         try {
-
+           
             $data =  $request->all();
             $checkifSelected = DB::table("function_belong_to_people")->where("customer_id" , $data["customer"])->first();
-           
+          
             if($checkifSelected){
                 $error["success"] = false;
                 return $this->sendError("Validation Error.", [
@@ -3007,7 +3024,6 @@ class VerificationController extends BaseController
                     [
                         "problem_id" => $data["problem_id"],
                         "project_id" => $data["project_id"],
-                        
                         "user_id" => Auth::user()->id, 
                         "type" => $data['type'], 
                         "created_at" => date('Y-m-d 00:00:00'),

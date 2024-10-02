@@ -354,8 +354,6 @@ switch ($type) {
                 return $this->sendResponse($success, "true");    
                 break;
                 case 16:
-                    
-                    
                     $errorcorrection = DB::table('error_correction')->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->get();
                     $problemDevelopment = db::table('problem_development')
                                         ->select('problem_development.*' , 'error_correction.compensator' ,'error_correction.compensator_date' , 'error_correction.id as error_correction_id' )
