@@ -2291,16 +2291,18 @@ class VerificationController extends BaseController
             if ($validator->fails()) {
                 return $this->sendError("Validation Error.", $validator->errors());
             }
+            $success = [];
         try{
             $problemDevelopment_count =  DB::table('problem_development')->get();
-            $error_correction_count = ErrorCorrection::all();
+            //$error_correction_count = ErrorCorrection::all();
 
             if($request->id != ''){
                 $ErrorCorrection = ErrorCorrection::find($request->id);
+                var_dump($ErrorCorrection);
             }else{
                 $ErrorCorrection = new ErrorCorrection();
             }
-                       
+            if($ErrorCorrection){         
             $ErrorCorrection->project_id = $request->project_id;
             $ErrorCorrection->problem_id = $request->problem_id;
             $ErrorCorrection->user_id = Auth::user()->id;
@@ -2319,6 +2321,13 @@ class VerificationController extends BaseController
                     return $this->sendResponse(
                         $success,
                         "Record created successfully."
+                    );
+            }
+            }else{
+               
+                    return $this->sendResponse(
+                        $success,
+                        "Record not found."
                     );
             }
             
@@ -2342,8 +2351,17 @@ class VerificationController extends BaseController
                     ->where('feedback_identifications.user_id' , Auth::user()->id)
                     ->where('feedback_identifications.project_id' , $project_id)
                     ->get();
+        if ($request->is('api/*')) {
+            $success["feedBack"] = $feedBack;
+            $success["problemDevelopment"] = $problemDevelopment;
+            $success["problem_id"] = $problem_id;
+            $success["project_id"] = $project_id;
+            $success["token"] = $request->header("Authorization");
+            return $this->sendResponse($success, "true");
+        }else{
+            return view("adult.verification.view.feed-back-identification" , compact("problemDevelopment" , "feedBack" , 'params' ,'problem_id' , 'project_id' ));
+        }
         
-        return view("adult.verification.view.feed-back-identification" , compact("problemDevelopment" , "feedBack" , 'params' ,'problem_id' , 'project_id' ));
     }
 
     public function storeFeedbackIdentification(Request $request){
@@ -2457,7 +2475,20 @@ class VerificationController extends BaseController
                 
         }        
         $errorcorrections = db::table('error_correction_type')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->get();
-        return view("adult.verification.view.error-corection" ,  compact("problemDevelopment" ,"compensators" , "feedBack" , "errorcorrections" , "errors" , "compensator" ,'params' ,'project_id'));
+        if ($request->is('api/*')) {
+            $success["problemDevelopment"] = $problemDevelopment;
+            $success["compensators"] = $compensators;
+            $success["feedBack"] = $feedBack;
+            $success["errorcorrections"] = $errorcorrections;
+            $success["project_id"] = $project_id;
+            $success["token"] = $request->header("Authorization");
+            return $this->sendResponse($success, "true");
+        }else{
+            return view("adult.verification.view.error-corection" ,  compact("problemDevelopment" ,"compensators" , "feedBack" , "errorcorrections" , "errors" , "compensator" ,'params' ,'project_id'));
+        }
+
+
+        
     }
 
 
