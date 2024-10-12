@@ -2510,12 +2510,17 @@ class VerificationController extends BaseController
             $data =  $request->all();
             $error = null;
             $compensator = null;
-            if(is_array($data['error'])){
+            if(is_array($data['error']) && !$request->is('api/*')){
                 $error =  json_encode($data['error']);          
+            }else{
+                $error = json_encode($data['error']);
             }
-            if(is_array($data['compensator'])){
+            if(is_array($data['compensator']) && !$request->is('api/*')){
                 $compensator =  json_encode($data['compensator']);          
+            }else{
+                $compensator = json_encode($data['compensator']);
             }
+            
             $insert = DB::table(
                 "error_correction_type"
             )->updateOrInsert(
