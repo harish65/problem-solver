@@ -2493,7 +2493,7 @@ class VerificationController extends BaseController
 
 
     public function storeErrorCorrection(Request $request){       
-        // echo "<pre>";print_r($request->all());die; 
+        
         $validator = Validator::make($request->all(), [
             "error" => "required",
             "feedback" => "required",
@@ -2504,8 +2504,7 @@ class VerificationController extends BaseController
             return $this->sendError("Validation Error.", $validator->errors());
         }
 
-        //error_correction_type
-        // echo "<pre>";print_r($request->all());die;
+       
         try {
             $data =  $request->all();
             $error = null;
@@ -2513,14 +2512,16 @@ class VerificationController extends BaseController
             if(is_array($data['error']) && !$request->is('api/*')){
                 $error =  json_encode($data['error']);          
             }else{
-                $error = json_encode($data['error']);
+                $exlode = explode(',' ,$data['error']);
+                $error = json_encode($exlode);
             }
             if(is_array($data['compensator']) && !$request->is('api/*')){
                 $compensator =  json_encode($data['compensator']);          
             }else{
-                $compensator = json_encode($data['compensator']);
+                $exlode = explode(',' ,$data['compensator']);
+                $compensator = json_encode($exlode);
             }
-            
+           
             $insert = DB::table(
                 "error_correction_type"
             )->updateOrInsert(
