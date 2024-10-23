@@ -359,6 +359,7 @@ class VerificationController extends BaseController
                         );
                     }
                 }
+                
                 $transitionPhrase = DB::table('verification_type_texts')->where('verification_type_id' , 9)->first();
                 $solutionTimeLocationTwo = DB::table('solution_time_locations')->where("type", 2)->where("project_id", $project_id)->where('user_id' , Auth::user()->id)->first();;
                 return view(
@@ -382,7 +383,7 @@ class VerificationController extends BaseController
                 $users = DB::table("customers")
                     ->where("project_id", "=", $project_id)
                     ->get();
-                
+                    
                 return view(
                     "adult.verification.view.people-project-content",
                     compact(
@@ -2137,6 +2138,7 @@ class VerificationController extends BaseController
 
     public function storeCommunicationFlow(Request $request)
     {
+        
         $validator = Validator::make($request->all(), [
             "person_to" => "required",
             "subject" => "required",
@@ -2817,7 +2819,6 @@ class VerificationController extends BaseController
             $deletCommunication  = DB::table('people_communication_flow')->where('customer_id' , $request->id)->orWhere('person_to' , $request->id)->delete();
             $delete = Db::table('customers')->where("id", "=", $request->id)
                 ->delete();
-
             if ($delete) {
                 $success["delete_verification"] = true;
                 return $this->sendResponse(
@@ -3067,7 +3068,7 @@ class VerificationController extends BaseController
 
     public function StoreCommonVerifications(Request $request){
         try {
-           
+        //    echo '<pre>';print_r($request->all);die;
             $validator = Validator::make($request->all(), [
                 "problem_id" => "required",
                 "project_id" => "required",

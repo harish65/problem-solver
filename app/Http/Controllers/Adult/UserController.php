@@ -21,7 +21,8 @@ class UserController extends BaseController
     }
 
 
-    public function create(Request $request){        
+    public function create(Request $request){  
+        // echo "<pre>";print_r($request->all());die;      
         $validator = Validator::make ( $request->all(),[
             'name' => 'required',
             'type' => 'required',
@@ -58,7 +59,7 @@ class UserController extends BaseController
                 ]);
             }
             $success['user'] = $insert;
-            return $this->sendResponse($success, 'Problem saved successfully.');
+            return $this->sendResponse($success, 'User created successfully.');
         }catch(Exception $e){
             return $this->sendError('Error.', ['error'=> $e->getMessage()]);
         }

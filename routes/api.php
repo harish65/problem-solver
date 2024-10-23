@@ -97,6 +97,16 @@ Route::middleware('auth:api')->group( function () {
        Route::post("delete-past-present-time", [\App\Http\Controllers\Adult\VerificationController::class, 'APIDeletePastPresentTime'])->name("delete-past-present-time");
        //	Replace Problem by Problem
        Route::post("replace-problem-by-problem", [\App\Http\Controllers\Adult\VerificationController::class, 'replaceProblemByProblem'])-> name("replace-problem-by-problem");
+        //Project Usres
+       Route::get("users", [\App\Http\Controllers\Adult\UserController::class, 'index'])-> name("users");
+       Route::post("create-user", [\App\Http\Controllers\Adult\UserController::class, 'create'])-> name("create-user");
+       Route::post("delete-user", [\App\Http\Controllers\Adult\VerificationController::class, 'deletePeopleFromProject'])-> name("delete-user");
+       //partition approach
+       Route::post("add-entity-word", [\App\Http\Controllers\Adult\VerificationController::class, 'createPartitionApproach'])-> name("add-entity-word");
+       Route::post("update_validations", [\App\Http\Controllers\Adult\VerificationController::class, 'updateValidations'])-> name("update_validations");
+       Route::post("communication_flow", [\App\Http\Controllers\Adult\VerificationController::class, 'storeCommunicationFlow'])-> name("communication_flow");
+       Route::post("del-communication_flow", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteCommunicationFlow'])-> name("del-communication_flow");
+      
 });
 
 

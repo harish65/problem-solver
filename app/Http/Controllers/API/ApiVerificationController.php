@@ -51,6 +51,7 @@ class ApiVerificationController extends BaseController
     // get Single verification
 
     public function GetSingleVerification(Request $request){
+       
         $data = $request->all();
         $problem_id = $data["problem_id"];
         $project_id = $data["project_id"];
@@ -244,6 +245,7 @@ switch ($type) {
                 return $this->sendResponse($success, "true");
                 break;
             case 10:
+                
                 $custommers = DB::table("customers")
                     ->where("project_id", "=", $project_id)
                     ->get();
@@ -390,7 +392,9 @@ switch ($type) {
                                         ->where('function_belong_to_people.problem_id' , $problem_id)
                                         ->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , Auth::user()->id)->get();
                             
-                            
+                            $custommers = DB::table("customers")
+                                        ->where("project_id", "=", $project_id)
+                                        ->get();
                             $functionAud  = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
                             $functionApplied  = DB::table('function_sub_people')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->where('verification_type' , $type)->first();
                             $success =  [
@@ -400,7 +404,7 @@ switch ($type) {
                                 "Solution_function" => $Solution_function,
                                 'functionAud' => $functionAud , 
                                 'functionApplied' => $functionApplied , 
-                                'people' => $people, 'validation_data'=>$validation_data
+                                'people' => $people, 'validation_data'=>$validation_data, 'custommers'=>$custommers
                                 ];
                             return $this->sendResponse($success, "true"); 
                             break;
@@ -411,7 +415,7 @@ switch ($type) {
                                     "problem" => $problem,
                                     "solution" => $solution,
                                     "Solution_function" => $Solution_function,
-                                    'functionApplied' => $functionApplied  , 'validation_data'=>$validation_data
+                                    'functionApplied' => $functionApplied  , 'validation_data'=>$validation_data 
                                     ];
                                 return $this->sendResponse($success, "true");                                
                                 break;
