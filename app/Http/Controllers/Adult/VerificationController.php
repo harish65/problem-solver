@@ -584,7 +584,7 @@ class VerificationController extends BaseController
                         );
                     }
                 }
-
+               
                 $problemDevelopment = DB::table('problem_development')->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->get();
                 return view(
                     "adult.verification.view.problem-development",
@@ -1130,15 +1130,10 @@ class VerificationController extends BaseController
                                                                             "solution_id",
                                                                             "Solution_function",
                                                                             "verifiationTypeText",'mevsyou','custommers'
-                                                                            
-                                                                            
-                                                                            
                                                                         )
                                                                     );
                                                                     break;
                                                                     case 29:
-                                   
-                                                                     
                                                                         $custommers = DB::table("customers")
                                                                                                 ->where("project_id", "=", $project_id)
                                                                                         ->get();
@@ -2728,7 +2723,7 @@ class VerificationController extends BaseController
     }
 
     public function UpdateSolutionFunctionAverage(Request $request){
-        
+        // echo '<pre>';print_r($request->all());die;  
         $validator = Validator::make($request->all(), [
             "solution_part" => "required|numeric",
         ]);
@@ -2743,7 +2738,7 @@ class VerificationController extends BaseController
             $success["entity"] = $insert;
             return $this->sendResponse(
                 $success,
-                "Record created successfully."
+                "Record updated successfully."
             );
         }catch(Exception $e){
             return $this->sendError("Validation Error.", [
@@ -2908,6 +2903,7 @@ class VerificationController extends BaseController
     }
 
     public function storeVisibilityEntityBehindExplanation(Request $request){
+        // echo '<pre>';print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "entity_name" => "required",
         ]);
@@ -2916,12 +2912,20 @@ class VerificationController extends BaseController
         }
         try {
             $data =  $request->all();
+            if ($request->is('api/*')) {
+                $project_id = $data["project_id"];
+             }else{
+                 $project_id = Crypt::decrypt($data["project_id"]);
+             }
+
+
+
             $insert = DB::table(
                 "visibility_entity_behind_explanation"
             )->updateOrInsert(
                 ["id" => $request->id],
                 [                   
-                    "project_id" => Crypt::decrypt($data["project_id"]),
+                    "project_id" => $project_id,
                     "user_id" => Auth::user()->id,                   
                     "entity_name" => $data["entity_name"],
                     "put_behind" => $data["put_behind"]
@@ -2947,8 +2951,6 @@ class VerificationController extends BaseController
             
             $delete = Db::table('visibility_entity_behind_explanation')->where("id", "=", $request->id)
                 ->delete();
-                
-            
                 $success["delete_verification"] = true;
                 return $this->sendResponse(
                     $success,
@@ -2966,14 +2968,20 @@ class VerificationController extends BaseController
 
     public function StoreMotherNature(Request $request){
         try {
-           
+        //    echo '<pre>';print_r($request->all());die;
             $data =  $request->all();
-            
+            if ($request->is('api/*')) {
+               $problem_id =  $data["problem"];
+               $project_id = $data["project"];
+            }else{
+                $problem_id =  Crypt::decrypt($data["problem"]);
+                $project_id = Crypt::decrypt($data["project"]);
+            }
             $insert = DB::table("mother_nature")->updateOrInsert(
                 ["id" => @$request->id],
                 [
-                    "problem_id" => Crypt::decrypt($data["problem"]),
-                    "project_id" =>Crypt::decrypt($data["project"]),
+                    "problem_id" => $problem_id,
+                    "project_id" => $project_id,
                     "user_id" => Auth::user()->id, 
                     "created_at" => date('Y-m-d 00:00:00'),
                     "identified" => true,
@@ -3068,7 +3076,7 @@ class VerificationController extends BaseController
 
     public function StoreCommonVerifications(Request $request){
         try {
-        //    echo '<pre>';print_r($request->all);die;
+           
             $validator = Validator::make($request->all(), [
                 "problem_id" => "required",
                 "project_id" => "required",
@@ -3087,11 +3095,9 @@ class VerificationController extends BaseController
                         "type" => $data['type'], 
                         "created_at" => date('Y-m-d 00:00:00'),
                         "identified" => true,
-                        
                     ]
                 );
             }else{
-                
                 $insert = DB::table($request->table_name)->updateOrInsert(
                     ["id" => @$request->id],
                     [
@@ -3105,7 +3111,6 @@ class VerificationController extends BaseController
                     ]
                 );
             }
-            
             $success["entity"] = $insert;
             return $this->sendResponse(
                 $success,
@@ -3242,7 +3247,7 @@ class VerificationController extends BaseController
                 ]);
             }
             $success['user'] = $insert;
-            return $this->sendResponse($success, 'Problem saved successfully.');
+            return $this->sendResponse($success, 'User saved successfully.');
         }catch(Exception $e){
             return $this->sendError('Error.', ['error'=> $e->getMessage()]);
         }
@@ -3250,7 +3255,7 @@ class VerificationController extends BaseController
 
     public function deletePeopleOutSideProject(Request $request){
         try {            
-          
+           
             $delete = Db::table('people_outside_project')->where("id", "=", $request->id)
                 ->delete();
 

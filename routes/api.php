@@ -106,7 +106,22 @@ Route::middleware('auth:api')->group( function () {
        Route::post("update_validations", [\App\Http\Controllers\Adult\VerificationController::class, 'updateValidations'])-> name("update_validations");
        Route::post("communication_flow", [\App\Http\Controllers\Adult\VerificationController::class, 'storeCommunicationFlow'])-> name("communication_flow");
        Route::post("del-communication_flow", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteCommunicationFlow'])-> name("del-communication_flow");
-      
+       Route::get("me-and-you-next/{id}", [\App\Http\Controllers\Adult\VerificationController::class, 'MeVsYouNextPage'])->name("me-and-you-next");
+        Route::post("me-and-you-next-store", [\App\Http\Controllers\Adult\VerificationController::class, 'MeVsYouNextPageStore'])->name("me-and-you-next-store");
+        Route::post("entity-usage", [\App\Http\Controllers\Adult\VerificationController::class, 'StoreEntityUsage'])->name("entity-usage");
+        //Outside from project
+        Route::post("create-people-ouside-project", [\App\Http\Controllers\Adult\VerificationController::class, 'storePeopleOutSideFromProject'])-> name("create-people-ouside-project");
+        Route::post("delete-people", [\App\Http\Controllers\Adult\VerificationController::class, 'deletePeopleOutSideProject'])-> name("delete-people");
+
+        Route::post("mother-nature", [\App\Http\Controllers\Adult\VerificationController::class, 'StoreMotherNature'])->name("mother-nature");
+        Route::post("me-and-you", [\App\Http\Controllers\Adult\VerificationController::class, 'StorMeVsYou'])->name("me-and-you");
+        Route::post("taking-advantage", [\App\Http\Controllers\Adult\VerificationController::class, 'StorTakingAdvantage'])->name("taking-advantage");
+
+        Route::post("visibility_entity_behind_explanation", [\App\Http\Controllers\Adult\VerificationController::class, 'storeVisibilityEntityBehindExplanation'])-> name("visibility_entity_behind_explanation");
+        Route::post("del_visibility_entity_behind_explanation", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteVisibilityEntityBehindExplanation'])-> name("del_visibility_entity_behind_explanation");
+        Route::post("taking-advantage", [\App\Http\Controllers\Adult\VerificationController::class, 'StorTakingAdvantage'])->name("taking-advantage");
+        Route::post("probelm-at-location", [\App\Http\Controllers\Adult\VerificationController::class, 'storeProblemAtLocation'])-> name("probelm-at-location");
+        Route::post("function-at-location", [\App\Http\Controllers\Adult\VerificationController::class, 'storeFunctionAtLocation'])-> name("function-at-location");
 });
 
 
