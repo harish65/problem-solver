@@ -11,19 +11,19 @@
               <a class="nav-link dashboard  {{ Route::is('adult.dashboard') ? 'active' : '' }}" href="{{ route('adult.dashboard')}}">Project</a>
             </li>
             <li class="nav-item" >
-              <a class="nav-link nav-problem"  id="nav-problem" href="">Problem</a>
+              <a class="nav-link nav-problem {{ Route::is('adult.problem') ? 'active' : '' }}"  id="nav-problem" href="">Problem</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link nav-solution" id="nav-solution" href="">Solution</a>
+              <a class="nav-link nav-solution {{ Route::is('adult.solution') ? 'active' : '' }}" id="nav-solution" href="">Solution</a>
             </li>    
             <li class="nav-item">
-              <a class="nav-link nav-solution-func" id="nav-solution-func" href="">Solution Function</a>
+              <a class="nav-link nav-solution-func {{ Route::is('adult.solution-func') ? 'active' : '' }}" id="nav-solution-func" href="">Solution Function</a>
             </li> 
             <li class="nav-item">
-              <a class="nav-link nav-varification" id="nav-varification" href="">Verification</a>
+              <a class="nav-link nav-varification {{ Route::is('adult.varification') ? 'active' : '' }}" id="nav-varification" href="">Verification</a>
             </li> 
             <li class="nav-item">
-              <a class="nav-link nav-relationship" id="nav-relationship"  href="">Relationship</a>
+              <a class="nav-link nav-relationship {{ Route::is('adult.rel') ? 'active' : '' }}" id="nav-relationship"  href="">Relationship</a>
             </li> 
             <li class="nav-item">
               <a class="nav-link nav-report" id="nav-report" href="">Report</a>

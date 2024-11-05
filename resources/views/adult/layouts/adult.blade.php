@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="{{ asset('assets-new/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets-new/css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets-new/toastar/toastr.min.css') }}">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet" />
+    <link href="{{ asset('assets-new/css/font-awesome.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets-new/css/sweetalert.css') }}" rel="stylesheet" />
     
     @yield('css')
 </head>
@@ -20,7 +20,7 @@
             @yield("content")
         @include('adult.layouts.partials.footer')    
     </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="{{ asset('assets-new/js/jquery.min.js') }}"></script>
 <script src="{{ asset('assets-new/js/popper.min.js') }}"></script>
 <script src="{{ asset('assets-new/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('assets-new/toastar/toastr.min.js') }}"></script>
@@ -28,7 +28,7 @@
 <script src="{{ asset('assets-new/js/main.js') }}"></script>
     
         <script>
-            
+            //verification
             $('#saveValidations').on('click',function(){
                 var fd = new FormData($('#validation_form')[0]);
                 $.ajaxSetup({
@@ -71,11 +71,52 @@
                 }
             });
         })
+        //Relationships
+        $('#btn_save_validations').on('click',function(){
+                var fdat = new FormData($('#rel_val_form')[0]);
+                
+                $.ajaxSetup({
+                    headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            }
+                    }); 
+                $.ajax({
+                url: "{{route('adult.save-rel-validations')}}",
+                data: fdat,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                type: 'POST',
+                beforeSend: function(){
+                    $('#btn_save_validations').attr('disabled',true);
+                    $('#btn_save_validations').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+                },
+                error: function (xhr, status, error) {
+                    $('#btn_save_validations').attr('disabled',false);
+                    $('#btn_save_validations').html('Save Validations');
+                    $.each(xhr.responseJSON.data, function (key, item) {
+                        toastr.error(item);
+                    });
+                },
+                success: function (response){
+                    if(response.success == false)
+                    {
+                        $('#btn_save_validations').attr('disabled',false);
+                        $('#btn_save_validations').html('Save Validations');
+                        var errors = response.data;
+                        $.each( errors, function( key, value ) {
+                            toastr.error(value)
+                        });
+                    } else {
+                        toastr.success(response.message);
+                        location.reload()
+                    }
+                }
+            });
+        })
        
         </script>
 @yield('scripts')
-<script>
-   
-</script>
+
 </body>
 </html>

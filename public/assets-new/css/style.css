@@ -825,3 +825,75 @@ background-color: #198754;
     color: rgba(0, 161, 76, 0.5) !important;
     top:30px;
 }
+
+/* Relationshp design */
+.connection_up{
+    width:40%;
+    border-top: 6px solid #00A14C;
+    position: relative;
+    border-right: 5px solid #00A14C;
+    height: 10rem;
+    top:150px; 
+}
+.arrow-down{
+    width: 27px;
+    height: 27px;
+    border-left: 5px solid #00A14C;
+    border-top: 5px solid #00A14C;
+    transform: rotate(225deg) skew(0, 0);
+    position: relative;
+    top: 17.5rem;
+    right: 16px;
+}
+.connection_down{
+    width:40%;
+    border-bottom: 6px solid #00A14C;
+    position: relative;
+    border-right: 5px solid #00A14C;
+    height: 10rem;
+    top:3rem;
+
+}
+.arrow-up{
+    width: 27px;
+    height: 27px;
+    border-left: 5px solid #00A14C;
+    border-top: 5px solid #00A14C;
+    transform: rotate(46deg) skew(0, 0);
+    position: relative;
+    top:3rem;
+    right: 16px;
+}
+.related {
+    border: 5px solid #00A14C;
+    border-radius: 52px;
+    height: 80px;
+    width: 7.3%;
+    position: relative;
+    top: 19.5rem;
+    right: 6.2%;
+    background: #00A14C;
+    color: #fff;
+    text-align: center;
+    padding-top: 2%;
+}
+.related_side{
+    border-top: 5px solid #00A14C;
+    width: 17%;
+    top: 22rem;
+    position: relative;
+    right: 7.5%;
+}
+.arrow-side{
+    width: 27px;
+    height: 27px;
+    border-left: 5px solid #00A14C;
+    border-top: 5px solid #00A14C;
+    transform: rotate(130deg) skew(0, 0);
+    position: relative;
+    top: 21.3rem;
+    right: 10%;
+}
+.communication_rel{
+    min-height: 250px;
+}

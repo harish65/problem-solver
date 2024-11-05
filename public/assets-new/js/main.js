@@ -140,3 +140,32 @@ function logout() {
     localStorage.clear();
 }
 
+//Routes function
+function routes(){
+    $('.nav-problem').click(function(){
+        $(this).attr('href' , ''); 
+        localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));   
+        $(this).attr('href' ,$('#problem_nav').attr('href'))
+    })
+    $('.nav-solution').click(function(){
+        $(this).attr('href' , ''); 
+        localStorage.setItem("sol", $('#solution_nav').attr('href'));   
+        $(this).attr('href' ,$('#solution_nav').attr('href'))
+    })
+    $('.nav-solution-func').click(function(){
+        $(this).attr('href' , '');
+        localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
+        $(this).attr('href' ,$('#solution_fun_nav').attr('href'))
+    })
+    $('.verification').click(function(){
+        $(this).attr('href' , '');
+        localStorage.setItem("varification", $('#verification').attr('href'));   
+        $(this).attr('href' ,$('#verification').attr('href'))
+    })
+    //Relation
+    $('.nav-relationship').click(function(){
+            $(this).attr('href' , '');
+            localStorage.setItem("relationship", $('#relationship').attr('href'));   
+            $(this).attr('href' ,$('#relationship').attr('href'))
+    })
+}

@@ -35,7 +35,7 @@
                 <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
                 <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
                 <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>
-                <a id="relationship" href="{{ route('adult.varification',@$parameter) }}"></a>
+                <a id="relationship" href="{{ route('adult.rel',@$parameter) }}"></a>
                 
                 <div class="imgWrp">
                                 @if($problem -> type == 0)
@@ -133,19 +133,7 @@
 @endsection
 @section('scripts')
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
-<script>
-    // var shoMessage = '{{ $showMessage }}'
-    //     if(shoMessage){
-    //         var solutionMsg = "A project is created to solve a problem.  If the project has not been created, then a problem cannot be identified to be solved.  The way to look at it, a project exists to solve a problem.  Please, go back to open a project or create a project in order to identify the problem to be solved."
-    //         swal({
-    //         title: "No Problem Defined",
-    //         text: solutionMsg,
-    //         type: "info",
-    //         showCancelButton: true,
-    //         confirmButtonColor: '#00A14C',
-    //         })
-    //     }
-    </script>
+
 <script>
     
     $('.dropify').dropify();
@@ -316,6 +304,10 @@
 
         })
    })
+
+
+
+
 $('.nav-problem').click(function(){
     $(this).attr('href' , '');
     localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));       

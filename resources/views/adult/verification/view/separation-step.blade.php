@@ -10,11 +10,8 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
-                      <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>   
-
+                     
+                      @include('adult.verification.view.component.common_routes')
                       @include('adult.verification.view.component.verification_types')
             </div>
         </div>
@@ -207,6 +204,11 @@
     $('#verification_types').on('change',function(){
     var id = $(this).val();
     window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
+})
+
+routes();
+$('.dashboard').click(function(){
+    routes();
 })
 
 

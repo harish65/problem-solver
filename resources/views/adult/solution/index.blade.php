@@ -28,6 +28,7 @@
                             <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
                             <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
                             <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                            <a id="relationship" href="{{ route('adult.rel',@$parameter) }}"></a>
 @if(isset($problem->id))
  <!-- Start card main div -->
     <div class="solutionconditionBlock">
@@ -394,7 +395,11 @@ $('.nav-solution-func').click(function(){
     localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
     $(this).attr('href' ,$('#solution_fun_nav').attr('href'))
 })
-
+$('.nav-relationship').click(function(){
+    $(this).attr('href' , '');
+    localStorage.setItem("relationship", $('#relationship').attr('href'));   
+    $(this).attr('href' ,$('#relationship').attr('href'))
+})
 
 $('.dashboard').click(function(){
     //Solution
@@ -409,7 +414,12 @@ $('.dashboard').click(function(){
     $('.nav-solution-func').attr('href' , '');
     localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
     $('.nav-solution-func').attr('href' ,$('#solution_fun_nav').attr('href'))
-
+    //Relation
+    $('.nav-relationship').click(function(){
+        $(this).attr('href' , '');
+        localStorage.setItem("relationship", $('#relationship').attr('href'));   
+        $(this).attr('href' ,$('#relationship').attr('href'))
+    })
 })
 
 $('.validation').on('change',function(){

@@ -6,16 +6,14 @@
     <div class="container">
         <div class="mainTitle">
             <div class="row">
-                      <?php 
-                            $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
-                            $parameter =  Crypt::encrypt($parameters);
-                      ?>
-                      <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
-                      <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>   
+                <?php 
+                $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
+                $parameter =  Crypt::encrypt($parameters);
+                $showMessage = true;
+                ?>    
 
-                      @include('adult.verification.view.component.verification_types')
+            @include('adult.verification.view.component.common_routes')
+            @include('adult.verification.view.component.verification_types')
             </div>
         </div>
     </div>
@@ -79,7 +77,7 @@
                             </div>
                         </div>
                         <div class="long-arrow">
-                        <p class="transitionPhrase">{{ $transitionPhrase->name }}</p>
+                        <p class="transitionPhrase">{{ @$transitionPhrase->name }}</p>
                             <!-- add arrow Image over here -->
                             <img src="{{ asset('assets-new/images/arrowRight.png') }}">
                             <!-- add arrow Image over here -->
@@ -275,6 +273,7 @@
    
 $('#verification_types').on('change',function(){
     var id = $(this).val();
+
     window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
 })
 $('.dropify').dropify();
@@ -282,45 +281,9 @@ $('.dropify').dropify();
 
 </script>
 <script>
-$('.nav-problem').click(function(){
-    $(this).attr('href' , ''); 
-    localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));   
-    $(this).attr('href' ,$('#problem_nav').attr('href'))
-})
-$('.nav-solution').click(function(){
-    $(this).attr('href' , ''); 
-    localStorage.setItem("sol", $('#solution_nav').attr('href'));   
-    $(this).attr('href' ,$('#solution_nav').attr('href'))
-})
-$('.nav-solution-func').click(function(){
-    $(this).attr('href' , '');
-    localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
-    $(this).attr('href' ,$('#solution_fun_nav').attr('href'))
-})
-$('.verification').click(function(){
-    $(this).attr('href' , '');
-    localStorage.setItem("varification", $('#verification').attr('href'));   
-    $(this).attr('href' ,$('#verification').attr('href'))
-})
-
-
+routes();
 $('.dashboard').click(function(){
-    //Solution
-    $('.nav-solution').attr('href' , '');
-    localStorage.setItem("sol", $('#solution_nav').attr('href'));   
-    $('.nav-solution').attr('href' ,$('#solution_nav').attr('href'))
-    //Problem
-    $('.nav-problem').attr('href' , '');
-    localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));       
-    $('.nav-problem').attr('href' ,$('#problem_nav').attr('href'))
-    //Sol fun
-    $('.nav-solution-func').attr('href' , '');
-    localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
-    $('.nav-solution-func').attr('href' ,$('#solution_fun_nav').attr('href'))
-    //verification
-    $('.nav-varification').attr('href' , '');
-    localStorage.setItem("varification", $('#verification').attr('href'));   
-    $('.nav-varification').attr('href' ,$('#solution_fun_nav').attr('href'))
+    routes();
 
 })
 

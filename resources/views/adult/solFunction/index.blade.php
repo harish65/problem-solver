@@ -26,6 +26,7 @@
                             <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
                             <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
                             <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>
+                            <a id="relationship" href="{{ route('adult.rel',@$parameter) }}"></a>
         <div class="pd-20 bg-white border-radius-4 box-shadow mb-30">
             <div class="row clearfix progress-box">
 
@@ -504,7 +505,11 @@
         localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
         $(this).attr('href' ,$('#solution_fun_nav').attr('href'))
     })
-
+    $('.nav-relationship').click(function(){
+        $(this).attr('href' , '');
+        localStorage.setItem("relationship", $('#relationship').attr('href'));   
+        $(this).attr('href' ,$('#relationship').attr('href'))
+    })
 
     $('.dashboard').click(function(){
         //Solution
@@ -519,7 +524,12 @@
         $('.nav-solution-func').attr('href' , '');
         localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
         $('.nav-solution-func').attr('href' ,$('#solution_fun_nav').attr('href'))
-
+        //Relation
+        $('.nav-relationship').click(function(){
+            $(this).attr('href' , '');
+            localStorage.setItem("relationship", $('#relationship').attr('href'));   
+            $(this).attr('href' ,$('#relationship').attr('href'))
+            })
     })
     </script>
     <script>

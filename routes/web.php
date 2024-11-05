@@ -278,6 +278,13 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::get("me-and-you-next/{id}", [\App\Http\Controllers\Adult\VerificationController::class, 'MeVsYouNextPage'])->name("me-and-you-next");
         Route::post("me-and-you-next-store", [\App\Http\Controllers\Adult\VerificationController::class, 'MeVsYouNextPageStore'])->name("me-and-you-next-store");
         Route::post("entity-usage", [\App\Http\Controllers\Adult\VerificationController::class, 'StoreEntityUsage'])->name("entity-usage");
+
+
+
+        //RelationShip Controller
+
+        Route::get("rel/{id?}/{type?}", [\App\Http\Controllers\Adult\RelationshipController::class, 'index'])->name("rel");
+        Route::post("save-rel-validations", [\App\Http\Controllers\Adult\RelationshipController::class, 'SaveValidations'])->name("save-rel-validations");
         
     });  
 });

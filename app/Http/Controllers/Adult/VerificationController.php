@@ -423,8 +423,6 @@ class VerificationController extends BaseController
                         ->where('people_communication_flow.user_id' , Auth::user()->id)
                         ->where('people_communication_flow.project_id' , $project_id)
                         ->where('people_communication_flow.problem_id' , $problem_id)
-                        
-                        
                         ->get();
           
                 return view(

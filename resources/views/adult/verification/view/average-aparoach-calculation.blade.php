@@ -5,18 +5,15 @@
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
-            <div class="row">
-                      <?php 
-                            $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
-                            $parameter =  Crypt::encrypt($parameters);
-                      ?>
-                      <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
-                      <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
-                      <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
-                      <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>   
-
-                      @include('adult.verification.view.component.verification_types')
-            </div>
+                <div class="row">
+                        <?php 
+                                $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
+                                $parameter =  Crypt::encrypt($parameters);
+                        ?>
+                        
+                        @include('adult.verification.view.component.common_routes')
+                        @include('adult.verification.view.component.verification_types')
+                </div>
         </div>
     </div>
     <div class="relationshipContent">
@@ -84,9 +81,7 @@
                                        
                                     </div>
                                 </div>
-                            </div>
-
-                        
+                            </div>                        
                         <div class="questionWrap">
                             <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
                                 tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
@@ -120,7 +115,7 @@
                                 <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, each part of the problem is not  substituted by a part of the solution</label></li>
                                
                             </ul>
-                        <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                            <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
                         </form>
                         </div>
                 </div>
@@ -289,57 +284,16 @@
 @endsection
 @section('scripts')
 
-<script>
-   
+<script>   
 $('#verification_types').on('change',function(){
     var id = $(this).val();
     window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
 })
-
-
-
 </script>
 <script>
-$('.nav-problem').click(function(){
-    $(this).attr('href' , ''); 
-    localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));   
-    $(this).attr('href' ,$('#problem_nav').attr('href'))
-})
-$('.nav-solution').click(function(){
-    $(this).attr('href' , ''); 
-    localStorage.setItem("sol", $('#solution_nav').attr('href'));   
-    $(this).attr('href' ,$('#solution_nav').attr('href'))
-})
-$('.nav-solution-func').click(function(){
-    $(this).attr('href' , '');
-    localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
-    $(this).attr('href' ,$('#solution_fun_nav').attr('href'))
-})
-$('.verification').click(function(){
-    $(this).attr('href' , '');
-    localStorage.setItem("varification", $('#verification').attr('href'));   
-    $(this).attr('href' ,$('#verification').attr('href'))
-})
-
-
+routes();
 $('.dashboard').click(function(){
-    //Solution
-    $('.nav-solution').attr('href' , '');
-    localStorage.setItem("sol", $('#solution_nav').attr('href'));   
-    $('.nav-solution').attr('href' ,$('#solution_nav').attr('href'))
-    //Problem
-    $('.nav-problem').attr('href' , '');
-    localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));       
-    $('.nav-problem').attr('href' ,$('#problem_nav').attr('href'))
-    //Sol fun
-    $('.nav-solution-func').attr('href' , '');
-    localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
-    $('.nav-solution-func').attr('href' ,$('#solution_fun_nav').attr('href'))
-    //verification
-    $('.nav-varification').attr('href' , '');
-    localStorage.setItem("varification", $('#verification').attr('href'));   
-    $('.nav-varification').attr('href' ,$('#solution_fun_nav').attr('href'))
-
+    routes();
 })
 </script>
 <script>
@@ -461,8 +415,4 @@ if(msg) {
     });
 }
 </script>
-
-
-
-
 @endsection
