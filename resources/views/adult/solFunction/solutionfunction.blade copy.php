@@ -4,9 +4,8 @@
 @section('content')
 @php
     $showMessage =  false; 
-    $can_edit = \App\Models\Project::SharedProject($project->id , Auth::user()->id);
+    $can_edit = \App\Models\Project::SharedProject($project->id , $project->shared_with);
 @endphp
-
 <div class="container">
     <div class="row spl-row">
         <h4>Solution Function</h4>
@@ -26,21 +25,216 @@
             vulputate velit
         </p>
     </div>
-                <?php
-                    $parameters = ['project_id' => $project_id , 'problem_id'=> $problem_id , 'solution_id' => $solution_id];
-                    $parameter =  Crypt::encrypt($parameters); 
-                ?>
+                    
+    @if(isset($solFunctions->id))
+                        <?php
+                            $parameters = ['project_id' => $project_id , 'problem_id'=> $problem_id , 'solution_id' => $solution_id];
+                            $parameter =  Crypt::encrypt($parameters); 
+                        ?>
+
                 <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
                 <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
                 <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
                 <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>
-                <a id="relationship" href="{{ route('adult.rel',@$parameter) }}"></a>      
-    <!-- If project shared  -->
-    @if($project->shared == 1)
-        @include('adult.solFunction.Editable_mode' , [$solFunctions , $project , $can_edit])    
+                <a id="relationship" href="{{ route('adult.rel',@$parameter) }}"></a>
+    <div class="conditionBlock">
+        <div class="blockProblem">
+            <div class="projectBlock text-center">
+                <h2>Problem</h2>
+                <div class="projectList text-center">
+                <div class="imgWrp">
+                                @if($solFunctions -> problem_type == 0)
+									@if(strlen($solFunctions -> problem_file) < 15)
+                                            <img class="mx-auto" src="{{ asset('assets-new/problem/'.$solFunctions->problem_file)}}"  width="100%" height="128px">
+									@endif
+                                    @elseif($solFunctions -> problem_type == 1)
+                                        <video class="mx-auto" controls="controls" preload="metadata"  width="100%" height="128px" preload="metadata">
+                                            <source src="{{ asset('assets-new/problem/' . $solFunctions -> problem_file) }}#t=0.1" type="video/mp4">
+                                        </video>
+                                    @elseif($solFunctions -> problem_type == 2)
+                                            <iframe class="mx-auto" src="{{ $solFunctions -> problem_file }}" width="100%" height="128px"> </iframe>
+                                    @endif
+                    </div>
+                    <p class="redText">{{ $solFunctions->problem_name }}</p>
+                </div>
+                <div class="projectList">
+                    <p class="date">{{ date('d/m/Y' , strtotime($solFunctions->problem_created_at)) }}</p>
+                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                </div>
+            </div>
+        </div>
+        <div class="long-arrow">
+        <p style="position:relative; top:35px;left:23px;">{{ $solFunctions->first_arr }}</p>
+            <!-- add arrow Image over here -->
+            <img src="{{ asset('assets-new/images/arrowRight.png')}}">
+            <!-- add arrow Image over here -->
+          </div>
+        <div class="blockProblem">
+            <div class="projectBlock text-center">
+                <h2>Solution</h2>
+                <div class="projectList text-center">
+                        <div class="imgWrp">
+                            @if($solFunctions -> solution_type == 0)
+                                        @if(strlen($solFunctions -> solution_file) < 15)
+                                            <img class="mx-auto" src="{{ asset('assets-new/solution/'.$solFunctions->solution_file)}}"  width="100%" height="128px">
+                                        @endif
+                                    @elseif($solFunctions -> solution_type == 1)
+                                        <video class="mx-auto" controls="controls" preload="metadata"  width="100%" height="128px" preload="metadata">
+                                            <source src="{{ asset('assets-new/problem/' . $solFunctions -> solution_file) }}#t=0.1" type="video/mp4">
+                                        </video>
+                                    @elseif($solFunctions -> solution_type == 2)
+                                            <iframe class="mx-auto" src="{{ $solFunctions -> solution_file }}"  width="100%" height="128px"> </iframe>
+                                    @endif
+                        </div>
+                    <p class="redText">{{ $solFunctions ->solution_name }}</p>
+                </div>
+                <div class="projectList">
+                    <p class="date">{{ date('d/m/Y' , strtotime($solFunctions->solution_created)) }}</p>
+                    <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                </div>
+            </div>
+        </div>
+        <div class="long-arrow">
+        <p style="position:relative; top:35px;left:25px;">{{ $solFunctions->second_arr }}</p>
+            <!-- add arrow Image over here -->
+            <img src="{{ asset('assets-new/images/arrowRight.png')}}">
+            <!-- add arrow Image over here -->
+          </div>
+        <div class="blockProblem">
+            <div class="projectBlock text-center">
+                <h2>Solution Function</h2>
+                <div class="projectList text-center">
+                    <div class="imgWrp">
+                        @if($solFunctions -> type == 0)
+                                @if(strlen($solFunctions -> file) < 15)
+                                    <img class="mx-auto" src="{{ asset('assets-new/solFunction/'.$solFunctions->file)}}"  width="100%" height="128px">
+                                @endif
+                            @elseif($solFunctions -> type == 1)
+                                <video class="mx-auto" controls="controls" preload="metadata"  width="100%" height="128px" preload="metadata">
+                                    <source src="{{ asset('assets-new/solFunction/' . $solFunctions -> file) }}#t=0.1" type="video/mp4">
+                                </video>
+                            @elseif($solFunctions -> file == 2)
+                                    <iframe class="mx-auto" src="{{ $solFunctions -> file }}" width="100%" height="128px"> </iframe>
+                            @endif
+                    </div>
+                    <p class="redText">{{ $solFunctions->name }}</p>
+                </div>
+                <div class="projectList">
+                    <p class="date">{{ date('d/m/Y' , strtotime($solFunctions->created_at)) }}</p>
+                    @if(!is_null($can_edit) && $can_edit->editable_project)
+                    @if(($can_edit->editable_solution_func && Auth::user()->id == $can_edit->shared_with) || (!$can_edit->editable_solution_func && Auth::user()->id == $project->user_id))
+                    <ul>
+                        <li>
+                            <a href="javaScript:Void(0)" class="editSolFunBtn"
+                            
+                             data-id="{{ $solFunctions->id }}"
+                             data-problem="{{ $solFunctions->problem_id }}"
+                             data-solution="{{ $solFunctions->solution_id }}"
+                             data-file ="{{ $solFunctions->file }}"
+                             data-name ="{{ $solFunctions->name }}"
+                             data-solution_function_type_id ="{{ $solFunctions->solution_function_type_id }}"
+                            >
+                                <img src="{{ asset('/assets-new/images/editIcon.png')}}" alt="">
+                            </a>
+                        </li>
+                        <li>
+                            <a data-id="{{ $solFunctions->id }}"  class="delSolFunBtn" title="Delete">
+                            <img src="{{ asset('/assets-new/images/deleteIcon.png') }}" alt=""></a>
+                        </li>
+                        <li>
+                            <a href="#"><img src="{{ asset('/assets-new/images/uploadIcon.png') }}" alt=""></a>
+                        </li>
+                    </ul>
+
+                        @else
+                        <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                        @endif
+                @endif
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <div class="row pt-5">
+        <p>
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
+            dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper
+            suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in
+            vulputate velit
+        </p>
+    </div>
+    <div class="row">
+        <div class="row-title">
+            <h5>Problem and Solution Function Identification</h5>
+        </div>
+        <div class="row-table">
+            <table class="table slp-tbl text-center">
+                <thead>
+                    <th>Problem</th>
+                    <th>Solution</th>
+                    <th>Solution Function</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: red;">{{ $solFunctions->problem_name}}</td>
+                        <td style="color: #00A14C;">{{ $solFunctions->solution_name}}</td>
+                        <td style="color: #00A14C;">{{ $solFunctions->name}}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row pt-5">
+        <h5>Validation Questions</h5>
+        <p>Does the solution function enable the replacement of the problem?</p>
+        <div class="form-group pl-5 pb-5">
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio"  value="1" data-id="{{ $solFunctions->id }}" class="form-check-input validation" {{ ($solFunctions->validation_first == '1') ? 'checked' : '' }}
+                        name="optradio_firts">Yes, the solution function enables the replacement of the problem
+                </label>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input validation" value="2" data-id="{{ $solFunctions->id }}" {{ ($solFunctions->validation_first == '2') ? 'checked' : '' }}
+                        name="optradio_firts">Yes, the solution function enables the replacement of the problem
+                </label>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input validation" value="3" data-id="{{ $solFunctions->id }}" {{ ($solFunctions->validation_first == '3') ? 'checked' : '' }}
+                        name="optradio_firts">Yes, the solution function enables the substitution of the problem
+                </label>
+            </div>
+            
+
+        </div>
+    </div>
+    <div class="row">
+        <p>Does the solution function enable the solving of the ProblemName?</p>
+        <div class="form-group pl-5 pb-5">
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" value="1" {{ ($solFunctions->validation_second == '1') ? 'checked' : '' }} data-id="{{ $solFunctions->id }}" class="form-check-input validation"
+                        name="optradio_second">Yes, the solution function enables the solving of the ProblemName
+                </label>
+            </div>
+        </div>
+        <div class=" col-sm-3 mb-3">
+            <button type="button" class="btn btn-success" id="saveValidations" onclick='saveValidations()'>Save Validations</button>
+        </div>
+    </div>
+
     @else
-        @include('adult.solFunction.Readonly_mode' , [$solFunctions , $project , $can_edit])          
-    @endif       
+    
+    <div class="row" style="margin-bottom: 10%;">
+        <div class="col-md-6 align-middle">
+            <button class="btn btn-success" data-toggle="modal" data-target="#updateSolFunctionModal" type="button" id="add-solution-function">+ Identify Solution Function</button>
+        </div>
+    </div>
+    <?php $showMessage =  true; ?>
+    @endif
     
 </div>
 @include('adult.solFunction.modal.add-sol-func',[$project_id , $problem_id , $solution_id])
@@ -319,11 +513,5 @@ $('.dashboard').click(function(){
                 $(this).attr('href' ,$('#relationship').attr('href'))
                 })
 })
-
-
-        $('#viewsolutionfunction').on('change',function(){ console.log($(this).val());
-            var id = $(this).val();
-            window.location.href = "{{ route("adult.solution-func") }}" + '/' + id;
-        });
  </script>
 @endsection

@@ -13,24 +13,43 @@ use Validator;
 
 class ProblemController extends BaseController
 {
+    
    
     public function index($id = null){
         
-        $params = Crypt::decrypt($id);
-        
-        $problemID = $params['problem_id'];
-        $projectID = $params['project_id']; 
+        $params = Crypt::decrypt($id); 
+        $selectedSingleProblem = false; 
        
-        $cat = DB::table('problem_categories')->get();
-        // $problemID = Crypt::decrypt($id);
-        $problem =  DB::table('problems')->where('id','=',$problemID)->where('user_id' , Auth::user()->id)->where('project_id' , $projectID)->first();
-           
-        if($problem){
-                return view ('adult.problem.problem',compact('problem','cat','projectID'));
-            }else{
-                $problem = null;
-                return view ('adult.problem.problem',compact('problem','cat','projectID'));
+        if(is_array($params)){
+            $projectID = $params['project_id']; 
+            $problem_id  = $params['problem_id'];
+            
+        }else{
+            $selectedSingleProblem = true;
+            $projectID   =  DB::table('problems')->where('id' , $params)->pluck('project_id')->first();
+            $problem_id  = $params;
         }
+        $cat = DB::table('problem_categories')->get();
+        $project = DB::table('projects')
+                        ->leftjoin('project_shared', 'projects.id', '=', 'project_shared.project_id')
+                        ->select('projects.*')
+                        ->orderBy("projects.id", "desc")
+                        ->where('projects.id' ,$projectID)
+                        ->where(function($query){
+                                $query->orWhere('projects.user_id' , Auth::user()->id);
+                                $query->orWhere('project_shared.shared_with', '=', Auth::user()->id);
+                        })
+                    ->groupBy('projects.id')
+                    ->first();
+        
+        if($selectedSingleProblem || !empty($params['problem_id'])){
+            $problem = DB::table('problems')->where('id' , $problem_id)->first();
+        }else{
+            $problem = DB::table('problems')->where(['project_id' => $projectID , 'user_id'=> Auth::user()->id])->first();
+        }      
+        
+       
+        return view ('adult.problem.problem',compact('problem','cat','projectID' , 'project' ,'problem_id'));
         
     }
 
@@ -148,4 +167,7 @@ class ProblemController extends BaseController
                 return $this->sendError('Error.', ['error'=> $e->getMessage()]);
             }
     }
+
+
+   
 }

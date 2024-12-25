@@ -20,15 +20,16 @@
             <div class="row">
                 <div class="col-sm-12">
                     <h1>{{ $relationship->name }}</h1>
-                    <div class="relationImage text-center">
-                        <img src="{{ asset('rel/' . $relationship->image)}}" alt="relationImage" />
-                    </div>
+                        <div class="relationImage text-center">
+                            <img src="{{ asset('rel/' . $relationship->image)}}" alt="relationImage" />
+                        </div>
                     <p>{{ $relationship->text }}</p>
                 </div>
                 
                         <!-- principleRelation start -->
+                        @if(isset($principal)) 
                         <div class="principleRelation">                    
-                               
+                            
                             <div class="d-flex">
                                 @include('adult.relationship.common.principal')
                                 @include('adult.relationship.common.upside')
@@ -39,11 +40,15 @@
                                 @include('adult.relationship.common.communication')
                                 @include('adult.relationship.common.downside')
                             </div>                        
-                               
+                           
+                            
                                 
                         </div>
+                        @else
+                        @php $showMessage = true @endphp
+                        @endif
                         <!-- principleRelation End -->
-                    @include('adult.relationship.common.validation')
+                        @include('adult.relationship.common.validation')
                 
             </div>
         </div>

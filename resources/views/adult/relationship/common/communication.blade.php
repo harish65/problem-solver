@@ -3,7 +3,7 @@
         <h2>Communications</h2>
         <div class="projectList text-center communication_rel">
             <div class="imgWrp">
-                <div id="myCarousel" class="carousel slide " data-ride="carousel">
+                <div id="myCarousel_com" class="carousel slide " data-ride="carousel" data-interval="2000">
                     <div class="carousel-inner" role="listbox">
                         @php $index = 1; @endphp
                         @foreach($communications as $entity)
@@ -27,7 +27,7 @@
                         
                             @foreach($communications as $entity)
                            
-                                    <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
+                                    <li data-target="#myCarousel_com" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
                             @php $index++; @endphp
                         @endforeach 
                     </ol>

@@ -28,4 +28,8 @@ class Solution extends Model
     public function verification(){
         return $this->hasMany(Verification::class);
     }
+
+
+
+    
 }

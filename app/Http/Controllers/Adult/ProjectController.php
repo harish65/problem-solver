@@ -7,6 +7,7 @@ use App\Http\Controllers\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\Models\Problem;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use Auth;
 use Validator;
@@ -20,20 +21,26 @@ class ProjectController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {    
+    {   
         $project = DB::table('projects')
-                    ->leftJoin('problems', 'projects.id', '=', 'problems.project_id')
-                    ->leftJoin('solutions', 'projects.id', '=', 'solutions.project_id')
+                    ->leftjoin('problems', 'projects.id', '=', 'problems.project_id')
+                    ->leftjoin('solutions', 'problems.project_id', '=', 'solutions.project_id')
+                    ->leftjoin('project_shared', 'projects.id', '=', 'project_shared.project_id')
                     ->select('projects.*', 'problems.id as problem_id', 'problems.name as problem' , 'solutions.name as solution_name' , 'solutions.id as solution_id')
                     ->orderBy("id", "desc")
-                    ->where('projects.user_id' , Auth::user()->id)
+                    ->where(function($query){
+                            $query->orWhere('projects.user_id' , Auth::user()->id);
+                            $query->orWhere('project_shared.shared_with', '=', Auth::user()->id);
+                    })
+                    ->groupBy('projects.id')
                     ->get();
+                    
                     if ($request->is('api/*')) {
                             $success['projects'] = $project;
                             $success['token'] = $request->header('Authorization');
                             return $this->sendResponse($success,'Reviewer Response');
                     }else{
-                        return view("adult.project.index", ["project" => $project]);
+                        return view('adult.project.index', ["project" => $project]);
                     }
     }
 
@@ -66,7 +73,7 @@ class ProjectController extends BaseController
                 $insert = DB::table('projects')->updateOrInsert(['id'=> $request->id],
                                             [
                                             'user_id' => Auth::user()->id,
-                                            'name'=> $request->name,                                       
+                                            'name'=> $request->name,                       
                                             'created_at' => date('Y-m-d H:i:s'),
                                             ]);
                 $success['type'] =  $insert;
@@ -132,14 +139,13 @@ class ProjectController extends BaseController
                 DB::table('problems')->where('project_id',$problem->id)->delete();
                     if(isset($solution->id)){
                         $solution_funct = DB::table('solution_functions')->where('solution_id', $solution->id)->first(); 
-                        DB::table('solutions')->where('project_id',$solution->id)->delete();
+                            DB::table('solutions')->where('project_id',$solution->id)->delete();
                             if(isset($solution_funct->id)){
                                 DB::table('solution_functions')->where('project_id',$solution_funct->id)->delete();
                             }
                     }
-            }
-            
-            // echo "<pre>";print_r();die;
+            }           
+           
             if($project){                
                 $success['success'] =  'true';
                 $success['token'] = $request->header('Authorization');
@@ -154,5 +160,72 @@ class ProjectController extends BaseController
                 return $this->sendResponse($success, 'Project can not deleted.');  
             }
     }
-    
+
+
+
+
+    public function shareProject(Request $request){
+        // echo '<pre>';print_r($request->all());die;
+       try{
+        $rules = array(
+            'email'=>'required|email',
+            "project_id" => "integer|required",
+            "project_sharing_mode" => "required"
+            
+        );
+        
+        $messsages = array(
+                'email.required'=>'The User Email must be a valid email address',
+                'project_id.required'=>'Project must be selected',
+                'project_sharing_mode.required'=>'Project share mode is required'
+        );
+        $validator = Validator::make($request->all(), $rules, $messsages);
+        if ($validator->fails()) {            
+            return $this->sendError("Validation Error.", $validator->errors());
+        }   
+        
+        // check user if exist
+        $user = User::where('email' , $request->email)->first();
+       
+        if($user){
+                $project = DB::table('project_shared')->where('project_id' , $request->project_id)->where('shared_with' ,  $user->id)->first();
+                if($project){
+                    return $this->sendError("Error.", ['messages'=> 'This project is already assigned to ' .$user->name .'!']);
+                }
+        }else{
+            return $this->sendError("Error.", ['messages'=> 'No record found!']);
+        }    
+        // if($request->shared_project == 1){
+            $update = DB::table('projects')->where('id' , $request->project_id)->update(['shared'=> '1']);
+        // }
+        
+       
+        // if($update){
+
+            // $editable_project = (isset($request->editable_project) && $request->editable_project == 1) ? '1' : '0';
+                $insertRecord =  DB::table('project_shared')->insert([
+                                    'project_id' => $request->project_id, 
+                                    'shared_with'=> $user->id,
+                                    'editable_project' => ($request->project_sharing_mode == 1) ? '1' : '0',
+                                    'editable_problem' => ($request->editable_problem == 1) ? '1' : '0',
+                                    'editable_solution' => ($request->editable_solution == 1) ? '1' : '0',
+                                    'editable_solution_func' => ($request->editable_solution_func == 1) ? '1' : '0',
+                                    'editable_verification' => ($request->editable_verification == 1) ? '1' : '0',
+                                    'editable_relationship' => ($request->editable_relationship == 1) ? '1' : '0',
+                                    'editable_report' => ($request->editable_report == 1) ? '1' : '0',
+                                    'editable_quiz' => ($request->editable_quiz == 1) ? '1' : '0',
+                                    'editable_result' => ($request->editable_result == 1) ? '1' : '0',
+                    
+                ]);
+
+            $success['type'] =  true;
+            $success['token'] = $request->header('Authorization');
+            return $this->sendResponse($success, 'Project shared successfully.');
+        // }
+        
+       }catch(Exception $e){
+                return $this->sendError('Error.', ['error'=> $e->getMessage()]);
+            }
+    }
+   
 }

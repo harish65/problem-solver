@@ -17,15 +17,14 @@
                 </div>
             </div>
         </div>
-        <?php 
-        
+                        <?php 
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                         ?>
-                            <a id="problem_nav" href="{{ route("adult.problem",@$parameter) }}"></a>
-                            <a id="solution_nav" href="{{ route("adult.solution",@$parameter) }}"></a>
-                            <a id="solution_fun_nav" href="{{ route("adult.solution-func",@$parameter) }}"></a>
-                            <a id="verification" href="{{ route("adult.varification",@$parameter) }}"></a>
+                            <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+                            <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+                            <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+                            <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>
                             <a id="relationship" href="{{ route('adult.rel',@$parameter) }}"></a>
         <div class="pd-20 bg-white border-radius-4 box-shadow mb-30">
             <div class="row clearfix progress-box">
@@ -42,14 +41,14 @@
 							@else
 								@if($item -> problem -> type == 0)
 									@if(strlen($item -> problem -> file) < 15)
-										<img src="{{ asset("assets/problem/" . $item -> problem -> file) }}" class="w-100 fileField">
+										<img src="{{ asset('assets/problem/' . $item -> problem -> file) }}" class="w-100 fileField">
 									@endif
 								@elseif($item -> problem -> type == 1)
 									<video controls="controls" preload="metadata" class="w-100 fileField" preload="metadata">
-										<source src="{{ asset("assets/problem/" . $item -> problem -> file) }}#t=0.1" type="video/mp4">
+										<source src="{{ asset('assets/problem/' . $item -> problem -> file) }}#t=0.1" type="video/mp4">
 									</video>
 								@elseif($item -> problem -> type == 2)
-									<img src="{{ "http://img.youtube.com/vi/" . explode("=", explode("watch?", $item -> problem -> file)[1])[1] . "/0.jpg" }}" class="w-100 fileField">
+									<img src="{{ 'http://img.youtube.com/vi/' . explode('=', explode('watch?', $item -> problem -> file)[1])[1] . '/0.jpg' }}" class="w-100 fileField">
 								@endif
 							@endif					
 							<h5 class="text-light-green padding-top-10 h5">
@@ -490,6 +489,9 @@
     @endif
     @section('scripts')
     <script>
+        
+
+
     $('.nav-problem').click(function(){
     $(this).attr('href' , ''); 
     localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));   
@@ -695,6 +697,8 @@
 
             $(".dropify").dropify();
         })
+
+        
     </script>
 
 

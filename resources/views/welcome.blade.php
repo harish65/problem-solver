@@ -53,8 +53,8 @@
         <div id="mobile-menu-wrap"></div>
         <div class="offcanvas__auth">
             <ul>
-                <li><a href="{{route("login")}}"><span class="fa fa-user"></span> Login</a></li>
-                <li><a href="{{route("register")}}"><span class="fa fa-user"></span> Register</a></li>
+                <li><a href="{{route('login')}}"><span class="fa fa-user"></span> Login</a></li>
+                <li><a href="{{route('register')}}"><span class="fa fa-user"></span> Register</a></li>
             </ul>
         </div>
         <div class="offcanvas__info">

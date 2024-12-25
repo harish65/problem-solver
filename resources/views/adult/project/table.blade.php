@@ -25,13 +25,22 @@
                             $parameter =  Crypt::encrypt($parameters);
                             ?>
                             
-                            <td><a class="grid-p-l" href="{{ route("adult.problem" ,@$parameter) }}" >{{ $item->name }}</a></td>
+                            <td><a class="grid-p-l" href="{{ route('adult.problem' ,@$parameter) }}" >{{ $item->name }}</a></td>
                             <td style="color:red">{{ ($item->problem != '') ? $item->problem : 'N/A' }}</td>
                             <td style="color:#00A14C">{{ ($item->solution_name != '') ? $item->solution_name : 'N/A' }}</td>
                             <td>
+                            @if($item->user_id == Auth::user()->id)
                                 <a href="javaScript:void(0)" class="editBtn" data-id="{{ $item->id }}" data-title="{{ $item->name }}"><img src="{{ url('/') }}/assets-new/images/editIcon.png" alt="" /></a>
                                 <a href="javaScript:void(0)" class="deleteBtn" data-id="{{ $item->id }}"><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" alt="" /></a>
-                                <a href="javaScript:void(0)" class="shareBtn" data-id="{{ $item->id }}"><img src="{{ url('/') }}/assets-new/images/uploadIcon.png" alt="" />
+                                <a href="javaScript:void(0)" class="shareBtn" data-id="{{ $item->id }}" data-shared="{{ $item->shared }}" data-name="{{ $item->name }}"><img src="{{ url('/') }}/assets-new/images/uploadIcon.png" alt="" /></a>
+                                <a href="javaScript:void(0)" class="viewBtn" data-id="{{ $item->id }}" data-shared="{{ $item->shared }}" data-name="{{ $item->name }}"><img src="{{ url('/') }}/assets-new/images/viewIcon.png" alt="" /></a>
+
+                                @else
+                                    <img src="{{ url('/') }}/assets-new/images/editIcon.png" alt="" />
+                                    <img src="{{ url('/') }}/assets-new/images/deleteIcon.png" alt="" />
+                                    <img src="{{ url('/') }}/assets-new/images/uploadIcon.png" alt="" />
+                                    <img src="{{ url('/') }}/assets-new/images/viewIcon.png" alt="" />
+                            @endif
                             </td>
                             
                         </tr>

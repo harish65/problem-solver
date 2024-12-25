@@ -2,6 +2,7 @@
     <div class="projectBlock text-center">
         <h2>Principal</h2>
         <div class="projectList text-center communication_rel">
+            @if(isset($principal)) 
                 @if($principal->principle_type == 0)
                     <ol style='display:grid;font-size:0.7rem;text-align: left;'>
                         <li>The Given Set of Communication Principle</li>
@@ -18,6 +19,7 @@
                 @else
                         <p style='font-size:0.7rem;text-align: left;'>{{ strip_tags($principal->content) }}</p>
                 @endif
+            @endif
         </div>
     </div>
     

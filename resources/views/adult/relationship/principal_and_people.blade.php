@@ -86,7 +86,7 @@
                          @if($relationship->id == 12)
                         <!-- principleRelation start -->
                             <div class="principleRelation">                    
-                            @if($principal)
+                            @if($principal && $words->count() > 0)
                                         <div class="d-flex">
                                         @include('adult.relationship.common.principal')
                                             @include('adult.relationship.common.upside')
@@ -95,9 +95,9 @@
                                             @include('adult.relationship.common.voucab')
                                             @include('adult.relationship.common.downside')
                                         </div>                        
-                                    @else
-                                    @php $showMessage = true @endphp
-                                    @endif
+                            @else
+                            @php $showMessage = true @endphp
+                            @endif
                                     
                             </div>
                         <!-- principleRelation End -->

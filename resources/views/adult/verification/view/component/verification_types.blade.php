@@ -1,13 +1,16 @@
-<div class="col-sm-12">
+<div class="col-md-6">
     <div class="d-flex align-items-center">
+    <?php 
+    
+    $categories   =  \App\Models\VerificationType::verificationTypeCategories(); 
 
-    <?php
-            $categories =  \App\Models\VerificationType::verificationTypeCategories();
 
-        ?>
+    $projectUsers  = \App\Models\Project::getUsers($project_id);
+        
+    ?>
         <h2>Verification</h2>
         <select class="form-control form-select" id="verification_types">
-        <option value=''>Select Verification Type..</option>
+        <option selected="true" disabled="disabled">Select Verification Type..</option>
             @foreach(@$categories as $cat)
             <optgroup label="{{ $cat->name }}">
                     @foreach(@$types as $type)
@@ -20,6 +23,18 @@
             </optgroup>
             @endforeach
             
+        </select>
+    </div>
+</div>
+
+<div class="col-md-6">
+    <div class="d-flex align-items-center">
+        <h2>Users</h2>
+        <select class="form-control form-select" id="verification_types">
+            <option selected="true" disabled="disabled">Select User..</option>
+            @foreach($projectUsers as $user)
+            <option  value='{{ $user->id }}' {{ ($problem->user_id == $user->id)  ?  'selected': '' }}>{{ $user->name }}</option>
+            @endforeach
         </select>
     </div>
 </div>

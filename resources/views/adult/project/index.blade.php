@@ -19,16 +19,14 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col">
           <h4>List of Projects</h4>
         </div>
-        <div class="col-md-6">
-          
+        <div class="col">          
           <div class="text-end">
             <div class="form-check">
-              <label class="form-check-label">  Grid View</label>
+              <label class="form-check-label"> Grid View</label>
                 <input type="checkbox" class="form-check-input" id="form-check-input" value="">
-              
             </div>
           </div>
         </div>
@@ -41,6 +39,7 @@
   @include('adult.project.table', [$project])      
       
   @include('adult.project.modal.add-project')
+  @include('adult.project.modal.share-project')
 @endsection
 
 @section('scripts')
@@ -104,9 +103,15 @@
 
 <script>
   $(document).on('click' , '.editBtn' , function(){
+        $('#modal_title').text('Edit Project');
        $('#project_id').val($(this).attr('data-id'))
        $('#name').val($(this).attr('data-title'))
        $('#addprojectModal').modal('toggle')
+  })
+  $(document).on('click' , '#btnCreate' , function(){
+    $('#modal_title').text('Add New Project');
+    $('#project-modal').find('input').val('');
+    $('#addprojectModal').modal('toggle')
   })
 </script>
 <script>
@@ -143,7 +148,7 @@
                        });
                    } else {
                        toastr.success(response.message);
-                      //  window.location.href = "{{route('adult.dashboard')}}";
+                       window.location.href = "{{route('adult.dashboard')}}";
                    }
                }
            });
@@ -175,6 +180,76 @@
     })
 </script>
 
+<script>
+  $('#shareprojectBtn').click(function(e){
+    e.preventDefault();
+    if($("input[name='project_sharing_mode']:checked").val() == 1 && $("input:checkbox:checked").length == 0){
+      toastr.error('Project permissions must be selected in editable mode!');
+      return false;
+    }
+    var fd = new FormData($('#share-project')[0]);
+    $.ajaxSetup({
+    headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+    });
+    
+    $.ajax({
+        url: "{{route('adult.share-project')}}",
+        data: fd,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        type: 'POST',
+        beforeSend: function(){
+          $('#shareprojectBtn').attr('disabled',true);
+          $('#shareprojectBtn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+        },
+        error: function (xhr, status, error) {
+            $('#shareprojectBtn').attr('disabled',false);
+            $('#shareprojectBtn').html('Submit');
+            $.each(xhr.responseJSON.data, function (key, item) {
+                toastr.error(item);
+            });
+        },
+        success: function (response){
+          if(response.success == false)
+          {
+              $('#shareprojectBtn').attr('disabled',false);
+              $('#shareprojectBtn').html('Submit');
+              var errors = response.data;
+              $.each( errors, function( key, value ) {
+                  toastr.error(value)
+              });
+          } else {
+              toastr.success('Project Shared successfully!');
+              location.reload();
+          }
+        }
+    });
+})
+
+$('input[type=radio]').on('change', function(){
+   if($(this).val() == 1){
+      $('.project_permission').css('display', 'block')
+   }else if($(this).val() == 0){
+    $('.project_permission').css('display', 'none')
+      if ($('input[type=checkbox]').is(':checked')) {
+        $('input[type=checkbox]').val('0').prop('checked' , false);
+      }
+   }
+})
+
+
+$(":checkbox").change(function() {
+        // Check if the checkbox is checked
+        if ($(this).is(':checked')) {
+            $(this).val(1); // Set value to 1 when checked
+        } else {
+            $(this).val(0); // Set value to 0 when unchecked
+        }
+    });
+</script>
 @endsection
 
 

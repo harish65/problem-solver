@@ -26,19 +26,19 @@ $(function () {
     })
 
 
-    $(document).on('click', '.nav-solution', function () {
-        $(this).addClass('active')
-        $("li .nav-link").not($(this)).removeClass('active');
-        var solutionMsg = "A project is created to solve a problem.  A solution of problem is identified in that project to solve the identified problem.  Please, go back to open/create a project before identifying the solution for the problem"
-        if ($(this).attr('href') == 'undefined') {
-            $(this).attr('href', '')
-            swalMessage(solutionMsg , 'Project Solution');
-            return false;
-        }
-        if (!$(this).attr('href')) {
-            swalMessage(solutionMsg , 'Project Solution');
-        }
-    })
+        $(document).on('click', '.nav-solution', function () {
+            $(this).addClass('active')
+            $("li .nav-link").not($(this)).removeClass('active');
+            var solutionMsg = "A project is created to solve a problem.  A solution of problem is identified in that project to solve the identified problem.  Please, go back to open/create a project before identifying the solution for the problem"
+            if ($(this).attr('href') == 'undefined') {
+                $(this).attr('href', '')
+                swalMessage(solutionMsg , 'Project Solution');
+                return false;
+            }
+            if (!$(this).attr('href')) {
+                swalMessage(solutionMsg , 'Project Solution');
+            }
+        })
 
     $(document).on('click', '.nav-solution-func', function () {
         $(this).addClass('active')
@@ -169,3 +169,22 @@ function routes(){
             $(this).attr('href' ,$('#relationship').attr('href'))
     })
 }
+
+
+
+// share project code 
+
+$(document).on('click' , '.shareBtn' , function(){
+    $(this).attr('disabled',true); 
+    $('#shared_project_id').val($(this).data('id'));
+    $('#shared_project').val($(this).data('shared'));
+    $('#project_name').text('Share Project ' + $(this).data('name'));
+    $('#shareProjectModal').modal('toggle');
+    $(this).attr('disabled',false);
+})
+$('#shareProjectModal').on('hidden.bs.modal', function () {
+    $(this).find('form').trigger('reset');
+})
+
+
+//Problem on change in owner side

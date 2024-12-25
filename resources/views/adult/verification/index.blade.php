@@ -45,8 +45,9 @@ $('#verification_types').on('change',function(){
 })
 </script>
 <script>
-routes();
-
+    $(function(){
+        routes();
+    })
 $('.dashboard').click(function(){
     routes();
 })

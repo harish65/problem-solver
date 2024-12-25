@@ -286,9 +286,6 @@ $('.dashboard').click(function(){
     routes();
 
 })
-
-
-
 $('#add-info-varification-button').click(function(){
         if($('#verification_types').val() == ''){
             toastr.error('Please select verification type first');

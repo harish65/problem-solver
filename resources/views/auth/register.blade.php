@@ -42,9 +42,10 @@
           <div class="form-group">
             <select class="form-control select" name="role" id="role">
               <option>Select Type</option>
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
+              @foreach ($roles as $role)
+                <option value="{{ $role->id}}">{{ $role->name}}</option>
+              @endforeach
+              
             </select>
           </div>
           <div class="form-group">

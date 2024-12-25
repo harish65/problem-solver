@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Problem extends Model
 {
@@ -23,5 +24,10 @@ class Problem extends Model
 
     public function verification(){
         return $this->hasMany(Verification::class);
+    }
+
+
+    public static function GetAllProblemsOfProject($id){
+        return DB::table('problems')->where('project_id' , $id)->get();
     }
 }

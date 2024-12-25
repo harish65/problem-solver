@@ -28,7 +28,7 @@
                 
                         <!-- principleRelation start -->
                         <div class="principleRelation">                    
-                                @if($entitieUsage->identified)
+                                @if(!is_null($entitieUsage) > 0)
                                     <div class="d-flex">
                                         @include('adult.relationship.common.principal')
                                         @include('adult.relationship.common.upside')

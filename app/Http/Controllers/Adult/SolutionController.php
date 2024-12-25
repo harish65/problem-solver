@@ -21,52 +21,72 @@ class SolutionController extends BaseController
     public function index($params = null){
       
         $params = Crypt::decrypt($params); 
-        
-        if(isset($params['problem_id'])){
-            $problem_id = $params['problem_id'];
-        }else{
-            $problem_id = $params;
-        }
-        
-        $project = DB::table('problems')->where('id' , '=' , $problem_id)->first();
-        if($project){
-
-       
-        $project_id = $project->project_id;
-        $problem_name = $project->name;
+        // dd($params);
+        $soluton_id = null;
+        if(!is_array($params)){ 
             
-        $solutionTypes = DB::table('solution_types')->get();
-        $problems = Problem::orderBy("id", "asc")
-                    ->where("user_id", Auth::user() -> id)
-                    ->get();
-        $problem = DB::table('solutions')
-                    ->join('problems' , 'solutions.problem_id' , 'problems.id')
-                    ->join('solution_types' , 'solutions.solution_type_id' , 'solution_types.id')                    
-                    ->select('solutions.*' , 'solution_types.output_slug','problems.name as problem_name', 'problems.project_id','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at')
-                    ->where('solutions.problem_id','=' ,$problem_id )
-                    ->first();
-                    return view('adult.solution.index' , compact('problem' ,'problems' , 'problem_id' , 'project_id' , 'problem_name','solutionTypes'));
-        }else{
-                    return Redirect::back()->withErrors(['msg' => 'Problem not found']);
+            $soluton_id = $params;
+            $solution = DB::table('solutions')
+                            ->join('problems' , 'solutions.problem_id' , 'problems.id')
+                            ->join('solution_types' , 'solutions.solution_type_id' , 'solution_types.id')                    
+                            ->select('solutions.*' , 'solution_types.output_slug','problems.name as problem_name', 'problems.project_id','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at')
+                            ->where('solutions.id' , $soluton_id)
+                            ->first();
+            $project = DB::table('projects')->where('id' ,$solution->project_id)->first();    
+            $problem_id = $solution->problem_id;  
+            $solutionTypes = DB::table('solution_types')->get();
+            $solutions = DB::table('solutions')->where('project_id' , $solution->project_id)->get();
+            $problem_name = DB::table('problems')->where('id' , $problem_id)->pluck('name')->first();
+        }else{            
+            $problem_id = $params['problem_id'];
+            $project = DB::table('projects')->where('id' ,$params['project_id'])->first();   
+            $solutionTypes = DB::table('solution_types')->get();
+            $project_id = $project->id;
+            $solutions = DB::table('solutions')->where('project_id', $project->id)->get();
+             
+            $query = DB::table('solutions')
+                            ->join('problems' , 'solutions.problem_id' , 'problems.id')
+                            ->join('solution_types' , 'solutions.solution_type_id' , 'solution_types.id')                    
+                            ->select('solutions.*' , 'solution_types.output_slug','problems.name as problem_name', 'problems.project_id','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at')
+                            ->where('solutions.problem_id','=' ,$problem_id)
+                            ->where('solutions.project_id','=' ,$project->id);
+
+                            
+                            //->orWhere('solutions.user_id' , Auth::user()->id)
+            
+            
+                            $solution = $query->first();
+
+                    
+            $problem_name = DB::table('problems')->where('id' , $problem_id)->pluck('name')->first();
         }
+        
+        return view('adult.solution.index' , compact('solution'  , 'problem_id' , 'solutionTypes' , 'project' , 'solutions','problem_name'));
         
     }
 
     public function store(Request $request){
         
          
-        $validator = Validator::make ( $request->all(),[
+        $rules = array(
             'solutionName' => 'required',
-            'problem_id' => 'required'
-        ]);
+            'problem_id' => 'required',
+            'solution_type_id'=> 'required'
+        );
+        $messsages = array(
+            'solutionName.required'=>'Solution name is required',
+            'project_id.required'=>'Problem must be selected',
+            'solution_type_id.required'=>'Transition phrase is required'
+        );
+        $validator = Validator::make($request->all(), $rules, $messsages);
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
         try{
-           
+            // echo "<pre>";print_r($request->all());die;
             $problem_id = Crypt::decrypt($request->input('problem_id'));
             $project_id = Crypt::decrypt($request->input('project_id'));
-        //    echo "<pre>";print_r($request->all());die;
+          
             if($request -> solutionType == 0){
                 $type =  null;
                 $file = null;
@@ -159,6 +179,7 @@ class SolutionController extends BaseController
     }
 
     public function updateValidation(Request $request){
+       
         $column = ($request->input('name') == 'optradio_firts')   ? 'validation_first' : 'validation_second';
         $update = DB::table('solutions')->where("id",'=' ,$request->input('data'))-> update([
             $column => $request->input('value')
@@ -171,7 +192,7 @@ class SolutionController extends BaseController
 
     public function updateSolution(Request $request)
     {
-        dd($request);
+        
         $validator = Validator::make ($request->all() , [
             'id' => 'required' //Id is solution id
         ]);

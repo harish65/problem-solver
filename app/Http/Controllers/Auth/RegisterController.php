@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController as BaseController;
+use DB;
 
 class RegisterController extends BaseController
 {
@@ -43,7 +44,8 @@ class RegisterController extends BaseController
         $this->middleware('guest');
     }
     public function showRegistrationForm() {
-        return view('auth.register');
+        $roles = DB::table('roles')->get();
+        return view('auth.register' , compact('roles'));
     }
     /**
      * Get a validator for an incoming registration request.

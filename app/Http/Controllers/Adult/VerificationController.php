@@ -34,6 +34,7 @@ class VerificationController extends BaseController
     {
         
         $params = Crypt::decrypt($data);
+        
         $problem_id = $params["problem_id"];
         $project_id = $params["project_id"];
         
@@ -140,6 +141,7 @@ class VerificationController extends BaseController
                     "Solution_function" => $Solution_function,
                     "verificationTypeText" => $verifiationTypeText,
                     "entity" => $entity,'transitionPhrase' => $transitionPhrase
+                    
                 ]);
                 break;
             case 2:
@@ -3074,7 +3076,7 @@ class VerificationController extends BaseController
 
     public function StoreCommonVerifications(Request $request){
         try {
-           
+            
             $validator = Validator::make($request->all(), [
                 "problem_id" => "required",
                 "project_id" => "required",

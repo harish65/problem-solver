@@ -1,10 +1,23 @@
 @extends('adult.layouts.adult')
 @section('title', 'Home | Admin')
-
 @section('content')
-<?php $showMessage =  false; ?>
-<div class="container">
+@php
+    $showMessage =  false; 
+    $project->id;
+    $can_edit = \App\Models\Project::SharedProject($project->id,Auth::user()->id);
+@endphp
 
+<?php 
+        
+$parameters = ['problem_id'=> $problem_id , 'project_id' => $project->id];                            
+$parameter =  Crypt::encrypt($parameters);
+?>
+
+<a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
+<a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
+<a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
+<a id="relationship" href="{{ route('adult.rel',@$parameter) }}"></a>
+<div class="container">
     <div class="row spl-row">
         <h4>Solution</h4>
     </div>
@@ -13,190 +26,19 @@
     </div>
     <div class="banner text-center">
         <img src="{{ asset('/assets-new/images/solution-banner.png') }}" width="666px" height="213px" >
-    </div>
-    
+    </div>    
         <div class="row pt-5">
             <p>
                 Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit
             </p>
         </div>
-                        <?php 
-                        
-                            $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
-                            $parameter =  Crypt::encrypt($parameters);
-                        ?>
-                            <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
-                            <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
-                            <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
-                            <a id="relationship" href="{{ route('adult.rel',@$parameter) }}"></a>
-@if(isset($problem->id))
- <!-- Start card main div -->
-    <div class="solutionconditionBlock">
-        <div class="blockProblem">
-            <div class="projectBlock text-center">
-              <h2>Problem</h2>
-              <div class="projectList text-center"> 
-                <div class="imgWrp">
-                        
-                
-                            @if($problem -> problem_type == 0)
-                                    @if(strlen($problem -> problem_file) < 15)
-									    <img class="mx-auto aaa" src="{{ asset('assets-new/problem/' . $problem -> problem_file) }}" width="100%" height="128px">
-                                    @endif
-                            @elseif($problem -> problem_type == 1)
-									<video class="mx-auto" controls="controls" preload="metadata" width="300" height="320" preload="metadata">
-										<source src="{{ asset('assets-new/problem/' . $problem -> problem_file) }}#t=0.1" type="video/mp4">
-									</video>
-                            @elseif($problem -> problem_type == 2)
-									    <iframe class="mx-auto" src="{{ $problem -> problem_file }}"width="300" height="320"> </iframe>
-                            @endif
-                    </div>
-                <p class="redText">{{ $problem->problem_name }}</p>
-              </div>
-              <div class="projectList">
-                <p class="date">{{ date('d/m/Y' , strtotime($problem->problem_created_at))}}</p>
-                <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-              </div>
-            </div>
-          </div>
-          <div class="long-arrow">            
-                <p style="position:relative; top:35px;left:10px;">{{ $problem->output_slug }}</p>
-            <img src="{{ asset('assets-new/images/arrowRight.png')}}">
-            <!-- add arrow Image over here -->
-          </div>
-          <div class="blockProblem">
-            <div class="projectBlock text-center">
-              <h2>Solution</h2>
-              <div class="projectList text-center"> 
-              <div class="imgWrp">
-                @if($problem -> type == 0)
-									@if(strlen($problem -> file) < 15)
-										<img class="mx-auto" src="{{ asset('assets-new/solution/'.$problem -> file) }}" width="100%" height="128px">
-									@endif
-								    @elseif($problem -> type == 1)
-									<video class="mx-auto" controls="controls" preload="metadata" width="100%" height="128px" preload="metadata">
-										<source src="{{ asset('assets-new/solution/'.$problem -> file) }}#t=0.1" type="video/mp4">
-									</video>
-								    @elseif($problem -> type == 2)
-									    <iframe class="mx-auto" src="{{ $problem -> file }}" width="100%" height="128px"> </iframe>
-								    @endif 
-              </div>
-                <p class="redText">{{ $problem->name }}</p>
-              </div>
-              <div class="projectList">
-                <p class="date">{{ date('d/m/Y' , strtotime($problem->created_at)) }}</p>
-                <ul>
-                  <li>
-                        <a href="javaScript:Void(0)"  class="editProblemBtn"
-                                                                            data-id="{{ $problem -> id }}"
-                                                                            data-name="{{ $problem -> name }}"
-                                                                            data-problem="{{ $problem -> problem_name }}"
-                                                                            data-type="{{ $problem -> type }}"
-                                                                            data-file="{{ $problem -> file }}"                                                                            
-                                                                            data-type-id ="{{ $problem -> solution_type_id }}"
-                                                                                    
-                        >
-                            <img src="{{ asset('/assets-new/images/editIcon.png')}}" alt=""/>
-                        </a>
-                </li>
-                  <li><a data-id="{{ $problem -> id }}" class="delProblemBtn" title="Delete" ><img src="{{ asset('/assets-new/images/deleteIcon.png') }}" alt=""/></a></li>
-                  <li><a href="#"><img src="{{ asset('/assets-new/images/uploadIcon.png') }}" alt=""/></a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-    </div>
-    <!-- End card main div -->
-    <div class="row pt-5">
-        <p>
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit
-        </p>
-    </div>
-    <div class="row">
-        <div class="row-title">
-            <h5>Problem and Solution Identification</h5>
-        </div>
-        <div class="row-table">
-            <table class="table slp-tbl text-center">
-                <thead>
-                    <th>Problem</th>
-                    <th>Solution</th>
-                </thead>
-                <tbody>
-                   
-                    <tr>
-                        <td style="color: red;">{{ (isset($problem->problem_name)) ? $problem->problem_name : 'NA'}}</td>
-                        <td style="color: #00A14C;">{{ (isset($problem->name)) ? $problem->name : 'NA'}}</td>
-                    </tr>
-                    
-                </tbody>
-            </table>
-        </div>
-    </div>
-    
-
-
-    <div class="row pt-5">
-        <h5>Validation Questions</h5>
-        <p>Does the solution of the actual problem replace the actual problem?</p>
-        <div class="form-group pl-5 pb-5">
-            <div class="form-check">
-                <label class="form-check-label">
-                <?php 
-                            // $parameters = ['problem_id'=> $problem->id , 'project_id' => $problem->project_id];
-                            // $parameter =  Crypt::encrypt($parameters);
-                        ?>
-                <input type="radio" {{ ($problem->validation_first == '0') ? 'checked' : '' }} value="0" data-id="{{ $problem->id }}" class="form-check-input validation" name="optradio_firts">Yes, the solution of the actual problem replaces the actual problem
-                </label>
-            </div>
-            <div class="form-check">
-                <label class="form-check-label">
-                <input type="radio" class="form-check-input validation" {{ ($problem->validation_first == '1') ? 'checked' : '' }} value="1" data-id="{{ $problem->id }}" name="optradio_firts">No, the solution of the actual problem does not replace the actual problem
-                </label>
-            </div>
-            
-        </div>
-        <p>Does the (solution name pull from the database) solve the (problem name pull from the database)?</p>
-        <div class="form-group pl-5 pb-5">
-            <div class="form-check">
-                <label class="form-check-label">
-                
-                <input type="radio" {{ ($problem->validation_second == '0') ? 'checked' : '' }} value="0" data-id="{{ $problem->id }}" class="form-check-input validation" name="optradio">Yes, (solution name form database) solves (problem name from database)
-                </label>
-            </div>
-            <div class="form-check">
-                <label class="form-check-label">
-                <input type="radio" class="form-check-input validation" {{ ($problem->validation_second == '1') ? 'checked' : '' }} value="1" data-id="{{ $problem->id }}" name="optradio">No, (solution name form database) does not solve (problem name from database)
-                </label>
-            </div>
-            
-        </div>
-        <div class=" col-sm-3 mb-3">
-            <button type="button" class="btn btn-success" id="saveValidations" onclick='saveValidations()'>Save Validations</button>
-        </div>
-    </div>
-   
-
-
-
-
-@else
-    <div class="row" style="margin-bottom: 10%;">
-            <div class="col-md-6 align-middle">
-                <button class="btn btn-success" data-toggle="modal" data-target="#add-sol-modal" type="button" id="add-solution">Add Solution</button>
-            </div>
-    </div>
-    <?php $showMessage =  true; ?>
-@endif 
-
-
-
-
-
- </div>   
+            @if($project->shared == 1 && $can_edit != null && $can_edit->editable_project == 1)
+                    @include('adult.solution.Editable_mode' , [$solution , $project , $can_edit])
+                    @else
+                    @include('adult.solution.Readonly_mode' , [$solution , $project , $can_edit])
+            @endif
+</div>  
 @include('adult.solution.model.add-sol' , [$problem_id , $solutionTypes])
-
 @endsection
 @section('css')
 <link rel="stylesheet" type="text/css" href="https://jeremyfagis.github.io/dropify/dist/css/dropify.min.css">
@@ -225,6 +67,11 @@
     //         confirmButtonColor: '#00A14C',
     //         })
     //     }
+
+    $('#viewsolution').on('change',function(){
+        var id = $(this).val();
+        window.location.href = "{{ route("adult.solution") }}" + '/' + id;
+    })
     </script>
 <script>
     $('.dropify').dropify();

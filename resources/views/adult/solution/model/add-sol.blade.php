@@ -11,10 +11,10 @@
                     <input type="hidden" name="id" id="id">
                     <!-- <input type="hidden" name="solutionType" id="solutionType"> -->
                     <?php 
-                            $parameter =  Crypt::encrypt($problem_id);
-                            $project_id =  Crypt::encrypt($project_id);
+                            $problem_id =  Crypt::encrypt($problem_id);
+                            $project_id =  Crypt::encrypt($project->id);
                         ?>
-                    <input type="hidden" name="problem_id" id="problem_id" value="{{ $parameter }}">
+                    <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
                     <input type="hidden" name="project_id" id="project_id" value="{{ $project_id }}">
 
                     <div class="form-group">

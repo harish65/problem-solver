@@ -48,12 +48,12 @@
 				<div class="dropdown">
 					<a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
 						<span class="user-icon">
-							<img src="{{ asset("assets/vendors/images/avatar/" . Auth::user() -> avatar) }}" alt="">
+							<img src='{{ asset("assets/vendors/images/avatar/" . Auth::user() -> avatar) }}' alt="">
 						</span>
 						<span class="user-name">{{ Auth::user() -> name }}</span>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
-						<a class="dropdown-item" href="{{ url("profile") }}"><i class="dw dw-user1"></i> Profile</a>
+						<a class="dropdown-item" href='{{ url("profile") }}'><i class="dw dw-user1"></i> Profile</a>
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="dw dw-logout"></i> Log Out
                         </a>
@@ -155,12 +155,9 @@
 			<div class="sidebar-menu">
 				<ul id="accordion-menu">
 					<li>
-						<a href="{{ url("adultHome") }}" class="dropdown-toggle no-arrow 
-						{{ Route::is("adultHome") ? 'active' : '' }}
-						{{ Route::is("adultProblem") ? 'active' : '' }}
-						{{ Route::is("adultSolution") ? 'active' : '' }}
-						{{ Route::is("adultSolFunction") ? 'active' : '' }}
-						{{ Route::is("adultVerification") ? 'active' : '' }}
+						<a href='{{ url("adultHome") }}' class="dropdown-toggle no-arrow 
+										{{ Route::is("adultHome") ? 'active' : '' }}
+										
 						">
 							<span class="micon icon-copy dw dw-home"></span><span class="mtext">Home</span>
 						</a>

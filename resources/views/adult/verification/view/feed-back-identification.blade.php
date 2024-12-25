@@ -158,7 +158,6 @@ $(document).on('click' , '#btnSave', function(e){
                         toastr.error(value)
                     });
                 } else {
-                    
                     toastr.success(response.message);
                     location.reload();
                 }

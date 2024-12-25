@@ -27,7 +27,8 @@
                 </div>
                 
                         <!-- principleRelation start -->
-                        <div class="principleRelation">                    
+                        <div class="principleRelation">   
+                        @if(isset($verification))                     
                         @if($verification->id && $principal)
                                     <div class="d-flex">
                                     @include('adult.relationship.common.principal')
@@ -37,9 +38,11 @@
                                         @include('adult.relationship.common.information')
                                         @include('adult.relationship.common.downside')
                                     </div>                        
-                                @else
-                                @php $showMessage = true @endphp
-                                @endif
+                           
+                            @endif
+                            @else
+                            @php $showMessage = true @endphp
+                            @endif
                                 
                         </div>
                         <!-- principleRelation End -->

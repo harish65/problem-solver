@@ -17,16 +17,17 @@
 <body>
     <div class="pageWrapper">            
         @include('adult.layouts.partials.navbar')
+        
             @yield("content")
+           
         @include('adult.layouts.partials.footer')    
     </div>
-<script src="{{ asset('assets-new/js/jquery.min.js') }}"></script>
-<script src="{{ asset('assets-new/js/popper.min.js') }}"></script>
-<script src="{{ asset('assets-new/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('assets-new/toastar/toastr.min.js') }}"></script>
-<script src="{{asset('assets-new/js/sweetalert.min.js')}}"></script>
-<script src="{{ asset('assets-new/js/main.js') }}"></script>
-    
+    <script src="{{ asset('assets-new/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets-new/js/popper.min.js') }}"></script>
+    <script src="{{ asset('assets-new/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets-new/toastar/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets-new/js/sweetalert.min.js')}}"></script>
+    <script src="{{ asset('assets-new/js/main.js') }}"></script>
         <script>
             //verification
             $('#saveValidations').on('click',function(){

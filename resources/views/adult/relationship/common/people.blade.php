@@ -3,7 +3,7 @@
         <h2>People</h2>
         <div class="projectList text-center sepration-step">
             <div class="imgWrp">
-                <div id="myCarousel" class="carousel slide " data-ride="carousel">
+                <div id="myCarousel_people" class="carousel slide" data-ride="carousel" data-interval="2000">
                     <div class="carousel-inner" role="listbox">
                         @php $index = 1; @endphp
                         @foreach($custommers as $entity)
@@ -22,7 +22,7 @@
                     <ol class="carousel-indicators custom">
                         @php $index = 0; @endphp
                             @foreach($custommers as $entity)
-                                    <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
+                                    <li data-target="#myCarousel_people" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
                             @php $index++; @endphp
                         @endforeach 
                     </ol>

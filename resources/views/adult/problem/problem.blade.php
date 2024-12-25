@@ -2,116 +2,46 @@
 @section('title', 'Home | Admin')
 
 @section('content')
-<?php $showMessage =  false; ?>
+@php
+    $showMessage =  false; 
+    $can_edit = \App\Models\Project::SharedProject($project->id , Auth::user()->id);    
+    $problems = null;
+    
+@endphp
+
+    @php           
+        $problems =  \App\Models\Problem::GetAllProblemsOfProject($project->id);
+    @endphp
+
+
 <div class="container">
 
     <div class="row spl-row">
         <h4>Problem</h4>
     </div>
     <div class="row spl-row-second">
-        <h4>TITLE FOR EXPLANTION</h4>
+            <div class="col-md-6">
+                <h4>TITLE FOR EXPLANTION</h4>
+            </div>
     </div>
-     <div class="banner text-center">
+    <div class="banner text-center">
         <img src="{{ asset('/assets-new/images/problem.png') }}" width="666px" height="213px" >
     </div>
-
     <div class="row pt-5">
         <p>
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit
         </p>
     </div>
-    @if($problem != null)
-    <div class="conditionBlock">
-        <div class="blockProblem">
-            <div class="projectBlock text-center">
-              <h2>Problem</h2>
-              <div class="projectList text-center"> 
 
-                        <?php 
-                            $parameters = ['problem_id'=> $problem->id , 'project_id' => $projectID];
-                            $parameter =  Crypt::encrypt($parameters);
-                        ?>
-                <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
-                <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
-                <a id="solution_fun_nav" href="{{ route('adult.solution-func',@$parameter) }}"></a>
-                <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>
-                <a id="relationship" href="{{ route('adult.rel',@$parameter) }}"></a>
-                
-                <div class="imgWrp">
-                                @if($problem -> type == 0)
-									@if(strlen($problem -> file) < 15)
-										<img class="mx-auto" src="{{ asset('assets-new/problem/' . $problem -> file) }}" width="100%" height="128px">
-									@endif
-								@elseif($problem -> type == 1)
-									<video class="mx-auto" controls="controls" preload="metadata" width="100%" height="128px" preload="metadata">
-										<source src="{{ asset('assets-new/problem/' . $problem -> file) }}#t=0.1" type="video/mp4">
-									</video>
-								@elseif($problem -> type == 2)
-									    <iframe class="mx-auto" src="{{ $problem -> file }}" width="100%" height="128px"> </iframe>
-								@endif
-                </div>
-                <p class="redText">{{ $problem->name }}</p>
-              </div>
-              <div class="projectList">
-                <p class="date">{{ date('d/m/Y' , strtotime($problem->created_at))}}</p>
-                <ul>
-                  <li>
-                        <a href="javaScript:Void(0)"  class="editProblemBtn"
-                                                                                    data-id="{{ $problem -> id }}"
-                                                                                    data-name="{{ $problem -> name }}"
-                                                                                    data-type="{{ $problem -> type }}"
-                                                                                    data-file="{{ $problem -> file }}"
-                                                                                    data-cat="{{ $problem -> category_id }}"
-                                                                                    data-actual_problrm_name = "{{ $problem ->actual_problrm_name}}"
-                        >
-                            <img src="{{ asset('/assets-new/images/editIcon.png')}}" alt=""/>
-                        </a>
-                </li>
-                  <li><a data-id="{{ $problem -> id }}" class="delProblemBtn" title="Delete" ><img src="{{ asset('/assets-new/images/deleteIcon.png')}}" alt=""/></a></li>
-                  <li><a href="#"><img src="{{ asset('/assets-new/images/uploadIcon.png')}}" alt=""/></a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-    </div>
-    <div class="row pt-5">
-        <p>
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit
-        </p>
-    </div>
-    <div class="row pt-5">
-        <h5>Validation Questions</h5>
-        <p>Have you performed analysis to identify the problem correctly?</p>
-        <div class="form-group pl-5 pb-5">
-            <div class="form-check">
-                <label class="form-check-label">
-                <?php 
-                    $parameters = ['problem_id'=> $problem->id , 'project_id' => $problem->project_id];
-                    $parameter =  Crypt::encrypt($parameters);
-                ?>
-                <input type="radio" {{ ($problem->validation == '0') ? 'checked' : ''}} value="0" data-id="{{ $parameter  }}" class="form-check-input validation" name="optradio">Yes, I have performed analysis to identify the problem correctly
-                </label>
-            </div>
-            <div class="form-check">
-                <label class="form-check-label">
-                <input type="radio" class="form-check-input validation" {{ ($problem->validation == '1') ? 'checked' : ''}} value="1" data-id="{{ $parameter  }}" name="optradio">No, I have not performed analysis to identify the problem correctly
-                </label>
-            </div>
-            <div class="row col-sm-3 mt-5">
-                <button type="button" class="btn btn-success" id="saveValidations" onclick='saveValidations()'>Save Validations</button>
-            </div>
-           
-        </div>
-    </div>
-@else
-    <div class="row" style="margin-bottom: 10%;">
-            <div class="col-md-6">
-                        <button class="btn btn-success" data-toggle="modal" data-target="#add-problem-modal" type="button" id="add-problem">Add Problem</button>
-            </div>
-    </div>
-    <?php $showMessage =  true; ?>
-@endif
- </div>   
+        @if($project->shared == 1)
+            @include('adult.problem.Editable_mode' , [$problem , $project , $can_edit])
+        @else
+            @include('adult.problem.Readonly_mode' , [$problem , $project , $can_edit])
+        @endif    
+
+
+</div>
+
 
 @include('adult.problem.modal.add-problem',[$projectID])
 @endsection
@@ -135,7 +65,6 @@
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
 
 <script>
-    
     $('.dropify').dropify();
     $(".updateProblemType").change(function(){
             var type = $(this).val();
@@ -305,36 +234,33 @@
         })
    })
 
+    $('.nav-problem').click(function(){
+        $(this).attr('href' , '');
+        localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));       
+        $(this).attr('href' ,$('#problem_nav').attr('href'))
+    })
+    $('.nav-solution').click(function(){
+        $(this).attr('href' , '');
+        localStorage.setItem("sol", $('#solution_nav').attr('href'));   
+        $(this).attr('href' ,$('#solution_nav').attr('href'))
+    })
+    $('.nav-solution-func').click(function(){
+        $(this).attr('href' , '');
+        localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
+        $(this).attr('href' ,$('#solution_fun_nav').attr('href'))
+    })
 
+    $('.nav-verification').click(function(){
+        $(this).attr('href' , '');
+        localStorage.setItem("varification", $('#verification').attr('href'));   
+        $(this).attr('href' ,$('#verification').attr('href'))
+    })
 
-
-$('.nav-problem').click(function(){
-    $(this).attr('href' , '');
-    localStorage.setItem("selected_problem", $('#problem_nav').attr('href'));       
-    $(this).attr('href' ,$('#problem_nav').attr('href'))
-})
-$('.nav-solution').click(function(){
-    $(this).attr('href' , '');
-    localStorage.setItem("sol", $('#solution_nav').attr('href'));   
-    $(this).attr('href' ,$('#solution_nav').attr('href'))
-})
-$('.nav-solution-func').click(function(){
-    $(this).attr('href' , '');
-    localStorage.setItem("sol-fun", $('#solution_fun_nav').attr('href'));   
-    $(this).attr('href' ,$('#solution_fun_nav').attr('href'))
-})
-
-$('.nav-verification').click(function(){
-    $(this).attr('href' , '');
-    localStorage.setItem("varification", $('#verification').attr('href'));   
-    $(this).attr('href' ,$('#verification').attr('href'))
-})
-
-$('.nav-relationship').click(function(){
-    $(this).attr('href' , '');
-    localStorage.setItem("relationship", $('#relationship').attr('href'));   
-    $(this).attr('href' ,$('#relationship').attr('href'))
-})
+    $('.nav-relationship').click(function(){
+        $(this).attr('href' , '');
+        localStorage.setItem("relationship", $('#relationship').attr('href'));   
+        $(this).attr('href' ,$('#relationship').attr('href'))
+    })
 
 
 $('.dashboard').click(function(){
@@ -367,5 +293,14 @@ function saveValidations(){
     location.reload();
 
 }
+
+
+$('#view_problem').on('change',function(){
+    var id = $(this).val();
+
+    console.log();problem_nav
+    window.location.href = "{{ route("adult.problem") }}" + '/' + id;
+    // window.location.href = $('#problem_nav').attr('href');
+})
 </script>
 @endsection

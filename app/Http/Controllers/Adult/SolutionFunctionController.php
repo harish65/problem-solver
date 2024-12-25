@@ -20,39 +20,53 @@ class SolutionFunctionController extends BaseController
 {
     //solution function
     public function index($params = null){
-        $params = Crypt::decrypt($params);         
-        $problem_id = $params['problem_id'];
-            $solution_id = DB::table('solutions')
-                    ->join('problems' , 'solutions.problem_id' , '=' , 'problems.id')
-                    ->select('solutions.*' , 'problems.name as problem_name')
-                    ->where('solutions.problem_id', $problem_id)->first();
-            if(!isset($solution_id->id)){
-    
-                return Redirect::back()->withErrors(['msg' => 'Solution Function must have solution identified.' , 'error' => 'Solution not identified']);
-            }        
-            $solutionID = $solution_id->id;
-            $solutionName =  $solution_id->name;
-            $solutionProblemName =  $solution_id->problem_name;
-            $project_id =  $solution_id->project_id;        
-          
 
-            $solFunctions = DB::table('solution_functions')
-                        ->join('problems' , 'solution_functions.problem_id' , 'problems.id')
-                        ->join('solutions' , 'solution_functions.solution_id' , 'solutions.id')
-                        ->join('solution_function_types' , 'solution_functions.solution_function_type_id' , 'solution_function_types.id')
-                        ->select('solution_functions.*' , 'solution_function_types.first_arr', 'solution_function_types.second_arr','solutions.name as solution_name','solutions.file as solution_file','solutions.created_at as solution_created','solutions.type as solution_type',
-                                                         'problems.name as problem_name','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at')
-                        ->where('solution_functions.problem_id','=' ,$problem_id )
-                        ->where('solution_functions.solution_id','=' ,$solutionID )
-                        ->first();
-           
-                return view("adult.solFunction.solutionfunction", [
+            $params = Crypt::decrypt($params); 
+            $query = DB::table('solution_functions')
+                                ->join('problems' , 'solution_functions.problem_id' , 'problems.id')
+                                ->join('solutions' , 'solution_functions.solution_id' , 'solutions.id')
+                                ->join('solution_function_types' , 'solution_functions.solution_function_type_id' , 'solution_function_types.id')
+                                ->select('solution_functions.*' , 'solution_function_types.first_arr', 'solution_function_types.second_arr','solutions.id as solution_id','solutions.name as solution_name','solutions.file as solution_file','solutions.created_at as solution_created','solutions.type as solution_type',
+                                                                'problems.id as problem_id','problems.name as problem_name','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at');
+
+            if(is_array($params)){  
+                    $problem_id = $params['problem_id'];
+                    $solution_id = DB::table('solutions')
+                            ->join('problems' , 'solutions.problem_id' , '=' , 'problems.id')
+                            ->select('solutions.*' , 'problems.name as problem_name')
+                            ->where('solutions.problem_id', $problem_id)->first();
+                    if(!isset($solution_id->id)){    
+                        return Redirect::back()->withErrors(['msg' => 'Solution Function must have solution identified.' , 'error' => 'Solution not identified']);
+                    }        
+                    $solutionID = $solution_id->id;
+                    $solutionName =  $solution_id->name;
+                    $solutionProblemName =  $solution_id->problem_name;
+                    $project_id =  $solution_id->project_id;        
+                    $project = DB::table('projects')->where('id' ,$project_id)->first();
+                    $solFunctions =  $query->where('solution_functions.problem_id','=' ,$problem_id )->where('solution_functions.solution_id','=' ,$solutionID )->first();
+        }else{
+                    $solutionFunctionId = $params;
+                    $solFunctions = $query->where('solution_functions.id','=' ,$solutionFunctionId)->first();
+                                // echo '<pre>';print_r($solFunctions);die;
+                    if(!isset($solFunctions->solution_id)){    
+                        return Redirect::back()->withErrors(['msg' => 'Solution Function must have solution identified.' , 'error' => 'Solution not identified']);
+                    }        
+                    $solutionID = $solFunctions->solution_id;
+                    $solutionName =  $solFunctions->solution_name;
+                    $solutionProblemName =  $solFunctions->problem_name;
+                    $project_id =  $solFunctions->project_id;        
+                    $project = DB::table('projects')->where('id' ,$project_id)->first();
+                    $problem_id = $solFunctions->problem_id;
+            }
+            
+            return view("adult.solFunction.solutionfunction", [
                             "solFunctions" => $solFunctions,
                             "solutionName" => $solutionName,
                             "solutionProblemName" => $solutionProblemName,
                             'project_id' => $project_id,
                             'problem_id' => $problem_id,
                             'solution_id' => $solutionID,
+                            'project' => $project
                         ]);
                
         
@@ -63,10 +77,16 @@ class SolutionFunctionController extends BaseController
     public function store(Request $request){
 
         // echo "<pre>";print_r($request->all());die;
-        $validator = Validator::make ( $request->all(),[
+        $rules = array(
             'updateSolFunctionName' => 'required|max:255',
-            // "updateSolFunctionSolutionId" => 'required',
-        ]);
+            "updateSolFunctionTypeId" => 'required',
+        );
+        $messsages = array(
+            'updateSolFunctionName.required'=>'Solution function name is required',
+            'updateSolFunctionTypeId.required'=>'Transition phrase is required',
+            
+        );
+        $validator = Validator::make($request->all(), $rules, $messsages);
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
