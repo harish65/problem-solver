@@ -10,8 +10,10 @@
                         <div class="projectBlock text-center">
                             <h2>{{ $item->name }}</h2>
                                 <?php 
+                                    
                                     $parameters = ['project_id' => $item->id,'problem_id'=> $item->problem_id];
                                     $parameter =  Crypt::encrypt($parameters);
+                                    
                                 ?>
                             <a href="{{ route('adult.problem',@$parameter) }}" data-params="{{ $parameter }}"
                                 class="project-grid">

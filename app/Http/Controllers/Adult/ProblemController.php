@@ -39,17 +39,17 @@ class ProblemController extends BaseController
                                 $query->orWhere('projects.user_id' , Auth::user()->id);
                                 $query->orWhere('project_shared.shared_with', '=', Auth::user()->id);
                         })
-                    ->groupBy('projects.id')
+                    ->orderBy('projects.id', 'desc')
                     ->first();
-        
-        if($selectedSingleProblem || !empty($params['problem_id'])){
-            $problem = DB::table('problems')->where('id' , $problem_id)->first();
-        }else{
-            $problem = DB::table('problems')->where(['project_id' => $projectID , 'user_id'=> Auth::user()->id])->first();
-        }      
-        
+                        
        
-        return view ('adult.problem.problem',compact('problem','cat','projectID' , 'project' ,'problem_id'));
+            $problem = DB::table('problems')->where(['project_id' => $projectID , 'user_id'=> Auth::user()->id])->first();
+            if(is_null($problem) && $problem_id !== null){
+                $problem = DB::table('problems')->where('id' , $problem_id)->first();   
+            }
+       
+       
+        return view ('adult.problem.problem',compact('problem','cat','projectID' , 'project' ,'problem_id' , 'selectedSingleProblem'));
         
     }
 

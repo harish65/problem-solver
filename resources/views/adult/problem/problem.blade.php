@@ -297,10 +297,7 @@ function saveValidations(){
 
 $('#view_problem').on('change',function(){
     var id = $(this).val();
-
-    console.log();problem_nav
     window.location.href = "{{ route("adult.problem") }}" + '/' + id;
-    // window.location.href = $('#problem_nav').attr('href');
 })
 </script>
 @endsection

@@ -23,17 +23,27 @@ class ProjectController extends BaseController
     public function index(Request $request)
     {   
         $project = DB::table('projects')
-                    ->leftjoin('problems', 'projects.id', '=', 'problems.project_id')
-                    ->leftjoin('solutions', 'problems.project_id', '=', 'solutions.project_id')
-                    ->leftjoin('project_shared', 'projects.id', '=', 'project_shared.project_id')
-                    ->select('projects.*', 'problems.id as problem_id', 'problems.name as problem' , 'solutions.name as solution_name' , 'solutions.id as solution_id')
-                    ->orderBy("id", "desc")
-                    ->where(function($query){
-                            $query->orWhere('projects.user_id' , Auth::user()->id);
-                            $query->orWhere('project_shared.shared_with', '=', Auth::user()->id);
-                    })
-                    ->groupBy('projects.id')
-                    ->get();
+                    ->leftJoin('problems', 'projects.id', '=', 'problems.project_id')
+                    ->leftJoin('solutions', 'problems.project_id', '=', 'solutions.project_id')
+                    ->leftJoin('project_shared', 'projects.id', '=', 'project_shared.project_id')
+                    ->select(
+                            'projects.id',
+                            'projects.name', // Example: Replace 'name' with actual project columns you need
+                            'projects.user_id',
+                            'projects.shared',
+                            'projects.created_at',
+                            'projects.updated_at',
+                                    DB::raw('MAX(problems.id) as problem_id'),
+                                    DB::raw('MAX(problems.name) as problem'),
+                                    DB::raw('MAX(solutions.name) as solution_name'),
+                                    DB::raw('MAX(solutions.id) as solution_id')
+                                )
+                                ->where(function ($query) {
+                                    $query->orWhere('projects.user_id', Auth::user()->id)
+                                        ->orWhere('project_shared.shared_with', '=', Auth::user()->id);
+                                })
+                            ->groupBy('projects.id', 'projects.name', 'projects.user_id' , 'projects.shared' ,'projects.created_at' , 'projects.updated_at') // Include all non-aggregated project columns
+                            ->orderBy('projects.id', 'desc')->get();
                     
                     if ($request->is('api/*')) {
                             $success['projects'] = $project;

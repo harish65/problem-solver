@@ -1,5 +1,6 @@
 
 @if(isset($problems) && $problems->count() > 0 )
+
     @php
         $problem_id = (isset($problem) && $problem->id != '') ?  $problem->id : $problem_id;
     @endphp

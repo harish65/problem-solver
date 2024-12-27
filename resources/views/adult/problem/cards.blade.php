@@ -1,26 +1,15 @@
-
-@if($problem != null)
-    
-    @if($project->shared == 1) 
-    
-    @include('adult.problem.problems_dd' , [$problems])
-    @endif
-    
-    <div class="conditionBlock">
+<div class="conditionBlock">
         <div class="blockProblem">
             <div class="projectBlock text-center">
               <h2>Problem</h2>
                         <div class="projectList text-center"> 
-                       
-                        <?php 
-                        
-                            $parameters = ['problem_id'=> $problem->id , 'project_id' => $projectID];
-                            $parameter =  Crypt::encrypt($parameters);
                            
+                        <?php 
+                            $parameters = ['problem_id'=> $problem->id , 'project_id' => $projectID];
+                            $parameter =  Crypt::encrypt($parameters); 
                         ?>
-                         
                         
-                        <a id="problem_nav"  href="{{ route('adult.problem',$parameter) }}"></a>
+                        <a id="problem_nav" href="{{ route('adult.problem',$parameter) }}"></a>
                         <a id="solution_nav" href="{{ route('adult.solution',$parameter) }}"></a>
                         <a id="solution_fun_nav" href="{{ route('adult.solution-func',$parameter) }}"></a>
                         <a id="verification" href="{{ route('adult.varification',$parameter) }}"></a>
@@ -36,31 +25,39 @@
                                             <source src="{{ asset('assets-new/problem/' . $problem -> file) }}#t=0.1" type="video/mp4">
                                         </video>
                                     @elseif($problem -> type == 2)
-                                            <iframe class="mx-auto" src="{{ $problem -> file }}" width="100%" height="128px"> </iframe>
+                                            <iframe class="mx-auto" src="{{ $problem-> file }}" width="100%" height="128px"> </iframe>
                                     @endif
                         </div>
                         <p class="redText">{{ $problem->name }}</p>
               </div>
               <div class="projectList">
                 <p class="date">{{ date('d/m/Y' , strtotime($problem->created_at))}}</p>
-                <!-- If project not shared and problem created by project owner -->
-                @if($project->user_id == Auth::user()->id  && $problem->user_id == Auth::user()->id)
+                    @if(($can_edit != null && $can_edit->editable_problem) || $problem->user_id == Auth::user()->id)
+                        <ul>
+                            <!-- if can edit -->                        
+                                <li>
+                                    <a href="javaScript:Void(0)"  class="editProblemBtn"
+                                                                        data-id   ="{{ $problem->id }}"
+                                                                        data-name ="{{ $problem->name }}"
+                                                                        data-type ="{{ $problem->type }}"
+                                                                        data-file ="{{ $problem->file }}"
+                                                                        data-cat  ="{{ $problem->category_id }}"
+                                                                        data-actual_problrm_name = "{{ $problem ->actual_problrm_name}}">
+                                        <img src="{{ asset('/assets-new/images/editIcon.png')}}" alt=""/>
+                                    </a>
+                                </li>
+                            
+                                <li><a data-id="{{ $problem -> id }}" class="delProblemBtn" title="Delete" ><img src="{{ asset('/assets-new/images/deleteIcon.png')}}" alt=""/></a></li>
+                                
+                        </ul>
+                    @else
                 <ul>
-                    <li>
-                        <a href="javaScript:Void(0)"  class="editProblemBtn"
-                                                            data-id   ="{{ $problem->id }}"
-                                                            data-name ="{{ $problem->name }}"
-                                                            data-type ="{{ $problem->type }}"
-                                                            data-file ="{{ $problem->file }}"
-                                                            data-cat  ="{{ $problem->category_id }}"
-                                                            data-actual_problrm_name = "{{ $problem ->actual_problrm_name}}">
-                            <img src="{{ asset('/assets-new/images/editIcon.png')}}" alt=""/>
-                        </a>
-                    </li>
-                
-                    <li><a data-id="{{ $problem -> id }}" class="delProblemBtn" title="Delete" ><img src="{{ asset('/assets-new/images/deleteIcon.png')}}" alt=""/></a></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
                 </ul>
                 @endif
+                
               </div>
             </div>
             </div>
@@ -99,20 +96,5 @@
                 <div class="row col-sm-3 mt-5 {{ ($problem->user_id == Auth::user()->id) ? '':'d-none' }} ">
                     <button type="button" class="btn btn-success" id="saveValidations" onclick='saveValidations()'>Save Validations</button>
                 </div>
-           
         </div>
     </div>
-    @else
-        @if($project->user_id == Auth::user()->id && $project->shared == 0)
-        <div class="row" style="margin-bottom: 10%;">
-                <div class="col-md-6">
-                    <button class="btn btn-success" data-toggle="modal" data-target="#add-problem-modal" type="button" id="add-problem"><i class="fa fa-plus"></i>Add Problem</button>
-                </div>
-            </div> 
-
-        @else    
-        @include('adult.problem.problems_dd' , [$problems])
-        @endif
-        
-        <?php $showMessage =  true; ?>
-    @endif
