@@ -32,9 +32,7 @@ class VerificationController extends BaseController
 {
     public function index($data = null, $type = null)
     {
-        
-        $params = Crypt::decrypt($data);
-        
+        $params = Crypt::decrypt($data);        
         $problem_id = $params["problem_id"];
         $project_id = $params["project_id"];
         
@@ -242,7 +240,7 @@ class VerificationController extends BaseController
                 );
                 break;
             case 6:
-                // die();
+                
                 $allVarifications = Verification::where(
                     "verification_type_id",
                     "=",
@@ -289,7 +287,7 @@ class VerificationController extends BaseController
                 $principle_identifications = DB::table(
                     "principle_identification_main"
                 )->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
-                // echo "<pre>";print_r($content);die;
+                
                 return view(
                     "adult.verification.view.entity-content",
                     compact(
@@ -470,7 +468,7 @@ class VerificationController extends BaseController
                         );
                     }
                 }
-                // echo '<pre>';print_r($users);die;
+               
                 return view(
                     "adult.verification.view.communication-flow-content",
                     compact(
@@ -738,7 +736,7 @@ class VerificationController extends BaseController
                                         ->where('function_belong_to_people.problem_id' , $problem_id)
                                         ->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , Auth::user()->id)->get();
                             
-                            // echo "<pre>";print_r($people);die;
+                           
                             $functionAud  = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
                             $functionApplied  = DB::table('function_sub_people')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->where('verification_type' , $verificationType->id)->first();
                             return view(
@@ -969,7 +967,7 @@ class VerificationController extends BaseController
                                                         ->where("user_id", "=", Auth::user()->id)
                                                         ->where("project_id", $project_id)
                                                     ->first();
-                                                //  echo "<pre>";print_r($entity_used);die;
+                                                
                                                 return view(
                                                     "adult.verification.view.resource-management-consideration",
                                                     compact(
@@ -1256,7 +1254,7 @@ class VerificationController extends BaseController
 
     public function store(Request $request)
     {
-        // echo "<pre>";print_r($request->all());die;
+        // 
         $validator = Validator::make($request->all(), [
             "verificationType" => "required",
         ]);
@@ -1461,7 +1459,7 @@ class VerificationController extends BaseController
         }
         try {
            
-            // echo "<pre>";print_r($request->all());die;
+            // 
             // add new row to varification_entity table
             if (!$request->beforeafter_id) {
                 $verificationEntity = new BeforeAndAfter();
@@ -1616,7 +1614,7 @@ class VerificationController extends BaseController
 
     public function storeTimeVerification(Request $request)
     {
-        // echo "<pre>";print_r($request->all());die;
+        // 
         $validator = Validator::make($request->all(), [
             "date" => "required",
             "solution_hold" => "required",
@@ -1657,7 +1655,7 @@ class VerificationController extends BaseController
     public function deleteTimeVerification(Request $request)
     {
         try {
-            //echo "<pre>";print_r($request->all());die;
+            //
             $delete = TimeVerification::where("id", "=", $request->id)->delete();
             if ($delete) {
                 $success["delete_verification"] = true;
@@ -1677,7 +1675,7 @@ class VerificationController extends BaseController
     }
 
     public function StorePastPresentTime(Request $request){
-        //  echo "<pre>";print_r($request->all());die;
+        //  
         $validator = Validator::make($request->all(), [
             "past_time" => "required",
         ]);
@@ -1813,7 +1811,7 @@ class VerificationController extends BaseController
 
     public function storePricipleIdentification(Request $request)
     {
-    //    echo "<pre>";print_r($request->all());die;
+    //    
         
            
             $data = $request->all();
@@ -1849,7 +1847,7 @@ class VerificationController extends BaseController
         if ($validator->fails()) {
             return $this->sendError("Validation Error.", $validator->errors());
         }
-            // echo "<pre>";print_r($request->all());die;
+            // 
         try {
             $verificationID = null;
             //check if verificatoin type is added in verification table
@@ -1878,7 +1876,7 @@ class VerificationController extends BaseController
                 $verification->save();
                 $verificationID = $verification->id;
             }
-            // echo "<pre>";print_r($request->all());die;
+            // 
             if ($request->updateProblemType == 0) {
                 $file = null;
                 $type = null;
@@ -1988,7 +1986,7 @@ class VerificationController extends BaseController
 
     public function createEntity(Request $request)
     {
-        // echo "<pre>";print_r($request->all());die;
+        // 
         $validator = Validator::make($request->all(), [
             "entity_name" => "required",
             "actual_enity" => "required",
@@ -2055,7 +2053,7 @@ class VerificationController extends BaseController
 
     public function createPartitionApproach(Request $request)
     {
-    //    echo "<pre>";print_r($request->all());die;
+    //    
         $validator = Validator::make($request->all(), [
             "word" => "required",
             "given" => "required",
@@ -2093,7 +2091,7 @@ class VerificationController extends BaseController
 
     public function updateValidations(Request $request)
     {
-        // echo '<pre></pre>'
+        
         try {
             $input = $request->all();
            
@@ -2362,7 +2360,7 @@ class VerificationController extends BaseController
     }
 
     public function storeFeedbackIdentification(Request $request){
-      
+        // 
         $validator = Validator::make($request->all(), [
             "error" => "required",
             "feedback" => "required",
@@ -2576,7 +2574,7 @@ class VerificationController extends BaseController
 
     ///function Function Adjustment
     public function storeFunctionAdjustment(Request $request){
-        //  echo '<pre>';print_r($request->all());die;
+        
         $validator = Validator::make($request->all(), [
             "function_name" => "required",
             "problem_name" => "required",
@@ -2620,7 +2618,7 @@ class VerificationController extends BaseController
     }
     // Function Substitution and People
     public function functionSustitutionAndPeople(Request $request){
-        // echo "<pre>";print_r($request->all());die;
+        // 
         $validator = Validator::make($request->all(), [
             "customer" => "required",
         ]);
@@ -2723,7 +2721,7 @@ class VerificationController extends BaseController
     }
 
     public function UpdateSolutionFunctionAverage(Request $request){
-        // echo '<pre>';print_r($request->all());die;  
+       
         $validator = Validator::make($request->all(), [
             "solution_part" => "required|numeric",
         ]);
@@ -2752,7 +2750,7 @@ class VerificationController extends BaseController
 
     public function replaceProblemByProblem(Request $request){
         try {
-            // echo "<pre>";print_r($request->all());die;
+            // 
             $data =  $request->all();
            
             $insert = DB::table(
@@ -2834,7 +2832,7 @@ class VerificationController extends BaseController
 
     public function storePassiveVoice(Request $request){
         try {
-            
+           
             $data =  $request->all();
             $insert = DB::table(
                 "passive_voice"
@@ -2863,7 +2861,7 @@ class VerificationController extends BaseController
 
     public function storeResourceManagment(Request $request){
         try {
-            // echo "<pre>";print_r($request->all());die;
+            // 
             $data =  $request->all();
             $file = null;
             $type = null;
@@ -2903,7 +2901,7 @@ class VerificationController extends BaseController
     }
 
     public function storeVisibilityEntityBehindExplanation(Request $request){
-        // echo '<pre>';print_r($request->all());die;
+        
         $validator = Validator::make($request->all(), [
             "entity_name" => "required",
         ]);
@@ -2968,7 +2966,7 @@ class VerificationController extends BaseController
 
     public function StoreMotherNature(Request $request){
         try {
-        //    echo '<pre>';print_r($request->all());die;
+        
             $data =  $request->all();
             if ($request->is('api/*')) {
                $problem_id =  $data["problem"];
@@ -3214,7 +3212,7 @@ class VerificationController extends BaseController
 
     public function storePeopleOutSideFromProject(Request $request){      
         try{
-            // echo "<pre>";print_r($request->all());die;
+            // 
             if($request->hasFile('file')){
                 $file = time().'.'.$request -> file -> extension();
                 $request -> file -> move(public_path('assets-new/users/'), $file);
@@ -3281,7 +3279,7 @@ class VerificationController extends BaseController
 
     public function storeProblemAtLocation(Request $request){
         try {
-            // echo "<pre>";print_r($request->all());die;
+            // 
             $data =  $request->all();
             $file = null;
             $type = null;
