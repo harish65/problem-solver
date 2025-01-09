@@ -274,9 +274,9 @@
                 </div>
                 <?php 
            
-                        $problem_id =  Crypt::encrypt($problem_id);
-                        $project_id =  Crypt::encrypt($project_id);
-                        $solution_id =  Crypt::encrypt($solution_id);
+                        // $problem_id =  Crypt::encrypt($problem_id);
+                        // $project_id =  Crypt::encrypt($project_id);
+                        // $solution_id =  Crypt::encrypt($solution_id);
                     ?>
                 <div class="modal-body">
                 <input type="hidden" name="updateProblemType" id="updateProblemType">

@@ -155,6 +155,8 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         //Route Project
         Route::post("/store", [\App\Http\Controllers\Adult\ProjectController::class, 'store'])-> name("store");
         Route::post("/delete", [\App\Http\Controllers\Adult\ProjectController::class, 'destroy'])-> name("delete");
+        Route::get("/shareusers/{id?}", [\App\Http\Controllers\Adult\ProjectController::class, 'getUsersForProjectSharing'])->name("shareusers");
+
 
         //Route Problem
         Route::get("/problem/{id?}", [\App\Http\Controllers\Adult\ProblemController::class, 'index'])-> name("problem");

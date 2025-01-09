@@ -1783,8 +1783,8 @@ class VerificationController extends BaseController
             
             $data = $request->all();
             $verification->user_id = Auth::user()->id;
-            $verification->project_id = Crypt::decrypt($data["project_id"]);
-            $verification->problem_id = Crypt::decrypt($data["problem_id"]);
+            $verification->project_id = $data["project_id"];
+            $verification->problem_id = $data["problem_id"];
             $verification->principle_type = $data["principle_type"];
             if(isset($data["content"]) && !empty($data["content"])){
                 $verification->content = ($data["content"]) ? $data["content"] : null;
@@ -1840,7 +1840,7 @@ class VerificationController extends BaseController
 
     public function storeEntityAvailable(Request $request)
     {
-        
+        // echo '<pre>';print_r($request->all());die;
         $validator = Validator::make($request->all(), [
             "entity" => "required",
         ]);
@@ -1866,10 +1866,8 @@ class VerificationController extends BaseController
                 $verification->name = "entity-available";
                 $verification->verification_type_id = $data["verificationType"];
                 $verification->verification_type_text_id = 0;
-                $verification->problem_id = Crypt::decrypt($data["problem_id"]);
-                $verification->solution_id = Crypt::decrypt(
-                    $data["solution_id"]
-                );
+                $verification->problem_id = $data["problem_id"];
+                $verification->solution_id = $data["solution_id"];
                 $verification->solution_function_id = $data["solution_function_id"];
                 $verification->user_id = Auth::user()->id;
                 $verification->type = 0;
@@ -1910,9 +1908,9 @@ class VerificationController extends BaseController
                             "actual_entity" => $data["actual_entity"],
                             "type" => $type,
                             "formula" => $data["formula"],
-                            "solution_id" => Crypt::decrypt($data["solution_id"]),
-                            "problem_id"=> Crypt::decrypt($data["problem_id"]),
-                            "project_id"=> Crypt::decrypt($data["project_id"]),
+                            "solution_id" => $data["solution_id"],
+                            "problem_id"=> $data["problem_id"],
+                            "project_id"=> $data["project_id"],
                             "solution_function_id"=> $data["solution_function_id"],
                             "user_id"=> Auth::user()->id,
                         ]
@@ -1927,9 +1925,9 @@ class VerificationController extends BaseController
                             "actual_entity" => $data["actual_entity"],
                             // "type" => $type,
                             "formula" => $data["formula"],
-                            "solution_id" => Crypt::decrypt($data["solution_id"]),
-                            "problem_id"=> Crypt::decrypt($data["problem_id"]),
-                            "project_id"=> Crypt::decrypt($data["project_id"]),
+                            "solution_id" => $data["solution_id"],
+                            "problem_id"=> $data["problem_id"],
+                            "project_id"=> $data["project_id"],
                             "solution_function_id" => $data["solution_function_id"],
                             "user_id"=> Auth::user()->id,
                         ]

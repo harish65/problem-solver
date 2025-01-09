@@ -189,8 +189,8 @@
                         <form id="content" method="post">
                             @csrf
                             <input type="hidden" name="id" value="{{ @$content->id}}">
-                            <input type="hidden" name="problem_id" id="problem_id" value="{{ Crypt::encrypt($problem_id) }}">
-                            <input type="hidden" name="project_id" value="{{ Crypt::encrypt($project_id) }}">
+                            <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                            <input type="hidden" name="project_id" value="{{ $project_id }}">
                             <input type="hidden" name="principle_type" value="{{ (@$content->principle_type) ? @$content->principle_type : '0' }}">
                             <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}">
                                 <div class="row">
@@ -264,8 +264,8 @@
                         ?>
                     <div class="modal-body">
                         <input type="hidden" name="id" value="{{ @$content->id}}">
-                        <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
-                        <input type="hidden" name="project_id" value="{{ $project_id }}">
+                        <input type="hidden" name="problem_id" id="problem_id" value="{{ Crypt::decrypt($problem_id) }}">
+                        <input type="hidden" name="project_id" value="{{ Crypt::decrypt($project_id) }}">
                         <div class="form-group">
                             <select class="form-control" name="principle_type">
                                 <option {{ (@$content->principle_type == 0) ? 'selected':'' }} value='0'>THE GIVEN SET</option>
@@ -535,7 +535,7 @@ $('.editEntity').click(function(){
            },
            error: function (xhr, status, error) {
                $('#update-content').attr('disabled',false);
-               $('#update-content').html('Submit');
+               $('#update-content').html('Update');
                $.each(xhr.responseJSON.data, function (key, item) {
                    toastr.error(item);
                });
@@ -544,7 +544,7 @@ $('.editEntity').click(function(){
              if(response.success == false)
              {
                  $('#update-content').attr('disabled',false);
-                 $('#update-content').html('Update Content');
+                 $('#update-content').html('Update');
                  var errors = response.data;
                  $.each( errors, function( key, value ) {
                      toastr.error(value)

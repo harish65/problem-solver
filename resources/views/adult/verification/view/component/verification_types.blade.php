@@ -3,10 +3,8 @@
     <?php 
     
     $categories   =  \App\Models\VerificationType::verificationTypeCategories(); 
-
-
     $projectUsers  = \App\Models\Project::getUsers($project_id);
-        
+    $project = \App\Models\Project::find($project_id);
     ?>
         <h2>Verification</h2>
         <select class="form-control form-select" id="verification_types">
@@ -26,7 +24,10 @@
         </select>
     </div>
 </div>
-
+@php 
+$can_edit = \App\Models\ProjectShared::where('project_id' ,$project_id)->where('shared_with',Auth::user()->id)->first();
+@endphp
+@if($can_edit != null && $can_edit->editable_project == 1)
 <div class="col-md-6">
     <div class="d-flex align-items-center">
         <h2>Users</h2>
@@ -38,3 +39,4 @@
         </select>
     </div>
 </div>
+@endif

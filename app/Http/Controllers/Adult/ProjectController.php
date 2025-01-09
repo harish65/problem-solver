@@ -32,18 +32,19 @@ class ProjectController extends BaseController
                             'projects.user_id',
                             'projects.shared',
                             'projects.created_at',
-                            'projects.updated_at',
-                                    DB::raw('MAX(problems.id) as problem_id'),
-                                    DB::raw('MAX(problems.name) as problem'),
-                                    DB::raw('MAX(solutions.name) as solution_name'),
-                                    DB::raw('MAX(solutions.id) as solution_id')
+                            'problems.id as problem_id',
+                            'problems.name as problem',                            
+                                    DB::raw('MIN(problems.id) as problem_id'),
+                                    DB::raw('MIN(problems.name) as problem'),
+                                    DB::raw('MIN(solutions.name) as solution_name'),
+                                    DB::raw('MIN(solutions.id) as solution_id')
                                 )
                                 ->where(function ($query) {
                                     $query->orWhere('projects.user_id', Auth::user()->id)
                                         ->orWhere('project_shared.shared_with', '=', Auth::user()->id);
                                 })
-                            ->groupBy('projects.id', 'projects.name', 'projects.user_id' , 'projects.shared' ,'projects.created_at' , 'projects.updated_at') // Include all non-aggregated project columns
-                            ->orderBy('projects.id', 'desc')->get();
+                            ->groupBy('projects.id') 
+                            ->orderBy('projects.id', 'DESC')->get();
                     
                     if ($request->is('api/*')) {
                             $success['projects'] = $project;
@@ -171,23 +172,39 @@ class ProjectController extends BaseController
             }
     }
 
-
+    public function getUsersForProjectSharing($projectId){
+        try{
+            $project = DB::table('projects')->where('id', $projectId)->first();
+                if($project && $project->shared == 1){
+                    $alreadyShared = DB::table('project_shared')->select('shared_with')->where('project_id',$projectId)->get();
+                    $users = DB::table('users')->where('id', '!=', Auth::user()->id)->where('role', 2)->whereNotIn('id', $alreadyShared)->get();
+                    $success['users'] = $users;
+                    return $this->sendResponse($success, 'success');
+                }else{
+                    $users = DB::table('users')->where('id', '!=', Auth::user()->id)->where('role', 2)->get();
+                    $success['users'] = $users;
+                    return $this->sendResponse($success, 'Success');
+                }
+        }catch(\Illuminate\Database\QueryException $e){
+            return $this->sendError('Error.', ['error'=> $e->getMessage()]);
+        }
+    }
 
 
     public function shareProject(Request $request){
-        // echo '<pre>';print_r($request->all());die;
+        echo "<pre>"; print_r($request->all()); exit;
        try{
         $rules = array(
-            'email'=>'required|email',
+            'user_id'=>'integer|required',
             "project_id" => "integer|required",
-            "project_sharing_mode" => "required"
+            //"project_sharing_mode" => "required"
             
         );
         
         $messsages = array(
-                'email.required'=>'The User Email must be a valid email address',
+                'email.required'=>'The User must be selected',
                 'project_id.required'=>'Project must be selected',
-                'project_sharing_mode.required'=>'Project share mode is required'
+                //'project_sharing_mode.required'=>'Project share mode is required'
         );
         $validator = Validator::make($request->all(), $rules, $messsages);
         if ($validator->fails()) {            
@@ -195,7 +212,7 @@ class ProjectController extends BaseController
         }   
         
         // check user if exist
-        $user = User::where('email' , $request->email)->first();
+        $user = User::where('id' , $request->user_id)->first();
        
         if($user){
                 $project = DB::table('project_shared')->where('project_id' , $request->project_id)->where('shared_with' ,  $user->id)->first();

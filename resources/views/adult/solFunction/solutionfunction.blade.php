@@ -36,7 +36,7 @@
                 <a id="verification" href="{{ route('adult.varification',@$parameter) }}"></a>
                 <a id="relationship" href="{{ route('adult.rel',@$parameter) }}"></a>      
     <!-- If project shared  -->
-    @if($project->shared == 1)
+    @if($project->shared == 1 && $can_edit != null && $can_edit->editable_project == 1)
         @include('adult.solFunction.Editable_mode' , [$solFunctions , $project , $can_edit])    
     @else
         @include('adult.solFunction.Readonly_mode' , [$solFunctions , $project , $can_edit])          

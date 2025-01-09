@@ -174,17 +174,17 @@ function routes(){
 
 // share project code 
 
-$(document).on('click' , '.shareBtn' , function(){
-    $(this).attr('disabled',true); 
-    $('#shared_project_id').val($(this).data('id'));
-    $('#shared_project').val($(this).data('shared'));
-    $('#project_name').text('Share Project ' + $(this).data('name'));
-    $('#shareProjectModal').modal('toggle');
-    $(this).attr('disabled',false);
-})
-$('#shareProjectModal').on('hidden.bs.modal', function () {
-    $(this).find('form').trigger('reset');
-})
+// $(document).on('click' , '.shareBtn' , function(){
+//     $(this).attr('disabled',true); 
+//     $('#shared_project_id').val($(this).data('id'));
+//     $('#shared_project').val($(this).data('shared'));
+//     $('#project_name').text('Share Project ' + $(this).data('name'));
+//     $('#shareProjectModal').modal('toggle');
+//     $(this).attr('disabled',false);
+// })
+// $('#shareProjectModal').on('hidden.bs.modal', function () {
+//     $(this).find('form').trigger('reset');
+// })
 
 
 //Problem on change in owner side

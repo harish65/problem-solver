@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+<?php $showMessage = null;?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">

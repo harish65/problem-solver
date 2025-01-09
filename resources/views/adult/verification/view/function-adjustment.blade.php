@@ -33,7 +33,7 @@
 
                 <div class="principleRelation">
                     <div class="conditionBlock space_rem">
-                        @if($functionAud)
+                @if($functionAud)
                         <!-- <div class="long-border"></div> -->
                         <div class="blockProblem">
                             <div class="projectBlock text-center">

@@ -1,7 +1,7 @@
 
 
 
-    @if($solution != null)
+@if($solution != null)
         @if($project->shared == 1)
         @include('adult.solution.solutions_dd' , [$solutions , $solution])  
         @endif

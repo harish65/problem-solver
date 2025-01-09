@@ -31,6 +31,7 @@ class Project extends Model
         $users = [];
         foreach($projectShared as $k=>$user){
             $users[$k] = $user->shared_with;
+           
         }
 
         return User::whereIn('id',$users)->get();

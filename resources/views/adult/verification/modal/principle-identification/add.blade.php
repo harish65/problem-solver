@@ -21,8 +21,8 @@
                     <input type="hidden" name="principle_main_id" id="principle_main_id" value="{{ @$content->id}}">
                     <input type="hidden" name="principle_identification_id" id="principle_identification_id" value="">
                     <input type="hidden" name="principle_type" id="principle_type	" value="{{ @$content->principle_type	}}">
-                    <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
-                    <input type="hidden" name="project_id" value="{{ $project_id }}">
+                    <input type="hidden" name="problem_id" id="problem_id" value="{{  Crypt::decrypt($problem_id) }}">
+                    <input type="hidden" name="project_id" value="{{ Crypt::decrypt($project_id) }}">
                     <div class="form-group">
                         <input type="text" disabled value="{{ 'Problem : '.@$problem->name }}" class="form-control"
                             placeholder="Problem Name">

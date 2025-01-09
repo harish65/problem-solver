@@ -1,11 +1,9 @@
 
 @if($problem != null)
-    
-    @if($project->shared == 1) 
-    
+@if(($project->user_id == Auth::user()->id) || ($project->shared == 1 && $can_edit != null && $can_edit->editable_problem == 0))
     @include('adult.problem.problems_dd' , [$problems])
-    @endif
-    
+@endif
+
     <div class="conditionBlock">
         <div class="blockProblem">
             <div class="projectBlock text-center">
@@ -13,10 +11,8 @@
                         <div class="projectList text-center"> 
                        
                         <?php 
-                        
                             $parameters = ['problem_id'=> $problem->id , 'project_id' => $projectID];
                             $parameter =  Crypt::encrypt($parameters);
-                           
                         ?>
                          
                         

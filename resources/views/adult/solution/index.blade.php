@@ -32,7 +32,8 @@ $parameter =  Crypt::encrypt($parameters);
                 Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit
             </p>
         </div>
-            @if($project->shared == 1 && $can_edit != null && $can_edit->editable_project == 1)
+                @if($project->shared == 1 && $can_edit != null && $can_edit->editable_project == 1)
+            
                     @include('adult.solution.Editable_mode' , [$solution , $project , $can_edit])
                     @else
                     @include('adult.solution.Readonly_mode' , [$solution , $project , $can_edit])

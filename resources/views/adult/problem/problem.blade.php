@@ -33,7 +33,7 @@
         </p>
     </div>
 
-        @if($project->shared == 1)
+        @if($project->shared == 1 && $can_edit != null && $can_edit->editable_project == 1)
             @include('adult.problem.Editable_mode' , [$problem , $project , $can_edit])
         @else
             @include('adult.problem.Readonly_mode' , [$problem , $project , $can_edit])

@@ -5,6 +5,7 @@
                         <div class="projectList text-center"> 
                            
                         <?php 
+                        
                             $parameters = ['problem_id'=> $problem->id , 'project_id' => $projectID];
                             $parameter =  Crypt::encrypt($parameters); 
                         ?>

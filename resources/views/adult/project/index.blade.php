@@ -89,7 +89,7 @@
     });
 </script>
 <script>
-  $(document).on('change' , '.form-check-input' , function(){
+  $(document).on('change' , '#form-check-input' , function(){
       if($(this).is(':checked')){
         // alert('table view')
         $('#table-view').removeClass('d-none')
@@ -249,6 +249,97 @@ $(":checkbox").change(function() {
             $(this).val(0); // Set value to 0 when unchecked
         }
     });
+
+
+    // share project code 
+
+$(document).on('click' , '.shareBtn' , function(){
+    
+    var project_id = $(this).data('id');
+    $('#shared_project_id').val($(this).data('id'));
+    $('#shared_project').val($(this).data('shared'));
+    $('#shareProjectModal').modal('toggle');
+$.ajax({
+        url: "{{route('adult.shareusers')}}/" + project_id ,
+        data: {project_id: project_id},
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        type: 'GET',
+        beforeSend: function(){
+          $('#shareprojectBtn').attr('disabled',true);
+          $('#shareprojectBtn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+        },
+        error: function (xhr, status, error) {
+            $('#shareprojectBtn').attr('disabled',false);
+            $('#shareprojectBtn').html('Submit');
+            $.each(xhr.responseJSON.data, function (key, item) {
+                toastr.error(item);
+            });
+        },
+        success: function (response){
+          
+          if(response.success == false)
+          {
+              $('#shareprojectBtn').attr('disabled',false);
+              $('#shareprojectBtn').html('Submit');
+              var errors = response.data;
+              $.each( errors, function( key, value ) {
+                  toastr.error(value)
+              });
+          } else {
+            const dropdown = $('#shared_user');
+            dropdown.empty(); // Clear existing options
+            dropdown.append('<option selected="true" disabled="disabled">Select User</option>');
+            // Append new options
+            response.data.users.forEach(option => {
+              dropdown.append(`<option value="${option.id}">${option.name}</option>`);
+            });
+            $('#shareprojectBtn').attr('disabled',false);
+            $('#shareprojectBtn').html('Submit');
+          }
+        }
+    });
+
+
+
+})
+$('#shareProjectModal').on('hidden.bs.modal', function () {
+    $(this).find('form').trigger('reset');
+})
+
+        const toggleSwitch = document.getElementById("toggle-switch");
+        const radioReadButtons = document.querySelectorAll('.read');
+        const radioWriteButtons = document.querySelectorAll('.write');
+
+        toggleSwitch.addEventListener("change", function () {
+            if (this.checked) {
+              $(this).val(0);
+                // When the switch is ON, check all radio buttons
+                radioReadButtons.forEach((radio, index) => {
+                    // if (index === 0) {
+                        radio.checked = true; // Check the first radio button
+                    // }
+                });
+                radioWriteButtons.forEach((radio, index) => {
+                    // if (index === 0) {
+                      $(radio).attr('disabled' , true) // Check the first radio button
+                    // }
+                });
+
+            } else {
+              $(this).val(1);
+                // When the switch is OFF, uncheck all radio buttons
+                radioReadButtons.forEach((radio) => {
+                    radio.checked = false;
+                });
+                radioWriteButtons.forEach((radio, index) => {
+                    // if (index === 0) {
+                      $(radio).attr('disabled' , false) // Check the first radio button
+                    // }
+                });
+            }
+        });
 </script>
 @endsection
 

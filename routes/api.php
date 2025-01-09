@@ -124,6 +124,11 @@ Route::middleware('auth:api')->group( function () {
         Route::post("function-at-location", [\App\Http\Controllers\Adult\VerificationController::class, 'storeFunctionAtLocation'])-> name("function-at-location");
         // Passive Voice
         Route::post("passive-voice", [\App\Http\Controllers\Adult\VerificationController::class, 'storePassiveVoice'])-> name("passive-voice");
+        Route::post("store-priciple-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'storePricipleVerification'])-> name("store-priciple-verification");
+        Route::post("store-entity-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'storeEntityAvailable'])-> name("store-entity-verification");
+        Route::post("store-priciple-identification", [\App\Http\Controllers\Adult\VerificationController::class, 'storePricipleIdentification'])-> name("store-priciple-identification");
+
+
 });
 
 
