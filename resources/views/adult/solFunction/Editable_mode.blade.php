@@ -1,3 +1,4 @@
+
 @if(isset($solFunctions->id))
         @if(($project->user_id == Auth::user()->id) || (!is_null($can_edit) && $can_edit->shared_with  == Auth::user()->id))
             @if($project->user_id == Auth::user()->id || $can_edit->editable_solution_func == 0)

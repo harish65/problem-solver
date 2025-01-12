@@ -19,7 +19,7 @@ class ProblemController extends BaseController
         
         $params = Crypt::decrypt($id); 
         $selectedSingleProblem = false; 
-        
+       
         if(is_array($params)){
             $projectID = $params['project_id']; 
             $problem_id  = $params['problem_id'];

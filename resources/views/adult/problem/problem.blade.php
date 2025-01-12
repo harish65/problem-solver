@@ -2,13 +2,11 @@
 @section('title', 'Home | Admin')
 
 @section('content')
-@php
-    $showMessage =  false; 
-    $can_edit = \App\Models\Project::SharedProject($project->id , Auth::user()->id);    
-    $problems = null;
-    
-@endphp
-
+    @php
+        $showMessage =  false; 
+        $can_edit = \App\Models\Project::SharedProject($project->id , Auth::user()->id);    
+        $problems = null;
+    @endphp
     @php           
         $problems =  \App\Models\Problem::GetAllProblemsOfProject($project->id);
     @endphp
@@ -34,8 +32,10 @@
     </div>
 
         @if($project->shared == 1 && $can_edit != null && $can_edit->editable_project == 1)
+        
             @include('adult.problem.Editable_mode' , [$problem , $project , $can_edit])
         @else
+        
             @include('adult.problem.Readonly_mode' , [$problem , $project , $can_edit])
         @endif    
 
@@ -293,6 +293,7 @@ function saveValidations(){
     location.reload();
 
 }
+
 
 
 $('#view_problem').on('change',function(){

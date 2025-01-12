@@ -59,7 +59,7 @@ class SolutionFunctionController extends BaseController
                     $problem_id = $solFunctions->problem_id;
             }
             
-            return view("adult.solFunction.solutionfunction", [
+                        return view("adult.solFunction.solutionfunction", [
                             "solFunctions" => $solFunctions,
                             "solutionName" => $solutionName,
                             "solutionProblemName" => $solutionProblemName,

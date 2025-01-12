@@ -53,6 +53,11 @@
             <a class="dropdown-item logout"  onClick="logout();" href="{{route('user.getlogout')}}"><i class="fa fa-lock"></i>Logout</a>
           </div>
         </div>
+        <ul>
+          <li>
+            <a href="#" class="nav-link dashboard">{{ Auth::user()->name }} {{   Auth::user()->id }} </a>
+          </li>
+        </ul>
       </nav>
     </div>
   </header>

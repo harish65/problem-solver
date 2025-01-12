@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use DB;
-
+use Auth;
 class Problem extends Model
 {
     use HasFactory;
@@ -42,5 +42,14 @@ class Problem extends Model
                             )
                             ->where('problems.project_id',  $project_id) // Get only users with problems
                             ->get();
+    }
+
+    public static function GetProblem($id){
+        $problem = DB::table('problems')->where(['project_id' => $id , 'user_id'=>Auth::user()->id])->first();
+        if(is_null($problem)){
+            $problem = DB::table('problems')->where('project_id' , $id)->first();
+        }
+        return $problem;
+
     }
 }

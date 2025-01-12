@@ -32,7 +32,9 @@ class VerificationController extends BaseController
 {
     public function index($data = null, $type = null)
     {
-        $params = Crypt::decrypt($data);        
+        
+        $params = Crypt::decrypt($data);       
+        
         $problem_id = $params["problem_id"];
         $project_id = $params["project_id"];
         
@@ -677,13 +679,6 @@ class VerificationController extends BaseController
                                 "id", "=", 16
                             )->first();
                         }
-                        
-                        // $errorcorrection = DB::table('error_correction')->get();
-                       
-    
-                        // $problemDevelopment = db::table('problem_development')->select('problem_development.*' , 'error_correction.compensator' )
-                        //                     ->leftJoin('error_correction', 'problem_development.id', '=', 'error_correction.error_id')
-                        //                     ->get();
                         $functionAud  = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
                             
                         return view(
@@ -1233,7 +1228,7 @@ class VerificationController extends BaseController
                                                                         );
                                                                     break;
                                                                     default: 
-                                                                
+                                                                       
                                                                     return view(
                                                                         "adult.verification.index",
                                                                         compact(
@@ -2859,6 +2854,7 @@ class VerificationController extends BaseController
 
     public function storeResourceManagment(Request $request){
         try {
+            
             // 
             $data =  $request->all();
             $file = null;
@@ -3351,4 +3347,9 @@ class VerificationController extends BaseController
             ]);
         } 
     }
+
+
+        
+
+
 }

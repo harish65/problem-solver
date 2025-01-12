@@ -23,8 +23,8 @@ class ProjectController extends BaseController
     public function index(Request $request)
     {   
         $project = DB::table('projects')
-                    ->leftJoin('problems', 'projects.id', '=', 'problems.project_id')
-                    ->leftJoin('solutions', 'problems.project_id', '=', 'solutions.project_id')
+                    // ->leftJoin('problems', 'projects.id', '=', 'problems.project_id')
+                    // ->leftJoin('solutions', 'problems.project_id', '=', 'solutions.project_id')
                     ->leftJoin('project_shared', 'projects.id', '=', 'project_shared.project_id')
                     ->select(
                             'projects.id',
@@ -32,12 +32,13 @@ class ProjectController extends BaseController
                             'projects.user_id',
                             'projects.shared',
                             'projects.created_at',
-                            'problems.id as problem_id',
-                            'problems.name as problem',                            
-                                    DB::raw('MIN(problems.id) as problem_id'),
-                                    DB::raw('MIN(problems.name) as problem'),
-                                    DB::raw('MIN(solutions.name) as solution_name'),
-                                    DB::raw('MIN(solutions.id) as solution_id')
+                            // 'problems.id as problem_id',
+                            // 'problems.name as problem',                            
+                            // 'solutions.name as solution_name',                            
+                                    // DB::raw('MIN(problems.id) as problem_id'),
+                                    // DB::raw('MIN(problems.name) as problem'),
+                                    // DB::raw('MIN(solutions.name) as solution_name'),
+                                    // DB::raw('MIN(solutions.id) as solution_id')
                                 )
                                 ->where(function ($query) {
                                     $query->orWhere('projects.user_id', Auth::user()->id)
@@ -45,7 +46,7 @@ class ProjectController extends BaseController
                                 })
                             ->groupBy('projects.id') 
                             ->orderBy('projects.id', 'DESC')->get();
-                    
+                // echo '<pre>';print_r($project);die;
                     if ($request->is('api/*')) {
                             $success['projects'] = $project;
                             $success['token'] = $request->header('Authorization');
@@ -175,10 +176,21 @@ class ProjectController extends BaseController
     public function getUsersForProjectSharing($projectId){
         try{
             $project = DB::table('projects')->where('id', $projectId)->first();
+            
                 if($project && $project->shared == 1){
-                    $alreadyShared = DB::table('project_shared')->select('shared_with')->where('project_id',$projectId)->get();
-                    $users = DB::table('users')->where('id', '!=', Auth::user()->id)->where('role', 2)->whereNotIn('id', $alreadyShared)->get();
+                    $alreadyShared = DB::table('project_shared')
+                        ->where('project_id', $projectId)
+                        ->pluck('shared_with') // Extracts only the 'shared_with' column as an array
+                        ->toArray();
+
+                    $users = DB::table('users')
+                        ->where('id', '!=', Auth::user()->id)
+                        ->where('role', 2)
+                        ->whereNotIn('id', $alreadyShared) // Use the array of IDs
+                        ->get()
+                        ->toArray();
                     $success['users'] = $users;
+                    
                     return $this->sendResponse($success, 'success');
                 }else{
                     $users = DB::table('users')->where('id', '!=', Auth::user()->id)->where('role', 2)->get();
@@ -192,7 +204,7 @@ class ProjectController extends BaseController
 
 
     public function shareProject(Request $request){
-        echo "<pre>"; print_r($request->all()); exit;
+        // echo "<pre>"; print_r($request->all()); exit;
        try{
         $rules = array(
             'user_id'=>'integer|required',
@@ -202,7 +214,7 @@ class ProjectController extends BaseController
         );
         
         $messsages = array(
-                'email.required'=>'The User must be selected',
+                'user_id.required'=>'The User must be selected',
                 'project_id.required'=>'Project must be selected',
                 //'project_sharing_mode.required'=>'Project share mode is required'
         );

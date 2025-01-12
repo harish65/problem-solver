@@ -25,7 +25,9 @@
             suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in
             vulputate velit
         </p>
+        
     </div>
+    
                 <?php
                     $parameters = ['project_id' => $project_id , 'problem_id'=> $problem_id , 'solution_id' => $solution_id];
                     $parameter =  Crypt::encrypt($parameters); 
@@ -321,9 +323,11 @@ $('.dashboard').click(function(){
 })
 
 
-        $('#viewsolutionfunction').on('change',function(){ console.log($(this).val());
-            var id = $(this).val();
-            window.location.href = "{{ route("adult.solution-func") }}" + '/' + id;
-        });
+    $('#viewsolutionfunction').on('change',function(){ 
+        var id = $(this).val();
+        window.location.href = "{{ route("adult.solution-func") }}" + '/' + id;
+       
+    });
+    
  </script>
 @endsection

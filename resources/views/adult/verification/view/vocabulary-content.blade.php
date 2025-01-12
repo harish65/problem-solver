@@ -1,11 +1,16 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
-@php $showMessage = true @endphp
+@php $showMessage = true;
+
+    $VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+    
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
             <div class="row">
+                
             <?php 
                     $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                     $parameter =  Crypt::encrypt($parameters);
@@ -17,19 +22,19 @@
             </div>
         </div>
     </div>
-    @if(@$verification->id)
+    @if(isset($verification) && $verification->id)
 
     <!-- Content Section Start -->
     <div class="relationshipContent">
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <h1>{{ @$verificationType->page_main_title }}</h1>
+                    <h1>{{ $verificationType->page_main_title }}</h1>
 
                     <div class="relationImage text-center">
                         <img src="{{asset('assets-new/verification_types/'.$verificationType->banner)}}" alt="relationImage" />
                     </div>
-                    <p>{{ @$verificationType->explanation }}</p>
+                    <p>{{ $verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
                 <div class="principleRelation">
@@ -112,6 +117,7 @@
                                 <div class="projectList">
                                     <p class="date">{{ date('d/m/Y' , strtotime($verification->created_at)) }}</p>
                                     <ul>
+                                    @if($VerificationPermission)
                                         <li>
                                             <a href="javaScript:Void(0)" class="editverBtn">
                                                 <img src="{{ asset('assets-new/images/editIcon.png') }}" alt="">
@@ -125,6 +131,11 @@
                                             <a href="#"><img src="{{ asset('assets-new/images/uploadIcon.png') }}"
                                                     alt=""></a>
                                         </li>
+                                        @else
+                                        <li>&nbsp</li>
+                                        <li>&nbsp</li>
+                                        <li>&nbsp</li>
+                                        @endif
                                     </ul>
                                 </div>
                             </div>
@@ -140,10 +151,12 @@
                                 <div class="text-left w-50 ">
                                     <h2>Vacabulary</h2>
                                 </div>
+                                @if($VerificationPermission)
                                 <div class="text-right w-50 pt-3">
                                     <button type="button" class="btn btn-success addVocabularyBtn"
                                         id="add-new-variant">+ Add New</button>
                                 </div>
+                                @endif
                             </div>
 
                             <div class="entity">
@@ -167,6 +180,7 @@
                                             </td>
                                             <td>{{ $ent->verification_value }}</td>
                                             <td>
+                                            @if($VerificationPermission)
                                                 <a href="javaScript:Void(0)" class="addVocabularyBtn">
                                                     <img src="{{ asset('assets-new/images/add-verification.png')}}"
                                                         alt="">
@@ -182,7 +196,11 @@
                                                     >
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
                                                 </a>
-
+                                                @else
+                                                        <img src="{{ asset('assets-new/images/add-verification.png')}}"alt="">
+                                                        <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
+                                                        <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
+                                                @endif
                                             </td>
 
                                         </tr>
@@ -199,25 +217,25 @@
                                 <br>
                                 <h5>Do I use any word that does not me solve the identified problem?</h5>
                                 <input type="hidden" name="id" value="{{ $verification->id }}">
-                                <li><label><input type="radio" data-id="{{ $verification->id  }}" {{
+                                <li><label><input type="radio"  data-id="{{ $verification->id  }}" {{
                                             (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}
-                                        name="validation_1" class="form-check-input validation" value="1">Yes, I use
+                                        name="validation_1" class="form-check-input validation" value="1" {{ (!$VerificationPermission) ? 'disabled' : '' }}> Yes, I use
                                         words that does not help me solve the problem</label> </li>
                                 <li><label><input type="radio" data-id="{{ $verification->id  }}" {{
                                             (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}
-                                        name="validation_1" class="form-check-input validation" value="2">No, I don't
+                                        name="validation_1" class="form-check-input validation" value="2" {{ (!$VerificationPermission) ? 'disabled' : '' }}>No, I don't
                                         use any word that does not help me solve the problem</label> </li>
                                 <br>
                                 <h5>Does each word from the vocabulary match to actual entity that enables solving the
                                     problem?</h5>
                                 <li><label><input type="radio" data-id="{{ $verification->id  }}" {{
                                             (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}
-                                        name="validation_2" class="form-check-input validation" value="1"> Yes, each
+                                        name="validation_2" class="form-check-input validation" value="1" {{ (!$VerificationPermission) ? 'disabled' : '' }}> Yes, each
                                         word from the vocabulary matches to actual entity that enables me to solve the
                                         problem</label></li>
                                 <li><label><input type="radio" data-id="{{ $verification->id  }}" {{
                                             (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}
-                                        name="validation_2" class="form-check-input validation" value="2"> No, some
+                                        name="validation_2" class="form-check-input validation" value="2" {{ (!$VerificationPermission) ? 'disabled' : '' }}> No, some
                                         words I used in my vocabulary does not match to actual entity that enables me to
                                         solve the problem</label></li>
                                 <br>
@@ -225,12 +243,12 @@
                                     and does not include any word that does not help solve the problem?</h5>
                                 <li><label><input type="radio" data-id="{{ $verification->id  }}" {{
                                             (@$verification->validations->validation_3 == 1) ? 'checked' : '' }}
-                                        name="validation_3" class="form-check-input validation" value="1"> Yes, I
+                                        name="validation_3" class="form-check-input validation" value="1" {{ (!$VerificationPermission) ? 'disabled' : '' }}> Yes, I
                                         understand that the solution of a problem is given with its own vocabulary and
                                         does not include any word that does not help me solve the problem</label></li>
                                 <li><label><input type="radio" data-id="{{ $verification->id  }}" {{
                                             (@$verification->validations->validation_3 == 2) ? 'checked' : '' }}
-                                        name="validation_3" class="form-check-input validation" value="2"> No, I do not
+                                        name="validation_3" class="form-check-input validation" value="2" {{ (!$VerificationPermission) ? 'disabled' : '' }}> No, I do not
                                         understand that the solution of a problem is given with its own vocabulary and
                                         does not include any word that does not help me solve the problem</label></li>
                             </ul>
@@ -261,10 +279,22 @@
                     </div>
 
                 </div>
+                @if($VerificationPermission)
                 <div class="col-sm-12">
                     <button class="btn btn-success" id="add-varification-button"><i class="fa fa-plus"></i> Create
                         Verificatoin</button>
                 </div>
+                @else
+                
+                <div class="col-sm-6 mt-5 ">
+                <div class="p-3 mb-2 bg-danger text-white rounded box-shadow-error">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                                                            <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
+                                                            <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                                                            </svg> Project was shared but verification is not identified by user</div>
+                </div>             
+
+                @endif
             </div>
         </div>
 

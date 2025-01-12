@@ -1,4 +1,5 @@
 $(function () {
+    routesSharedProject();
     $(document).on('click', '.nav-problem', function (e) {
         var problemMes = "A project is created to solve a problem.  If the project has not been created, then a problem cannot be identified to be solved.  The way to look at it, a project exists to solve a problem.  Please, go back to open a project or create a project in order to identify the problem to be solved"
         $(this).addClass('active')
@@ -170,21 +171,15 @@ function routes(){
     })
 }
 
+function routesSharedProject(){
+    localStorage.setItem("varification",$('#verification').attr('href'));
+    var hrefverification = localStorage.getItem("varification");        
+    if (typeof hrefverification !== 'undefined') {
+        $('.nav-varification').attr('href', hrefverification)
+    }
+}
 
 
-// share project code 
-
-// $(document).on('click' , '.shareBtn' , function(){
-//     $(this).attr('disabled',true); 
-//     $('#shared_project_id').val($(this).data('id'));
-//     $('#shared_project').val($(this).data('shared'));
-//     $('#project_name').text('Share Project ' + $(this).data('name'));
-//     $('#shareProjectModal').modal('toggle');
-//     $(this).attr('disabled',false);
-// })
-// $('#shareProjectModal').on('hidden.bs.modal', function () {
-//     $(this).find('form').trigger('reset');
-// })
 
 
-//Problem on change in owner side
+       

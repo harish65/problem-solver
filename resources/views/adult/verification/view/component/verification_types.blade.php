@@ -27,7 +27,7 @@
 @php 
 $can_edit = \App\Models\ProjectShared::where('project_id' ,$project_id)->where('shared_with',Auth::user()->id)->first();
 @endphp
-@if($can_edit != null && $can_edit->editable_project == 1)
+
 <div class="col-md-6">
     <div class="d-flex align-items-center">
         <h2>Users</h2>
@@ -39,4 +39,3 @@ $can_edit = \App\Models\ProjectShared::where('project_id' ,$project_id)->where('
         </select>
     </div>
 </div>
-@endif

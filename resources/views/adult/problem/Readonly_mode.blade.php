@@ -1,21 +1,19 @@
 
+@php $checkReadOnlyMode = \App\Models\ProjectShared::CheckSharedProjectsMode($projectID);@endphp
 @if($problem != null)
-@if(($project->user_id == Auth::user()->id) || ($project->shared == 1 && $can_edit != null && $can_edit->editable_problem == 0))
-    @include('adult.problem.problems_dd' , [$problems])
-@endif
+    @if(($project->user_id == Auth::user()->id && $checkReadOnlyMode) || ($project->shared == 1 && $can_edit != null && $can_edit->editable_problem == 0))
+            @include('adult.problem.problems_dd' , [$problems])
+    @endif
 
     <div class="conditionBlock">
         <div class="blockProblem">
             <div class="projectBlock text-center">
               <h2>Problem</h2>
                         <div class="projectList text-center"> 
-                       
                         <?php 
                             $parameters = ['problem_id'=> $problem->id , 'project_id' => $projectID];
                             $parameter =  Crypt::encrypt($parameters);
                         ?>
-                         
-                        
                         <a id="problem_nav"  href="{{ route('adult.problem',$parameter) }}"></a>
                         <a id="solution_nav" href="{{ route('adult.solution',$parameter) }}"></a>
                         <a id="solution_fun_nav" href="{{ route('adult.solution-func',$parameter) }}"></a>
@@ -99,16 +97,16 @@
         </div>
     </div>
     @else
-        @if($project->user_id == Auth::user()->id && $project->shared == 0)
-        <div class="row" style="margin-bottom: 10%;">
+    <!-- Check if project has shared project only read only mode with all users -->
+        
+        @if(($project->user_id == Auth::user()->id && $project->shared == 0) || (!$checkReadOnlyMode && $project->user_id == Auth::user()->id) )
+            <div class="row" style="margin-bottom: 10%;">
                 <div class="col-md-6">
                     <button class="btn btn-success" data-toggle="modal" data-target="#add-problem-modal" type="button" id="add-problem"><i class="fa fa-plus"></i>Add Problem</button>
                 </div>
             </div> 
-
         @else    
         @include('adult.problem.problems_dd' , [$problems])
-        @endif
-        
+        @endif        
         <?php $showMessage =  true; ?>
     @endif

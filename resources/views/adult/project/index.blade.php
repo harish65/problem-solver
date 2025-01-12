@@ -157,7 +157,7 @@
 
   <script>
     $('.project-grid').on('click',function(){
-        var url = "{{ route('adult.solution') }}" + "/" +$(this).attr('data-params') ;
+        var url = "{{ route('adult.solution') }}" + "/" + $(this).attr('data-params') ;
         localStorage.setItem("sol",url);
         var href = localStorage.getItem("sol");
         $('.nav-solution').attr('href' , href)
@@ -167,24 +167,21 @@
         var hrefsolfun = localStorage.getItem("sol-fun");
         $('.nav-solution-func').attr('href' , hrefsolfun)
 
-
-
-
-        var url_ver = "{{ route('adult.varification') }}" + "/" +$(this).attr('data-params') ;
+        var url_ver = "{{ route('adult.varification') }}" + "/" + $(this).attr('data-params') ;
         localStorage.setItem("varification",url_ver);
-
         var hrefverification = localStorage.getItem("varification");        
-        if (typeof hrefverification !== 'undefined') {
+        // if (typeof hrefverification !== 'undefined') {
             $('.nav-varification').attr('href', hrefverification)
-        }
+        // }
     })
 </script>
 
 <script>
   $('#shareprojectBtn').click(function(e){
     e.preventDefault();
-    if($("input[name='project_sharing_mode']:checked").val() == 1 && $("input:checkbox:checked").length == 0){
-      toastr.error('Project permissions must be selected in editable mode!');
+    const isChecked = Array.from(document.querySelectorAll('input[type="radio"]')).some(radio => radio.checked);
+    if($("#shared_project_editable").val() == 1 && !isChecked){
+      toastr.error('Project user and permissions must be selected in editable mode!');
       return false;
     }
     var fd = new FormData($('#share-project')[0]);
@@ -315,6 +312,8 @@ $('#shareProjectModal').on('hidden.bs.modal', function () {
         toggleSwitch.addEventListener("change", function () {
             if (this.checked) {
               $(this).val(0);
+              $('#shared_project_editable').val(0);
+              
                 // When the switch is ON, check all radio buttons
                 radioReadButtons.forEach((radio, index) => {
                     // if (index === 0) {
@@ -329,6 +328,7 @@ $('#shareProjectModal').on('hidden.bs.modal', function () {
 
             } else {
               $(this).val(1);
+              $('#shared_project_editable').val(1);
                 // When the switch is OFF, uncheck all radio buttons
                 radioReadButtons.forEach((radio) => {
                     radio.checked = false;

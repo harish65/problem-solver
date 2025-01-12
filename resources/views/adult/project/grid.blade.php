@@ -10,20 +10,23 @@
                         <div class="projectBlock text-center">
                             <h2>{{ $item->name }}</h2>
                                 <?php 
+                                    $problem = \App\Models\Problem::GetProblem($item->id);
+                                    $solution = \App\Models\Solution::GetSolution($item->id);
                                     
-                                    $parameters = ['project_id' => $item->id,'problem_id'=> $item->problem_id];
+                                    $parameters = ($problem) ? ['project_id' => $item->id,'problem_id'=> $problem->id] : ['project_id' => $item->id,'problem_id'=> null];
                                     $parameter =  Crypt::encrypt($parameters);
                                     
                                 ?>
-                            <a href="{{ route('adult.problem',@$parameter) }}" data-params="{{ $parameter }}"
+                              
+                            <a href="{{ route('adult.problem',$parameter) }}" data-params="{{ $parameter }}"
                                 class="project-grid">
                                 <div class="projectList">
                                     <h3>Problem</h3>
-                                    <p class="redText">{{ ($item->problem != '') ? $item->problem : 'N/A' }}</p>
+                                    <p class="redText">{{ ($problem && $problem->name != '') ? $problem->name : 'N/A' }}</p>
                                 </div>
                                 <div class="projectList">
                                     <h3>Solution</h3>
-                                    <p class="greenText">{{ ($item->solution_name != '') ? $item->solution_name : 'N/A' }}</p>
+                                    <p class="greenText">{{ ($solution && $solution->name != '') ? $solution->name : 'N/A' }}</p>
                                 </div>
                             </a>
                             <div class="projectList">

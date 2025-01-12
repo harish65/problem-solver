@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use DB;
+use Auth;
 class Solution extends Model
 {
     use HasFactory;
@@ -31,5 +32,12 @@ class Solution extends Model
 
 
 
-    
+    public static function GetSolution($id){
+        $solution = DB::table('solutions')->where(['project_id' => $id , 'user_id'=>Auth::user()->id])->first();
+        if(is_null($solution)){
+            $solution = DB::table('problems')->where('project_id' , $id)->first();
+        }
+        return $solution;
+
+    }
 }

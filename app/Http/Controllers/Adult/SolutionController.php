@@ -60,7 +60,7 @@ class SolutionController extends BaseController
                     
             $problem_name = DB::table('problems')->where('id' , $problem_id)->pluck('name')->first();
         }
-        
+        echo $problem_id;
         return view('adult.solution.index' , compact('solution'  , 'problem_id' , 'solutionTypes' , 'project' , 'solutions','problem_name'));
         
     }

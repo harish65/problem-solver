@@ -12,6 +12,8 @@
             <form method="post" id="share-project">
                 <input type='hidden' name='project_id' id='shared_project_id'>
                 <input type='hidden' name='shared_project' id='shared_project'>
+                <input type='hidden' name='project_sharing_mode' id='shared_project_editable' value="1">
+                
                 <div class="form-group">
                     <label>Share With</label>
                     <!-- <input type='email' class='form-control' name="email" id="shared_user" placeholder="example@example.com"> -->
@@ -22,7 +24,7 @@
                 </div>
                 <div class="form-group ml-3">
                         <div class="form-check form-switch">
-                        <input class="form-check-input" name="project_sharing_mode" type="checkbox" role="switch" id="toggle-switch">
+                        <input class="form-check-input" name="" type="checkbox" role="switch" id="toggle-switch">
                         <label class="form-check-label ml-5" for="flexSwitchCheckChecked">Share project in read only mode</label>
                         </div>
                 </div>
