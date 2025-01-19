@@ -1,7 +1,9 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-@php $showMessage = true @endphp
+@php $showMessage = true;
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -10,8 +12,6 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      
-
                       @include('adult.verification.view.component.common_routes')
                       @include('adult.verification.view.component.verification_types')
             </div>
@@ -39,10 +39,11 @@
                             <h2>Past Time Present Time</h2>
 
                             </div>
+                            @if($VerificationPermission)
                                 <div class="text-right w-50 pt-3">
                                     <button type="button" class="btn btn-success addVocabularyBtn" id="add-new-variant">+ Add New</button>
                                 </div>
-                               
+                               @endif
                             </div>
                             <div class="entity">
                             <?php $lastDate = null ?>
@@ -63,12 +64,17 @@
                                             <td>{{ date('m/d/Y' , strtotime($varification->time))}}</td>
                                             <td>{{ $problem->name }}</td>
                                             <td>
+                                            @if($VerificationPermission)
                                                 <a href="javaScript:void(0)" class="delete_action_single"  data-id="{{  $varification->id }}">
                                                     <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
                                                 </a>
                                                 <a href="javaScript:void(0)" class="editVocabularyBtn" data-id="{{  $varification->id }}" data-key="{{ date('m/d/Y' ,  strtotime($varification->time) )}}">
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
                                                 </a>
+                                                @else
+                                                    <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
+                                                    <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
+                                                @endif
 
                                             </td>
                                         </tr>
@@ -79,13 +85,14 @@
                                         @endforeach
                                     </tbody>
                                 </table>
-                               
+                                @if($VerificationPermission)
                                 <div class="row">
                                     <div class="col-md-12">
                                     <button type="button" class="btn btn-danger" id="bulk_delete">Delete</button>
                                     </div>
                                 </div>
                                 <input type="hidden" value="{{ date('Y-m-d' , strtotime($lastDate.' + 1 days')) }}" id="last_date"> 
+                                @endif
                                 @endif
                             </div>
                         </div>
@@ -103,10 +110,12 @@
                         <ul style="list-style:none;">
                        
                             <h5>Does the problem exist from past to present?</h5>
-                            <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} >Yes, the problem has existed from the past to present</label></li>
-                            <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} >No, the problem has not existed from the past to present</label></li>
+                            <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, the problem has existed from the past to present</label></li>
+                            <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>No, the problem has not existed from the past to present</label></li>
                         </ul>
+                        @if($VerificationPermission)
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        @endif
                         </form>
                     </div>
                 </div>

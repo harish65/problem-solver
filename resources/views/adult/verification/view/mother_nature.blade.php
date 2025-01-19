@@ -4,6 +4,9 @@
 @section('title', 'Adult | Solution Types')
 @section('content')
 <?php $showMsg = false ?>
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -182,25 +185,29 @@
                                     <input type="hidden" name="name" value="entity_usage">        
                                     <ul style="list-style:none;">
                                         <h5>Do you understand the existing of mother nature in your problem solution?</h5>
-                                        <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} >Yes, I do understand the existence of mother nature in my problem solution</label></li>
-                                        <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} >No, I do not understand the existence of mother nature in my problem solution.</label></li>
+                                        <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, I do understand the existence of mother nature in my problem solution</label></li>
+                                        <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>No, I do not understand the existence of mother nature in my problem solution.</label></li>
                                     </ul>
                                     <ul style="list-style:none;">
                                         <h5>Do you take mother nature into consideration in your solution? </h5>
-                                        <li><label><input type="radio"  name="validation_2" value="1" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} >Yes, I do take mother nature into consideration in my solution</label></li>
-                                        <li><label><input type="radio"  name="validation_2" value="2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} >No, I do not take mother nature into consideration in my solution</label></li>
+                                        <li><label><input type="radio"  name="validation_2" value="1" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, I do take mother nature into consideration in my solution</label></li>
+                                        <li><label><input type="radio"  name="validation_2" value="2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>No, I do not take mother nature into consideration in my solution</label></li>
                                     </ul>
+                                    @if($VerificationPermission)
                                     <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                                    @endif
                             </form>
                         </div>
                     </div>
                     <!-- End -->
 
                 @else
-                <div class="col-sm-4">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#entityModal"
-                     id="">+ Identify Entity Behind</button>
-                </div>
+                    @if($VerificationPermission)
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#entityModal"
+                        id="">+ Identify Entity Behind</button>
+                    </div>
+                    @endif
                 @endif
             @else
             <?php $showMsg = true ?>

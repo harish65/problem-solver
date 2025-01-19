@@ -1,6 +1,9 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 
 <div class='relationshipPage'>
     <div class="container">
@@ -21,7 +24,9 @@
             <div class="container">
                 <div class="row ">
                     <div class="col-sm-4">
+                        @if($VerificationPermission)
                         <button class="btn btn-success" id="feed-back" >+ Identify Feedback</button>
+                        @endif
                     </div>  
                     <div class="col-sm-8 ">
                         <a href="{{ route('adult.varification' , [$parameter , 16])}}" class="btn btn-success float-end">Back</a>
@@ -46,8 +51,13 @@
                                         <td>{{ date('d/m/Y' , strtotime($data->feedback_date)) }} </td>
                                         <td>{{ $data->from_person }}</td>
                                         <td>
+                                        @if($VerificationPermission)
                                                 <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  data-error_id="{{$data->error_id}}" data-feedback_date="{{date('d-m-Y' , strtotime($data->feedback_date))}}" data-date="{{$data->feedback_date}}"  data-feedback="{{$data->feedback}}" data-from_person="{{$data->from_person}}"  data-error_name="{{ $data->error_name}}"class="btn btn-success editBtn"><i class="fa fa-pencil"></i></a>
                                                 <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  class="btn btn-danger delete-btn"><i class="fa fa-trash"></i></a>
+                                                @else
+                                                <a href="javaScript:void(0)" class="btn btn-success"><i class="fa fa-pencil"></i></a>
+                                                <a href="javaScript:void(0)"   class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                                @endif
                                         </td>
                                     </tr>
                                     @endforeach

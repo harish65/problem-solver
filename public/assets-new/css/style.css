@@ -476,7 +476,7 @@ ul.feelFree li img {
     background-color: #FFFFFF;
 }
 
-.slp-tbl thead{
+.slp-tbl thead , .btn-accordion{
     
     background: #2F4858;
     color: #FFFFFF;

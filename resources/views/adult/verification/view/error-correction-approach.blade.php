@@ -1,7 +1,9 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
-@php $showMessage = false @endphp
+@php $showMessage = false;
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -10,8 +12,6 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                      
-
                       @include('adult.verification.view.component.common_routes')
                       @include('adult.verification.view.component.verification_types')
             </div>
@@ -63,6 +63,7 @@
                                     <h2>Compensator</h2>
                                     <div class="projectList text-center">
                                         @foreach($problemDevelopment as $data)
+
                                         <button class="btn btn-success mt-3 compensator" data-error-id="{{ $data->id }}">
                                             {{($data->compensator == null) ? 'Identify Compensator' : $data->compensator }}
                                         </button>
@@ -128,7 +129,11 @@
                                                                                 data-error_date="{{ ($data->compensator_date != '') ? date('d-m-Y' , strtotime($data->compensator_date)) : ''}}" 
                                                                                 data-problem="{{$data->problem_name}}" data-problem_date="{{date('d-m-Y' , strtotime($data->problem_date))}} " 
                                                                                 class="btn btn-success editBtn"><i class="fa fa-pencil"></i></a>
+                                                    @if($VerificationPermission)                            
                                                     <a href="javaScript:void(0)" data-id ="{{ $data->error_correction_id }}"  class="btn btn-danger deleteBtn"><i class="fa fa-trash"></i></a>
+                                                    @else
+                                                    <a href="javaScript:void(0)" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         
@@ -155,6 +160,9 @@
                             </div>
                     
                     </div>
+                    @else
+
+                    <!-- @include('adult.verification.view.component.shared-message') -->
                 @endif
             </div>
             <!-- End -->
@@ -167,7 +175,7 @@
 
 
     <!-- Modal Start -->
-    
+    @if($VerificationPermission)
     <div class="modal fade" id="error_correction_modal" tabindex="-1" role="dialog" aria-labelledby="error_correction_modal" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -205,7 +213,7 @@
         </div>
       </div>
     <!-- Modal End -->
-
+@endif
 
 @endsection
 @section('css')

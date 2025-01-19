@@ -1,7 +1,9 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -64,7 +66,7 @@
                                         </div>
                                     </div>
                                     <div class="form-check mt-3">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="" {{ (!$VerificationPermission) ? 'disabled':'' }} id="flexCheckDefault">
                                         <label class="" for="flexCheckDefault" style="color:#000;">
                                             Show/Hide
                                           </label>
@@ -78,10 +80,12 @@
                             <h2>Identified Entities</h2>
                             
                         </div>
+                        @if($VerificationPermission)
                         <div class="col-md-3">
                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#entityModal"
                              id="">+ Identify Entity Behind</button>
                         </div>
+                        @endif
                     </div>
                         <div class="row mt-3">
 
@@ -101,12 +105,17 @@
                                             <td>{{ $data->entity_name }}</td>
                                             <td>{{ ($data->put_behind) ? 'No' : 'Yes'  }}</td>
                                             <td>
+                                            @if($VerificationPermission)
                                                 <a href="javaScript:Void(0)" class="deleteEntityAvailable" data-id="{{ $data->id }}">
                                                     <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
                                                 </a>
                                                 <a href="javaScript:Void(0)" class="editEnityTable" data-name="{{ $data->entity_name  }}" data-put-behind="{{ $data->put_behind }}" data-id="{{ $data->id }}"  >
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="" >
                                                 </a>
+                                                @else
+                                                <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
+                                                <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="" >
+                                                @endif
                                             </td>
                                         </tr>
                                   
@@ -128,37 +137,40 @@
                                 <h5>To solve the problem, do you feel you have something you want to put behind you that
                                     will not help you in solving the problem? </h5>
                                 <li><label><input type="radio" name="validation_1" value="1" {{
-                                            (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} >Yes, I
+                                            (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, I
                                         do have things I want to put behind me that will not help solve the
                                         problem</label></li>
                                 <li><label><input type="radio" name="validation_1" value="2" {{
-                                            (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} >No, I
+                                            (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}  {{ (!$VerificationPermission) ? 'disabled':'' }} >No, I
                                         have nothing to put behind that will not help me solve the problem.</label></li>
                             </ul>
                             <ul style="list-style:none;">
                                 <h5>Do you understand that the solution of a problem is given for that problem and does
                                     not include any outside entity that is not needed to solve that problem? </h5>
                                 <li><label><input type="radio" name="validation_2" value="1" {{
-                                            (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} >Yes, I
+                                            (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }} >Yes, I
                                         understand that the solution of a problem is given for that problem and does not
                                         include any outside entity that is not needed to solve that problem</label></li>
                                 <li><label><input type="radio" name="validation_2" value="2" {{
-                                            (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} >No, I
+                                            (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }} >No, I
                                         do not understand that the solution of a problem is given for that problem and
                                         does not include any outside entity that is not needed to solve that
                                         problem</label></li>
                             </ul>
+                            @if($VerificationPermission)
                             <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                            @endif
                         </form>
                     </div>
                 </div>
                 <!-- End -->
                 @else
-                <div class="col-sm-4">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#entityModal"
-                     id="">+ Identify Entity Behind</button>
-                </div>
-                
+                    @if($VerificationPermission)
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#entityModal"
+                        id="">+ Identify Entity Behind</button>
+                    </div>
+                    @endif
                 @endif
 
             </div>

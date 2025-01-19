@@ -2,6 +2,9 @@
 @section('title', 'Adult | Solution Type')
 @section('content')
 <?php $showMsg = false ?>
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -143,9 +146,11 @@
                         @endif
                         
                         @else
-                        <div class="col-md-12">
-                            <button type="button"  class="btn btn-success add-entity" data-toggle="modal" data-target="#resource_management_model" >Add <i class="fa fa-plus"></i></button>
-                        </div>
+                            @if($VerificationPermission)
+                            <div class="col-md-12">
+                                <button type="button"  class="btn btn-success add-entity" data-toggle="modal" data-target="#resource_management_model" >+ Add </button>
+                            </div>
+                            @endif
                         @endif
                     </div>
                     
@@ -169,29 +174,31 @@
                                 <h5>Do you use resources or physical entities to solve the problem?</h5>
                                 <ul class="validate_que" style="list-style:none;">
                                     
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, I use resources or natural entities to solve that problem</label></li>
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, I do not use resources or natural entities to solve that problem</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}  value="1">&nbsp;&nbsp;Yes, I use resources or natural entities to solve that problem</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}  value="2">&nbsp;&nbsp;No, I do not use resources or natural entities to solve that problem</label></li>
                                 
                                 </ul>
                                 <h5>Are usage of resources or physical entities required to solve that problem?</h5>
                                 <ul class="validate_que" style="list-style:none;">
                                     
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, usage of resources or physical entities required to solve that problem</label></li>
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, usage of resources or physical entities required to solve that problem</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}  value="1">&nbsp;&nbsp;Yes, usage of resources or physical entities required to solve that problem</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}  value="2">&nbsp;&nbsp;No, usage of resources or physical entities required to solve that problem</label></li>
                                 
                                 </ul>
                                 <h5>Do you use resources or physical entities to solve ProblemName?</h5>
                                 <ul class="validate_que" style="list-style:none;">
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, I use resources or natural entities to solve ProblemName</label></li>
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, I do not use resources or natural entities to solve ProblemName</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}  value="1">&nbsp;&nbsp;Yes, I use resources or natural entities to solve ProblemName</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}  value="2">&nbsp;&nbsp;No, I do not use resources or natural entities to solve ProblemName</label></li>
                                 </ul>
                                 <h5>Are usage of resources or physical entities required to solve ProblemName?</h5>
                                 <ul class="validate_que" style="list-style:none;">
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_4" {{ (@$verification->validations->validation_4 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, usage of resources or physical entities required to solve ProblemName</label></li>
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_4" {{ (@$verification->validations->validation_4 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, usage of resources or physical entities required to solve ProblemName</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_4" {{ (@$verification->validations->validation_4 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}  value="1">&nbsp;&nbsp;Yes, usage of resources or physical entities required to solve ProblemName</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_4" {{ (@$verification->validations->validation_4 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}  value="2">&nbsp;&nbsp;No, usage of resources or physical entities required to solve ProblemName</label></li>
                                 
                                 </ul>
+                                @if($VerificationPermission)
                                 <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                                @endif
                             </form>
                         </div>
                 </div>

@@ -1,7 +1,10 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-<?php $showMsg = false ?>
+<?php $showMsg = false; ?>
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -148,16 +151,14 @@
                                             <td>{{ $entity->entity}}</td>
                                             <td>{{ $entity->actual_entity}}</td>
                                             <td>
-                                            <!-- <a href="javaScript:Void(0)" class="addVocabularyBtn" data-toggle="modal" data-target="#exampleModal">
-                                                    <img src="{{ asset('assets-new/images/add-verification.png')}}"
-                                                        alt="">
-                                                </a> -->
+                                            
+                                                @if($VerificationPermission)
                                                 <a href="javaScript:Void(0)" class="deleteEntityAvailable" data-id="{{ $entity->id }}">
                                                     <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
                                                 </a>
-                                                <!-- <a href="javaScript:Void(0)" class="editEnityTable" data-entity="{{  @$entity->entity }}" data-selected="{{ @$entity->selected }}" data-actual-entity=" {{ $entity->actual_entity }} " data-id="{{ $entity->id }}"  >
-                                                    <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="" >
-                                                </a> -->
+                                                @else
+                                                <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach    
@@ -238,19 +239,22 @@
                         <input type="hidden" name="name" id="name" value="People_in_Project">           
                         <ul style="list-style:none;">
                             <h5>Does the problem exist from past to present?</h5>
-                            <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} >Yes, I do understand the relationship between communication and principle in a project</label></li>
-                            <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} >No, I do not understand the relationship between communication and principle in a project.</label></li>
+                            <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, I do understand the relationship between communication and principle in a project</label></li>
+                            <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }} >No, I do not understand the relationship between communication and principle in a project.</label></li>
                         </ul>
+                        @if($VerificationPermission)
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        @endif
                         </form>
                     </div>
                 </div>
                 <!-- End -->
                 @else
-               
-                <div class="col-md-10">
-                    <button type="button"  class="btn btn-success add-entity" id="add-entity">Add <i class="fa fa-plus"></i></button>
-                </div>                
+                @if($VerificationPermission)
+                    <div class="col-md-10">
+                        <button type="button"  class="btn btn-success add-entity" id="add-entity">Add <i class="fa fa-plus"></i></button>
+                    </div>                
+                    @endif
                 @endif
                 @else
                 <?php $showMsg = true ?>

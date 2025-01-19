@@ -101,10 +101,11 @@ class ApiController extends BaseController
     }
     //Update problem validation questions
     public function updateProblemValidation(Request $request){
-        
-        $update = DB::table('problems')->where("id",'=' ,$request->id)-> update([
+      
+        $update = DB::table('problems')->where("id" ,$request->id)->update([
            'validation' => $request->input('value')
         ]);
+      
         if($update){
             $success["Problem"] = $update;
             return $this->sendResponse($success, "Validation updated successfully.");
@@ -341,19 +342,26 @@ class ApiController extends BaseController
             $success['solution'] =  $solution;
             return $this->sendResponse($success, 'Solution has been deleted successfully.');
         }else{
-            return $this->sendError('Error.', ['error'=> 'Solution can be deleted.']);
+            return $this->sendError('Error.', ['error'=> 'Solution can not  deleted.']);
         }
        
     }
 
-    public function updateSolutionValidation(Request $request){
-        $column = ($request->input('name') == 'optradio_first')   ? 'validation_first' : 'validation_second';
-        $update = DB::table('solutions')->where("id",'=' ,$request->input('data'))-> update([
-            $column => $request->input('value')
-        ]);
-       
+    public function updateValidations(Request $request){
+        if($request->table_name == 'problems'){
+            $update = DB::table('problems')->where("id",'=' ,$request->id)-> update([
+                'validation' => $request->validation_first
+             ]);
+        }else{
+            $update = DB::table($request->table_name)->where("id",'=' ,$request->id)-> update([
+                'validation_first' => $request->validation_first, 'validation_second' => $request->validation_second
+             ]);
+        }
+        
         if($update){
-            return true;
+            return $this->sendResponse('success', 'Validations has been saved successfully.');
+        }else{
+            return $this->sendError('Error.', ['error'=> 'Validations can not saved.']);
         }
     }
 
@@ -470,7 +478,7 @@ public function storeSolutionFunction(Request $request){
                 }
             
                 if($insert){
-                    $solutionfunctionID = DB::table('solution_functions')->select('id')->where('solution_id' , '=' , $solution_id)->first();
+                    $solutionfunctionID = DB::table('solution_functions')->select('*')->where('solution_id' , '=' , $solution_id)->first();
                     $parameter = ['solution_id' => $solution_id ,  'problem_id' => $problem_id , 'solution_func_id' => $solutionfunctionID->id  , 'project_id'=>$project_id ];
                     $success['type'] =  $solutionfunctionID;
                     $success['params'] = $params = Crypt::encrypt($parameter);

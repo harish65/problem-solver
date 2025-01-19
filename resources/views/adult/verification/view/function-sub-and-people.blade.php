@@ -1,7 +1,9 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
-@php $showMessage = true @endphp
+@php $showMessage = true;
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -128,12 +130,13 @@
 
                     </div>
                     @else
-                
-                    <div class="col-sm-4">
+                    @if($VerificationPermission)
+                    <div class="col-sm-6">
                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
-                        </div>
-
-                    
+                    </div>
+                    @else
+                    @include('adult.verification.view.component.shared-message')
+                    @endif  
                     @endif  
                 @endif
             </div>
@@ -150,10 +153,12 @@
                 <div class="col-md-8">
                     <h2>Function and People Identification</h2>
                 </div>
-               
-                <div class="col-md-4    ">
+                @if($VerificationPermission)
+                <div class="col-md-4">
+
                     <button type="button"  class="btn btn-success addVocabularyBtn"   data-toggle="modal" data-target="#exampleModal">+ Add </button>
                 </div>
+                @endif
                                
             </div>
 
@@ -190,18 +195,20 @@
                         <h5>Do I target the right function?</h5>
                         <ul class="validate_que" style="list-style:none;">
                             
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} value="1">&nbsp;&nbsp;Yes, I target the right function</label></li>
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2">&nbsp;&nbsp;No, I don’t target the right function</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;Yes, I target the right function</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;No, I don’t target the right function</label></li>
                            
                         </ul>
                         <h5>Do I understand that I can only look at functions that belong to me when trying to solve a problem?</h5>
                         <ul class="validate_que" style="list-style:none;">
                             
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} value="1">&nbsp;&nbsp;Yes, I understand that I can only look at functions that belong to me when trying to solve a problem</label></li>
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} value="2">&nbsp;&nbsp;No, I don’t understand that I can only look at functions that belong to me when trying to solve a problem</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;Yes, I understand that I can only look at functions that belong to me when trying to solve a problem</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;No, I don’t understand that I can only look at functions that belong to me when trying to solve a problem</label></li>
                            
                         </ul>
+                        @if($VerificationPermission)
                     <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                    @endif
                     </form>
             </div>
         </div>

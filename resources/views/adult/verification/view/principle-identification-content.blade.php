@@ -2,6 +2,9 @@
 @section('title', 'Adult | Solution Types')
 @section('content')
 <?php $ShowMessage =  true; ?>
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -133,9 +136,11 @@
                             <div class="text-left w-50 ">
                                 <h2>Principle Identification</h2>
                             </div>
+                            @if($VerificationPermission)
                                 <div class="text-right w-50 pt-3">
                                     <button type="button"  class="btn btn-success addVocabularyBtn" id="add-new-variant">Identify Princpal</button>
                                 </div>
+                                @endif
                             </div>
                             </div>
                             <div class="entity">
@@ -171,8 +176,12 @@
                                                         <td>{{ $data->text }}</td>
                                                         <td>{{ ($applicable == 1) ? 'Yes':'No'  }}</td>
                                                         <td>
+                                                        @if($VerificationPermission)
                                                         <a href="javaScript:Void(0)" class="editEntity" data-number="{{$data->id }}" data-priciple="{{$data->text }}"
                                                         ><img src="{{ asset('assets-new/images/editIcon.png')}}" alt=""></a>
+                                                        @else
+                                                        <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
+                                                        @endif
                                                         </td>
                                                     @endif
                                                 </tr>
@@ -197,9 +206,11 @@
                                     <textarea name="content">{{ $content->content }}</textarea>
                                 </div>
                                 <div class="row mt-3 text-right">
+                                @if($VerificationPermission)
                                     <div class="form-group">
                                             <button class="btn btn-success" id="update-content"  type="submit">Update Content</button>
                                     </div>
+                                    @endif
                                 </div>
                         </form>
                         @endif
@@ -214,23 +225,25 @@
                             <input type="hidden" name="name" value="principla_identification">
                             <ul style="list-style:none;">
                             <h5>Do you use principles to solve the underlying problem?</h5>
-                                <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="validation" value="1">Ye, I use principles to solve the underlying problem.</label></li>
-                                <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="validation" value="2">No, I don’t use principles to solve the underlying problem.</label></li>
+                                <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="validation" value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>Ye, I use principles to solve the underlying problem.</label></li>
+                                <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="validation" value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>No, I don’t use principles to solve the underlying problem.</label></li>
                             <h5>Do people use principles to solve the problem?</h5>    
-                            <li><label><input  type="radio"  {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} name="validation_2" class="validation" value="1">Yes, people user principles to solve the problem</label></li>
-                                <li><label><input  type="radio"  {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} name="validation_2" class="validation" value="2">No, people don’t use principles to solve the problem</label></li>
+                            <li><label><input  type="radio"  {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} name="validation_2" class="validation" value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, people user principles to solve the problem</label></li>
+                                <li><label><input  type="radio"  {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} name="validation_2" class="validation" value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>No, people don’t use principles to solve the problem</label></li>
                             </ul>
+                            @if($VerificationPermission)
                             <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                            @endif
                         </form>
                         </div>
                         
                 </div>
                 @else
-                    
+                    @if($VerificationPermission)
                         <div class="text-right w-50 pt-3">
                             <button type="button"  class="btn btn-success addVocabularyBtn" id="add-new-variant">Identify Princpal</button>
                         </div>
-                    
+                    @endif
                 @endif
                 @endif
                 <!-- End principleRelation-->

@@ -1,7 +1,9 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -10,8 +12,6 @@
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                         ?>
-                        
-
                       @include('adult.verification.view.component.common_routes')
                       @include('adult.verification.view.component.verification_types')
             </div>
@@ -100,10 +100,12 @@
                                 <h2>Before And After Verification</h2>
                             </div>
                             
-                           
+                                @if($VerificationPermission)
                                 <div class="text-right w-50 pt-3">
                                     <button type="button"  class="btn btn-success addEntity" id="add-new-variant">+ Add New</button>
                                 </div>
+                                
+                                @endif  
                            
                             </div>
 
@@ -125,7 +127,9 @@
                                             <td>{{ $solution->name }}</td>
                                             <td><span>{{ ( $beforeAfter->existing_after == 1) ? 'Yes' : 'No'}}</span></td>
                                            
-                                            <td><a href="javascript:void(0)" class="">
+                                            <td>
+                                            @if($VerificationPermission)
+                                            <a href="javascript:void(0)" class="">
                                                     <img src="{{ asset('assets-new/images/add-verification.png')}}" alt="">
                                                 </a>
                                                 <a href="javascript:void(0)" data-id="{{ $beforeAfter->id }}" class="deleteEntity">
@@ -135,7 +139,11 @@
                                                 <a href="javascript:void(0)" class="editEntity"  >
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
                                                 </a>
-
+                                                @else
+                                                <img src="{{ asset('assets-new/images/add-verification.png')}}" alt="">
+                                                <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
+                                                <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
+                                                @endif
                                             </td>
                                             
                                         </tr>
@@ -161,22 +169,27 @@
                                 <input type="hidden" name="name" id="name" value="before_and_after">   
                                 <ul>
                                     <h5>The problem existed before, is the problem solved after?</h5>
-                                    <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1">Yes, the problem existed before and after the problem is solved</label></li>
-                                    <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2">No, the problem existed before and after the problem is not solved</label></li>
+                                    <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, the problem existed before and after the problem is solved</label></li>
+                                    <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>No, the problem existed before and after the problem is not solved</label></li>
                                     <br>
                                     <h5>The problem existed before, is the problem solved after function execution?</h5>
-                                    <li><label><input  type="radio"  {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} name="validation_2" class="form-check-input validation" value="1">Yes, the problem is solved after function execution</label></li>
-                                    <li><label><input  type="radio"  {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} name="validation_2" class="form-check-input validation" value="2">No, the problem is not solved after function execution</label></li>
+                                    <li><label><input  type="radio"  {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} name="validation_2" class="form-check-input validation" value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, the problem is solved after function execution</label></li>
+                                    <li><label><input  type="radio"  {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} name="validation_2" class="form-check-input validation" value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>No, the problem is not solved after function execution</label></li>
                                 </ul>
+                                @if($VerificationPermission)
                                 <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                                @endif 
                         </form>    
                     </div>
                 </div>
                 @else
-
+                @if($VerificationPermission)
                 <div class="text-right w-50 pt-3">
                     <button type="button"  class="btn btn-success addEntity" id="add-new-variant">+ Add New</button>
                 </div>
+                @else
+                    @include('adult.verification.view.component.shared-message')
+                @endif 
 
                 @endif
                 <!-- End -->

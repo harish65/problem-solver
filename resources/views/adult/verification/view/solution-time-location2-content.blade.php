@@ -1,7 +1,10 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-<?php $showMsg = false ?>
+<?php $showMsg = false; ?>
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -161,16 +164,16 @@
                         <h5>Do you start solving the problem with people?</h5>
                         <ul class="validate_que" style="list-style:none;">
                             
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} value="1">&nbsp;&nbsp;Yes, I start solving the problem with people </label></li>
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}  value="2">&nbsp;&nbsp;No, I don’t start solving the problem with people</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}  value="1">&nbsp;&nbsp;Yes, I start solving the problem with people </label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }} value="2">&nbsp;&nbsp;No, I don’t start solving the problem with people</label></li>
                            
                         </ul>
 
                         <h5>Do you finish solving the problem with the same people?</h5>
                         <ul class="validate_que" style="list-style:none;">
                             
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2"  {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} value="1">&nbsp;&nbsp;Yes, I finish solving the problem with the same people</label></li>
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2"  {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} value="2">&nbsp;&nbsp;No, I don’t finish solving the problem with the same people</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2"  {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }} value="1">&nbsp;&nbsp;Yes, I finish solving the problem with the same people</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2"  {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}  value="2">&nbsp;&nbsp;No, I don’t finish solving the problem with the same people</label></li>
                            
                         </ul>
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
@@ -180,9 +183,11 @@
                 </div>
                 <!-- End -->
                 @else
-                <div class="col-sm-4">
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
-                    </div>
+                    @if($VerificationPermission)
+                    <div class="col-sm-4">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
+                        </div>
+                    @endif   
                 @endif   
                 @else
                 <?php $showMsg = true; ?>

@@ -2,7 +2,9 @@
 @section('title', 'Adult | Solution Types')
 @section('content')
 <?php $part = 1;
- $showMsg = false ?>
+ $showMsg = false;
+ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+ ?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -31,9 +33,11 @@
                 <!-- start -->
                  @if($entities->count() > 0)
                 <div class="principleRelation container">
-                            <div class="add-entity mb-3">
-                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+ Add New</button>
-                            </div>
+                            @if($VerificationPermission)
+                                <div class="add-entity mb-3">
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+ Add New</button>
+                                </div>
+                            @endif
                     <div class="partitionApp">
 
                             <div class="blockProblem">
@@ -105,18 +109,22 @@
                         <h5>Have you replaced each part of the problem to specific part of the solution?</h5>
                         <ul class="validate_que" style="list-style:none;">
                             
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, I have replaced each part of the problem to specific part of the solution</label></li>
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, I haven’t not replaced each part of the problem to specific part of the solution</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}   value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;Yes, I have replaced each part of the problem to specific part of the solution</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}   value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;No, I haven’t not replaced each part of the problem to specific part of the solution</label></li>
                            
                         </ul>
+                        @if($VerificationPermission)
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        @endif
                         </form>
                         </div>
                 </div>
                 @else
-                <div class="add-entity mb-3">
+                @if($VerificationPermission)
+                            <div class="add-entity mb-3">
                                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+ Add New</button>
                             </div>
+                @endif
                 @php $showMsg =  true;@endphp
                 @endif
                 <!-- End -->
@@ -127,7 +135,7 @@
     <!-- Content Section End -->
 
     <!-- Modal Start -->
-    
+    @if($VerificationPermission)
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -171,6 +179,7 @@
           </div>
         </div>
       </div>
+      
     <!-- Modal End -->
     <div class="modal fade" id="problemModal" tabindex="-1" role="dialog" aria-labelledby="problemModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -208,6 +217,7 @@
         </div>
       </div>
 </div>
+@endif
 
 @endsection
 @section('css')

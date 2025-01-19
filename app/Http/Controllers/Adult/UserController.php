@@ -42,6 +42,7 @@ class UserController extends BaseController
                 // }else if(strstr($mime, "image/")){
                 //     $type = 0;
                 // }
+                $message = null;
                 $insert = DB::table('customers')->updateOrInsert(['id'=> $request->id],
                 [
                     'name' => $request->name,
@@ -50,16 +51,19 @@ class UserController extends BaseController
                     'type' => $request->type,
                     'created_at' => date('Y-m-d h:i:s')
                 ]);
+                $message = 'User created successfully.';
             }else{
                 $insert = DB::table('customers')->updateOrInsert(['id'=> $request->id],
                 [
                     'name' => $request->name,
                     'type' => $request->type,
+                    'project_id' => $request->project_id,
                     'created_at' => date('Y-m-d h:i:s')
                 ]);
+                $message = 'User updated successfully.';
             }
             $success['user'] = $insert;
-            return $this->sendResponse($success, 'User created successfully.');
+            return $this->sendResponse($success, $message);
         }catch(Exception $e){
             return $this->sendError('Error.', ['error'=> $e->getMessage()]);
         }

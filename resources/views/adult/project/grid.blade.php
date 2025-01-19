@@ -41,13 +41,10 @@
                                                 src="{{ url('/') }}/assets-new/images/deleteIcon.png" alt="" /></a>
                                     </li>
                                     <li>
-                                        <a href="javaScript:void(0)" class="shareBtn" data-id="{{ $item->id }}" title="Share"  data-shared="{{ $item->shared }}" data-name="{{ $item->name }}"><img
+                                        <a href="{{ route('adult.project-share' , Crypt::encrypt($item->id)) }}" title="Share"><img
                                                 src="{{ url('/') }}/assets-new/images/uploadIcon.png" alt="" /></a>
                                     </li>
-                                    <li>
-                                        <a href="javaScript:void(0)" class="viewBtn" data-id="{{ $item->id }}" title="View" data-shared="{{ $item->shared }}" data-name="{{ $item->name }}"><img
-                                                src="{{ url('/') }}/assets-new/images/viewIcon.png" alt="" /></a>
-                                    </li>
+                                    
                                     @else
                                         <li><img src="{{ url('/') }}/assets-new/images/editIcon.png" alt="" /></li>
                                         <li><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" alt="" /></li>

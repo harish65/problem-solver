@@ -2,6 +2,9 @@
 @section('title', 'Adult | Solution Type')
 @section('content')
 <?php $showMsg = false ?>
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -84,9 +87,11 @@
                             <div class="text-left w-50 ">
                                 <h2>Problem Development</h2>
                             </div>
+                            @if($VerificationPermission)
                                 <div class="text-right w-50 pt-3">
                                     <button type="button"  class="btn btn-success addVocabularyBtn" >+ Add Problem Development</button>
                                 </div>
+                                @endif
                             </div>
 
                             <div class="entity">
@@ -114,8 +119,14 @@
                                                 {{date('d-m-Y' , strtotime($data->problem_date))}}
                                             </td>
                                             <td>
-                                                <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  data-error_name="{{$data->error_name}}" data-error_date="{{date('d-m-Y' , strtotime($data->error_date))}}" data-problem="{{$data->problem_name}}" data-problem_date="{{date('d-m-Y' , strtotime($data->problem_date))}} " class="btn btn-success editBtn"><i class="fa fa-pencil"></i></a>
-                                                <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  class="btn btn-danger delete-btn"><i class="fa fa-trash"></i></a>
+                                            @if($VerificationPermission)
+                                                <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  data-error_name="{{$data->error_name}}" data-error_date="{{date('d-m-Y' , strtotime($data->error_date))}}" data-problem="{{$data->problem_name}}" data-problem_date="{{date('d-m-Y' , strtotime($data->problem_date))}} " class="editBtn"><img src="{{ asset('assets-new/images/editIcon.png')}}" alt=""></a>
+                                                <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  class="delete-btn"><img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt=""></a>
+                                                @else
+                                                <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
+                                                <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
+                                                
+                                                @endif
                                             </td>
                                         </tr>
                                   @endforeach
@@ -137,11 +148,13 @@
                                 <br>
                                 <h5>Do you understand that errors or errors in communication develop problems?</h5>
                                 <input type="hidden" name="id" value="{{ @$verification->id }}">
-                                <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1">Yes, I do understand that errors or errors in communication develop problems</label> </li>
-                                <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2">No, I do not understand that errors or errors in communication develop problems</label> </li>
+                                <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, I do understand that errors or errors in communication develop problems</label> </li>
+                                <li><label><input  type="radio"  {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>No, I do not understand that errors or errors in communication develop problems</label> </li>
                                 
                             </ul>
+                            @if($VerificationPermission)
                             <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                            @endif
                         </form>
                 </div>
             </div>

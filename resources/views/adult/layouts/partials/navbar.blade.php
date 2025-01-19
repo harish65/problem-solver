@@ -8,7 +8,7 @@
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link dashboard  {{ Route::is('adult.dashboard') ? 'active' : '' }}" href="{{ route('adult.dashboard')}}">Project</a>
+              <a class="nav-link dashboard  {{ Route::is('adult.dashboard' || 'adult.project-share') ? 'active' : '' }}" href="{{ route('adult.dashboard')}}">Project</a>
             </li>
             <li class="nav-item" >
               <a class="nav-link nav-problem {{ Route::is('adult.problem') ? 'active' : '' }}"  id="nav-problem" href="">Problem</a>
@@ -61,3 +61,5 @@
       </nav>
     </div>
   </header>
+
+  

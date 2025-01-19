@@ -1,7 +1,9 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
-
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -58,6 +60,7 @@
                                         </div>
                                     </div>
                                     <ul>
+                                    @if($VerificationPermission)
                                         <li>
                                               <a href="javaScript:Void(0)" class="editBtn" data-id="{{$functionAud->id}}" data-sol-fun-id="{{$functionAud->solution_function_id}}" data-function_name="{{$functionAud->function_name}}" data-problem_name="{{$functionAud->problem_name}}" >
                                                   <img src="{{ asset('assets-new/images/editIcon.png') }}" alt="">
@@ -65,6 +68,11 @@
                                         </li>
                                         <li><a data-id="8" class="delProblemBtn" title="Delete"><img src="{{ asset('assets-new/images/deleteIcon.png') }}" alt=""></a></li>
                                         <li><a href="#"><img src="{{ asset('assets-new/images/uploadIcon.png') }}" alt=""></a></li>
+                                        @else
+                                        <li>&nbsp;</li>
+                                        <li>&nbsp;</li>
+                                        <li>&nbsp;</li>
+                                        @endif
                                       </ul>
                                 </div>
                                
@@ -99,13 +107,19 @@
                                          </div>
                                     </div>
                                     <ul>
+                                    @if($VerificationPermission)
                                         <li>
                                               <a href="javaScript:Void(0)" class="editBtn" data-id="{{$functionAud->id}}" data-sol-fun-id="{{$functionAud->solution_function_id}}" data-function_name="{{$functionAud->function_name}}" data-problem_name="{{$functionAud->problem_name}}">
                                                   <img src="{{ asset('assets-new/images/editIcon.png') }}" alt="">
                                               </a>
-                                      </li>
+                                        </li>
                                         <li><a data-id="8" class="delProblemBtn" title="Delete"><img src="{{ asset('assets-new/images/deleteIcon.png') }}" alt=""></a></li>
                                         <li><a href="#"><img src="{{ asset('assets-new/images/uploadIcon.png') }}" alt=""></a></li>
+                                        @else
+                                        <li>&nbsp;</li>
+                                        <li>&nbsp;</li>
+                                        <li>&nbsp;</li>
+                                        @endif
                                       </ul>
                                 </div>
                                 
@@ -122,7 +136,11 @@
                     </div>
                     @else
                     <div class="col text-center">
+                    @if($VerificationPermission)
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#functionAdjutment">Add +</button>
+                        @else
+                        @include('adult.verification.view.component.shared-message')
+                        @endif
                     </div>
                     @endif
                 </div>

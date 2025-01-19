@@ -2,6 +2,10 @@
 @section('title', 'Adult | Solution Types')
 @section('content')
 <?php $showMsg =  false; ?>
+
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -56,9 +60,11 @@
                    
             </div>
             <div class="row">
-                <div class="modal-btn">
-                    <a type="button" href="#" class="btn btn-success float-right mb-3"  id="add_people">+ Add New User</a>
-                </div>
+                @if($VerificationPermission)
+                    <div class="modal-btn">
+                        <a type="button" href="#" class="btn btn-success float-right mb-3"  id="add_people">+ Add New User</a>
+                    </div>
+                @endif
                 @if($users->count() > 0)
                 <?php $ShowMessage =  true; ?>
                 <table class="table slp-tbl text-center">
@@ -83,7 +89,9 @@
                                 {{ ($user->present_after == 1) ? 'Yes' : 'No' }}
                             </td>
                             <td>
-                                <a href="javaScript:Void(0)"  data-href="{{ route('problem.delete') }}" data-id = "{{ $user->id }}" class="delProblemBtn" title="Delete" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20"></a>
+                            @if($VerificationPermission)
+                                <a href="javaScript:Void(0)"  data-href="{{ route('problem.delete') }}" data-id = "{{ $user->id }}" class="delProblemBtn" title="Delete" >
+                                    <img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20"></a>
                                 &nbsp;
                                 <a href="javaScript:Void(0)"  class="editProblemBtn" data-before ="{{$user->present_before}}" 
                                                                                         data-present_after ="{{$user->present_after}}"
@@ -91,6 +99,10 @@
                                                                                         data-name = "{{ $user->name }}"
                                                                                         data-type = "{{ $user->type }}"
                                                                                         data-file = "{{ $user->file }}"><img src="{{ url('/') }}/assets-new/images/editIcon.png" width="15" height="20"></a>
+                                                                                        @else
+                                                                                        <img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20">
+                                                                                        <img src="{{ url('/') }}/assets-new/images/editIcon.png" width="15" height="20">
+                            @endif
                             </td>
                         </tr>
                         @endforeach
@@ -117,18 +129,19 @@
                         
                         <h5>Do you understand that people outside the project cannot be absent from life in order to solve the identified problem?</h5>
                         <ul class="validate_que" style="list-style:none;">
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I do understand that people outside the project cannot be absent from life in order to solve the identified problem.</label></li>
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2">&nbsp;&nbsp;No, I do not understand that people outside the project cannot be absent from life in order to solve the identified problem.</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}  value="1">&nbsp;&nbsp;Yes, I do understand that people outside the project cannot be absent from life in order to solve the identified problem.</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }} value="2">&nbsp;&nbsp;No, I do not understand that people outside the project cannot be absent from life in order to solve the identified problem.</label></li>
                         
                         </ul>
-        
-                       
+
+                        @if($VerificationPermission)
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        @endif
                 </form>
                 
             </div>
 
-            @else
+                    @else
                     <?php $showMsg =  true; ?>
                     @endif
         </div>

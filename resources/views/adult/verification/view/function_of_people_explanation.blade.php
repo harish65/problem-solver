@@ -2,7 +2,10 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-<?php $showMsg = false ?>
+<?php $showMsg = false; ?>
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -140,26 +143,25 @@
                                 <input type="hidden" name="name" value="entity_usage">        
                         <ul style="list-style:none;">
                             <h5>Do you understand that the function to solve the underlying problem is executed by person/people?</h5>
-                            <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} >Yes, I understand that the function to solve the underlying problem is executed by person/people.</label></li>
-                            <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} >No, I don’t understand that the function to solve the underlying problem is executed by person/people.</label></li>
+                            <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, I understand that the function to solve the underlying problem is executed by person/people.</label></li>
+                            <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>No, I don’t understand that the function to solve the underlying problem is executed by person/people.</label></li>
                         </ul>
-                        
+                        @if($VerificationPermission)
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        @endif
                         </form>
                     </div>
                 </div>
                 <!-- End -->
                 @else
-
-                    <div class="col-sm-4">
-                       <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
-                    </div>
-
-               
+                    @if($VerificationPermission)
+                        <div class="col-sm-4">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
+                        </div>
+                    @endif
                @endif
 
                @else
-
                <?php $showMsg = true ?>
                @endif
                 
@@ -172,7 +174,7 @@
     
     
     <!-- Modal End -->
-
+    @if($VerificationPermission)
     <!----Modal start----->
     <div class="modal fade" id="commonSolutionModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true" enctype="multipart/form-data">
@@ -220,7 +222,7 @@
     </div>
     <!----Modal End----->
 </div>
-
+@endif
 @endsection
 @section('css')
 

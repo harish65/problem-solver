@@ -1,7 +1,9 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-@php $showMessage = true @endphp
+@php $showMessage = true;
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -24,23 +26,26 @@
                 <div class="col-sm-12">
                     <h1>{{ @$verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
-                        <img src="{{ asset("assets-new/verification_types/" . @$verificationType->banner)}}" alt="relationImage" />
+                        <img src="{{ asset('assets-new/verification_types/' . @$verificationType->banner)}}" alt="relationImage" />
                         
                     </div>
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
-                <div class="principleRelation">
-                    
+                <div class="principleRelation">                    
                     <div class="questionWrap">
                             <div class="row">
                             <div class="title d-flex">
-                                <div class="text-left w-50 ">
+                                <div class="text-left w-50">
                                     <h2>Time Verification</h2>
                                 </div>
+                                @if($VerificationPermission)
                                 <div class="text-right w-50 pt-3">
                                     <button type="button" class="btn btn-success addVocabularyBtn" id="add-new-variant">+ Add New</button>
                                 </div>
+                                
+                                    
+                                @endif
                             </div>
                             <div class="entity">
                             <?php $lastDate = null ?>
@@ -59,14 +64,18 @@
                                             <td>{{ date('m/d/Y' , strtotime($varification->date))}}</td>
                                             <td>{{ ($varification->solution_hold) ? 'Yes' : 'No' }}</td>
                                             <td>
-                                               
+                                            @if($VerificationPermission)
                                                 <a href="javaScript:Void(0)" class="deleteVoucablaryBtn" data-id="{{  $varification->id }}">
                                                     <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
                                                 </a>
                                                 <a href="javaScript:Void(0)" class="editVocabularyBtn" data-id="{{  $varification->id }}" data-key="{{ date('Y-m-d' ,  strtotime($varification->date) )}}" data-val="{{ $varification->solution_hold }}">
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
                                                 </a>
+                                                @else
+                                                <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
+                                                <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
 
+                                            @endif
                                             </td>
                                         </tr>
                                         <?php $lastDate = date('Y-m-d H:i:s' ,  strtotime($varification->date)) ; ?>
@@ -91,10 +100,12 @@
                         <input type="hidden" name="name" id="name" value="People_in_Project">   
                         <ul style="list-style:none;">
                             <h5>Does the solution of the problem hold related to time?</h5>
-                            <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} >Yes, the solution of the problem holds related to time</label></li>
-                            <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} >No, the solution of the problem does not hold related to time</label></li>
+                            <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}  {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, the solution of the problem holds related to time</label></li>
+                            <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}  {{ (!$VerificationPermission) ? 'disabled':'' }}>No, the solution of the problem does not hold related to time</label></li>
                         </ul>
+                        @if($VerificationPermission)
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        @endif
                         </form>
                     </div>
                 </div>

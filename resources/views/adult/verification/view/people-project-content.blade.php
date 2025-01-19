@@ -2,6 +2,9 @@
 @section('title', 'Adult | Solution Types')
 @section('content')
 <?php $ShowMessage =  false; ?>
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -51,9 +54,11 @@
                 
             </div>
             <div class="row">
-                <div class="modal-btn">
-                    <a type="button" href="#" class="btn btn-success float-right mb-3"  id="add_people">+ Add New User</a>
-                </div>
+                @if($VerificationPermission)
+                    <div class="modal-btn">
+                        <a type="button" href="#" class="btn btn-success float-right mb-3"  id="add_people">+ Add New User</a>
+                    </div>
+                @endif
                 @if($users->count() > 0)
                 <?php $ShowMessage =  true; ?>
                 <table class="table slp-tbl text-center">
@@ -74,6 +79,7 @@
                                 {{ ucfirst($user->type) }}
                             </td>
                             <td>
+                            @if($VerificationPermission)
                                 <a href="javaScript:Void(0)"  data-href="{{ route('problem.delete') }}" data-id = "{{ $user->id }}" class="delProblemBtn" title="Delete" ><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20"></a>
                                 &nbsp;
                                 <a href="javaScript:Void(0)"  class="editProblemBtn"
@@ -81,6 +87,12 @@
                                                                                         data-name = {{ $user->name }}
                                                                                         data-type = {{ $user->type }}
                                                                                         data-file = {{ $user->file }}><img src="{{ url('/') }}/assets-new/images/editIcon.png" width="15" height="20"></a>
+
+                                @else
+                                <img src="{{ url('/') }}/assets-new/images/deleteIcon.png" width="15" height="20">
+                                <img src="{{ url('/') }}/assets-new/images/editIcon.png" width="15" height="20">
+                            
+                                                                                        @endif
                             </td>
                         </tr>
                         @endforeach
@@ -107,26 +119,28 @@
                         
                         <h5>Are you part of that project?</h5>
                         <ul class="validate_que" style="list-style:none;">
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I am part of that project</label></li>
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2">&nbsp;&nbsp;No, I am not part of that project</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}  value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;Yes, I am part of that project</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}  value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;No, I am not part of that project</label></li>
                         
                         </ul>
         
                         <h5>Do you have a function in that project?</h5>
                         <ul class="validate_que" style="list-style:none;">
                             
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I do have a function in that project</label></li>
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}  value="2">&nbsp;&nbsp;No, I do not have a function in that project</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}  value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;Yes, I do have a function in that project</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}  value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;No, I do not have a function in that project</label></li>
                         
                         </ul>
                         <h5>Do you involve in that project?</h5>
                         <ul class="validate_que" style="list-style:none;">
                             
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I involve in that project</label></li>
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 2) ? 'checked' : '' }}  value="2">&nbsp;&nbsp;No, I don’t involve in that project</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 1) ? 'checked' : '' }}  value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;Yes, I involve in that project</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_3" {{ (@$verification->validations->validation_3 == 2) ? 'checked' : '' }}  value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;No, I don’t involve in that project</label></li>
                         
                         </ul>
+                        @if($VerificationPermission)
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        @endif
                 </form>
                 
             </div>

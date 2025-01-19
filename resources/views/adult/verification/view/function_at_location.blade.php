@@ -1,7 +1,10 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-<?php $showMsg = false ?>
+<?php $showMsg = false; ?>
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -151,10 +154,10 @@
 
                                 <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{
                                             (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}
-                                        value="1">&nbsp;&nbsp;Yes, I do understand that the solution to solve a problem is executed at the location where the problem is identified.</label></li>
+                                        value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;Yes, I do understand that the solution to solve a problem is executed at the location where the problem is identified.</label></li>
                                 <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{
                                             (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}
-                                        value="2">&nbsp;&nbsp;Nos, I do not understand that the solution to solve a problem is executed at the location where the problem is identified.</label>
+                                        value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;Nos, I do not understand that the solution to solve a problem is executed at the location where the problem is identified.</label>
                                 </li>
                             </ul>
 
@@ -163,23 +166,27 @@
 
                                 <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{
                                             (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}
-                                        value="1">&nbsp;&nbsp;Yes, I do understand that the solution to solve a problem is executed at the location where that problem is identified by people who are working to solve that problem.</label>
+                                        value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;Yes, I do understand that the solution to solve a problem is executed at the location where that problem is identified by people who are working to solve that problem.</label>
                                 </li>
                                 <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{
                                             (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}
-                                        value="2">&nbsp;&nbsp;No, I don’t understand that the solution to solve a problem is executed at the location where that problem is identified by people who are working to solve that problem.</label></li>
+                                        value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;No, I don’t understand that the solution to solve a problem is executed at the location where that problem is identified by people who are working to solve that problem.</label></li>
 
                             </ul>
+                            @if($VerificationPermission)
                             <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                            @endif   
                         </form>
 
                     </div>
                 </div>
                 <!-- End -->
                 @else
-                <div class="col-sm-4">
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#function_at_location_modal" id="">+ Identify</button>
-                    </div>
+                    @if($VerificationPermission)
+                            <div class="col-sm-4">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#function_at_location_modal" id="">+ Identify</button>
+                            </div>
+                    @endif   
                 @endif   
                 @else
                 <?php $showMsg = true ?>

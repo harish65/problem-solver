@@ -39,8 +39,8 @@ Route::middleware('auth:api')->group( function () {
     Route::post("/store-solution", [\App\Http\Controllers\API\ApiController::class, 'storeSolution'])-> name("store-solution");
     Route::post("/delete-solution", [\App\Http\Controllers\API\ApiController::class, 'deleteSolution'])-> name("delete-solution");
     Route::get("/get-solution-type", [\App\Http\Controllers\API\ApiController::class, 'getSolutionType'])-> name("get-solution-type");  
-    Route::post("/upadate-solution-valiadtion", [\App\Http\Controllers\API\ApiController::class, 'updateSolutionValidation'])-> name("upadate-solution-valiadtion"); 
-    
+    // Route::post("/upadate-solution-valiadtion", [\App\Http\Controllers\API\ApiController::class, 'updateSolutionValidation'])-> name("upadate-solution-valiadtion"); 
+    Route::post("/upadate-valiadtion", [\App\Http\Controllers\API\ApiController::class, 'updateValidations'])-> name("upadate-valiadtion"); 
     
 
     // /Solution function
@@ -127,6 +127,7 @@ Route::middleware('auth:api')->group( function () {
         Route::post("store-priciple-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'storePricipleVerification'])-> name("store-priciple-verification");
         Route::post("store-entity-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'storeEntityAvailable'])-> name("store-entity-verification");
         Route::post("store-priciple-identification", [\App\Http\Controllers\Adult\VerificationController::class, 'storePricipleIdentification'])-> name("store-priciple-identification");
+        Route::post("resource-managment", [\App\Http\Controllers\Adult\VerificationController::class, 'storeResourceManagment'])-> name("resource-managment");
 
 
 });

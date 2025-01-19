@@ -1,7 +1,10 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
-<?php $showMsg = false ?>
+<?php $showMsg = false;
+
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+?>
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -31,10 +34,12 @@
                 @if(isset($problemPart->problem_part)  && !is_null($problemPart->problem_part))
                 
                 <div class="principleRelation container">
-                            <div class="add-entity mb-3">
-                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+ Calculate</button>
-                            </div>
-                            <?php $solutionParts = \App\Models\AverageApproach::getSolutionParts($problemPart->project_id, $problemPart->id);?>
+                            @if($VerificationPermission)
+                                <div class="add-entity mb-3">
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">+ Calculate</button>
+                                </div>
+                            @endif
+                            <?php $solutionParts = \App\Models\AverageApproach::getSolutionParts($problemPart->project_id, $problemPart->id , $problem->user_id);?>
                     <div class="partitionApp">
                             <div class="blockProblem">
                                     <div class="projectBlock text-center">
@@ -70,9 +75,11 @@
                                                                     {{ $solutionPart->solution_part_value  }}
                                                                 </span>
                                                                 <span>{{ __('Part ') . ++$key}}</span>
+                                                                @if($VerificationPermission)
                                                                 <span class="text-part-val float-right edit-part" title="Edit" data-id="{{ $solutionPart->id }}" data-value="{{ $solutionPart->solution_part_value }}">
                                                                     <i class="fa fa-pencil"></i>
                                                                 </span>
+                                                                @endif
                                                             </li>
                                                         @endforeach
                                                 @endif       
@@ -103,19 +110,21 @@
                             <h5>Does the solution of that problem require averaging?</h5>
                             <ul class="validate_que" style="list-style:none;">
                                 
-                                <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, the solution of that problem requires averaging</label></li>
-                                <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, the solution of that problem does not require averaging</label></li>
+                                <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}   value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;Yes, the solution of that problem requires averaging</label></li>
+                                <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}   value="2" {{ (!$VerificationPermission) ? 'disabled':'' }} >&nbsp;&nbsp;No, the solution of that problem does not require averaging</label></li>
                                
                             </ul>
     
                             <h5>Is each part of the problem substituted by a part of the solution?</h5>
                             <ul class="validate_que" style="list-style:none;">
                                 
-                                <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Is each part of the problem substituted by a part of the solution?</label></li>
-                                <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, each part of the problem is not  substituted by a part of the solution</label></li>
+                                <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}   value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;Is each part of the problem substituted by a part of the solution?</label></li>
+                                <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}   value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;No, each part of the problem is not  substituted by a part of the solution</label></li>
                                
                             </ul>
+                            @if($VerificationPermission)
                             <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                            @endif
                         </form>
                         </div>
                 </div>

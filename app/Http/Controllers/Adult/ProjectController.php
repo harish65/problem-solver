@@ -46,13 +46,19 @@ class ProjectController extends BaseController
                                 })
                             ->groupBy('projects.id') 
                             ->orderBy('projects.id', 'DESC')->get();
-                // echo '<pre>';print_r($project);die;
+
+
+                    $verificationTypes = DB::table('verification_types')->get();    
+                    
                     if ($request->is('api/*')) {
                             $success['projects'] = $project;
+                            $success['verificationTypes'] = $verificationTypes;
                             $success['token'] = $request->header('Authorization');
                             return $this->sendResponse($success,'Reviewer Response');
                     }else{
-                        return view('adult.project.index', ["project" => $project]);
+
+                       
+                        return view('adult.project.index', ["project" => $project , 'verificationTypes' => $verificationTypes]);
                     }
     }
 
@@ -175,8 +181,9 @@ class ProjectController extends BaseController
 
     public function getUsersForProjectSharing($projectId){
         try{
-            $project = DB::table('projects')->where('id', $projectId)->first();
             
+            $project = DB::table('projects')->where('id', $projectId)->first();
+                
                 if($project && $project->shared == 1){
                     $alreadyShared = DB::table('project_shared')
                         ->where('project_id', $projectId)
@@ -187,28 +194,52 @@ class ProjectController extends BaseController
                         ->where('id', '!=', Auth::user()->id)
                         ->where('role', 2)
                         ->whereNotIn('id', $alreadyShared) // Use the array of IDs
-                        ->get()
-                        ->toArray();
-                    $success['users'] = $users;
-                    
-                    return $this->sendResponse($success, 'success');
+                        ->get();
+                   return $users;
                 }else{
                     $users = DB::table('users')->where('id', '!=', Auth::user()->id)->where('role', 2)->get();
-                    $success['users'] = $users;
-                    return $this->sendResponse($success, 'Success');
+                    return $users;
                 }
         }catch(\Illuminate\Database\QueryException $e){
             return $this->sendError('Error.', ['error'=> $e->getMessage()]);
         }
     }
+     public function shareProjectGet($project_id  , Request $request){
+        
+        $projectId = Crypt::decrypt($project_id);       
+      
+        $verificationTypes = DB::table('verification_types')->get();    
+        $projectUsers = $this->getUsersForProjectSharing($projectId);
+        
+        if($projectUsers->count() == 0 ){
+            return redirect()->route('adult.dashboard')->with('error', 'No user found for project sharing!');
+        }
+        $allreadySharedUsers = DB::table('project_shared')
+                    ->join('users', 'project_shared.shared_with', '=', 'users.id')
+                    ->where('project_shared.project_id', $projectId)
+                    ->select('users.name', 'users.email' , 'project_shared.*')
+                    ->get();
+      
+        if ($request->is('api/*')) {
+                $success['project_id'] = $project_id;
+                $success['verificationTypes'] = $verificationTypes;
+                $success['projectUsers'] = $projectUsers;
+                $success['token'] = $request->header('Authorization');
+                $success['allreadyShared'] = $allreadyShared;
+                return $this->sendResponse($success,'Reviewer Response');
+        }else{
+            return view('adult.project.shareproject', ["project_id" => $project_id , 'verificationTypes' => $verificationTypes , 'projectUsers'=>$projectUsers , 'allreadySharedUsers'=>$allreadySharedUsers]);
+        }
+     }
 
+     
 
     public function shareProject(Request $request){
-        // echo "<pre>"; print_r($request->all()); exit;
+       
        try{
         $rules = array(
             'user_id'=>'integer|required',
-            "project_id" => "integer|required",
+            "project_id" => "required",
             //"project_sharing_mode" => "required"
             
         );
@@ -218,32 +249,34 @@ class ProjectController extends BaseController
                 'project_id.required'=>'Project must be selected',
                 //'project_sharing_mode.required'=>'Project share mode is required'
         );
-        $validator = Validator::make($request->all(), $rules, $messsages);
-        if ($validator->fails()) {            
-            return $this->sendError("Validation Error.", $validator->errors());
-        }   
+               
+            $validator = Validator::make($request->all(), $rules, $messsages);
+            if ($validator->fails()) {            
+                return $this->sendError("Validation Error.", $validator->errors());
+            }   
+            
+            $project_id = Crypt::decrypt($request->project_id);
+            // check user if exist
+            $user = User::where('id' , $request->user_id)->first();
         
-        // check user if exist
-        $user = User::where('id' , $request->user_id)->first();
-       
-        if($user){
-                $project = DB::table('project_shared')->where('project_id' , $request->project_id)->where('shared_with' ,  $user->id)->first();
-                if($project){
-                    return $this->sendError("Error.", ['messages'=> 'This project is already assigned to ' .$user->name .'!']);
-                }
-        }else{
-            return $this->sendError("Error.", ['messages'=> 'No record found!']);
-        }    
-        // if($request->shared_project == 1){
-            $update = DB::table('projects')->where('id' , $request->project_id)->update(['shared'=> '1']);
-        // }
+            if($user){
+                    $project = DB::table('project_shared')->where('project_id' , $project_id)->where('shared_with' ,  $user->id)->first();
+                    if($project){
+                        return $this->sendError("Error.", ['messages'=> 'This project is already assigned to ' .$user->name .'!']);
+                    }
+            }else{
+                return $this->sendError("Error.", ['messages'=> 'No record found!']);
+            }    
+            // if($request->shared_project == 1){
+                $update = DB::table('projects')->where('id' , $project_id)->update(['shared'=> '1']);
+            // }
         
-       
+            
         // if($update){
 
             // $editable_project = (isset($request->editable_project) && $request->editable_project == 1) ? '1' : '0';
                 $insertRecord =  DB::table('project_shared')->insert([
-                                    'project_id' => $request->project_id, 
+                                    'project_id' => $project_id, 
                                     'shared_with'=> $user->id,
                                     'editable_project' => ($request->project_sharing_mode == 1) ? '1' : '0',
                                     'editable_problem' => ($request->editable_problem == 1) ? '1' : '0',
@@ -254,6 +287,38 @@ class ProjectController extends BaseController
                                     'editable_report' => ($request->editable_report == 1) ? '1' : '0',
                                     'editable_quiz' => ($request->editable_quiz == 1) ? '1' : '0',
                                     'editable_result' => ($request->editable_result == 1) ? '1' : '0',
+                                    'vocabulary' => ($request->vocabulary == 1) ? '1' : '0',
+                                    'information' => ($request->information == 1) ? '1' : '0',
+                                    'before_and_after' => ($request->before_and_after == 1) ? '1' : '0',
+                                    'separation_step' => ($request->separation_step == 1) ? '1' : '0',
+                                    'time_verification' => ($request->time_verification == 1) ? '1' : '0',
+                                    'past_and_present_time' => ($request->past_and_present_time == 1) ? '1' : '0',
+                                    'entity_available' => ($request->entity_available == 1) ? '1' : '0',
+                                    'solution_time_location1' => ($request->solution_time_location1 == 1) ? '1' : '0',
+                                    'solution_time_location2' => ($request->solution_time_location2 == 1) ? '1' : '0',
+                                    'people_in_project' => ($request->people_in_project == 1) ? '1' : '0',
+                                    'people_and_communication' => ($request->people_and_communication == 1) ? '1' : '0',
+                                    'communication_flow' => ($request->communication_flow == 1) ? '1' : '0',
+                                    'partition_approach' => ($request->partition_approach == 1) ? '1' : '0',
+                                    'principle_identification' => ($request->principle_identification == 1) ? '1' : '0',
+                                    'problem_development_from_error_explanation' => ($request->problem_development_from_error_explanation == 1) ? '1' : '0',
+                                    'error_correction_approach' => ($request->error_correction_approach == 1) ? '1' : '0',
+                                    'function_adjustment' => ($request->function_adjustment == 1) ? '1' : '0',
+                                    'function_substitution_and_people' => ($request->function_substitution_and_people == 1) ? '1' : '0',
+                                    'functions_belong_to_people_explanation' => ($request->functions_belong_to_people_explanation == 1) ? '1' : '0',
+                                    'averaging_approach' => ($request->averaging_approach == 1) ? '1' : '0',
+                                    'passive_voice_approach_explanation' => ($request->passive_voice_approach_explanation == 1) ? '1' : '0',
+                                    'replace_problem_by_problem' => ($request->replace_problem_by_problem == 1) ? '1' : '0',
+                                    'resource_management_consideration' => ($request->resource_management_consideration == 1) ? '1' : '0',
+                                    'entity_usage' => ($request->entity_usage == 1) ? '1' : '0',
+                                    'function_of_people_explanation' => ($request->function_of_people_explanation == 1) ? '1' : '0',
+                                    'visibility_and_entity_behind_explanation' => ($request->visibility_and_entity_behind_explanation == 1) ? '1' : '0',
+                                    'mother_nature_existence_explanation' => ($request->mother_nature_existence_explanation == 1) ? '1' : '0',
+                                    'me_vs__you_approach' => ($request->me_vs__you_approach_ == 1) ? '1' : '0',
+                                    'taking_advantage_on_other' => ($request->taking_advantage_on_other_ == 1) ? '1' : '0',
+                                    'people_outside_the_project' => ($request->people_outside_the_project_ == 1) ? '1' : '0',
+                                    'problem_and_solution_at_location_explanation' => ($request->problem_and_solution_at_location_explanation == 1) ? '1' : '0',
+                                    'function_at_location_explanation' => ($request->function_at_location_explanation == 1) ? '1' : '0',
                     
                 ]);
 

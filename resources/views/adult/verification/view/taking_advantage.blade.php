@@ -2,6 +2,10 @@
 @section('title', 'Adult | Solution Type')
 @section('content')
 <?php $showMsg = false ?>
+
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -156,29 +160,32 @@
                                 <h5>Do you understand that the only advantage that exists is to solve the underlying problem?  </h5>
                                 <ul class="validate_que" style="list-style:none;">
                                     
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, I understand that the only advantage that exists is to solve the underlying problem</label></li>
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, I do not understand that the only advantage that exists is to solve the underlying problem</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}  {{ (!$VerificationPermission) ? 'disabled':'' }}   value="1">&nbsp;&nbsp;Yes, I understand that the only advantage that exists is to solve the underlying problem</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}  {{ (!$VerificationPermission) ? 'disabled':'' }}    value="2">&nbsp;&nbsp;No, I do not understand that the only advantage that exists is to solve the underlying problem</label></li>
                                 
                                 </ul>
                                 <h5>Do you understand that the only interest that exists is to solve the underlying problem?</h5>
                                 <ul class="validate_que" style="list-style:none;">
                                     
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, I do understand that the only interest that exists is to solve the underlying problem</label></li>
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, I do not understand that the only interest that exists is to solve the underlying problem</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}  value="1">&nbsp;&nbsp;Yes, I do understand that the only interest that exists is to solve the underlying problem</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}  {{ (!$VerificationPermission) ? 'disabled':'' }} value="2">&nbsp;&nbsp;No, I do not understand that the only interest that exists is to solve the underlying problem</label></li>
                                 
                                 </ul>
         
-                                
+                                @if($VerificationPermission)
                                 <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                                @endif
                             </form>
                         </div>
                 </div>
                 <!-- End -->
                 @else
-                <div class="col-sm-4">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#entityModal"
-                        id="">+ Identify</button>
-                </div>
+                    @if($VerificationPermission)
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#entityModal"
+                            id="">+ Identify</button>
+                    </div>
+                    @endif
                 @endif
 
                 @else

@@ -1,7 +1,10 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-<?php $showMsg = false ?>
+<?php $showMsg = false; ?>
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -174,10 +177,10 @@
 
                                         <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{
                                                     (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}
-                                                value="1">&nbsp;&nbsp;I have separated the problem from myself</label></li>
+                                                value="1" {{ (!$VerificationPermission) ? 'disabled':'' }} >&nbsp;&nbsp;I have separated the problem from myself</label></li>
                                         <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{
                                                     (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}
-                                                value="2">&nbsp;&nbsp;No, I haven’t separated the problem from myself</label>
+                                                value="2" {{ (!$VerificationPermission) ? 'disabled':'' }} >&nbsp;&nbsp;No, I haven’t separated the problem from myself</label>
                                         </li>
 
                                     </ul>
@@ -187,24 +190,28 @@
 
                                         <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{
                                                     (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}
-                                                value="1">&nbsp;&nbsp;Yes, I have separated the problem from the people</label>
+                                                value="1" {{ (!$VerificationPermission) ? 'disabled':'' }} >&nbsp;&nbsp;Yes, I have separated the problem from the people</label>
                                         </li>
                                         <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{
                                                     (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}
-                                                value="2">&nbsp;&nbsp;No, I haven’t separated the problem from the
+                                                value="2" {{ (!$VerificationPermission) ? 'disabled':'' }} >&nbsp;&nbsp;No, I haven’t separated the problem from the
                                                 people</label></li>
 
                                     </ul>
+                                    @if($VerificationPermission)
                                     <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                                    @endif  
                                 </form>
 
                             </div>
                         </div>
                         <!-- End -->
-                @else
-                <div class="col-sm-4">
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
-                    </div>
+                    @else
+                    @if($VerificationPermission)
+                    <div class="col-sm-4">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
+                        </div>
+                    @endif    
                 @endif    
                 @else
                 <?php $showMsg = true; ?>

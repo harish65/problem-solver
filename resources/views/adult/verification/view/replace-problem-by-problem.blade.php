@@ -1,7 +1,9 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
-
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -114,21 +116,22 @@
                                 <h5>Do you understand that a problem needs to be solved?</h5>
                                 <ul class="validate_que" style="list-style:none;">
                                     
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}   value="1">&nbsp;&nbsp;Yes, I understand that a problem needs to be solved</label></li>
-                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}   value="2">&nbsp;&nbsp;No, I do not understand that a problem needs to be solved</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}   value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;Yes, I understand that a problem needs to be solved</label></li>
+                                    <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}   value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;No, I do not understand that a problem needs to be solved</label></li>
                                 
                                 </ul>
         
-                                
+                                @if($VerificationPermission)
                                 <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                                @endif
                             </form>
                         </div>
                         @else
-
-                        <div class="add-entity mb-3">
-                            <button type="button" class="btn btn-success" class="cursor" id="replace_sol" data-toggle="modal" data-target="#replace_problem_model" >+</button>
-                        </div>
-                   
+                        @if($VerificationPermission)
+                            <div class="add-entity mb-3">
+                                <button type="button" class="btn btn-success" class="cursor" id="replace_sol" data-toggle="modal" data-target="#replace_problem_model" >+ Add</button>
+                            </div>
+                        @endif
                     @endif
                 </div>
                 <!-- End -->

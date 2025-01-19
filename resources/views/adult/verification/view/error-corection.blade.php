@@ -1,7 +1,9 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Type')
 @section('content')
-
+@php 
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -105,7 +107,9 @@
             <div class="container">
                 <div class="row ">
                     <div class="col-sm-4">
+                    @if($VerificationPermission)
                         <button class="btn btn-success" id="feed-back">+ Error Correction</button>
+                    @endif    
                     </div>                    
                 </div>
 
@@ -154,9 +158,14 @@
                                     </td>
                                     <td>{{($errorcorrection->feedback_applied == 0) ? 'Yes' : 'No' }}</td>
                                     <td>
-                                         <a href="javaScript:void(0)" class="btn btn-success editBtn" data-id ="{{ $errorcorrection->id }}" data-error_ids="{{ $errorcorrection->error }}" data-compensator_ids="{{ $errorcorrection->compensator }}" data-feedback="{{$errorcorrection->feedback }}" data-feedback_applied="{{$errorcorrection->feedback_applied }}" ><i class="fa fa-pencil"></i></a>
-                                            <a href="javaScript:void(0)" data-id ="{{ $errorcorrection->id }}"   class="btn btn-danger deleteBtn"><i class="fa fa-trash"></i></a>
-                                        </td>
+                                    @if($VerificationPermission)
+                                        <a href="javaScript:void(0)" class="btn btn-success editBtn" data-id ="{{ $errorcorrection->id }}" data-error_ids="{{ $errorcorrection->error }}" data-compensator_ids="{{ $errorcorrection->compensator }}" data-feedback="{{$errorcorrection->feedback }}" data-feedback_applied="{{$errorcorrection->feedback_applied }}" ><i class="fa fa-pencil"></i></a>
+                                        <a href="javaScript:void(0)" data-id ="{{ $errorcorrection->id }}"   class="btn btn-danger deleteBtn"><i class="fa fa-trash"></i></a>
+                                        @else
+                                        <a href="javaScript:void(0)" class="btn btn-success" ><i class="fa fa-pencil"></i></a>
+                                        <a href="javaScript:void(0)"  class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                         </tbody>

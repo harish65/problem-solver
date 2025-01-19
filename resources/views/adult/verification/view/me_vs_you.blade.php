@@ -1,7 +1,10 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-<?php $showMsg = false ?>
+<?php $showMsg = false; ?>
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -163,35 +166,39 @@
                             <ul style="list-style:none;">
                                 <h5>Do I approach the solution of a problem one vs. another or people vs. people? </h5>
                                 <li><label><input type="radio" name="validation_1" value="1" {{
-                                            (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} >No, I
+                                            (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}  {{ (!$VerificationPermission) ? 'disabled':'' }}>No, I
                                         approach the solution of a problem like I work with you and people work
                                         together?</label></li>
                                 <li><label><input type="radio" name="validation_1" value="2" {{
-                                            (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} >Yes, I
+                                            (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, I
                                         approach the solution of a problem like me vs. you and people vs.
                                         people.</label></li>
                             </ul>
                             <ul style="list-style:none;">
                                 <h5>Do I understand that to solve a problem is I work with and I don’t go against? </h5>
                                 <li><label><input type="radio" name="validation_2" value="1" {{
-                                            (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} >Yes, I
+                                            (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, I
                                         understand the solution of a problem is I work with and I don’t go
                                         against</label></li>
                                 <li><label><input type="radio" name="validation_2" value="2" {{
-                                            (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} >No, I
+                                            (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>No, I
                                         do not understand the solution of a problem is I work with and I don’t go
                                         against</label></li>
                             </ul>
+                            @if($VerificationPermission )
                             <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                            @endif
                         </form>
                     </div>
                 </div>
                 <!-- End -->
                 @else
-                <div class="col-sm-4">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#entityModal"
-                        id="">+ Identify</button>
-                </div>
+                    @if($VerificationPermission )
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#entityModal"
+                            id="">+ Identify</button>
+                    </div>
+                    @endif
                 @endif
                 @else
 
@@ -200,6 +207,7 @@
             </div>
         </div>
     </div>
+    @if($VerificationPermission)
     <!-- Content Section End -->
     <div class="modal fade" id="entityModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true" enctype="multipart/form-data">
@@ -243,7 +251,7 @@
         </form>
     </div>
 
-
+@endif
 
 
 </div>

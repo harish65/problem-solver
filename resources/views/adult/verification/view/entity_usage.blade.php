@@ -2,7 +2,10 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-<?php $showMsg = false ?>
+<?php $showMsg = false; ?>
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -178,8 +181,13 @@
                                                 {{ $Solution_function->name}}
                                             </td>
                                             <td>
+                                            @if($VerificationPermission)
                                                 <a  href=""><img src="{{ url('/assets-new/images/deleteIcon.png') }}" width="15" height="20"></a>
                                                 <a  href=""><img src="{{ url('/assets-new/images/editicon.png') }}" width="15" height="20"></a>
+                                            @else
+                                            <img src="{{ url('/assets-new/images/deleteIcon.png') }}" width="15" height="20">
+                                            <img src="{{ url('/assets-new/images/editicon.png') }}" width="15" height="20">
+                                                @endif
                                             </td>
 
                                         </tr>
@@ -207,22 +215,26 @@
                                 <input type="hidden" name="name" value="entity_usage">        
                         <ul style="list-style:none;">
                             <h5>Have you used the entities to solve the underlying problem?</h5>
-                            <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} >Yes, I have used the entities to solve the problem</label></li>
-                            <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} >No, I haven’t used the entities to solve the problem.</label></li>
+                            <li><label><input type="radio"  name="validation_1" value="1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, I have used the entities to solve the problem</label></li>
+                            <li><label><input type="radio"  name="validation_1" value="2" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>No, I haven’t used the entities to solve the problem.</label></li>
                         </ul>
                         <ul style="list-style:none;">
                             <h5>Do the entities that are used can be substituted for the problem?</h5>
-                            <li><label><input type="radio"  name="validation_2" value="1" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} >Yes, the entities that are used can be substituted for the problem</label></li>
-                            <li><label><input type="radio"  name="validation_2" value="2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} >No, the entities that are used cannot be substituted for the problem.</label></li>
+                            <li><label><input type="radio"  name="validation_2" value="1" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, the entities that are used can be substituted for the problem</label></li>
+                            <li><label><input type="radio"  name="validation_2" value="2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }} {{ (!$VerificationPermission) ? 'disabled':'' }}>No, the entities that are used cannot be substituted for the problem.</label></li>
                         </ul>
+                        @if($VerificationPermission)
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        @endif
                         </form>
                     </div>
                 </div>
                 @else
-                        <div class="col-md-12">
-                            <button type="button"  class="btn btn-success add-entity" data-toggle="modal" data-target="#EntityUsageModal" >Add <i class="fa fa-plus"></i></button>
-                        </div>  
+                    @if($VerificationPermission)
+                            <div class="col-md-12">
+                                <button type="button"  class="btn btn-success add-entity" data-toggle="modal" data-target="#EntityUsageModal" >Add <i class="fa fa-plus"></i></button>
+                            </div>  
+                    @endif
                 @endif
                 @else
                 <?php $showMsg = true ?>

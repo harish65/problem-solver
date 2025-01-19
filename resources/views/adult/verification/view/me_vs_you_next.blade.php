@@ -1,7 +1,9 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -84,7 +86,6 @@
                 </div>
                 @if($mevsyou)
                 <!-- start -->
-
                 <div class="conditionBlock">
                         <div class="inner_conditionblock d-flex">
                             <ul class="custom_height">
@@ -187,10 +188,12 @@
                     </div>
                     </div><!-- End condition block -->
                 @else
-                <div class="col-sm-4">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal"
-                        id="">+ Identify</button>
-                </div>
+                    @if($VerificationPermission)
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal"
+                            id="">+ Identify</button>
+                    </div>
+                    @endif
                 @endif
 
             </div>

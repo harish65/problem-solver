@@ -1,7 +1,10 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-<?php $showMsg = false ?>
+<?php $showMsg = false; ?>
+@php
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -154,10 +157,10 @@
 
                                 <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{
                                             (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}
-                                        value="1">&nbsp;&nbsp;Yes, the problem is solved at the location it is identified</label></li>
+                                        value="1" {{ (!$VerificationPermission) ? 'disabled':'' }} >&nbsp;&nbsp;Yes, the problem is solved at the location it is identified</label></li>
                                 <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{
                                             (@$verification->validations->validation_1 == 2) ? 'checked' : '' }}
-                                        value="2">&nbsp;&nbsp;No, the problem is not solved at the location it is identified</label>
+                                        value="2" {{ (!$VerificationPermission) ? 'disabled':'' }} >&nbsp;&nbsp;No, the problem is not solved at the location it is identified</label>
                                 </li>
                             </ul>
 
@@ -166,23 +169,27 @@
 
                                 <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{
                                             (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}
-                                        value="1">&nbsp;&nbsp;Yes, the solution function of the problem executes at the problem’s location</label>
+                                        value="1" {{ (!$VerificationPermission) ? 'disabled':'' }} >&nbsp;&nbsp;Yes, the solution function of the problem executes at the problem’s location</label>
                                 </li>
                                 <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{
                                             (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}
-                                        value="2">&nbsp;&nbsp;No, the solution function of the problem is not executed at the problem’s location</label></li>
+                                        value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>&nbsp;&nbsp;No, the solution function of the problem is not executed at the problem’s location</label></li>
 
                             </ul>
+                            @if($VerificationPermission)
                             <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                            @endif
                         </form>
 
                     </div>
                 </div>
                 <!-- End -->
                 @else
-                <div class="col-sm-4">
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#problem_at_location_modal" id="">+ Identify</button>
-                    </div>
+                    @if($VerificationPermission)
+                    <div class="col-sm-4">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#problem_at_location_modal" id="">+ Identify</button>
+                        </div>
+                    @endif 
                 @endif 
                 
                 

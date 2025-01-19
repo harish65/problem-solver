@@ -1,7 +1,10 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-@php $showMessage = true @endphp
+@php 
+$showMessage = true ;
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -99,6 +102,7 @@
                                 <div class="projectList">
                                     <p class="date">{{ date('d/m/Y' , strtotime($verification->created_at)) }}</p>
                                     <ul>
+                                    @if($VerificationPermission)
                                         <li>
                                             <a href="javaScript:Void(0)" class="editverBtn" 
                                                 data-verification_type_text_id = "{{ @$verification->verification_type_text_id }}"
@@ -119,6 +123,11 @@
                                                     src="{{ asset('assets-new/images/uploadIcon.png') }}"
                                                     alt=""></a>
                                         </li>
+                                        @else
+                                        <li>&nbsp;</li>
+                                        <li>&nbsp;</li>
+                                        <li>&nbsp;</li>
+                                        @endif
                                     </ul>
                                 </div>
                             </div>
@@ -134,9 +143,11 @@
                                 <div class="text-left w-50 ">
                                     <h2>Information</h2>
                                 </div>
+                                @if($VerificationPermission)
                                 <div class="text-right w-50 pt-3">
                                     <button type="button"  class="btn btn-success addEntity" id="add-new-variant">+ Add New</button>
                                 </div>
+                                @endif
                             </div>
                             <div class="entity">
                                 <table class="table slp-tbl text-center">
@@ -170,6 +181,7 @@
                                                 </td>
                                                 
                                                 <td>
+                                                @if($VerificationPermission)
                                                     <a href="javaScript:Void(0)"  id="addEntity" class="addEntity">
                                                         <img src="{{ asset('assets-new/images/add-verification.png')}}"
                                                             alt="">
@@ -180,12 +192,13 @@
                                                     <a href="javaScript:Void(0)" id="editEntity" class="editEntity"
                                                         data-id="{{ $ent->id }}"
                                                         data-key="{{ $ent->verification_key }}"
-                                                        data-value="{{ $ent->verification_value }}""
-                                                        data-point_to="{{ $ent->point_to }}"
-                                                    >
+                                                        data-value="{{ $ent->verification_value }}"
+                                                        data-point_to="{{ $ent->point_to }}">1
                                                         <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
                                                     </a>
+                                                    
 
+                                                @endif
                                                 </td>
                                             
                                         </tr>
@@ -208,10 +221,12 @@
                         <ul>
                             <h5>Does the identified information match the given information?</h5>
                             <input type="hidden" name="id" value="{{ $verification->id }}">
-                            <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1">Yes, the identified information matches the given information</label></li>
-                            <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2">No, the identified information does not match the given information</label></li>
+                            <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="1" {{ (!$VerificationPermission) ? 'disabled' : '' }}>Yes, the identified information matches the given information</label></li>
+                            <li><label><input  type="radio" data-id="{{ $verification->id  }}" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} name="validation_1" class="form-check-input validation" value="2" {{ (!$VerificationPermission) ? 'disabled' : '' }}>No, the identified information does not match the given information</label></li>
                         </ul>
+                        @if($VerificationPermission)
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        @endif
                         </form>
                         
                     </div>
@@ -229,13 +244,18 @@
         <div class="container">
             <div class="row">
             <div class="col-sm-12">
-                    <h1>{{ @$verificationType->page_main_title }}</h1>
+                    <h1>{{ $verificationType->page_main_title }}</h1>
                     <div class="relationImage text-center">
                     <img src="{{ asset('assets-new/images/verification-banners/info_var.png')}}" alt="relationImage" />
                         
                     </div>
-                    <p>{{ @$verificationType->explanation }}</p>
+                    <p>{{ $verificationType->explanation }}</p>
+
+                    @if($VerificationPermission)
                     <button class="btn btn-success" id="add-info-varification-button"><i class="fa fa-plus"></i>  Create Verificatoin</button>
+                    @else
+                    @include('adult.verification.view.component.shared-message')     
+                    @endif
                 </div>
                 </div>
             </div>

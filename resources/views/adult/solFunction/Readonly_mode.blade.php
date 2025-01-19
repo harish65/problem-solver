@@ -1,5 +1,5 @@
 @if(isset($solFunctions->id))
-        @if($project->user_id == Auth::user()->id || $can_edit->editable_solution_func == 0)
+        @if($project->user_id == Auth::user()->id && $project->shared == 1)
                 @include('adult.solFunction.solutiofunction_dd',[$solFunctions]) 
         @endif 
             @include('adult.solFunction.cards')

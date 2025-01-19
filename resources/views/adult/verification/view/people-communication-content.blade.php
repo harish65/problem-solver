@@ -1,7 +1,9 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Solution Types')
 @section('content')
-@php $showMessage = true @endphp
+@php $showMessage = true; 
+$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+@endphp
 <div class='relationshipPage'>
     <div class="container">
         <div class="mainTitle">
@@ -47,8 +49,13 @@
                                         <p class="redText">{{ $user->type }}</p>
                                     </div>
                                     <div class="">
+                                    @if($VerificationPermission)
                                         <button class="btn btn-success communicate" data-id="{{ $user->id }}" data-customer_id="{{ $user->id }}" data-name = "{{ $user->name }}"  value="communicate">Communication</button>
                                         <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                        @else
+                                            <button class="btn btn-success" disabled>Communication</button>
+                                            <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -61,39 +68,45 @@
                     </div>
                     @if($users->count()>0)
                     <?php $showMessage = false; ?>
-                        <table class="table slp-tbl text-center">
-                        <thead>      
-                            <th>From Person</th>
-                            <th>To Person</th>
-                            <th>Date</th>                            
-                            <th>Subject</th>                            
-                            <th>Actions</th>
-                            
-                        </thead>
-                            <tbody>
-                                @foreach ($communications as $communication)
-                                        <tr>
-                                            <td>{{ App\Models\Customer::getCustomerName($communication->customer_id)}}</td>
-                                            <td>{{ App\Models\Customer::getCustomerName($communication->person_to)}}</td>
-                                            <td>{{ date('d-m-Y' , strtotime($communication->created_at) ) }}</td>
-                                            <td>{{ $communication->title }}</td>
-                                            
-                                            <td>
-                                                <a href="javaScript:void(0)" class="delete_"  data-id="{{ $communication->id }}">
-                                                    <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
-                                                </a>
-                                                <!-- <a href="javaScript:void(0)" class="edit" data-id="{{ $communication->id }}" data-person_one="{{ $communication->customer_id }}"  data-person_two="{{ $communication->person_to }}" data-title="{{ $communication->title }}" data-comment="{{ $communication->comment }}" >
+                    @if($communications->count() > 0)
+                            <table class="table slp-tbl text-center">
+                            <thead>      
+                                <th>From Person</th>
+                                <th>To Person</th>
+                                <th>Date</th>                            
+                                <th>Subject</th>                            
+                                <th>Actions</th>
+                                
+                            </thead>
+                                <tbody>
+                                    @foreach ($communications as $communication)
+                                            <tr>
+                                                <td>{{ App\Models\Customer::getCustomerName($communication->customer_id)}}</td>
+                                                <td>{{ App\Models\Customer::getCustomerName($communication->person_to)}}</td>
+                                                <td>{{ date('d-m-Y' , strtotime($communication->created_at) ) }}</td>
+                                                <td>{{ $communication->title }}</td>
+                                                
+                                                <td>
+                                                @if($VerificationPermission)
+                                                    <a href="javaScript:void(0)" class="delete_"  data-id="{{ $communication->id }}">
+                                                        <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
+                                                    </a>
+                                                
+                                                    <a href="javaScript:void(0)" class="view" data-id="{{ $communication->id }}" data-person_one="{{ $communication->customer_id }}"  data-person_two="{{ $communication->person_to }}" data-title="{{ $communication->title }}" data-comment="{{ $communication->comment }}" >
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
-                                                </a> -->
-                                                <a href="javaScript:void(0)" class="view" data-id="{{ $communication->id }}" data-person_one="{{ $communication->customer_id }}"  data-person_two="{{ $communication->person_to }}" data-title="{{ $communication->title }}" data-comment="{{ $communication->comment }}" >
-                                                    <i class="fa fa-eye"></i>
-                                                </a>
+                                                    </a>
+                                                    @else
+                                                    <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
+                                                    <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
 
-                                            </td>
-                                        </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                                    @endif
+
+                                                </td>
+                                            </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            @endif
                         @endif
                     </div>
                     <div class="questionWrap">
@@ -108,19 +121,21 @@
                         <h5>Have you separated the people in the project from their communication?</h5>
                         <ul class="validate_que" style="list-style:none;">
                             
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I have separated the people in the project from their communication</label></li>
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2">&nbsp;&nbsp;No, I have not separated the people in the project form their communication</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }}  value="1" {{ (!$VerificationPermission) ? 'disabled':'' }} >&nbsp;&nbsp;Yes, I have separated the people in the project from their communication</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2" {{ (!$VerificationPermission) ? 'disabled':'' }} >&nbsp;&nbsp;No, I have not separated the people in the project form their communication</label></li>
                            
                         </ul>
 
                         <h5>Do you understand that separation of people and communication is important in a project?</h5>
                         <ul class="validate_que" style="list-style:none;">
                             
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}  value="1">&nbsp;&nbsp;Yes, I do understand that separation of people and communication is important in a project</label></li>
-                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}  value="2">&nbsp;&nbsp;No, I don’t understand that separation of people and communication is important in a project</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }}  value="1" {{ (!$VerificationPermission) ? 'disabled':'' }} >&nbsp;&nbsp;Yes, I do understand that separation of people and communication is important in a project</label></li>
+                            <li><label>&nbsp;&nbsp;<input type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}  value="2" {{ (!$VerificationPermission) ? 'disabled':'' }} >&nbsp;&nbsp;No, I don’t understand that separation of people and communication is important in a project</label></li>
                            
                         </ul>
+                        @if($VerificationPermission)
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                        @endif
                         </form>
                         
                     </div>
@@ -131,7 +146,7 @@
         </div>
     </div>
     <!-- Content Section End -->
-
+    @if($VerificationPermission)
    
      <!-- Modal start -->
      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -185,7 +200,7 @@
             </div>
         </div>
     </div>
-    
+    @endif
     <!-- Modal End -->
 </div>
 
@@ -286,8 +301,9 @@ $('.communicate').on('click',function(){
         $('#person_2').val($(this).data('person_two')).attr('disabled' , true)
         $('#title_').val($(this).data('title')).attr('disabled' , false)
         $('#id').val($(this).data('id'))
-        tinyMCE.activeEditor.setContent($(this).data('comment'));
         $('#btnSave').show();
+        tinyMCE.activeEditor.setContent($(this).data('comment'));
+        
        $('#exampleModal').modal('toggle');
     })
     $('.view').click(function(){

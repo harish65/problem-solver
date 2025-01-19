@@ -22,9 +22,9 @@ class AverageApproach extends Model
 
 
 
-    public static function getSolutionParts($project_id , $problem_part){
+    public static function getSolutionParts($project_id , $problem_part , $user_id){
 
-        $data = DB::table('averagin_aproach_parts')->where('average_approach_id' , $problem_part)->where('project_id', $project_id)->where('user_id' ,Auth::user()->id)->get();
+        $data = DB::table('averagin_aproach_parts')->where('average_approach_id' , $problem_part)->where('project_id', $project_id)->where('user_id' ,$user_id)->get();
         return $data;    
     }                
 }

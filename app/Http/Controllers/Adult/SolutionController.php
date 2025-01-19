@@ -83,7 +83,7 @@ class SolutionController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());       
         }
         try{
-            // echo "<pre>";print_r($request->all());die;
+            
             $problem_id = Crypt::decrypt($request->input('problem_id'));
             $project_id = Crypt::decrypt($request->input('project_id'));
           
@@ -179,7 +179,7 @@ class SolutionController extends BaseController
     }
 
     public function updateValidation(Request $request){
-       
+        echo '<pre>';print_r($request->all());die;
         $column = ($request->input('name') == 'optradio_firts')   ? 'validation_first' : 'validation_second';
         $update = DB::table('solutions')->where("id",'=' ,$request->input('data'))-> update([
             $column => $request->input('value')
