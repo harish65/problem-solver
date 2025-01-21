@@ -22,43 +22,55 @@ class ProjectController extends BaseController
      */
     public function index(Request $request)
     {   
-        $project = DB::table('projects')
-                    // ->leftJoin('problems', 'projects.id', '=', 'problems.project_id')
-                    // ->leftJoin('solutions', 'problems.project_id', '=', 'solutions.project_id')
-                    ->leftJoin('project_shared', 'projects.id', '=', 'project_shared.project_id')
-                    ->select(
-                            'projects.id',
-                            'projects.name', // Example: Replace 'name' with actual project columns you need
-                            'projects.user_id',
-                            'projects.shared',
-                            'projects.created_at',
-                            // 'problems.id as problem_id',
-                            // 'problems.name as problem',                            
-                            // 'solutions.name as solution_name',                            
-                                    // DB::raw('MIN(problems.id) as problem_id'),
-                                    // DB::raw('MIN(problems.name) as problem'),
-                                    // DB::raw('MIN(solutions.name) as solution_name'),
-                                    // DB::raw('MIN(solutions.id) as solution_id')
-                                )
-                                ->where(function ($query) {
-                                    $query->orWhere('projects.user_id', Auth::user()->id)
-                                        ->orWhere('project_shared.shared_with', '=', Auth::user()->id);
-                                })
-                            ->groupBy('projects.id') 
-                            ->orderBy('projects.id', 'DESC')->get();
-
-
+        
+        $userId  = Auth::user()->id;
+        $projects = DB::table('projects')
+                            ->leftJoin('project_shared', 'projects.id', '=', 'project_shared.project_id')
+                            ->leftJoin('problems', function ($join) use ($userId) {
+                                $join->on('projects.id', '=', 'problems.project_id')
+                                    ->where(function ($query) use ($userId) {
+                                        $query->where('problems.user_id', '=', $userId)
+                                            ->orWhereNull('problems.user_id');
+                                    });
+                            })
+                            ->leftJoin('solutions', function ($join) use ($userId) {
+                                $join->on('projects.id', '=', 'solutions.project_id')
+                                    ->where(function ($query) use ($userId) {
+                                        $query->where('solutions.user_id', '=', $userId)
+                                            ->orWhereNull('solutions.user_id');
+                                    });
+                            })
+                            ->select(
+                                'projects.id',
+                                DB::raw('MIN(projects.name) as name'),
+                                'projects.user_id',
+                                'projects.shared',
+                                'projects.created_at',
+                                'problems.id as problem_id',
+                                'problems.name as problem_name',
+                                'solutions.id as solution_id',
+                                'solutions.name as solution_name',
+                              
+                            )
+                            ->where(function ($query) use ($userId) {
+                                $query->orWhere('projects.user_id', '=', $userId)
+                                    ->orWhere('project_shared.shared_with', '=', $userId);
+                            })
+                            ->groupBy('projects.id', 'projects.user_id', 'projects.shared', 'projects.created_at', 'problems.id', 'solutions.id','solutions.name')
+                            ->orderBy('projects.id', 'DESC')
+                            ->get();
+                    
+                    // echo '<pre>';print_r($projects);die;
                     $verificationTypes = DB::table('verification_types')->get();    
                     
                     if ($request->is('api/*')) {
-                            $success['projects'] = $project;
+                            $success['projects'] = $projects;
                             $success['verificationTypes'] = $verificationTypes;
                             $success['token'] = $request->header('Authorization');
                             return $this->sendResponse($success,'Reviewer Response');
                     }else{
 
-                       
-                        return view('adult.project.index', ["project" => $project , 'verificationTypes' => $verificationTypes]);
+                        return view('adult.project.index', ["project" => $projects , 'verificationTypes' => $verificationTypes]);
                     }
     }
 
