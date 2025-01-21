@@ -12,11 +12,19 @@ use App\Models\User;
 class Project extends Model
 {
     use HasFactory;
-    public function problem()
+    public function problems()
     {
-        // return $this->hasOne(Problem::class ,'');
+        return $this->hasMany(Problem::class);
+    }
+    public function solutions()
+    {
+        return $this->hasMany(Solution::class);
     }
 
+    public function sharedUsers()
+{
+    return $this->hasMany(ProjectShared::class, 'project_id');
+}
     public function projectUsers()
     {
         // return $this->hasMany(User::class ,'id' , 'user_id');
@@ -37,6 +45,8 @@ class Project extends Model
         return User::whereIn('id',$users)->get();
 
     }
+
+
     
 
 }

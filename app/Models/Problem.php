@@ -25,6 +25,10 @@ class Problem extends Model
     public function verification(){
         return $this->hasMany(Verification::class);
     }
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 
 
     public static function GetAllProblemsOfProject($id){

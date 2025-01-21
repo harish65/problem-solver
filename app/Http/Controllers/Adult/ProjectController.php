@@ -22,55 +22,55 @@ class ProjectController extends BaseController
      */
     public function index(Request $request)
     {   
-        
-        $userId  = Auth::user()->id;
-        $projects = DB::table('projects')
-                            ->leftJoin('project_shared', 'projects.id', '=', 'project_shared.project_id')
-                            ->leftJoin('problems', function ($join) use ($userId) {
-                                $join->on('projects.id', '=', 'problems.project_id')
-                                    ->where(function ($query) use ($userId) {
-                                        $query->where('problems.user_id', '=', $userId)
-                                            ->orWhereNull('problems.user_id');
-                                    });
-                            })
-                            ->leftJoin('solutions', function ($join) use ($userId) {
-                                $join->on('projects.id', '=', 'solutions.project_id')
-                                    ->where(function ($query) use ($userId) {
-                                        $query->where('solutions.user_id', '=', $userId)
-                                            ->orWhereNull('solutions.user_id');
-                                    });
-                            })
-                            ->select(
-                                'projects.id',
-                                DB::raw('MIN(projects.name) as name'),
-                                'projects.user_id',
-                                'projects.shared',
-                                'projects.created_at',
-                                'problems.id as problem_id',
-                                'problems.name as problem_name',
-                                'solutions.id as solution_id',
-                                'solutions.name as solution_name',
-                              
-                            )
-                            ->where(function ($query) use ($userId) {
-                                $query->orWhere('projects.user_id', '=', $userId)
-                                    ->orWhere('project_shared.shared_with', '=', $userId);
-                            })
-                            ->groupBy('projects.id', 'projects.user_id', 'projects.shared', 'projects.created_at', 'problems.id', 'solutions.id','solutions.name')
-                            ->orderBy('projects.id', 'DESC')
-                            ->get();
-                    
-                    // echo '<pre>';print_r($projects);die;
+        // $project = DB::table('projects')
+        //             ->leftJoin('project_shared', 'projects.id', '=', 'project_shared.project_id')
+        //             ->select(
+        //                 'projects.id',
+        //                 DB::raw('MIN(projects.name) as name'),
+        //                 'projects.user_id',
+        //                 'projects.shared',
+        //                 'projects.created_at'
+        //             )
+        //             ->where(function ($query) {
+        //                 $query->orWhere('projects.user_id', Auth::user()->id)
+        //                     ->orWhere('project_shared.shared_with', '=', Auth::user()->id);
+        //             })
+        //             ->groupBy('projects.id', 'projects.user_id', 'projects.shared', 'projects.created_at')
+        //             ->orderBy('projects.id', 'DESC')
+        //             ->get();
+
+        $userId = Auth::user()->id;
+
+    // Fetch projects with related problems and solutions
+            $projects = Project::with([
+                'problems' => function ($query) use ($userId) {
+                    $query->where('user_id', $userId)->orWhereNull('user_id');
+                },
+                'solutions' => function ($query) use ($userId) {
+                    $query->where('user_id', $userId)->orWhereNull('user_id');
+                },
+            ])
+            ->where(function ($query) use ($userId) {
+                $query->where('user_id', $userId)
+                    ->orWhereHas('sharedUsers', function ($subQuery) use ($userId) {
+                        $subQuery->where('shared_with', $userId);
+                    });
+            })
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        // echo '<pre>';print_r($projects);exit;
                     $verificationTypes = DB::table('verification_types')->get();    
                     
                     if ($request->is('api/*')) {
-                            $success['projects'] = $projects;
+                            $success['projects'] = $project;
                             $success['verificationTypes'] = $verificationTypes;
                             $success['token'] = $request->header('Authorization');
                             return $this->sendResponse($success,'Reviewer Response');
                     }else{
 
-                        return view('adult.project.index', ["project" => $projects , 'verificationTypes' => $verificationTypes]);
+                       
+                        return view('adult.project.index', ["project" => $project , 'verificationTypes' => $verificationTypes]);
                     }
     }
 

@@ -28,7 +28,7 @@
 @php 
 $can_edit = \App\Models\ProjectShared::where('project_id' ,$project_id)->where('shared_with',Auth::user()->id)->first();
 @endphp
-@if($problem)
+@if(isset($problem))
 <div class="col-md-6">
     <div class="d-flex align-items-center">
         <h2>Users</h2>
