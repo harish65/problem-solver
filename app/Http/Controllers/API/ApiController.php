@@ -516,6 +516,30 @@ public function storeSolutionFunction(Request $request){
     }
 
 
+
+    public function appDashboard(Request $request){
+        $projectShared = DB::table('project_shared')
+                        ->where('shared_with', Auth::user()->id)
+                        ->pluck('project_id')
+                        ->toArray();
+        $project = DB::table('projects')->where(function($query) use ($projectShared){
+                            $query->whereIn('id', $projectShared);
+                        })->orWhere('user_id' , Auth::user()->id)->get();
+                        foreach($project as $item){
+                            $problem = \App\Models\Problem::GetProblem($item->id);
+                            $solution = \App\Models\Solution::GetSolution($item->id);
+                            $item->problem_name  = $problem->name ?? null;
+                            $item->problem_id    = $problem->id ?? null;
+                            $item->solution_name = $solution->name ?? null;
+                            $item->solution_id   = $solution->id ?? null;
+
+                        }
+                $success['projects'] = $project;
+                $success['token'] = $request->header('Authorization');
+                return $this->sendResponse($success,'Reviewer Response');
+                    
+    }
+
     
 
 }
