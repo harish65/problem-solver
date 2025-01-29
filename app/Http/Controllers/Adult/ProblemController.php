@@ -47,8 +47,8 @@ class ProblemController extends BaseController
             if(is_null($problem) && $problem_id !== null){
                 $problem = DB::table('problems')->where('id' , $problem_id)->first();   
             }
-       
-       
+    //    echo '<pre>';print_r($problem);exit;
+    //    
         return view ('adult.problem.problem',compact('problem','cat','projectID' , 'project' ,'problem_id' , 'selectedSingleProblem'));
         
     }

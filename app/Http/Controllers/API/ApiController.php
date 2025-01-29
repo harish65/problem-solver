@@ -520,22 +520,54 @@ public function storeSolutionFunction(Request $request){
 
 
     public function appDashboard(Request $request){
-        $projectShared = DB::table('project_shared')
-                        ->where('shared_with', Auth::user()->id)
-                        ->pluck('project_id')
-                        ->toArray();
-        $project = DB::table('projects')->where(function($query) use ($projectShared){
-                            $query->whereIn('id', $projectShared);
-                        })->orWhere('user_id' , Auth::user()->id)->get();
-                        foreach($project as $item){
-                            $problem = \App\Models\Problem::GetProblem($item->id);
-                            $solution = \App\Models\Solution::GetSolution($item->id);
-                            $item->problem_name  = $problem->name ?? null;
-                            $item->problem_id    = $problem->id ?? null;
-                            $item->solution_name = $solution->name ?? null;
-                            $item->solution_id   = $solution->id ?? null;
+        $sharedUsers = DB::table('project_shared')
+                ->where('shared_with', Auth::user()->id)
+                ->pluck('shared_with')  // Get only the user IDs
+                ->toArray();
 
-                        }
+            // Include the authenticated user in the users array
+            $users = array_merge($sharedUsers, [Auth::user()->id]);
+
+            $project = DB::table('projects')
+                ->leftJoin('project_shared', 'projects.id', '=', 'project_shared.project_id') 
+                ->leftJoin('problems', function ($join) use ($users) {  // Use 'use' to pass $users
+                    $join->on('projects.id', '=', 'problems.project_id')
+                        ->where(function ($query) use ($users) {  // Use 'use' again inside
+                            $query->where('problems.user_id', Auth::user()->id)
+                                ->orWhereIn('problems.user_id', $users);
+                        });
+                })
+                ->leftJoin('solutions', function ($join) use ($users) { // Use 'use' to pass $users
+                    $join->on('projects.id', '=', 'solutions.project_id')
+                        ->where(function ($query) use ($users) { // Use 'use' again inside
+                            $query->where('solutions.user_id', Auth::user()->id)
+                                ->orWhereIn('solutions.user_id', $users);
+                        });
+                })
+                ->select(
+                    'projects.id',
+                    'projects.name',
+                    'projects.user_id',
+                    'projects.shared',
+                    'projects.created_at',
+                    'projects.updated_at',
+                    DB::raw('COALESCE(FIRST_VALUE(problems.id) OVER (PARTITION BY projects.id ORDER BY problems.id DESC), NULL) as problem_id'),
+                    DB::raw('COALESCE(FIRST_VALUE(problems.name) OVER (PARTITION BY projects.id ORDER BY problems.id DESC), NULL) as problem'),
+                    DB::raw('COALESCE(FIRST_VALUE(solutions.name) OVER (PARTITION BY projects.id ORDER BY solutions.id DESC), NULL) as solution_name'),
+                    DB::raw('COALESCE(FIRST_VALUE(solutions.id) OVER (PARTITION BY projects.id ORDER BY solutions.id DESC), NULL) as solution_id')
+                )
+                ->where(function ($query) {
+                    $query->where('projects.user_id', Auth::user()->id)
+                        ->orWhere('project_shared.shared_with', Auth::user()->id);
+                })
+                ->groupBy('projects.id', 'projects.name', 'projects.user_id', 'projects.shared', 'projects.created_at', 'projects.updated_at')
+                ->orderBy('projects.id', 'desc')
+                ->get();
+
+
+    
+
+
                 $success['projects'] = $project;
                 $success['token'] = $request->header('Authorization');
                 return $this->sendResponse($success,'Reviewer Response');

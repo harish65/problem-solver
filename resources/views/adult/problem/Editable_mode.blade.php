@@ -1,5 +1,6 @@
 
     @php
+    
         $ProjectOwner = ($project->user_id == Auth::user()->id) ? true : false;    
     @endphp
     
@@ -28,6 +29,7 @@
             </div>    
             @else
             @include('adult.problem.problems_dd' , [$problems])
+            @include('adult.problem.cards' , [$problems])
         @endif  
         <?php $showMessage =  true; ?>
     @endif

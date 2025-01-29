@@ -11,7 +11,14 @@ class ProjectShared extends Model
     use HasFactory;
     protected $table = 'project_shared';
 
-
+    public function shareduser()
+    {
+        return $this->hasOne(User::class , 'id' , 'shared_with');
+    }
+    public function projectDetails()
+    {
+        return $this->hasOne(Project::class , 'id' , 'project_id');
+    }
 
 
     public static function CheckSharedProjectsMode($projectid){

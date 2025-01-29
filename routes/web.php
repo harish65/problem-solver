@@ -290,7 +290,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         //Share project Routs
         Route::post("share-project", [\App\Http\Controllers\Adult\ProjectController::class, 'shareProject'])->name("share-project");
         Route::get("/share-project/{id}", [\App\Http\Controllers\Adult\ProjectController::class, 'shareProjectGet'])->name("project-share");
-        // Route::get("/update-permissions/{id}/{user_id?}", [\App\Http\Controllers\Adult\ProjectController::class, 'shareProjectUpdate'])->name("update_project_permissions");
+        Route::get("/permissions/{user_id}/{project_id}", [\App\Http\Controllers\Adult\ProjectController::class, 'viewPermissions'])->name("project_permissions");
 
 
     });  

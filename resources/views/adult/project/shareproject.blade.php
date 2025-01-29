@@ -51,7 +51,7 @@
                             <tr>
                                 <th>Users</th>
                                 <th>Permissions Mode</th>
-                                
+                                <th>Action</th>
                                     
                             </tr>
                         </thead>
@@ -60,7 +60,7 @@
                             <tr>
                                 <td>{{ ucfirst($user->name)}}<small><i class="text-green">({{$user->email}})</i></small></td>
                                 <td class=" {{ ($user->editable_project == 1) ? 'bg-success'  : 'bg-secondary' }}   text-white">{{ ($user->editable_project == 1) ? 'Write Permissions' : 'Read Permissions'  }}</td>
-                               
+                               <td><a href="{{ route('adult.project_permissions' , [Crypt::encrypt($user->shared_with) , Crypt::encrypt($user->project_id)])}}">View Permission</a></td>
                             </tr>
                             @endforeach
                            

@@ -1,3 +1,4 @@
+@if(isset($problem) && !empty($problem))
 <div class="conditionBlock">
         <div class="blockProblem">
             <div class="projectBlock text-center">
@@ -48,7 +49,7 @@
                                     </a>
                                 </li>
                             
-                                <li><a data-id="{{ $problem -> id }}" class="delProblemBtn" title="Delete" ><img src="{{ asset('/assets-new/images/deleteIcon.png')}}" alt=""/></a></li>
+                                <li><a data-id="{{ $problem -> id }}" class=" " title="Delete" ><img src="{{ asset('/assets-new/images/deleteIcon.png')}}" alt=""/></a></li>
                                 
                         </ul>
                     @else
@@ -99,3 +100,4 @@
                 </div>
         </div>
     </div>
+    @endif

@@ -1,5 +1,7 @@
 
-@php $checkReadOnlyMode = \App\Models\ProjectShared::CheckSharedProjectsMode($projectID);@endphp
+@php $checkReadOnlyMode = \App\Models\ProjectShared::CheckSharedProjectsMode($projectID);
+    
+@endphp
 @if($problem != null)
     @if(($project->user_id == Auth::user()->id && $checkReadOnlyMode) || ($project->shared == 1 && $can_edit != null && $can_edit->editable_problem == 0))
             @include('adult.problem.problems_dd' , [$problems])

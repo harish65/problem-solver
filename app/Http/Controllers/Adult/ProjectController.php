@@ -22,49 +22,53 @@ class ProjectController extends BaseController
      */
     public function index(Request $request)
     {   
-        // $project = DB::table('projects')
-        //             ->leftJoin('project_shared', 'projects.id', '=', 'project_shared.project_id')
-        //             ->select(
-        //                 'projects.id',
-        //                 DB::raw('MIN(projects.name) as name'),
-        //                 'projects.user_id',
-        //                 'projects.shared',
-        //                 'projects.created_at'
-        //             )
-        //             ->where(function ($query) {
-        //                 $query->orWhere('projects.user_id', Auth::user()->id)
-        //                     ->orWhere('project_shared.shared_with', '=', Auth::user()->id);
-        //             })
-        //             ->groupBy('projects.id', 'projects.user_id', 'projects.shared', 'projects.created_at')
-        //             ->orderBy('projects.id', 'DESC')
-        //             ->get();
+        
+                $sharedUsers = DB::table('project_shared')
+                    ->where('shared_with', Auth::user()->id)
+                    ->pluck('shared_with')  // Get only the user IDs
+                    ->toArray();
+                $users = array_merge($sharedUsers, [Auth::user()->id]);
 
-        $userId = Auth::user()->id;
-
-    // Fetch projects with related problems and solutions
-            $projects = Project::with([
-                'problems' => function ($query) use ($userId) {
-                    $query->where('user_id', $userId)->orWhereNull('user_id');
-                },
-                'solutions' => function ($query) use ($userId) {
-                    $query->where('user_id', $userId)->orWhereNull('user_id');
-                },
-            ])
-            ->where(function ($query) use ($userId) {
-                $query->where('user_id', $userId)
-                    ->orWhereHas('sharedUsers', function ($subQuery) use ($userId) {
-                        $subQuery->where('shared_with', $userId);
-                    });
-            })
-            ->orderBy('id', 'DESC')
-            ->get();
-
-        // echo '<pre>';print_r($projects);exit;
+                $project = DB::table('projects')
+                    ->leftJoin('project_shared', 'projects.id', '=', 'project_shared.project_id') 
+                    ->leftJoin('problems', function ($join) use ($users) {  // Use 'use' to pass $users
+                        $join->on('projects.id', '=', 'problems.project_id')
+                            ->where(function ($query) use ($users) {  // Use 'use' again inside
+                                $query->where('problems.user_id', Auth::user()->id)
+                                    ->orWhereIn('problems.user_id', $users);
+                            });
+                    })
+                    ->leftJoin('solutions', function ($join) use ($users) { // Use 'use' to pass $users
+                        $join->on('projects.id', '=', 'solutions.project_id')
+                            ->where(function ($query) use ($users) { // Use 'use' again inside
+                                $query->where('solutions.user_id', Auth::user()->id)
+                                    ->orWhereIn('solutions.user_id', $users);
+                            });
+                    })
+                    ->select(
+                        'projects.id',
+                        'projects.name',
+                        'projects.user_id',
+                        'projects.shared',
+                        'projects.created_at',
+                        'projects.updated_at',
+                        DB::raw('COALESCE(FIRST_VALUE(problems.id) OVER (PARTITION BY projects.id ORDER BY problems.id DESC), NULL) as problem_id'),
+                        DB::raw('COALESCE(FIRST_VALUE(problems.name) OVER (PARTITION BY projects.id ORDER BY problems.id DESC), NULL) as problem'),
+                        DB::raw('COALESCE(FIRST_VALUE(solutions.name) OVER (PARTITION BY projects.id ORDER BY solutions.id DESC), NULL) as solution_name'),
+                        DB::raw('COALESCE(FIRST_VALUE(solutions.id) OVER (PARTITION BY projects.id ORDER BY solutions.id DESC), NULL) as solution_id')
+                    )
+                    ->where(function ($query) {
+                        $query->where('projects.user_id', Auth::user()->id)
+                            ->orWhere('project_shared.shared_with', Auth::user()->id);
+                    })
+                    ->groupBy('projects.id', 'projects.name', 'projects.user_id', 'projects.shared', 'projects.created_at', 'projects.updated_at')
+                    ->orderBy('projects.id', 'desc')
+                    ->get();
                     $verificationTypes = DB::table('verification_types')->get();    
                     
                     if ($request->is('api/*')) {
                             $success['projects'] = $project;
-                            $success['verificationTypes'] = $verificationTypes;
+                            
                             $success['token'] = $request->header('Authorization');
                             return $this->sendResponse($success,'Reviewer Response');
                     }else{
@@ -223,9 +227,9 @@ class ProjectController extends BaseController
         $verificationTypes = DB::table('verification_types')->get();    
         $projectUsers = $this->getUsersForProjectSharing($projectId);
         
-        if($projectUsers->count() == 0 ){
-            return redirect()->route('adult.dashboard')->with('error', 'No user found for project sharing!');
-        }
+        // if($projectUsers->count() == 0 ){
+        //     return redirect()->route('adult.dashboard')->with('error', 'No user found for project sharing!');
+        // }
         $allreadySharedUsers = DB::table('project_shared')
                     ->join('users', 'project_shared.shared_with', '=', 'users.id')
                     ->where('project_shared.project_id', $projectId)
@@ -342,6 +346,15 @@ class ProjectController extends BaseController
        }catch(Exception $e){
                 return $this->sendError('Error.', ['error'=> $e->getMessage()]);
             }
+    }
+
+
+    public function viewPermissions($user_id , $project_id){
+        $user_id = Crypt::decrypt($user_id);
+        $project_id = Crypt::decrypt($project_id);
+        $data =  \App\Models\ProjectShared::with('shareduser','projectDetails')->where('project_id' , $project_id)->where('shared_with' ,  $user_id)->first();
+           
+        return view('adult.project.viewpermissions', ['user_id' => $user_id , 'project_id' => $project_id , 'data' => $data]);
     }
    
 }

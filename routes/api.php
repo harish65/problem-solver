@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [\App\Http\Controllers\Adult\LoginController::class, 'postLogin'])->name('login');
 Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'register'])->name('register');
 Route::middleware('auth:api')->group( function () {
+    // Route::get('/dashboard', [\App\Http\Controllers\Adult\ProjectController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [\App\Http\Controllers\API\ApiController::class, 'appDashboard'])->name('dashboard');
     Route::post('/create-project', [\App\Http\Controllers\Adult\ProjectController::class, 'store'])->name('create-project');
     Route::post('/delete-project', [\App\Http\Controllers\Adult\ProjectController::class, 'destroy'])->name('delete-project');
