@@ -521,12 +521,16 @@ public function storeSolutionFunction(Request $request){
 
     public function appDashboard(Request $request){
         $sharedUsers = DB::table('project_shared')
-                ->where('shared_with', Auth::user()->id)
-                ->pluck('shared_with')  // Get only the user IDs
-                ->toArray();
+                    ->distinct()
+                    ->pluck('shared_with')  // Get only unique user IDs
+                    ->toArray();
 
             // Include the authenticated user in the users array
-            $users = array_merge($sharedUsers, [Auth::user()->id]);
+           
+                
+                $users = array_merge($sharedUsers, [Auth::user()->id]);
+           
+            
 
             $project = DB::table('projects')
                 ->leftJoin('project_shared', 'projects.id', '=', 'project_shared.project_id') 

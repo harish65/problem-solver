@@ -24,9 +24,10 @@ class ProjectController extends BaseController
     {   
         
                 $sharedUsers = DB::table('project_shared')
-                    ->where('shared_with', Auth::user()->id)
-                    ->pluck('shared_with')  // Get only the user IDs
-                    ->toArray();
+                ->distinct()
+                ->pluck('shared_with')  // Get only unique user IDs
+                ->toArray();
+
                 $users = array_merge($sharedUsers, [Auth::user()->id]);
 
                 $project = DB::table('projects')
