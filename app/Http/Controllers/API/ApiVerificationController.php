@@ -410,12 +410,15 @@ switch ($type) {
                             break;
                             case 19:                         
                                 $functionApplied  = DB::table('function_sub_people')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->where('verification_type' , 19)->first();
+                                $custommers = DB::table("customers")
+                                        ->where("project_id", "=", $project_id)
+                                        ->get();
                                 $success =  [
                                     "project_id" => $project_id,
                                     "problem" => $problem,
                                     "solution" => $solution,
                                     "Solution_function" => $Solution_function,
-                                    'functionApplied' => $functionApplied  , 'validation_data'=>$validation_data 
+                                    'functionApplied' => $functionApplied  , 'validation_data'=>$validation_data, 'custommers'=>$custommers
                                     ];
                                 return $this->sendResponse($success, "true");                                
                                 break;
