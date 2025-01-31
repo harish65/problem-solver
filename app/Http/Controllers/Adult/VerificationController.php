@@ -33,8 +33,9 @@ class VerificationController extends BaseController
     public function index($data = null, $type = null)
     {   
         
+       
         $params = Crypt::decrypt($data);       
-        
+             
         $problem_id = $params["problem_id"];
         $project_id = $params["project_id"];
         

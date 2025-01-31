@@ -22,7 +22,6 @@ class ProjectController extends BaseController
      */
     public function index(Request $request)
     {   
-        
                 $sharedUsers = DB::table('project_shared')
                 ->distinct()
                 ->pluck('shared_with')  // Get only unique user IDs

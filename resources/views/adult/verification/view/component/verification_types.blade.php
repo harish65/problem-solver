@@ -1,13 +1,10 @@
 <?php 
-    
     $categories   =  \App\Models\VerificationType::verificationTypeCategories(); 
     $projectUsers  = \App\Models\Project::getUsers($project_id);
     $project = \App\Models\Project::find($project_id);
-    
     ?>
 <div class="col-md-6">
     <div class="d-flex align-items-center">
-    
         <h2>Verification</h2>
         <select class="form-control form-select" id="verification_types">
         <option selected="true" disabled="disabled">Select Verification Type..</option>
@@ -31,10 +28,11 @@ $can_edit = \App\Models\ProjectShared::where('project_id' ,$project_id)->where('
 @endphp
 @if($project->user_id == Auth::user()->id)
     @if(isset($problem))
+    
     <div class="col-md-6">
         <div class="d-flex align-items-center">
             <h2>User</h2>
-            <select class="form-control form-select" id="verification_types">
+            <select class="form-control form-select" id="verification_users">
                 <option selected="true" disabled="disabled">Select User..</option>
                 @foreach($projectUsers as $user)
                 <option  value='{{ @$user->id }}' {{ ($problem->user_id == $user->id)  ?  'selected': '' }}>{{ $user->name }}</option>
@@ -56,4 +54,5 @@ $can_edit = \App\Models\ProjectShared::where('project_id' ,$project_id)->where('
     </div>
     @endif
 
+    
 
