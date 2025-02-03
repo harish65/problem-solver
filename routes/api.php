@@ -127,6 +127,9 @@ Route::middleware('auth:api')->group( function () {
         Route::post("store-entity-verification", [\App\Http\Controllers\Adult\VerificationController::class, 'storeEntityAvailable'])-> name("store-entity-verification");
         Route::post("store-priciple-identification", [\App\Http\Controllers\Adult\VerificationController::class, 'storePricipleIdentification'])-> name("store-priciple-identification");
         Route::post("resource-managment", [\App\Http\Controllers\Adult\VerificationController::class, 'storeResourceManagment'])-> name("resource-managment");
+        
+        Route::post("updateVerification", [\App\Http\Controllers\API\ApiVerificationController::class, 'updateVerification'])-> name("updateVerification");
+        Route::post("delete-verification", [\App\Http\Controllers\API\ApiVerificationController::class, 'deleteVerification'])-> name("delete-verification");
 
 
 });
