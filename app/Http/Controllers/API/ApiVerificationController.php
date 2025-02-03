@@ -820,9 +820,70 @@ switch ($type) {
 
 
 
-    public function storinformationVerification(){
+    public function updateVerification(Request $request){
+        // echo '<pre>';print_r($request->all());die;
+        $validator = Validator::make ($request->all() , [
+            'id' => 'required', // id is verification id
+            'solution_fun_id' => 'required',
+            'verificationType' => 'required',
+            'verification_type_text_id' => 'required'
+        ]);
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        try{
+                    $data = $request->all();
+                    $verification = Verification::find($request->id);                           
+                    $verification->verification_type_id = $data['verificationType'];
+                    $verification->verification_type_text_id = $data['verification_type_text_id'];
+                    $verification->problem_id = $data['problem_id'];
+                    $verification->solution_id =  $data['solution_id'];
+                    $verification->solution_function_id = $data['solution_fun_id'];
+                    $verification->user_id = Auth::user()->id;
+                    $verification->type = 0;
+                    $verification->file = $data['file'];
+                    $verification->save();
+                    if($verification->id){
+                        $success['verification'] =  $verification;
+                        return $this->sendResponse($success, 'Verification updated  successfully.');
+                    }else{
+                        return $this->sendResponse($error, 'Something Wrong.');
+                    }
+                
+        }catch(Exception $e){
+            return $this->sendError('Error.', ['error'=> $e->getMessage()]);
+        }
+}
 
-    }
+
+public function deleteVerification(Request $request){
+    $validator = Validator::make($request->all(), [
+            "id" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError("Validation Error.", $validator->errors());
+        }
+        try {
+            $verId = $request->id;
+            $delete = Verification::where("id", "=", $verId)->delete();
+            $entityDelete = Db::table("verification_entities")
+                ->where("verId", "=", $verId)
+                ->delete();
+            if ($delete) {
+                $success["delete_verification"] = $delete;
+                return $this->sendResponse(
+                    $success,
+                    "Verification deleted successfully."
+                );
+            } else {
+                return $this->sendResponse($error, "Something Wrong.");
+            }
+        } catch (Exception $e) {
+            return $this->sendError("Validation Error.", [
+                "error" => $e->getMessage(),
+            ]);
+        }
+}
     
 
 }
