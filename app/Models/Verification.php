@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Project;
 use App\Models\ProjectShared;
 use Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class Verification extends Model
 {
@@ -39,32 +40,38 @@ class Verification extends Model
     
 
     public static function CheckVerificationPermission($project_id){
-            $verificationTypeID = request()->route()->parameter('type');
-            $project = Project::find($project_id);
+        
+        $verificationTypeID = request()->route()->parameter('type');
+        $project = Project::find($project_id);
+        $parameter = Crypt::decrypt(request()->route()->parameter('id'));
+        
+        if (!$project) {
+            return false; // Return early if the project doesn't exist
+        }
+        
+        $userId = Auth::user()->id;
+        $isOwner = $project->user_id == $userId;
+        $isShared = $project->shared == 1;
+        $canEdit = Project::SharedProject($project_id, $userId);
+        $isReadOnly = ProjectShared::CheckSharedProjectsMode($project_id);
+        $verificationType = Verification::verificationsArray($verificationTypeID);
+        
+        
+        // If the user has added the problem, return true
+        
+        // Case 1: Owner of the project
+        if ($isOwner && (!$isShared || ($isShared && $isReadOnly && $canEdit && $canEdit->editable_verification == 0))) {
+            return true;
+        }
+        
+        // Case 2: Shared project with editable permissions
+        if ($isShared && $canEdit && $canEdit->editable_project == 1 && $canEdit->editable_verification == 1 && $canEdit->$verificationType) { 
+            return true;
+        }
 
-            if (!$project) {
-                return false; // Return early if the project doesn't exist
-            }
-
-            $userId = Auth::user()->id;
-            $isOwner = $project->user_id == $userId;
-            $isShared = $project->shared == 1;
-            $canEdit = Project::SharedProject($project_id, $userId);
-            
-            $isReadOnly = ProjectShared::CheckSharedProjectsMode($project_id);
-            $verificationType = Verification::verificationsArray($verificationTypeID);
-            
-            // Case 1: Owner of the project
-            if ($isOwner && (!$isShared || ($isShared && $isReadOnly && $canEdit && $canEdit->editable_verification == 0))) {
-                return true;
-            }
-
-            // Case 2: Shared project with editable permissions
-            if ($isShared && $canEdit && $canEdit->editable_project == 1 && $canEdit->editable_verification == 1 && $canEdit->$verificationType) {
-                return true;
-            }
-
-            return false;
+        
+        return false;
+        
     }
 
     public static function verificationsArray($verificationTypeID){

@@ -2,7 +2,7 @@
 @section('title', 'Adult | Solution Type')
 @section('content')
 @php
-$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+$can_edit = \App\Models\Project::SharedProject($project_id, Auth::user()->id);
 @endphp
 
 <div class='relationshipPage'>
@@ -24,12 +24,15 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
             <div class="container">
                 <div class="row ">
                     <div class="col-sm-4">
-                        @if($VerificationPermission)
+                    @if(!is_null($can_edit) && $project->shared == 1 && $project->user_id != Auth::user()->id)
                         <button class="btn btn-success" id="feed-back" >+ Identify Feedback</button>
-                        @endif
+                       @endif 
                     </div>  
                     <div class="col-sm-8 ">
-                        <a href="{{ route('adult.varification' , [$parameter , 16])}}" class="btn btn-success float-end">Back</a>
+                        <?php
+                            $parameter =  Crypt::decrypt($params);
+                        ?>
+                        <a href="{{ route('adult.varification' ,  [Crypt::encrypt($parameter) , 16])}}" class="btn btn-success float-end">Back</a>
                     </div>                    
                 </div>
 
@@ -51,13 +54,10 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                                         <td>{{ date('d/m/Y' , strtotime($data->feedback_date)) }} </td>
                                         <td>{{ $data->from_person }}</td>
                                         <td>
-                                        @if($VerificationPermission)
+                                        
                                                 <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  data-error_id="{{$data->error_id}}" data-feedback_date="{{date('d-m-Y' , strtotime($data->feedback_date))}}" data-date="{{$data->feedback_date}}"  data-feedback="{{$data->feedback}}" data-from_person="{{$data->from_person}}"  data-error_name="{{ $data->error_name}}"class="btn btn-success editBtn"><i class="fa fa-pencil"></i></a>
                                                 <a href="javaScript:void(0)" data-id ="{{ $data->id }}"  class="btn btn-danger delete-btn"><i class="fa fa-trash"></i></a>
-                                                @else
-                                                <a href="javaScript:void(0)" class="btn btn-success"><i class="fa fa-pencil"></i></a>
-                                                <a href="javaScript:void(0)"   class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                                                @endif
+                                                
                                         </td>
                                     </tr>
                                     @endforeach

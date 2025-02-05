@@ -4,7 +4,7 @@
 @php $showMessage = true;
 
     $VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
-    
+       
 @endphp
 <div class='relationshipPage'>
     <div class="container">
@@ -25,7 +25,7 @@
     @if(isset($verification) && $verification->id)
 
     <!-- Content Section Start -->
-    <div class="relationshipContent">
+    <div class="relationshipContent">   
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
@@ -333,6 +333,12 @@
         var id = $(this).val();
         window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
     })
+
+    $('#verification_users').on('change', function () { 
+        var verification_type_id = $('#verification_types').val();
+        var id = $(this).val();
+        window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + verification_type_id + '/' + id;
+    })
     $('.dropify').dropify();
 
 
@@ -526,8 +532,8 @@
                 } else {
 
                     toastr.success(response.message);
-                    html.update();
-                    // location.reload()
+                    // html.update();
+                    location.reload()
                 }
             }
         });
@@ -622,7 +628,7 @@
     });
 
 
-    $('#btnDeleteVocab').click(function (e) {
+    $('#btnDeleteVocab').click(function (e) { 
         e.preventDefault();
         var dv = new FormData($('#deleteVocabularyForm')[0]);
         $.ajaxSetup({

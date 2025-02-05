@@ -2,7 +2,8 @@
 @section('title', 'Adult | Solution Type')
 @section('content')
 @php 
-$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+$can_edit =  \App\Models\Project::SharedProject($project_id, Auth::user()->id);
+
 @endphp
 <div class='relationshipPage'>
     <div class="container">
@@ -107,7 +108,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
             <div class="container">
                 <div class="row ">
                     <div class="col-sm-4">
-                    @if($VerificationPermission)
+                    @if(!is_null($can_edit) && $project->shared == 1 && $project->user_id != Auth::user()->id)
                         <button class="btn btn-success" id="feed-back">+ Error Correction</button>
                     @endif    
                     </div>                    
@@ -158,7 +159,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                                     </td>
                                     <td>{{($errorcorrection->feedback_applied == 0) ? 'Yes' : 'No' }}</td>
                                     <td>
-                                    @if($VerificationPermission)
+                                    @if(!is_null($can_edit) && $project->shared == 1 && $project->user_id != Auth::user()->id)
                                         <a href="javaScript:void(0)" class="btn btn-success editBtn" data-id ="{{ $errorcorrection->id }}" data-error_ids="{{ $errorcorrection->error }}" data-compensator_ids="{{ $errorcorrection->compensator }}" data-feedback="{{$errorcorrection->feedback }}" data-feedback_applied="{{$errorcorrection->feedback_applied }}" ><i class="fa fa-pencil"></i></a>
                                         <a href="javaScript:void(0)" data-id ="{{ $errorcorrection->id }}"   class="btn btn-danger deleteBtn"><i class="fa fa-trash"></i></a>
                                         @else
@@ -304,8 +305,8 @@ $(document).on('click' , '#btnSave', function(e){
                     });
                 } else {
                     
-                    toastr.success(response.message);
-                    location.reload();
+                    //toastr.success(response.message);
+                    //location.reload();
                 }
             }
         });

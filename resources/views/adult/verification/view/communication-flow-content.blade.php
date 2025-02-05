@@ -234,7 +234,12 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
 $('#verification_types').on('change',function(){
     var id = $(this).val();
     window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
-})
+});
+$('#verification_users').on('change', function () { 
+        var verification_type_id = $('#verification_types').val();
+        var id = $(this).val();
+        window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + verification_type_id + '/' + id;
+    });
 $('.dropify').dropify();
 
 

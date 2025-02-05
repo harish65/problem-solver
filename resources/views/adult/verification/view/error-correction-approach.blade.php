@@ -9,8 +9,9 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
         <div class="mainTitle">
             <div class="row">
                       <?php 
-                            $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
+                            $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id , 'user_id'=>$userID];                            
                             $parameter =  Crypt::encrypt($parameters);
+                            
                       ?>
                       @include('adult.verification.view.component.common_routes')
                       @include('adult.verification.view.component.verification_types')
@@ -148,10 +149,11 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                                 @if(isset($data->id))
                                 <ul class="navbar-nav">
                                     <li class="nav-item active">
-                                        <a class="btn btn-success"  href="{{ route('adult.feedback-identification' , $parameters) }}">2. Feedback identification<span class="sr-only">(current)</span></a>
+                                       
+                                        <a class="btn btn-success"  href="{{ route('adult.feedback-identification' , $parameter) }}">2. Feedback identification<span class="sr-only">(current)</span></a>
                                     </li>
                                     <li class="nav-item active">
-                                        <a class="btn btn-success" href="{{ route('adult.error-correction' ,  $parameters) }}">3. Continue With Error Correction<span class="sr-only">(current)</span></a>
+                                        <a class="btn btn-success" href="{{ route('adult.error-correction' ,  $parameter) }}">3. Continue With Error Correction<span class="sr-only">(current)</span></a>
                                     </li>
                                 </ul>
                                 @endif
@@ -175,7 +177,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
 
 
     <!-- Modal Start -->
-    @if($VerificationPermission)
+   
     <div class="modal fade" id="error_correction_modal" tabindex="-1" role="dialog" aria-labelledby="error_correction_modal" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -213,7 +215,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
         </div>
       </div>
     <!-- Modal End -->
-@endif
+
 
 @endsection
 @section('css')
@@ -258,7 +260,11 @@ $('#verification_types').on('change',function(){
     var id = $(this).val();
     window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
 })
-
+$('#verification_users').on('change', function () { 
+        var verification_type_id = $('#verification_types').val();
+        var id = $(this).val();
+        window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + verification_type_id + '/' + id;
+    })
 
 </script>
 <script>
@@ -381,8 +387,8 @@ $(document).on('click' , '#btnSave', function(e){
             }
         });
    })
-   $('.compensator').click(function(){
-    $('#error-correction-dev-form')[0].reset();  
+   $('.compensator').click(function(){ 
+    // $('#error-correction-dev-form')[0].reset();  
     $('#error_correction_modal').modal('toggle')
 })
 

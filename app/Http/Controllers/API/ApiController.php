@@ -568,16 +568,14 @@ public function storeSolutionFunction(Request $request){
                 ->orderBy('projects.id', 'desc')
                 ->get();
 
-
-    
-
-
                 $success['projects'] = $project;
                 $success['token'] = $request->header('Authorization');
                 return $this->sendResponse($success,'Reviewer Response');
                     
     }
 
+
+    
     
 
 }

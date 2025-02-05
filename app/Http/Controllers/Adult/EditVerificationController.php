@@ -17,6 +17,7 @@ class EditVerificationController extends BaseController
                 $validator = Validator::make ($request->all(),[
                         'verificationType' => 'required'
                     ]);
+                    
                     if($validator->fails()){
                         return $this->sendError('Validation Error.', $validator->errors());       
                     }
@@ -38,9 +39,8 @@ class EditVerificationController extends BaseController
                         return $this->sendError('Validation Error.', ['error'=> $e->getMessage]);  
                     }
         }
-        public function editVerificationVocablary($request)
-        {                
-        
+        public function editVerificationVocablary($request) {                
+                
                 $validator = Validator::make ($request->all() , [
                     
                     'id' => 'required', // id is verification id
@@ -75,7 +75,7 @@ class EditVerificationController extends BaseController
                     return $this->sendError('Error.', ['error'=> $e->getMessage()]);
                 }
         
-}
+        }
 
                 public function updateVocabulary(Request $request)
                 {

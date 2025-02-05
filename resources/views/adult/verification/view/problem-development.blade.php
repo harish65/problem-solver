@@ -4,6 +4,7 @@
 <?php $showMsg = false ?>
 @php
 $VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+
 @endphp
 <div class='relationshipPage'>
     <div class="container">
@@ -160,12 +161,13 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
             </div>
             <!-- End -->
             @else
+            @if($VerificationPermission)
             <div class="row text-end">
                 <div class="text-right">
                     <button type="button"  class="btn btn-success addVocabularyBtn" >+ Add Problem Development</button>
                 </div>
             </div>
-
+            @endif
             @endif
            
             
@@ -270,7 +272,12 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
 $('#verification_types').on('change',function(){
     var id = $(this).val();
     window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
-})
+});
+$('#verification_users').on('change', function () { 
+        var verification_type_id = $('#verification_types').val();
+        var id = $(this).val();
+        window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + verification_type_id + '/' + id;
+    });
 
 
 </script>

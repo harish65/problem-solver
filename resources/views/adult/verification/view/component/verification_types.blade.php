@@ -12,8 +12,7 @@
             <optgroup label="{{ $cat->name }}">
                     @foreach(@$types as $type)
                             @if($type->category == $cat->id)
-                                <option {{ (@$verificationType->id == $type->id) ? 'selected' : '' }} value='{{ $type->id
-                                    }}'>{{ $type->name }}
+                                <option {{ (@$verificationType->id == $type->id) ? 'selected' : '' }} value='{{ $type->id }}'>{{ $type->name }}
                                 </option>
                             @endif
                     @endforeach
@@ -48,11 +47,11 @@ $can_edit = \App\Models\ProjectShared::where('project_id' ,$project_id)->where('
             <h2>User</h2>
             <select class="form-control form-select" id="verification_types" disabled>
                 <option selected="true" disabled="disabled">{{ Auth::user()->name }}</option>
-               
             </select>
         </div>
     </div>
     @endif
+   
 
     
 

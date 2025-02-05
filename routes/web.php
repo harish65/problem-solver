@@ -200,7 +200,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::post("sftstore", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'store'])->name("sftstore");
         Route::post("sftdelete", [\App\Http\Controllers\Adult\SolutionFuntionTypeController::class, 'delete'])->name("sftdelete");
         // vrification Type
-        Route::get("varification/{id?}/{type?}", [\App\Http\Controllers\Adult\VerificationController::class, 'index'])-> name("varification");
+        Route::get("varification/{id?}/{type?}/{user_id?}", [\App\Http\Controllers\Adult\VerificationController::class, 'index'])-> name("varification");
         Route::get("add-varification-type", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'verificationType'])-> name("add-varification-type");
         Route::post("store-verification-type", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'store'])->name("store-verification-type");
         

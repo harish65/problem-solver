@@ -41,11 +41,12 @@ class Project extends Model
             $users[$k] = $user->shared_with;
            
         }
-
         return User::whereIn('id',$users)->get();
-
     }
 
+
+
+    
 
     
 
