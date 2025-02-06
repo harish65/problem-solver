@@ -35,7 +35,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
-                @foreach ($users as $user)
+                @foreach ($custommers as $user)
                 <div class="blockProblem">
                     <div class="projectBlock text-center">
                       <h2>People</h2>
@@ -59,7 +59,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                         <a type="button" href="#" class="btn btn-success float-right mb-3"  id="add_people">+ Add New User</a>
                     </div>
                 @endif
-                @if($users->count() > 0)
+                @if($custommers->count() > 0)
                 <?php $ShowMessage =  true; ?>
                 <table class="table slp-tbl text-center">
                     <thead>
@@ -70,7 +70,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($users as $user)
+                        @foreach ($custommers as $user)
                         <tr>
                             <td>
                                 {{ ucfirst($user->name) }}

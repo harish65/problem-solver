@@ -10,7 +10,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
         <div class="mainTitle">
             <div class="row">
                 <?php 
-                            $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
+                            $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id , 'user_id'=>$user_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
                 
@@ -226,10 +226,6 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                         <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
                         <input type="hidden" name="project_id" value="{{ $project_id }}">
                         <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
-
-
-
-
                         <div class="form-group">
                             <input type="text" class="form-control" name="verificationType" disabled
                                 value="Problem : {{@$problem->name}}">
@@ -281,7 +277,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
         window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + id;
     })
 
-    ('#verification_users').on('change', function () { 
+    $('#verification_users').on('change', function () { 
         var verification_type_id = $('#verification_types').val();
         var id = $(this).val();
         window.location.href = "{{ route("adult.varification",@$parameter) }}" + '/' + verification_type_id + '/' + id;

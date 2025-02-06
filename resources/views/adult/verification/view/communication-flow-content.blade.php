@@ -31,7 +31,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
-                @if(!empty($users[0]->comment) )
+                @if(!empty($custommers[0]->comment) )
                 <?php $showMessage = false;?>
                 <div class="principleRelation ">
                     <div class="heading_comm">
@@ -45,7 +45,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                     </div>
                     <div class="d-flex">
                         <ul class="">
-                            @foreach($users as $k=>$user)
+                            @foreach($custommers as $k=>$user)
                             <div class="d-flex ">
                                 
                                 <li>
@@ -79,7 +79,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                        
                         <ul class="custom_ul">
                                     <li><h6><strong>Communication Mixture</strong></h6></li>
-                                            @foreach($users as $k=>$user)
+                                            @foreach($custommers as $k=>$user)
                                                 <li class="custom_li">
                                                     <div class="person_name_ ">
                                                         <button class="btn btn-success _communication" data-com-date="{{ date('m/d/Y' , strtotime($user->created_at) ) }}" data-comment="{{ $user->comment }}" data-title="{{ $user->title }}" data-id="{{ $user->id }}" data-person_one="{{ $user->customer_id }}"  data-person_two="{{ $user->person_to }}"  > {{ $user->name }} : Communication</button>
@@ -145,7 +145,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                             <label for="person_1">From Person : Person 1<span></span></label>
                             <select name="person_one" class="form-control form-select" id="person_1" disabled>
                                     <option value="">Please select</option>
-                                        @foreach($customers as $user)
+                                        @foreach($custommers as $user)
                                             <option value="{{ $user->id}}">{{ $user->name }}</option>
                                         @endforeach
                             </select>
@@ -154,7 +154,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                             <label for="person_2">To Persone : Person 2<span></span></label>
                             <select name="person_to" class="form-control form-select" id="person_2" disabled>
                                     <option value="">Please select</option>
-                                        @foreach($customers as $user)
+                                        @foreach($custommers as $user)
                                             <option value="{{ $user->id}}">{{ $user->name }}</option>
                                         @endforeach
                             </select>

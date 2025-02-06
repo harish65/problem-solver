@@ -33,7 +33,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
-                @if($users->count() > 0)
+                @if($custommers->count() > 0)
                 <?php $ShowMessage =  false; ?>
                 @if($content)
                 
@@ -47,7 +47,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                                         <div id="myCarousel" class="carousel slide " data-ride="carousel">
                                             <div class="carousel-inner" role="listbox">
                                                 @php $index = 1; @endphp
-                                                @foreach($users as $entity)
+                                                @foreach($custommers as $entity)
                                                     <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
                                                         <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">
                                                         <div class="carousel-caption custom">
@@ -62,7 +62,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                                             </div>
                                             <ol class="carousel-indicators custom">
                                                 @php $index = 0; @endphp
-                                                    @foreach($users as $entity)
+                                                    @foreach($custommers as $entity)
                                                             <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
                                                     @php $index++; @endphp
                                                 @endforeach 

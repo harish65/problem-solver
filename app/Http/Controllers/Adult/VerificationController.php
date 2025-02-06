@@ -133,11 +133,11 @@ class VerificationController extends BaseController
                 $verification->validations
             );
         }
-
+        $customers_condition = ['project_id' => $project_id , 'user_id' => $problem->user_id];
         $solution_id = $solution->id;
         $solutionTypes = DB::table("solution_types")->get();
         $custommers = DB::table("customers")
-                    ->where("project_id", "=", $project_id)
+                    ->where($customers_condition)
                     ->get();
         //project shared
         
@@ -331,9 +331,7 @@ class VerificationController extends BaseController
                 );
                 break;
             case 8:
-                $custommers = DB::table("customers")
-                    ->where("project_id", "=", $project_id)
-                    ->get();
+                
                 if (!$verification) {
                     $verification = Verification::where(
                         "verification_type_id",
@@ -366,9 +364,7 @@ class VerificationController extends BaseController
                 );
                 break;
             case 9:
-                $custommers = DB::table("customers")
-                    ->where("project_id", "=", $project_id)
-                    ->get();
+              
                 if (!$verification) {
                     $verification = Verification::where(
                         "verification_type_id",
@@ -402,10 +398,6 @@ class VerificationController extends BaseController
                 );
                 break;
             case 10:
-                $users = DB::table("customers")
-                    ->where("project_id", "=", $project_id)
-                    ->get();
-                    
                 return view(
                     "adult.verification.view.people-project-content",
                     compact(
@@ -419,14 +411,12 @@ class VerificationController extends BaseController
                         "solution_id",
                         "Solution_function",
                         "verifiationTypeText",
-                        "users"
+                        "custommers"
                     )
                 );
                 break;
             case 11:
-                $users = DB::table("customers")
-                    ->where("project_id", "=", $project_id)
-                    ->get();
+               
                 if (!$verification) {
                     $verification = Verification::where(
                         "verification_type_id",
@@ -446,7 +436,7 @@ class VerificationController extends BaseController
                         ->where('people_communication_flow.project_id' , $project_id)
                         ->where('people_communication_flow.problem_id' , $problem_id)
                         ->get();
-          
+                
                 return view(
                     "adult.verification.view.people-communication-content",
                     compact(
@@ -460,7 +450,7 @@ class VerificationController extends BaseController
                         "solution_id",
                         "Solution_function",
                         "verifiationTypeText",
-                        "users" , "communications"
+                        "custommers" , "communications"
                     )
                 );
                 break;
@@ -471,12 +461,10 @@ class VerificationController extends BaseController
                         ->select('customers.*' , 'people_communication_flow.*')
                         ->leftJoin('people_communication_flow', 'customers.id', '=', 'people_communication_flow.customer_id')
                         ->where('customers.project_id' , $project_id)
+                        ->where('customers.user_id' , $problem->user_id)
                         ->whereNotNull('people_communication_flow.comment')
                         ->get();
-                $customers = DB::table("customers")
-                        ->where("project_id", "=", $project_id)
-                        ->get();
-
+                
                    
                 if (!$verification) {
                     $verification = Verification::where(
@@ -504,7 +492,7 @@ class VerificationController extends BaseController
                         "solution_id",
                         "Solution_function",
                         "verifiationTypeText",
-                        "users" , "customers"
+                        "users" , "custommers"
                     )
                 );
                 break;
@@ -544,11 +532,6 @@ class VerificationController extends BaseController
                 $allVarifications = DB::table(
                     "principle_identification"
                 )->get();
-               
-                
-                $users = DB::table("customers")
-                    ->where("project_id", "=", $project_id)
-                    ->get();
                    
                 if (!$verification) {
                     $verification = Verification::where(
@@ -579,7 +562,7 @@ class VerificationController extends BaseController
                         "Solution_function",
                         "verifiationTypeText",
                         "allVarifications",
-                        "users" , 
+                        "custommers" , 
                         "content"
                     )
                 );
@@ -589,9 +572,7 @@ class VerificationController extends BaseController
                 $allVarifications = DB::table(
                     "principle_identification"
                 )->get();
-                $users = DB::table("customers")
-                    ->where("project_id", "=", $project_id)
-                    ->first();
+                
                 if (!$verification) {
                     $verification = Verification::where(
                         "verification_type_id",
@@ -620,7 +601,7 @@ class VerificationController extends BaseController
                         "Solution_function",
                         "verifiationTypeText",
                         "allVarifications",
-                        "users",
+                        "custommers",
                         'problemDevelopment'
                     )
                 );
@@ -629,9 +610,7 @@ class VerificationController extends BaseController
                     $allVarifications = DB::table(
                         "principle_identification"
                     )->get();
-                    $users = DB::table("customers")
-                        ->where("project_id", "=", $project_id)
-                        ->first();
+                   
                     if (!$verification) {
                         $verification = Verification::where(
                             "verification_type_id", "=", 16
@@ -670,7 +649,7 @@ class VerificationController extends BaseController
                             "Solution_function",
                             "verifiationTypeText",
                             "allVarifications",
-                            "users",
+                            "custommers",
                             'userID',
                             'errorcorrection','problemDevelopment'
                         )
@@ -716,7 +695,7 @@ class VerificationController extends BaseController
                                 "Solution_function",
                                 "verifiationTypeText",
                                 "allVarifications",
-                                "users",
+                                // "users",
                                 // 'errorcorrection','problemDevelopment',
                                 'functionAud'
                             )
@@ -727,9 +706,7 @@ class VerificationController extends BaseController
                             $allVarifications = DB::table(
                                 "principle_identification"
                             )->get();
-                            $custommers = DB::table("customers")
-                                ->where("project_id", "=", $project_id)
-                                ->get();
+                          
                             if (!$verification) {
                                 $verification = Verification::where(
                                     "verification_type_id", "=", 16
@@ -779,9 +756,7 @@ class VerificationController extends BaseController
                                 $allVarifications = DB::table(
                                     "principle_identification"
                                 )->get();
-                                $custommers = DB::table("customers")
-                                    ->where("project_id", "=", $project_id)
-                                    ->get();
+                                
                                 if (!$verification) {
                                     $verification = Verification::where(
                                         "verification_type_id", "=", 16
@@ -1006,9 +981,7 @@ class VerificationController extends BaseController
                                                     $allVarifications = DB::table(
                                                         "principle_identification"
                                                     )->get();
-                                                    $custommers = DB::table("customers")
-                                                                            ->where("project_id", "=", $project_id)
-                                                                    ->get();
+                                                   
                                                     if (!$verification) {
                                                         $verification = Verification::where(
                                                             "verification_type_id", "=", 16
@@ -1066,7 +1039,7 @@ class VerificationController extends BaseController
                                                         $allVarifications = DB::table(
                                                             "principle_identification"
                                                         )->get();
-                                                        $custommers = DB::table("customers")->where("project_id", "=", $project_id)->get();
+                                                      
                                                         $functionOfPeople = DB::table("function_of_people_explanations")->where("project_id", "=", $project_id)->where('user_id' , $problem->user_id)->first();
                                                         return view(
                                                             "adult.verification.view.function_of_people_explanation",
@@ -1128,9 +1101,10 @@ class VerificationController extends BaseController
                                                                 );
                                                                 break;
                                                                 case 28:
-                                                                    $mevsyou = DB::table('me_vs_you')->where('user_id' , $problem->user_id)->where('project_id' , $project_id)->first();                                                                 
-                                                                    $custommers = DB::table("customers")->where("project_id", "=", $project_id)->get();
                                                                     
+                                                                    $mevsyou = DB::table('me_vs_you')->where('user_id' , $problem->user_id)->where('project_id' , $project_id)->first();                                                                 
+                                                                    
+                                                                    $user_id = $problem->user_id;
                                                                     return view(
                                                                         "adult.verification.view.me_vs_you",
                                                                         compact(
@@ -1143,14 +1117,12 @@ class VerificationController extends BaseController
                                                                             "solution",
                                                                             "solution_id",
                                                                             "Solution_function",
-                                                                            "verifiationTypeText",'mevsyou','custommers'
+                                                                            "verifiationTypeText",'mevsyou','custommers','user_id'
                                                                         )
                                                                     );
                                                                     break;
                                                                     case 29:
-                                                                        $custommers = DB::table("customers")
-                                                                                                ->where("project_id", "=", $project_id)
-                                                                                        ->get();
+                                                                       
                                                                         $taking_ad  = DB::table('taking_advantage')->where('user_id' , $problem->user_id)->where('project_id' , $project_id)->first();
                                                                         return view(
                                                                             "adult.verification.view.taking_advantage",
@@ -1174,7 +1146,7 @@ class VerificationController extends BaseController
                                                                     case 30:
                                    
                                                                         $users = DB::table("people_outside_project")
-                                                                        ->where("project_id", "=", $project_id)->get();
+                                                                        ->where(["project_id"=> $project_id , 'user_id'=> $problem->user_id])->get();
                                                                         $custommers = DB::table("customers")->where("project_id", "=", $project_id)->get();
                                                                         return view(
                                                                             "adult.verification.view.people-outside-project-content",
@@ -1200,8 +1172,7 @@ class VerificationController extends BaseController
                                    
                                                                      
                                                                         $problrmAtLocatios  = DB::table('problrm_at_location_explantion')->where('user_id' , $problem->user_id)->where('project_id' , $project_id)->first();
-                                                                        $custommers = DB::table("customers")
-                                                                        ->where("project_id", "=", $project_id)->get();
+                                                                       
                                                                         return view(
                                                                             "adult.verification.view.prolem_solution_at_location",
                                                                             compact(
@@ -1223,12 +1194,8 @@ class VerificationController extends BaseController
                                                                     break;
 
                                                                     case 32:
-                                   
-                                                                     
                                                                         $function_at_location  = DB::table('function_at_locations')->where('user_id' , $problem->user_id)->where('project_id' , $project_id)->first();
-                                                                        $custommers = DB::table("customers")
-                                                                        ->where("project_id", "=", $project_id)->get();
-                                                                        
+                                                                       
                                                                         return view(
                                                                             "adult.verification.view.function_at_location",
                                                                             compact(
@@ -3183,10 +3150,13 @@ class VerificationController extends BaseController
         } 
     }
     public function MeVsYouNextPage($id){
-        $params = Crypt::decrypt($id);       
+        $params = Crypt::decrypt($id); 
+        
         $problem = Problem::where("id", "=", $params['problem_id'])->first();
         $verificationType = VerificationType::where("id","=",28)->first();
-        $mevsyounext = DB::table('me_vs_you_next')->where('user_id' , $problem->user_id)->where('project_id' , $params['project_id'])->first();
+        $user_id = $params['user_id'];
+
+        $mevsyounext = DB::table('me_vs_you_next')->where('user_id' , $user_id)->where('project_id' , $params['project_id'])->first();
         $types = VerificationType::orderBy("id", "asc")->get();
         $solution = Solution::where("problem_id", "=", $params['problem_id'])->first();
         $custommers = DB::table("customers")->where("project_id", "=", $params['project_id'])->get();
@@ -3292,6 +3262,7 @@ class VerificationController extends BaseController
                     'type' => $request->type,
                     'present_before' => $request->present_before,
                     'present_after' => $request->present_after,
+                    'user_id' => Auth::user()->id,
                     'created_at' => date('Y-m-d h:i:s')
                 ]);
             }else{
@@ -3303,6 +3274,7 @@ class VerificationController extends BaseController
                     'project_id' => $request->project_id,
                     'present_before' => $request->present_before,
                     'present_after' => $request->present_after,
+                    'user_id' => Auth::user()->id,
                     'created_at' => date('Y-m-d h:i:s')
                 ]);
             }

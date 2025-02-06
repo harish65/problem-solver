@@ -49,6 +49,7 @@ class UserController extends BaseController
                     'project_id' => $request->project_id,
                     'file' => $file,
                     'type' => $request->type,
+                    'user_id' => Auth::user()->id,
                     'created_at' => date('Y-m-d h:i:s')
                 ]);
                 $message = 'User created successfully.';
@@ -58,6 +59,7 @@ class UserController extends BaseController
                     'name' => $request->name,
                     'type' => $request->type,
                     'project_id' => $request->project_id,
+                    'user_id' => Auth::user()->id,
                     'created_at' => date('Y-m-d h:i:s')
                 ]);
                 $message = 'User updated successfully.';

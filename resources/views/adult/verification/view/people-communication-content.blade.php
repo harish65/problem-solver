@@ -12,8 +12,8 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);
                       ?>
-                    @include('adult.verification.view.component.common_routes')
-                    @include('adult.verification.view.component.verification_types')
+                            @include('adult.verification.view.component.common_routes')
+                            @include('adult.verification.view.component.verification_types')
             </div>
         </div>
     </div>
@@ -33,7 +33,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                 <!-- start -->
                 <div class="principleRelation">
                     <ul class="inner-card">
-                        @foreach($users as $user)
+                        @foreach($custommers as $user)
                         <li>
                             <div class="blockProblem">
                                 <div class="projectBlock text-center">
@@ -66,7 +66,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                     <div class="title d-flex">
                         <h2>People Communation</h2>
                     </div>
-                    @if($users->count()>0)
+                    @if($custommers->count()>0)
                     <?php $showMessage = false; ?>
                     @if($communications->count() > 0)
                             <table class="table slp-tbl text-center">
@@ -96,8 +96,9 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                                                     <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
                                                     </a>
                                                     @else
-                                                    <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
-                                                    <img src="{{ asset('assets-new/images/editIcon.png')}}" alt="">
+                                                        <img src="{{ asset('assets-new/images/deleteIcon.png')}}" alt="">
+                                                        <a href="javaScript:void(0)" class="view" data-id="{{ $communication->id }}" data-person_one="{{ $communication->customer_id }}"  data-person_two="{{ $communication->person_to }}" data-title="{{ $communication->title }}" data-comment="{{ $communication->comment }}" >
+                                                        <i class="fa fa-eye"></i></a>
 
                                                     @endif
 
@@ -146,8 +147,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
         </div>
     </div>
     <!-- Content Section End -->
-    @if($VerificationPermission)
-   
+    
      <!-- Modal start -->
      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -168,7 +168,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                             <label for="person_1">From Person : Person One<span></span></label>
                             <select name="person_one" class="form-control form-select" id="person_1">
                                     <option value=''>Please select</option>
-                                        @foreach($users as $user)
+                                        @foreach($custommers as $user)
                                             <option value="{{ $user->id}}">{{ $user->name }}</option>
                                         @endforeach
                             </select>
@@ -177,7 +177,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                             <label for="person_2">To Persone : Person Two<span></span></label>
                             <select name="person_to" class="form-control form-select" id="person_2">
                                     <option value="">Please select</option>
-                                        @foreach($users as $user)
+                                        @foreach($custommers as $user)
                                             <option value="{{ $user->id}}">{{ $user->name }}</option>
                                         @endforeach
                             </select>
@@ -194,13 +194,16 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                  </form>
             </div>
             <div class="modal-footer">
+            @if($VerificationPermission)
+   
                 <button type="button" class="btn btn-secondary close_mdl" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-success" id="btnSave">Submit</button>
+                @endif
             </div>
             </div>
         </div>
     </div>
-    @endif
+  
     <!-- Modal End -->
 </div>
 

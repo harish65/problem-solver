@@ -2,7 +2,7 @@
 @section('title', 'Adult | Solution Types')
 @section('content')
 @php
-$VerificationPermission = \App\Models\Verification::CheckVerificationPermission($project_id);
+$VerificationPermission = true;
 @endphp
 <div class='relationshipPage'>
     <div class="container">
