@@ -2,23 +2,27 @@
     $categories   =  \App\Models\VerificationType::verificationTypeCategories(); 
     $projectUsers  = \App\Models\Project::getUsers($project_id);
     $project = \App\Models\Project::find($project_id);
+   
     ?>
 <div class="col-md-6">
     <div class="d-flex align-items-center">
         <h2>Verification</h2>
         <select class="form-control form-select" id="verification_types">
-        <option selected="true" disabled="disabled">Select Verification Type..</option>
+            <option selected="true" disabled="disabled">Select Verification Type..</option>
             @foreach(@$categories as $cat)
-            <optgroup label="{{ $cat->name }}">
-                    @foreach(@$types as $type)
-                            @if($type->category == $cat->id)
-                                <option {{ (@$verificationType->id == $type->id) ? 'selected' : '' }} value='{{ $type->id }}'>{{ $type->name }}
-                                </option>
-                            @endif
-                    @endforeach
-            </optgroup>
+                @php
+                    $filteredTypes = $types->where('category', $cat->id);
+                @endphp
+                @if($filteredTypes->isNotEmpty())
+                    <optgroup label="{{ $cat->name }}">
+                        @foreach($filteredTypes as $type)
+                            <option {{ (@$verificationType->id == $type->id) ? 'selected' : '' }} value='{{ $type->id }}'>
+                                {{ $type->name }}
+                            </option>
+                        @endforeach
+                    </optgroup>
+                @endif
             @endforeach
-            
         </select>
     </div>
 </div>

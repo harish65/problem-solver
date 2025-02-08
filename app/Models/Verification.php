@@ -74,7 +74,7 @@ class Verification extends Model
         
     }
 
-    public static function verificationsArray($verificationTypeID){
+    public static function verificationsArray($verificationTypeID = null){
         $data =  [
             1 => 'vocabulary',
             2 => 'information',
@@ -109,9 +109,11 @@ class Verification extends Model
             31 => 'problem_and_solution_at_location_explanation',
             32 => 'function_at_location_explanation',
         ];
+        if(!$verificationTypeID){
+            return $data;
+        }
         return $data[$verificationTypeID];
     }
     
     
-
 }

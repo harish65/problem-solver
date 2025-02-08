@@ -59,7 +59,17 @@ class VerificationController extends BaseController
         // }
 
         $verificationTypeSlug =  null;
+        $verificationsArray =  Verification::verificationsArray();
         if($project->shared == 1 && $project->user_id != Auth::user()->id && $problem->user_id != Auth::user()->id && $can_edit && $can_edit->editable_project == 1 && $can_edit->editable_verification == 1){
+            
+            $filteredKeys= [];
+            foreach ($can_edit  as $key => $value) {
+                if ($value === '1') {
+                    $filteredKeys[] = $key;
+                }
+            }
+            $result = array_keys(array_intersect($verificationsArray, $filteredKeys));
+              
             if($type != null){
                 $verificationTypeSlug =  Verification::verificationsArray($type);
                 if($can_edit->$verificationTypeSlug == 1){
@@ -67,6 +77,8 @@ class VerificationController extends BaseController
                 }
             }
             
+        }else{
+            $result = array_keys($verificationsArray);
         } 
         
         if($user_id != null){
@@ -84,7 +96,7 @@ class VerificationController extends BaseController
             "=",
             $problem_id
         )->first();
-        $types = VerificationType::orderBy("category", "asc")->get();
+        $types = VerificationType::orderBy("category", "asc")->whereIn('id',$result)->get();
        
         if (!isset($Solution_function->id)) {
             $verificationType = VerificationType::where("id","=",$type)->first();
@@ -96,7 +108,7 @@ class VerificationController extends BaseController
         }      
         
         //get Verification
-        if($project->user_id == Auth::user()->id && is_null($user_id)){
+        if($project->user_id == Auth::user()->id && is_null($user_id)){ 
             $verification = Verification::where(["problem_id" => $problem_id])
                                             ->where("verification_type_id", "=", $type)
                                             ->where("solution_function_id", "=", $Solution_function->id)->first();
@@ -729,7 +741,7 @@ class VerificationController extends BaseController
                                         ->where('function_belong_to_people.problem_id' , $problem_id)
                                         ->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , $problem->user_id)->get();
                             
-                           
+                            // echo '<pre>';print_r($people);die;
                             $functionAud        = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $problem->user_id)->first();
                             $functionApplied    = DB::table('function_sub_people')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $problem->user_id)->where('verification_type' , $verificationType->id)->first();
                             return view(
