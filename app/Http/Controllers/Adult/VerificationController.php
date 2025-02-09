@@ -72,9 +72,11 @@ class VerificationController extends BaseController
               
             if($type != null){
                 $verificationTypeSlug =  Verification::verificationsArray($type);
-                if($can_edit->$verificationTypeSlug == 1){
+                
+                if($can_edit->$verificationTypeSlug == 1){ 
                      $problem->user_id = Auth::user()->id;
                 }
+                
             }
             
         }else{
@@ -468,7 +470,7 @@ class VerificationController extends BaseController
                 break;
             case 12:
 
-
+                
                 $users = DB::table('customers')
                         ->select('customers.*' , 'people_communication_flow.*')
                         ->leftJoin('people_communication_flow', 'customers.id', '=', 'people_communication_flow.customer_id')
@@ -476,8 +478,8 @@ class VerificationController extends BaseController
                         ->where('customers.user_id' , $problem->user_id)
                         ->whereNotNull('people_communication_flow.comment')
                         ->get();
-                
-                   
+                       
+                  
                 if (!$verification) {
                     $verification = Verification::where(
                         "verification_type_id",
