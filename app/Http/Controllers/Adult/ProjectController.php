@@ -157,6 +157,9 @@ class ProjectController extends BaseController
            
            
             $project  = DB::table('projects')->where('id', $request->input('id'))->delete();
+            if($project){
+                $projectshared  = DB::table('project_shared')->where('project_id', $request->input('id'))->delete();
+            }
              
             $problem = DB::table('problems')->where('project_id', $request->input('id'))->first();
             
@@ -178,7 +181,7 @@ class ProjectController extends BaseController
                 return $this->sendResponse($success, 'Project deleted successfully.');  
             }else{
                 $success['success'] =  false;
-                return $this->sendError($success,  'Project can not deleted13.');
+                return $this->sendError($success,  'Project can not deleted.');
             }           
             
             }catch(\Illuminate\Database\QueryException $e){
@@ -278,19 +281,20 @@ class ProjectController extends BaseController
             // if($request->shared_project == 1){
                 $update = DB::table('projects')->where('id' , $project_id)->update(['shared'=> '1']);
             // }
-        
+
+            // $checkVerificatonDependancy = $this->VerificationDependancy($request , $project_id);
             
         // if($update){
 
             // $editable_project = (isset($request->editable_project) && $request->editable_project == 1) ? '1' : '0';
                 $insertRecord =  DB::table('project_shared')->insert([
-                                    'project_id' => $project_id, 
-                                    'shared_with'=> $user->id,
-                                    'editable_project' => ($request->project_sharing_mode == 1) ? '1' : '0',
-                                    'editable_problem' => ($request->editable_problem == 1) ? '1' : '0',
+                                    'project_id'        => $project_id, 
+                                    'shared_with'       => $user->id,
+                                    'editable_project'  => ($request->project_sharing_mode == 1) ? '1' : '0',
+                                    'editable_problem'  => ($request->editable_problem == 1) ? '1' : '0',
                                     'editable_solution' => ($request->editable_solution == 1) ? '1' : '0',
-                                    'editable_solution_func' => ($request->editable_solution_func == 1) ? '1' : '0',
-                                    'editable_verification' => ($request->editable_verification == 1) ? '1' : '0',
+                                    'editable_solution_func'    => ($request->editable_solution_func == 1) ? '1' : '0',
+                                    'editable_verification'     => ($request->editable_verification == 1) ? '1' : '0',
                                     'editable_relationship' => ($request->editable_relationship == 1) ? '1' : '0',
                                     'editable_report' => ($request->editable_report == 1) ? '1' : '0',
                                     'editable_quiz' => ($request->editable_quiz == 1) ? '1' : '0',
@@ -347,6 +351,23 @@ class ProjectController extends BaseController
         $data =  \App\Models\ProjectShared::with('shareduser','projectDetails')->where('project_id' , $project_id)->where('shared_with' ,  $user_id)->first();
            
         return view('adult.project.viewpermissions', ['user_id' => $user_id , 'project_id' => $project_id , 'data' => $data]);
+    }
+
+    public function StopshareProject(Request $request){
+                try{
+
+                     $update =  DB::table('project_shared')->where(['id' => $request->id , 'shared_with'=>$request->shared_with])->update([$request->field => $request->value]);
+                     if($update){
+                        $success['success'] =  true;
+                        return $this->sendResponse($success, 'Action perofrmed successfully.');
+                     }else{
+                        $success['success'] =  false;
+                        return $this->sendError($success, 'Action can not performed.');
+                     }
+                     
+                }catch(\Exception $e){
+                    return $this->sendError('Error.', ['error'=> $e->getMessage()]);
+                }
     }
    
 }

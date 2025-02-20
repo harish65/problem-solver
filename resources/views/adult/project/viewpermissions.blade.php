@@ -23,7 +23,7 @@
      
     </div>
   </div>
-  <div class="row bannerSection">
+  <div class="row bannerSection mb-5">
     <div class="col">
       <div class="text-left">
         <div class="form-check">
@@ -44,11 +44,14 @@
                 <th>Module Name</th>
                 <th>Read</th>
                 <th>Write</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
+        
             @foreach ($data->toArray() as $key => $value)
-                @if (!in_array($key, ['id', 'project_id', 'shared_with', 'timestamps', 'wasRecentlyCreated', 'exists', 'preventsLazyLoading', 'incrementing']))
+                
+                @if (!in_array($key, ['id', 'project_id', 'shared_with', 'timestamps', 'wasRecentlyCreated', 'exists', 'preventsLazyLoading', 'incrementing' , 'shareduser','project_details' , 'editable_project','editable_verification']))
                     <tr>
                         <td>{{ ucfirst(str_replace('_', ' ', $key)) }}</td>
                         <td>
@@ -61,14 +64,71 @@
                                 {{ ($value == 1) ? 'Yes' : 'No' }}
                             </span>
                         </td>
+                        <td>
+                        <form id='stopsharing'>
+                            <div class="form-check form-switch">
+                              
+                              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"  data-id="{{ $data->id }}" data-user="{{ $data->shared_with }}" data-key='{{$key}}' value="{{ (!is_array($value)) ? $value:0 }}" {{ ($value == 1) ? 'checked' : '' }}>
+                            </div>
+                        </form>
+                        
+                        </td>
                     </tr>
                 @endif
             @endforeach
         </tbody>
-    </table>
+      </table>
+      </div>
     </div>
-  </div>
 </div>
 
 
+@endsection
+@section('scripts')
+<script>
+$(":checkbox").change(function() {
+  $.ajaxSetup({
+    headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+    });
+    var fieldValue = null;
+    if ($(this).is(':checked')) {
+        fieldValue =  1; // Set value to 1 when checked
+        } else {
+          fieldValue =  0;  // Set value to 0 when unchecked
+        }
+    $.ajax({
+        url: "{{route('adult.stop-share-project')}}",
+        data: { 'id':$(this).data('id') , 'field':$(this).data('key') , 'value':fieldValue ,'shared_with':$(this).data('user')},
+        type: 'POST',
+        beforeSend: function(){
+          $('#shareprojectBtn').attr('disabled',true);
+          $('#shareprojectBtn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+        },
+        error: function (xhr, status, error) {
+            $('#shareprojectBtn').attr('disabled',false);
+            $('#shareprojectBtn').html('Submit');
+            $.each(xhr.responseJSON.data, function (key, item) {
+                toastr.error(item);
+            });
+        },
+        success: function (response){
+          console.log(response);
+          if(response.success == false)
+          {
+              $('#shareprojectBtn').attr('disabled',false);
+              $('#shareprojectBtn').html('Submit');
+              var errors = response.data;
+              toastr.error(response.message);
+          } else {
+              toastr.success(response.message);
+              // location.reload();
+          }
+        }
+    });
+})
+
+  
+</script>
 @endsection

@@ -181,11 +181,11 @@
                                                     <th>Write</th>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($verificationTypes as $verification)
+                                                    @foreach ($verificationTypes as $key=>$verification)
                                                         <tr>
                                                             <td>{{ $verification->name  }}</td>
                                                             <td class="text-center"><input type="radio" name="{{ strtolower(str_replace(' ', '_', $verification->name)) }}" class="v_read" value="0"></td>
-                                                            <td class="text-center"><input type="radio" name="{{ strtolower(str_replace(' ', '_', $verification->name)) }}" class="v_write" value="1"></td>
+                                                            <td class="text-center"><input type="radio" id="{{ strtolower(str_replace(' ', '_', $verification->name)) }}" name="{{ strtolower(str_replace(' ', '_', $verification->name)) }}" class="v_write" value="1"></td>
                                                         </tr>
                                                     @endforeach
                                                     
@@ -392,5 +392,53 @@ $(":checkbox").change(function() {
         }
     });     
        
+
+
+
+$(document).ready(function() {
+    let dependencies = {
+        'function_substitution_and_people': 'people_in_project',
+        'separation_step': 'people_in_project',
+        'people_and_communication': 'people_in_project',
+        'communication_flow': 'people_and_communication',
+        'functions_belong_to_people_explanation': 'people_in_project',
+        'function_of_people_explanation': 'people_in_project',
+        'me_vs__you_approach': 'people_in_project',
+        'people_outside_the_project': 'people_in_project',
+        'solution_time_location1': 'people_in_project',
+        'solution_time_location2': 'people_in_project',
+        'taking_advantage_on_other': 'people_in_project',
+        'problem_and_solution_at_location_explanation': 'people_in_project',
+        'function_at_location_explanation': 'people_in_project',
+        'principle_identification': 'people_in_project',
+        'entity_available': 'principle_identification',
+        'entity_usage': 'principle_identification',
+        'resource_management_consideration': 'entity_usage',
+        'error_correction_approach':'problem_development_from_error_explanation',
+        'averaging_approach':'partition_approach'
+    };
+
+$("input[type='radio']").change(function() {
+        let checkbox = $(this);
+        let id = checkbox.attr('id');
+       
+        if (checkbox.is(':checked')) {
+            // Ensure dependencies are also checked
+            $.each(dependencies, function(child, parent) {
+                if (child === id) {
+                    $("#" + parent).prop('checked', true);
+                }
+            });
+        } else {
+            // If a required dependency is unchecked, warn user
+            $.each(dependencies, function(child, parent) {
+                if (parent === id && $("#" + child).is(':checked')) {
+                    alert(parent + " must be selected if " + child + " is checked.");
+                    checkbox.prop('checked', true);
+                }
+            });
+        }
+    });
+});
 </script>
 @endsection
