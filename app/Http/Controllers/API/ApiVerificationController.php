@@ -391,7 +391,7 @@ switch ($type) {
                                         ->leftJoin('customers', 'function_belong_to_people.customer_id', '=', 'customers.id')
                                         ->where('function_belong_to_people.problem_id' , $problem_id)
                                         ->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , Auth::user()->id)->get();
-                            
+                           
                             $custommers = DB::table("customers")
                                         ->where("project_id", "=", $project_id)
                                         ->get();

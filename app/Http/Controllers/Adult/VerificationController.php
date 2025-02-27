@@ -716,7 +716,7 @@ class VerificationController extends BaseController
                         );
                         break;
                         case 18:
-                        
+                    
                             $allVarifications = DB::table(
                                 "principle_identification"
                             )->get();
@@ -743,7 +743,7 @@ class VerificationController extends BaseController
                                         ->where('function_belong_to_people.problem_id' , $problem_id)
                                         ->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , $problem->user_id)->get();
                             
-                            // echo '<pre>';print_r($people);die;
+                            
                             $functionAud        = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $problem->user_id)->first();
                             $functionApplied    = DB::table('function_sub_people')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $problem->user_id)->where('verification_type' , $verificationType->id)->first();
                             return view(

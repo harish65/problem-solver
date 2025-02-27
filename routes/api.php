@@ -130,7 +130,7 @@ Route::middleware('auth:api')->group( function () {
         
         Route::post("updateVerification", [\App\Http\Controllers\API\ApiVerificationController::class, 'updateVerification'])-> name("updateVerification");
         Route::post("delete-verification", [\App\Http\Controllers\API\ApiVerificationController::class, 'deleteVerification'])-> name("delete-verification");
-
+        Route::post("delete-entity-available/{id}", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteEntityAvailable'])-> name("delete-entity-available");
 
 });
 
