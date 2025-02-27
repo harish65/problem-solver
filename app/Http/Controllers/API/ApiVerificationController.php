@@ -413,12 +413,15 @@ switch ($type) {
                                 $custommers = DB::table("customers")
                                         ->where("project_id", "=", $project_id)
                                         ->get();
+                                $people = db::table('function_belong_to_people')->select('function_belong_to_people.*' , 'customers.name' )
+                                            ->leftJoin('customers', 'function_belong_to_people.customer_id', '=', 'customers.id')
+                                            ->where('function_belong_to_people.problem_id' , $problem_id)->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , $problem->user_id)->get();
                                 $success =  [
                                     "project_id" => $project_id,
                                     "problem" => $problem,
                                     "solution" => $solution,
                                     "Solution_function" => $Solution_function,
-                                    'functionApplied' => $functionApplied  , 'validation_data'=>$validation_data, 'custommers'=>$custommers
+                                    'functionApplied' => $functionApplied  , 'validation_data'=>$validation_data, 'custommers'=>$custommers  , 'people' => $people,
                                     ];
                                 return $this->sendResponse($success, "true");                                
                                 break;

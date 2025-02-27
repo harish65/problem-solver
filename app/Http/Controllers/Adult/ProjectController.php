@@ -355,7 +355,7 @@ class ProjectController extends BaseController
 
     public function StopshareProject(Request $request){
                 try{
-
+                    // echo '<pre>';print_r($request->all());die;
                      $update =  DB::table('project_shared')->where(['id' => $request->id , 'shared_with'=>$request->shared_with])->update([$request->field => $request->value]);
                      if($update){
                         $success['success'] =  true;

@@ -23,21 +23,31 @@
      
     </div>
   </div>
-  <div class="row bannerSection mb-5">
+  <div class="row bannerSection mb-5 d-flex">
     <div class="col">
-      <div class="text-left">
+      <div class="">
         <div class="form-check">
-          <h3>Project Name :{{  $data->projectDetails->name }}</h3>
-          
+        <label class="form-check-label" for="">Project Name :{{  $data->projectDetails->name }}</label>
         </div>
       </div>
-      <div class="text-rght">
+      <div class="">
         <div class="form-check">
-          <h3>User Name :{{  $data->shareduser->name }}</h3>
+        <label class="form-check-label" for="">User Name :{{  $data->shareduser->name }}</label>
         </div>
+      </div>
+      
+    </div>
+    <div class="col">
+      <div class="form-check">
+      
+      <div class="form-check form-switch">
+        <label class="form-check-label" for="stopcompleteProjectShring">Checked switch checkbox input</label>
+        <input class="form-check-input" type="checkbox" role="switch" name="stop_sharing" data-id="{{ $data->id }}" data-user="{{ $data->shared_with }}" data-key='stop_sharing' value="1" {{ ($data->stop_sharing == 1) ? 'checked' : '' }} {{ ($data->stop_sharing == 1) ? 'disabled' : '' }}  id="stopcompleteProjectShring"> 
+      </div>
       </div>
     </div>
     <div class="table-responsive">
+      @if($data->stop_sharing == 0)
       <table class="table slp-tbl text-center">
         <thead>
             <tr>
@@ -67,7 +77,6 @@
                         <td>
                         <form id='stopsharing'>
                             <div class="form-check form-switch">
-                              
                               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"  data-id="{{ $data->id }}" data-user="{{ $data->shared_with }}" data-key='{{$key}}' value="{{ (!is_array($value)) ? $value:0 }}" {{ ($value == 1) ? 'checked' : '' }}>
                             </div>
                         </form>
@@ -78,15 +87,15 @@
             @endforeach
         </tbody>
       </table>
+      @endif
       </div>
     </div>
 </div>
-
-
 @endsection
 @section('scripts')
 <script>
 $(":checkbox").change(function() {
+  
   $.ajaxSetup({
     headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -127,7 +136,8 @@ $(":checkbox").change(function() {
           }
         }
     });
-})
+});
+
 
   
 </script>
