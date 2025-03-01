@@ -2,10 +2,17 @@
     <div class="container">
         <div class="row">
             @foreach ($project as $item)
+                
             @php 
                 $projectShared = \App\Models\Project::SharedProject($item->id,Auth::user()->id);
+               
             @endphp
+                @if(!empty($projectShared) && $projectShared->shared_with == Auth::user()->id && $projectShared->stop_sharing == 1)
+                        @continue;
+                @endif
                 @if(($item->user_id == Auth::user()->id) || !empty($projectShared))
+              
+                    
                     <div class="col">
                         <div class="projectBlock text-center">
                             <h2>{{ $item->name }}</h2>
@@ -55,7 +62,12 @@
                             </div>
                         </div>
                     </div>
-                @endif
+
+                    
+                    @endif
+              
+             
+
             @endforeach
             <div class="col">
                 <div class="projectBlock projectAdd text-center">
