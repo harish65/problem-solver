@@ -54,7 +54,7 @@
                 <th>Module Name</th>
                 <th>Read</th>
                 <th>Write</th>
-                <th>Action</th>
+               
             </tr>
         </thead>
         <tbody>
@@ -75,11 +75,7 @@
                             </span>
                         </td>
                         <td>
-                        <form id='stopsharing'>
-                            <div class="form-check form-switch">
-                              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"  data-id="{{ $data->id }}" data-user="{{ $data->shared_with }}" data-key='{{$key}}' value="{{ (!is_array($value)) ? $value:0 }}" {{ ($value == 1) ? 'checked' : '' }}>
-                            </div>
-                        </form>
+                       
                         
                         </td>
                     </tr>
