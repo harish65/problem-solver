@@ -11,8 +11,6 @@
                         @continue;
                 @endif
                 @if(($item->user_id == Auth::user()->id) || !empty($projectShared))
-              
-                    
                     <div class="col">
                         <div class="projectBlock text-center">
                             <h2>{{ $item->name }}</h2>
@@ -62,12 +60,7 @@
                             </div>
                         </div>
                     </div>
-
-                    
                     @endif
-              
-             
-
             @endforeach
             <div class="col">
                 <div class="projectBlock projectAdd text-center">
