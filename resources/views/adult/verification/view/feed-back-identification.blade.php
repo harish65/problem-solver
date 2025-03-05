@@ -27,6 +27,9 @@ $can_edit = \App\Models\Project::SharedProject($project_id, Auth::user()->id);
                     @if(!is_null($can_edit) && $project->shared == 1 && $project->user_id != Auth::user()->id)
                         <button class="btn btn-success" id="feed-back" >+ Identify Feedback</button>
                        @endif 
+                       @if($project->user_id == Auth::user()->id)
+                       <button class="btn btn-success" id="feed-back" >+ Identify Feedback</button>
+                       @endif
                     </div>  
                     <div class="col-sm-8 ">
                         <?php
