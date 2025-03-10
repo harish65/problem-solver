@@ -2450,12 +2450,24 @@ class VerificationController extends BaseController
 
     public function errorCorrection(Request $request){
         
-        $params = $request->all();
-        $params  = key($params);
-        $params = Crypt::decrypt($params);
-        $user_id  = $params['user_id'];
-        $project_id = $params['project_id'];
         
+        
+        $params = $request->all();
+    
+        if ($request->is('api/*')) { 
+           
+            $user_id  = $params['user_id'];
+            $project_id = $params['project_id'];
+            
+        }else{
+            $params  = key($params);
+            $params = Crypt::decrypt($params);
+            
+            $user_id  = $params['user_id'];
+            $project_id = $params['project_id'];
+        }
+        
+       
         $problem_user_id = DB::table('problems')->where('id' , $params['problem_id'])->pluck('user_id')->first();
         $project = DB::table('projects')->where('id' , $project_id)->first();
         $can_edit =  \App\Models\Project::SharedProject($project_id, Auth::user()->id);
