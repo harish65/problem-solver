@@ -34,7 +34,7 @@
               </div>
               <div class="projectList">
                 <p class="date">{{ date('d/m/Y' , strtotime($problem->created_at))}}</p>
-                    @if(($can_edit != null && $can_edit->editable_problem) || $problem->user_id == Auth::user()->id)
+                    @if(($can_edit != null && $can_edit->editable_problem) || $project->user_id == Auth::user()->id)
                         <ul>
                             <!-- if can edit -->                        
                                 <li>
@@ -87,12 +87,12 @@
                     ?>
                     
                     <label class="form-check-label">                
-                    <input type="radio" {{ ($problem->validation == '0') ? 'checked' : ''}} value="0" data-id="{{ $parameter  }}" class="form-check-input validation" name="optradio" {{ ($problem->user_id == Auth::user()->id) ? '':'disabled' }}>Yes, I have performed analysis to identify the problem correctly
+                    <input type="radio" {{ ($problem->validation == '0') ? 'checked' : ''}} value="0" data-id="{{ $parameter  }}" class="form-check-input validation" name="optradio" {{ ($project->user_id == Auth::user()->id) ? '':'disabled' }}>Yes, I have performed analysis to identify the problem correctly
                     </label>
                 </div>
                 <div class="form-check">
                     <label class="form-check-label">
-                    <input type="radio" class="form-check-input validation" {{ ($problem->validation == '1') ? 'checked' : ''}} value="1" data-id="{{ $parameter  }}" name="optradio" {{ ($problem->user_id == Auth::user()->id) ? '':'disabled' }}>No, I have not performed analysis to identify the problem correctly
+                    <input type="radio" class="form-check-input validation" {{ ($problem->validation == '1') ? 'checked' : ''}} value="1" data-id="{{ $parameter  }}" name="optradio" {{ ($project->user_id == Auth::user()->id) ? '':'disabled' }}>No, I have not performed analysis to identify the problem correctly
                     </label>
                 </div>
                 <div class="row col-sm-3 mt-5 {{ ($problem->user_id == Auth::user()->id) ? '':'d-none' }} ">

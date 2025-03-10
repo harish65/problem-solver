@@ -415,7 +415,8 @@ $(document).ready(function() {
         'entity_usage': 'principle_identification',
         'resource_management_consideration': 'entity_usage',
         'error_correction_approach':'problem_development_from_error_explanation',
-        'averaging_approach':'partition_approach'
+        'averaging_approach':'partition_approach',
+        'mother_nature_existence_explanation':'principle_identification',
     };
 
 $("input[type='radio']").change(function() {

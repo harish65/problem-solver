@@ -3,11 +3,12 @@
         $disabled =  '';
         @endphp
         
-        @if($solution->user_id !== Auth::user()->id)
-                @php  $disabled =  "disabled"; @endphp
+        @if(($can_edit != null && $can_edit->editable_solution) || ($project->user_id == Auth::user()->id && $project->shared == 0))
+        @else
+        @php  $disabled =  "disabled"; @endphp   
         @endif
        
-        
+    
         <div class="row pt-5">
                 <h5>Validation Questions</h5>
                 <p>Does the solution of the actual problem replace the actual problem?</p>

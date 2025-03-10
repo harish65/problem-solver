@@ -82,7 +82,8 @@
                 </div>
                 <div class="projectList">
                     <p class="date">{{ date('d/m/Y' , strtotime($solFunctions->created_at)) }}</p>
-                    @if(!is_null($solFunctions) && $solFunctions->user_id === Auth::user()->id)
+                    
+                    @if(($can_edit != null && $can_edit->editable_solution_func) || ($project->user_id == Auth::user()->id && $project->shared == 0))
                         <ul>
                             <li>
                                 <a href="javaScript:Void(0)" class="editSolFunBtn"

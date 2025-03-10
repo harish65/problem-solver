@@ -54,7 +54,7 @@
               <div class="projectList">
                 <p class="date">{{ date('d/m/Y' , strtotime($solution->created_at)) }}</p>
               
-                  @if(!is_null($solution) && $solution->user_id === Auth::user()->id)
+                @if(($can_edit != null && $can_edit->editable_solution) || ($project->user_id == Auth::user()->id && $project->shared == 0))
                         <ul>
                             <li>
                                     <a href="javaScript:Void(0)"  class="editProblemBtn"

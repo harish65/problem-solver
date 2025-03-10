@@ -36,19 +36,19 @@
             <div class="form-check">
                 <label class="form-check-label">
                     <input type="radio"  value="1" data-id="{{ $solFunctions->id }}" class="form-check-input validation" {{ ($solFunctions->validation_first == '1') ? 'checked' : '' }}
-                        name="optradio_firts"    {{ ($solFunctions->user_id == Auth::user()->id) ? '':'disabled' }} >Yes, the solution function enables the replacement of the problem
+                        name="optradio_firts"    {{ (($can_edit != null && $can_edit->editable_solution_func) || ($project->user_id == Auth::user()->id && $project->shared == 0)) ? '':'disabled' }} >Yes, the solution function enables the replacement of the problem
                 </label>
             </div>
             <div class="form-check">
                 <label class="form-check-label">
                     <input type="radio" class="form-check-input validation" value="2" data-id="{{ $solFunctions->id }}" {{ ($solFunctions->validation_first == '2') ? 'checked' : '' }}
-                        name="optradio_firts" {{ ($solFunctions->user_id == Auth::user()->id) ? '':'disabled' }}>Yes, the solution function enables the replacement of the problem
+                        name="optradio_firts" {{ (($can_edit != null && $can_edit->editable_solution_func) || ($project->user_id == Auth::user()->id && $project->shared == 0)) ? '':'disabled' }}>Yes, the solution function enables the replacement of the problem
                 </label>
             </div>
             <div class="form-check">
                 <label class="form-check-label">
                     <input type="radio" class="form-check-input validation" value="3" data-id="{{ $solFunctions->id }}" {{ ($solFunctions->validation_first == '3') ? 'checked' : '' }}
-                        name="optradio_firts" {{ ($solFunctions->user_id == Auth::user()->id) ? '':'disabled' }}>Yes, the solution function enables the substitution of the problem
+                        name="optradio_firts" {{ (($can_edit != null && $can_edit->editable_solution_func) || ($project->user_id == Auth::user()->id && $project->shared == 0)) ? '':'disabled' }}>Yes, the solution function enables the substitution of the problem
                 </label>
             </div>
             
@@ -61,11 +61,15 @@
             <div class="form-check">
                 <label class="form-check-label">
                     <input type="radio" value="1" {{ ($solFunctions->validation_second == '1') ? 'checked' : '' }} data-id="{{ $solFunctions->id }}" class="form-check-input validation"
-                        name="optradio_second" {{ ($solFunctions->user_id == Auth::user()->id) ? '':'disabled' }}>Yes, the solution function enables the solving of the ProblemName
+                        name="optradio_second" {{ (($can_edit != null && $can_edit->editable_solution_func) || ($project->user_id == Auth::user()->id && $project->shared == 0)) ? '':'disabled' }}>Yes, the solution function enables the solving of the ProblemName
                 </label>
             </div>
         </div>
+        @if(($can_edit != null && $can_edit->editable_solution_func) || ($project->user_id == Auth::user()->id && $project->shared == 0))
         <div class=" col-sm-3 mb-3">
             <button type="button" class="btn btn-success" id="saveValidations" onclick='saveValidations()'>Save Validations</button>
         </div>
+        
+        @endif
+       
     </div>

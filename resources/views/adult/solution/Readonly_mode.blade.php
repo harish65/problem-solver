@@ -11,6 +11,7 @@
     @if($project->shared == 1)
         @include('adult.solution.solutions_dd', [$solutions, $solution])
     @endif
+    
     @include('adult.solution.cards')
     @include('adult.solution.validations')
 @else
