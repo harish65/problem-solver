@@ -43,6 +43,7 @@ class Kernel extends HttpKernel
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\LogResponseTime::class,
         ],
     ];
 
@@ -69,5 +70,6 @@ class Kernel extends HttpKernel
         'parent' => \App\Http\Middleware\Parent::class,
         'teacher' => \App\Http\Middleware\Teacher::class,
         'student' => \App\Http\Middleware\Student::class,
+        'responseTime' => \App\Http\Middleware\LogResponseTime::class,
     ];
 }
