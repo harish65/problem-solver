@@ -30,6 +30,14 @@ class ApiController extends BaseController
             return $this->sendError("Validation Error.", $validator->errors());
         }
         try {
+            $projectHasProblem = DB::table("problems")
+                ->where("project_id", "=", $request->project_id)
+                ->first();
+            if (isset($projectHasProblem->id)) {
+                return $this->sendError("Error.", [
+                    "error" => "Project already have problem!",
+                ]);
+            }
            
             if ($request->problemType == 0) {
                 $file = null;
@@ -255,6 +263,14 @@ class ApiController extends BaseController
         }
         
         try{
+            $projectHasSolution = DB::table("solutions")
+                ->where(["project_id"=> $request->project_id , "problem_id" => $request->problem_id])
+                ->first();
+            if (isset($projectHasProblem->id)) {
+                return $this->sendError("Error.", [
+                    "error" => "Project already have solution!",
+                ]);
+            }
             if(!isset($request->id)){
                 $checkSolutionExist = $solution = DB::table('solutions')->where('problem_id','=', $request->problem_id)->first();
 
@@ -417,6 +433,14 @@ public function getSolutionFunction(Request $request){
 // store solution function
 public function storeSolutionFunction(Request $request){
     try{
+        $projectHasSolutionfunct = DB::table("solution_functions")
+                ->where(["project_id"=> $request->project_id , "problem_id" => $request->problem_id])
+                ->first();
+            if (isset($projectHasSolutionfunct->id)) {
+                return $this->sendError("Error.", [
+                    "error" => "Project already have solution function!",
+                ]);
+            }
             $problem_id = $request->input('problem_id');    
             $project_id = $request->input('project_id'); 
             $solution_id = $request->input('solution_id'); 
