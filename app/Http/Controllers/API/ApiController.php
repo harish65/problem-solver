@@ -33,7 +33,7 @@ class ApiController extends BaseController
             $projectHasProblem = DB::table("problems")
                 ->where("project_id", "=", $request->project_id)
                 ->first();
-            if (isset($projectHasProblem->id)) {
+            if (isset($projectHasProblem->id) && $request->id == null) {
                 return $this->sendError("Error.", [
                     "error" => "Project already have problem!",
                 ]);
@@ -266,7 +266,7 @@ class ApiController extends BaseController
             $projectHasSolution = DB::table("solutions")
                 ->where(["project_id"=> $request->project_id , "problem_id" => $request->problem_id])
                 ->first();
-            if (isset($projectHasProblem->id)) {
+            if (isset($projectHasProblem->id) && $request->id == null) {
                 return $this->sendError("Error.", [
                     "error" => "Project already have solution!",
                 ]);
@@ -436,7 +436,7 @@ public function storeSolutionFunction(Request $request){
         $projectHasSolutionfunct = DB::table("solution_functions")
                 ->where(["project_id"=> $request->project_id , "problem_id" => $request->problem_id])
                 ->first();
-            if (isset($projectHasSolutionfunct->id)) {
+            if (isset($projectHasSolutionfunct->id) && $request->id == null) {
                 return $this->sendError("Error.", [
                     "error" => "Project already have solution function!",
                 ]);
