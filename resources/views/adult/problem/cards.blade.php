@@ -95,9 +95,11 @@
                     <input type="radio" class="form-check-input validation" {{ ($problem->validation == '1') ? 'checked' : ''}} value="1" data-id="{{ $parameter  }}" name="optradio" {{ ($project->user_id == Auth::user()->id) ? '':'disabled' }}>No, I have not performed analysis to identify the problem correctly
                     </label>
                 </div>
+                @if(($can_edit != null && $can_edit->editable_problem) || $project->user_id == Auth::user()->id)
                 <div class="row col-sm-3 mt-5 {{ ($problem->user_id == Auth::user()->id) ? '':'d-none' }} ">
                     <button type="button" class="btn btn-success" id="saveValidations" onclick='saveValidations()'>Save Validations</button>
                 </div>
+                @endif
         </div>
     </div>
     @endif
