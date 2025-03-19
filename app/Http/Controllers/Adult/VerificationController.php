@@ -60,7 +60,10 @@ class VerificationController extends BaseController
 
         $verificationTypeSlug =  null;
         $verificationsArray =  Verification::verificationsArray();
-        if($project->shared == 1 && $project->user_id != Auth::user()->id && $problem->user_id != Auth::user()->id && $can_edit && $can_edit->editable_project == 1 && $can_edit->editable_verification == 1){
+
+
+        // if($project->shared == 1 && $project->user_id != Auth::user()->id && $problem->user_id != Auth::user()->id && $can_edit && $can_edit->editable_project == 1 && $can_edit->editable_verification == 1){
+        if($project->shared == 1 && $project->user_id != Auth::user()->id){
             
             $filteredKeys= [];
             foreach ($can_edit  as $key => $value) {
@@ -82,7 +85,7 @@ class VerificationController extends BaseController
         }else{
             $result = array_keys($verificationsArray);
         } 
-        
+       
         if($user_id != null){
             $problem->user_id = $user_id;   
         }

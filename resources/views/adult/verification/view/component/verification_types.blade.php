@@ -2,7 +2,12 @@
     $categories   =  \App\Models\VerificationType::verificationTypeCategories(); 
     $projectUsers  = \App\Models\Project::getUsers($project_id);
     $project = \App\Models\Project::find($project_id);
-   
+
+    // echo '<pre>';print_r($types);
+    // echo '<pre>';print_r($project->sharedUsers);die;
+
+
+
     ?>
 <div class="col-md-6">
     <div class="d-flex align-items-center">
