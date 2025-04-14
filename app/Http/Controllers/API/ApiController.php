@@ -433,14 +433,14 @@ public function getSolutionFunction(Request $request){
 // store solution function
 public function storeSolutionFunction(Request $request){
     try{
-        $projectHasSolutionfunct = DB::table("solution_functions")
-                ->where(["project_id"=> $request->project_id , "problem_id" => $request->problem_id])
-                ->first();
-            if (isset($projectHasSolutionfunct->id) && $request->id == null) {
-                return $this->sendError("Error.", [
-                    "error" => "Project already have solution function!",
-                ]);
-            }
+        // $projectHasSolutionfunct = DB::table("solution_functions")
+        //         ->where(["project_id"=> $request->project_id , "problem_id" => $request->problem_id])
+        //         ->first();
+        //     if (isset($projectHasSolutionfunct->id) && $request->id == null) {
+        //         return $this->sendError("Error.", [
+        //             "error" => "Project already have solution function!",
+        //         ]);
+        //     }
             $problem_id = $request->input('problem_id');    
             $project_id = $request->input('project_id'); 
             $solution_id = $request->input('solution_id'); 

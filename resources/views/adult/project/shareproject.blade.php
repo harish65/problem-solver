@@ -134,14 +134,21 @@
                                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                                 <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
                                                 </svg></small>
+                                               
                                             </td>
                         <td class="text-center"><input type="radio" name="editable_verification" class="read" value="0"></td>
                         <td class="text-center"><input type="radio" name="editable_verification" class="write" value="1"></td>
                         </tr>
                         <tr>
-                        <td>Relationships</td>
-                        <td class="text-center"><input type="radio" name="editable_relationship" class="read" value="0"></td>
-                        <td class="text-center"><input type="radio" name="editable_relationship" class="write" value="1"></td>
+                        <td>Relationships<small>  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="" class="bi bi-exclamation-circle " viewBox="0 0 16 16">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                                                </svg></small>
+                                                <br>
+                                                <small><i>If you are shring relationship with users please share verifications in editable mode </i></small>
+                                            </td>
+                        <td class="text-center"><input type="radio" name="editable_relationship" id="r_rel" class="read" value="0"></td>
+                        <td class="text-center"><input type="radio" name="editable_relationship" id="w_rel" class="write" value="1"></td>
                         </tr>
                         <tr>
                         <td>Reports</td>
@@ -192,6 +199,55 @@
                                                 </tbody>
                                             </table>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan='4'>
+                            <div class="accordion" id="rel_detailsAccordion">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingOne">
+                                            <button class="accordion-button collapsed btn-accordion" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRel" aria-expanded="false" aria-controls="collapseRel" disabled>
+                                            Relationships
+                                            </button>
+                                        </h2>
+                                        <div id="collapseRel" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#rel_detailsAccordion">
+                                        <div class="container mt-3 ">
+                                                <div class="form-check form-switch d-inline-block">
+                                                <input class="form-check-input" name="" type="checkbox" role="switch" id="toggle-switch-relationship-read">
+                                                <label class="form-check-label ml-5" for="flexSwitchCheckChecked">Share All RelationShips In Read Only Mode</label>
+                                                </div>
+                                                <div class="form-check form-switch d-inline-block">
+                                                <input class="form-check-input" type="checkbox" id="toggle-switch-relationship-write">
+                                                <label class="form-check-label ml-5" for="switch2">Share All RelationShips In Write Mode</label>
+                                                </div>
+                                            </div>
+                                            <table class="table slp-tbl text-center">
+                                                <thead>
+                                                    <th>Relatioship Type</th>
+                                                    <th>Read</th>
+                                                    <th>Write</th>
+                                                </thead>
+                                                <tbody>
+                                                    @php
+                                                        $relationshopTypes = \App\Models\Relationship::all();
+                                                       
+                                                    @endphp
+                                                    @foreach ($relationshopTypes as $key=>$value)
+                                                        <tr>
+                                                            @php
+                                                                $trim = trim($value->name)
+                                                            @endphp
+                                                            <td>{{ $value->name  }}</td>
+                                                            <td class="text-center"><input type="radio" name="{{ strtolower(str_replace(' ', '_', $trim)) }}" class="r_read" value="0"></td>
+                                                            <td class="text-center"><input type="radio"  name="{{ strtolower(str_replace(' ', '_', $trim)) }}" class="rel_write"   value="1"></td>
+                                                        </tr>
+                                                    @endforeach
+                                                    
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -441,5 +497,79 @@ $("input[type='radio']").change(function() {
         }
     });
 });
+
+$(document).ready(function() {
+  $('input[type=radio][name=editable_relationship]').change(function() {
+    // Hide all accordion sections
+    if (this.checked && $(this).val() == 1) {
+            $('#collapseRel').collapse('show');            
+        }else{
+            $('#collapseRel').collapse('hide');
+        }
+  });
+});
+
+$('#toggle-switch-relationship-read').change(function() {
+    $('.rel_write').each(function() {
+        if ($(this).is(':checked')) {
+            $(this).prop('checked', false);
+        }
+        $(this).prop('disabled', true);
+    });
+    // Check first option in each radio group
+    if($('#toggle-switch-relationship-read').is(':checked')){
+        $('.r_read').each(function() {
+        if (!$('input[name="' + this.name + '"]:checked').length) {
+                $('input[name="' + this.name + '"]').first().prop('checked', true);
+        }else{
+            $('input[name="' + this.name + '"]').first().prop('checked', false);
+        }
+        });
+        $('#toggle-switch-relationship-write').prop('disabled', true);
+    }else{
+        $('.rel_write').each(function() {
+            $(this).prop('disabled', false);
+    });
+    $('.r_read').each(function() {
+        $('input[name="' + this.name + '"]').first().prop('checked', false);
+    })
+    $('#toggle-switch-relationship-write').prop('disabled', false);
+    }
+  });
+
+$('#toggle-switch-relationship-write').change(function() {
+    if($('#toggle-switch-relationship-write').is(':checked')){
+                $('.r_read').each(function() {
+                if ($(this).is(':checked')) {
+                    $(this).prop('checked', false);
+                }
+                $(this).prop('disabled', true);
+        });
+        // Check first option in each radio group
+        $('.rel_write').each(function() {
+            if (!$('input[name="' + this.name + '"]:checked').length) {
+                    $('input[name="' + this.name + '"]').prop('checked', true);
+
+            }else{
+                if($('input[name="' + this.name + '"]:checked')){
+                    $('input[name="' + this.name + '"]').prop('checked', false);
+                }
+                
+            }
+        });
+        $('#toggle-switch-relationship-read').prop('disabled', true);
+    }else{
+        $('.r_read').each(function() {
+                $(this).prop('disabled', false);
+        });
+        $('.rel_write').each(function() {
+            $('input[name="' + this.name + '"]').prop('checked', false);
+        })
+        $('#toggle-switch-relationship-read').prop('disabled', false);
+    }
+});
+  
+
+
 </script>
 @endsection

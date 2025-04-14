@@ -9,7 +9,8 @@
                             ?>
                             <h2>Relationship</h2>
                             <select class="form-control form-select" id="rel_types">
-                            <option value=''>Select Relationship...</option>
+                            <option  selected="true" disabled="disabled">Select Relationship...</option>
+                            
                                 @foreach($categories as $cat)
                                     <optgroup label="{{ $cat->name }}">
                                             @foreach($relationships as $type)

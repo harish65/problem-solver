@@ -23,10 +23,12 @@ use App\Models\Customer;
 use App\Models\TimeVerification;
 use App\Models\PrincipleIdentificationMain;
 use App\Models\AverageApproach;
-use DB;
-use Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Exception;
 use Redirect;
-use Validator;
+
 
 class VerificationController extends BaseController
 {
@@ -47,7 +49,7 @@ class VerificationController extends BaseController
         $verification = null;
         $entity = null;
         //get problem
-        $project = \DB::table('projects')
+        $project = DB::table('projects')
                         
                         ->where('projects.id', $project_id)
                         ->first();
@@ -60,11 +62,12 @@ class VerificationController extends BaseController
 
         $verificationTypeSlug =  null;
         $verificationsArray =  Verification::verificationsArray();
-
-
-        // if($project->shared == 1 && $project->user_id != Auth::user()->id && $problem->user_id != Auth::user()->id && $can_edit && $can_edit->editable_project == 1 && $can_edit->editable_verification == 1){
-        if($project->shared == 1 && $project->user_id != Auth::user()->id){
-            
+        if($project->shared == 1 && $project->user_id !== Auth::user()->id){
+                if(is_null($can_edit)){
+                    $can_edit = Project::SharedProject($project->id , $problem->user_id);
+                }
+                
+               
             $filteredKeys= [];
             foreach ($can_edit  as $key => $value) {
                 if ($value === '1') {
@@ -157,10 +160,6 @@ class VerificationController extends BaseController
                     ->where($customers_condition)
                     ->get();
         //project shared
-        
-       
-        
-
                 
         switch ($type) {
             case 1:

@@ -5,30 +5,64 @@ use App\Http\Controllers\BaseController as BaseController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Relationship;
 use App\Models\SolutionFunction;
 use App\Models\Solution;
 use App\Models\Verification;
-use DB;
-use Auth;
-use Validator;
+use App\Models\Project;
+
+use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class RelationshipController extends BaseController
 {
     public function index($data = null, $type = null){     
         
         $params = Crypt::decrypt($data);
-        
+       
         if($params['problem_id'] == ''){
             return Redirect::back()->withErrors(['message' => 'Problem must be define or project must be selected']);
         }
         
         $relationships = Relationship::all();
+
+
+        $filteredKeys= [];
+        $project = DB::table('projects')->where('projects.id', $params['project_id'])->first();
+        if($project->shared == 1 && $project->user_id != Auth::user()->id){
+            $can_edit = Project::SharedProject($params['project_id'] , Auth::user()->id);
+            // echo '<pre>';print_r($can_edit);die;
+            foreach ($can_edit  as $key => $value) {
+                if ($value === '1') {
+                    $filteredKeys[] = $key;
+                }
+            }
+            foreach ($can_edit  as $key => $value) {
+                if ($value === 1) {
+                    $filteredKeys[] = $key;
+                }
+            }
+            $relationshipsArray = Relationship::relationshipsArray();
+            $result = array_keys(array_intersect($relationshipsArray, $filteredKeys));
+            $relationships =  Relationship::whereIn('id' , $result)->get();
+
+        }
+       
+
+        
         $view = null;
         $veiwParams = null;
         $relationship    =  Relationship::where('id' , $type)->first();
+
+
+
         $condition       = ['problem_id'=> $params['problem_id'] , 'project_id'=>$params['project_id'] ,'user_id' => Auth::user()->id];
         $validations     =  DB::table('rel_validations')->where($condition)->where('id' , $type)->first();
+
+
         
         switch($type){
             case 1: 

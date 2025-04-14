@@ -9,9 +9,10 @@ use App\Models\Problem;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
-use Auth;
-use Validator;
-use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class ProjectController extends BaseController
 {
@@ -236,7 +237,7 @@ class ProjectController extends BaseController
                 $success['verificationTypes'] = $verificationTypes;
                 $success['projectUsers'] = $projectUsers;
                 $success['token'] = $request->header('Authorization');
-                $success['allreadyShared'] = $allreadyShared;
+                $success['allreadyShared'] = $allreadySharedUsers;
                 return $this->sendResponse($success,'Reviewer Response');
         }else{
             return view('adult.project.shareproject', ["project_id" => $project_id , 'verificationTypes' => $verificationTypes , 'projectUsers'=>$projectUsers , 'allreadySharedUsers'=>$allreadySharedUsers]);
@@ -248,6 +249,7 @@ class ProjectController extends BaseController
     public function shareProject(Request $request){
        
        try{
+        // echo '<pre>';print_r($request->all());die;
         $rules = array(
             'user_id'=>'integer|required',
             "project_id" => "required",
@@ -299,6 +301,7 @@ class ProjectController extends BaseController
                                     'editable_report' => ($request->editable_report == 1) ? '1' : '0',
                                     'editable_quiz' => ($request->editable_quiz == 1) ? '1' : '0',
                                     'editable_result' => ($request->editable_result == 1) ? '1' : '0',
+                                    //Vrifications
                                     'vocabulary' => ($request->vocabulary == 1) ? '1' : '0',
                                     'information' => ($request->information == 1) ? '1' : '0',
                                     'before_and_after' => ($request->before_and_after == 1) ? '1' : '0',
@@ -331,6 +334,22 @@ class ProjectController extends BaseController
                                     'people_outside_the_project' => ($request->people_outside_the_project_ == 1) ? '1' : '0',
                                     'problem_and_solution_at_location_explanation' => ($request->problem_and_solution_at_location_explanation == 1) ? '1' : '0',
                                     'function_at_location_explanation' => ($request->function_at_location_explanation == 1) ? '1' : '0',
+                                    //Relationships
+                                    'communication_and_people_relationship_explanation' => ($request->communication_and_people_relationship_explanation) ? '1' : '0',
+                                    'communication_and_principle_relationship_explanation' => ($request->communication_and_principle_relationship_explanation) ? '1' : '0',
+                                    'communication_and_solution_function_relationship_explanation' => ($request->communication_and_solution_function_relationship_explanation) ? '1' : '0',
+                                    'communication_and_solution_relationship_explanation' => ($request->communication_and_solution_relationship_explanation) ? '1' : '0',
+                                    'entity_usage_and_principle_relationship_explanation' => ($request->entity_usage_and_principle_relationship_explanation) ? '1' : '0',
+                                    'entity_usage_and_solution_relationship' => ($request->entity_usage_and_solution_relationship) ? '1' : '0',
+                                    'information_and_principle_relationship_explanation' => ($request->information_and_principle_relationship_explanation) ? '1' : '0',
+                                    'information_and_solution_relationship_explanation' => ($request->information_and_solution_relationship_explanation) ? '1' : '0',
+                                    'principle_and_people_person_relationship_explanation' => ($request->principle_and_people_person_relationship_explanation) ? '1' : '0',
+                                    'principle_and_function_relationship_explanation' => ($request->principle_and_function_relationship_explanation) ? '1' : '0',
+                                    'principle_and_solution_relationship_explanation' => ($request->principle_and_solution_relationship_explanation) ? '1' : '0',
+                                    'vocabulary_and_principle_relationship_explanation' => ($request->vocabulary_and_principle_relationship_explanation) ? '1' : '0',
+                                    'resource_management_and_solution_relationship_explanation' => ($request->resource_management_and_solution_relationship_explanation) ? '1' : '0',
+                                    'people_and_solution_function_relationship_explanation' => ($request->people_and_solution_function_relationship_explanation) ? '1' : '0',
+
                     
                 ]);
 
