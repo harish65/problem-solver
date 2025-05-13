@@ -160,6 +160,10 @@
                         <td class="text-center"><input type="radio" name="editable_result" class="read" value="0"></td>
                         <td class="text-center"><input type="radio" name="editable_result" class="write" value="1"></td>
                         </tr>
+                        <td>Quiz</td>
+                        <td class="text-center"><input type="radio" name="editable_quiz" class="read" value="0"></td>
+                        <td class="text-center"><input type="radio" name="editable_quiz" class="write" value="1"></td>
+                        </tr>
                         <tr>
                             <td colspan='4'>
                                 <div class="accordion" id="detailsAccordion">

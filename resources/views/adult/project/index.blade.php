@@ -1,5 +1,5 @@
 @extends('adult.layouts.adult')
-@section('title', 'Problem | Adult')   
+@section('title', 'Project | Adult')   
  
 @section('content')
 
@@ -17,8 +17,8 @@
           <div class="bannerImg">
             <img src="{{ url('/') }}/assets-new/images/banner-adult-dashboard.png" alt="Banner Image"/>
           </div>
+          </div>
         </div>
-      </div>
       <div class="row">
         <div class="col">
           <h4>List of Projects</h4>
@@ -40,7 +40,7 @@
   @include('adult.project.table', [$project])      
       
   @include('adult.project.modal.add-project')
-  @include('adult.project.modal.share-project' , [$verificationTypes])
+  
 @endsection
 
 @section('scripts')

@@ -901,3 +901,11 @@ background-color: #198754;
     box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     
 }
+
+
+.quizformborder{
+    border-radius: 15px;
+}
+
+.question-block_student { display: none; }
+.question-block_student.active { display: block; }

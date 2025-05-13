@@ -48,12 +48,17 @@
                                         <a href="{{ route('adult.project-share' , Crypt::encrypt($item->id)) }}" title="Share"><img
                                                 src="{{ url('/') }}/assets-new/images/uploadIcon.png" alt="" /></a>
                                     </li>
+
+                                    <li>
+                                        
+                                        <a href="{{ route('quiz' , Crypt::encrypt($item->id)) }}" title="Quiz"><i class="fa fa-question fa-lg"></i></a>
+                                    </li>
                                     
                                     @else
                                         <li><img src="{{ url('/') }}/assets-new/images/editIcon.png" alt="" /></li>
                                         <li><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" alt="" /></li>
                                         <li><img src="{{ url('/') }}/assets-new/images/uploadIcon.png" alt="" /></li>
-                                        <li><img src="{{ url('/') }}/assets-new/images/viewIcon.png" alt="" /></li>
+                                        <li><i class="fa fa-question"></i></li>
                                     @endif
                                 </ul>
                                 <button type="button" class=" btn btn-light btn-block">{{  ($item->shared == 1) ? 'Shared': 'Not Shared' }}</button>

@@ -1,6 +1,19 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Adult\ProjectController as AdultProjectController;
+use App\Http\Controllers\Adult\VerificationController as AdultVerificationController;
+use App\Http\Controllers\Adult\VerificationTypeController as AdultVerificationTypeController;
+use App\Http\Controllers\Adult\VerificationTypeTextController as AdultVerificationTypeTextController;
+use App\Http\Controllers\Adult\SolutionFunctionController as AdultSolutionFunctionController;
+use App\Http\Controllers\Adult\SolutionTypeController as AdultSolutionTypeController;
+use App\Http\Controllers\Adult\SolutionFuntionTypeController as AdultSolutionFuntionTypeController;
+use App\Http\Controllers\Adult\UserController as AdultUserController;
+use App\Http\Controllers\Adult\LoginController as AdultLoginController;
+use App\Http\Controllers\Adult\ProblemController as AdultProblemController;
+use App\Http\Controllers\Adult\SolutionController as AdultSolutionController;
+use App\Http\Controllers\Adult\RelationshipController as AdultRelationshipController;
+use App\Http\Controllers\Adult\ProjectShareController as ProjectShareController;
 
 /*
 |--------------------------------------------------------------------------
@@ -293,6 +306,13 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::get("/share-project/{id}", [\App\Http\Controllers\Adult\ProjectController::class, 'shareProjectGet'])->name("project-share");
         Route::get("/permissions/{user_id}/{project_id}", [\App\Http\Controllers\Adult\ProjectController::class, 'viewPermissions'])->name("project_permissions");
 
-
     });  
 });
+Route::get("/quiz/{id}", [\App\Http\Controllers\QuizController::class, 'index'])->name("quiz");
+Route::get("/add-quiz/{id}", [\App\Http\Controllers\QuizController::class, 'addQuiz'])-> name("add-quiz");
+Route::post("/store-quiz", [\App\Http\Controllers\QuizController::class, 'store'])-> name("store-quiz");
+Route::get("/edit-quiz/{id}", [\App\Http\Controllers\QuizController::class, 'edit'])-> name("edit-quiz");
+Route::post("/update-quiz/{id}", [\App\Http\Controllers\QuizController::class, 'update'])-> name("update-quiz");
+Route::delete("/delete-quiz/{id}", [\App\Http\Controllers\QuizController::class, 'destroy'])-> name("delete-quiz");
+
+Route::post("add-quiz-data", [\App\Http\Controllers\QuizController::class, 'saveQuizData'])-> name("add-quiz-data");
