@@ -6,7 +6,6 @@
     <div class="container">
         <div class="mainTitle">
             <div class="row">
-                
                       <?php 
                             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
                             $parameter =  Crypt::encrypt($parameters);

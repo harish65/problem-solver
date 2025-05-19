@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Project;
-use App\Models\user;
 use App\Models\Problem;
 use App\Http\Controllers\BaseController as BaseController;
-use Auth;
-use Validator;
-use DB;
-
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ProblemController extends BaseController
 {

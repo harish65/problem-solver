@@ -152,54 +152,60 @@
       
 @yield('scripts')
 <script>
-let currentQuestionIndex = 0;
-
-function showQuestion(index) {
-    $('.question-block_student').removeClass('active');
-    $(`.question-block_student[data-index="${index}"]`).addClass('active');
-}
-
-$(document).ready(function () {
-    showQuestion(currentQuestionIndex);
-
-    $('#nextBtnMcq').click(function () {
-        let total = $('.question-block_student').length;
-        if (currentQuestionIndex < total - 1) {
-            currentQuestionIndex++;
-            showQuestion(currentQuestionIndex);
-        }
-    });
-
-    $('#prevBtnMcq').click(function () {
-        if (currentQuestionIndex > 0) {
-            currentQuestionIndex--;
-            showQuestion(currentQuestionIndex);
-        }
-    });
-});
-function validateQuestions() {
-    let isValid = true;
-    $('.question-block_student').each(function (index) {
-        const selected = $(this).find(`input[type="radio"]:checked`).length;
-        if (!selected) {
-            isValid = false;
-            $(this).addClass('border border-danger');
-        } else {
-            $(this).removeClass('border border-danger');
-        }
-    });
-    return isValid;
-}
-$('#submitBtnMcq').on('click', function (e) {
-    e.preventDefault(); // Prevent default form submission
-    if (!validateQuestions()) {
-        toastr.error("Please answer all questions before submitting.");
-        return;
+    let currentQuestionIndex = 0;
+    function showQuestion(index) {
+        $('.question-block_student').removeClass('active');
+        $(`.question-block_student[data-index="${index}"]`).addClass('active');
     }
-    // Optional: Submit form via AJAX or let native form submission handle it
-    $('form').submit(); // Adjust if your form has a different structure
-});
-</script>
 
+    function updateQuestionIndex(index){
+        currentQuestionIndex = 0;
+    }
+
+    $(document).ready(function () {
+        showQuestion(currentQuestionIndex);
+        $(document).on('click', '#nextBtnMcq', function () {
+            console.log(currentQuestionIndex);
+            let total = $('.question-block_student').length;
+            if (currentQuestionIndex < total - 1) {
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
+            }
+        });
+
+        $(document).on('click', '#prevBtnMcq', function () {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion(currentQuestionIndex);
+            }
+        });
+
+        showQuestion(currentQuestionIndex);
+    });
+
+    function validateQuestions() {
+        let isValid = true;
+        $('.question-block_student').each(function (index) {
+            const selected = $(this).find(`input[type="radio"]:checked`).length;
+            if (!selected) {
+                isValid = false;
+                $(this).addClass('border border-danger');
+            } else {
+                $(this).removeClass('border border-danger');
+            }
+        });
+        return isValid;
+    }
+    $('#submitBtnMcq').on('click', function (e) {
+        e.preventDefault(); // Prevent default form submission
+        if (!validateQuestions()) {
+            toastr.error("Please answer all questions before submitting.");
+            return;
+        }
+        // Optional: Submit form via AJAX or let native form submission handle it
+        $('#quizForm1').submit(); // Adjust if your form has a different structure
+    });
+</script>
+@stack('sub_scripts')
 </body>
 </html>

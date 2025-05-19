@@ -197,6 +197,9 @@ $VerificationPermission = true;
                 @endif
 
             </div>
+            <div class="row pt-5">
+                    @include('adult.quiz.quiz-component' , [$project->id , $pageId , $pageType])
+                </div>
         </div>
     </div>
     <!-- Content Section End -->

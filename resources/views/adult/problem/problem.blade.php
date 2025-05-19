@@ -31,7 +31,7 @@ $problems = \App\Models\Problem::GetAllProblemsOfProject($project->id);
 
 
     <div class="row pt-5">
-        @include('adult.quiz.quiz-component' , [$project->id , 1001 , 'problem'])
+        @include('adult.quiz.quiz-component' , [$project->id , $pageId , $pageType])
     </div>
     @if($project->shared == 1 && $can_edit != null && $can_edit->editable_project == 1)
     @include('adult.problem.Editable_mode' , [$problem , $project , $can_edit])

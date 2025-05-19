@@ -10,9 +10,9 @@ use App\Models\Problem;
 use App\Models\Solution;
 use App\Models\SolutionType;
 use App\Models\Setting;
-use Auth;
-use DB;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Redirect;
 
 class SolutionController extends BaseController
@@ -21,7 +21,6 @@ class SolutionController extends BaseController
     public function index($params = null){
       
         $params = Crypt::decrypt($params); 
-        // dd($params);
         $soluton_id = null;
         if(!is_array($params)){ 
             
@@ -60,8 +59,11 @@ class SolutionController extends BaseController
                     
             $problem_name = DB::table('problems')->where('id' , $problem_id)->pluck('name')->first();
         }
+
+        $pageType = 'solution';
+        $pageId = 1002;
         
-        return view('adult.solution.index' , compact('solution'  , 'problem_id' , 'solutionTypes' , 'project' , 'solutions','problem_name'));
+        return view('adult.solution.index' , compact('solution'  , 'problem_id' , 'solutionTypes' , 'project' , 'solutions','problem_name', 'pageType', 'pageId'));
         
     }
 
