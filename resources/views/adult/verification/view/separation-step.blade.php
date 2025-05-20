@@ -32,143 +32,146 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                     <p>{{ @$verificationType->explanation }}</p>
                 </div>
                 <!-- start -->
-            @if($custommers->count() > 0)
-                <?php $showMessage = false; ?>
-                @if($steps)
-                <div class="principleRelation">
-                    <div class="container">
-                        <div class="row justify-content-center">
-                           
-                                  
-                                        <div class="blockProblem col-sm-3">
-                                            <div class="projectBlock text-center">
-                                                <h2>People</h2>
-                                                <div class="projectList text-center sepration-step">
-                                                    <div class="imgWrp">
-                                                        <div id="myCarousel" class="carousel slide " data-ride="carousel">
-                                                       
-                                                            <div class="carousel-inner" role="listbox">
-                                                                @php $index = 1; @endphp
-                                                                @foreach($custommers as $entity)
-                                                                    <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
-                                                                        <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">                                                                        
-                                                                        <div class="carousel-caption custom">
-                                                                            <ul style="display:block">
-                                                                                <li>{{ $entity->name }}</li>
-                                                                                <li style="color:red">{{ $entity->type }}</li>
-                                                                            </ul>
-
-
-                                                                        </div>
-                                                                    </div>                                                                  
-                                                                    @php $index++; @endphp
-                                                                @endforeach 
-                                                            </div>
-                                                            <ol class="carousel-indicators custom">
-                                                                @php $index = 0; @endphp
-                                                                    @foreach($custommers as $entity)
-                                                                            <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
-                                                                    @php $index++; @endphp
-                                                                @endforeach 
-                                                            </ol>
-                                                           
-                                                            
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    
-                                                </div>
-                                               
-                                            </div>
-                                        </div>
-                                  
+                @if($custommers->count() > 0)
+                    <?php $showMessage = false; ?>
+                    @if($steps)
+                    <div class="principleRelation">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                            
                                     
-                                    <div class="line-border "></div>
-                                
+                                            <div class="blockProblem col-sm-3">
+                                                <div class="projectBlock text-center">
+                                                    <h2>People</h2>
+                                                    <div class="projectList text-center sepration-step">
+                                                        <div class="imgWrp">
+                                                            <div id="myCarousel" class="carousel slide " data-ride="carousel">
+                                                        
+                                                                <div class="carousel-inner" role="listbox">
+                                                                    @php $index = 1; @endphp
+                                                                    @foreach($custommers as $entity)
+                                                                        <div class="carousel-item {{ ($index == 1) ? 'active':'' }} ">
+                                                                            <img src="{{ asset('assets-new/users/'.$entity->file)}}" alt="Chania" width="80%" height="128px">                                                                        
+                                                                            <div class="carousel-caption custom">
+                                                                                <ul style="display:block">
+                                                                                    <li>{{ $entity->name }}</li>
+                                                                                    <li style="color:red">{{ $entity->type }}</li>
+                                                                                </ul>
 
-                                
-                                <div class="blockProblem col-sm-3">
-                                    <div class="projectBlock text-center">
-                                        <h2>Problem</h2>
-                                        <div class="projectList text-center">
-                                            <div class="imgWrp">
-                                                <img class="mx-auto"
-                                                    src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
+
+                                                                            </div>
+                                                                        </div>                                                                  
+                                                                        @php $index++; @endphp
+                                                                    @endforeach 
+                                                                </div>
+                                                                <ol class="carousel-indicators custom">
+                                                                    @php $index = 0; @endphp
+                                                                        @foreach($custommers as $entity)
+                                                                                <li data-target="#myCarousel" data-slide-to="{{ $index  }}" class="{{ ($index == 0) ? 'active':'' }}"></li>
+                                                                        @php $index++; @endphp
+                                                                    @endforeach 
+                                                                </ol>
+                                                            
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        
+                                                    </div>
+                                                
+                                                </div>
+                                            </div>
+                                    
+                                        
+                                        <div class="line-border "></div>
+                                    
+
+                                    
+                                    <div class="blockProblem col-sm-3">
+                                        <div class="projectBlock text-center">
+                                            <h2>Problem</h2>
+                                            <div class="projectList text-center">
+                                                <div class="imgWrp">
+                                                    <img class="mx-auto"
+                                                        src="{{ asset('assets-new/problem/'.$problem->file)}}" width="100%"
+                                                        height="128px">
+                                                </div>
+                                                
+                                                <p class="redText" title='{{  $problem->name }}' style="color:red">{{ $problem->name }}</p>
+                                            </div>
+                                            <div class="projectList">
+                                                <p class="date" >{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
+                                                <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="line-border"></div>
+                                    <div class="blockProblem col-sm-3">
+                                        <div class="projectBlock text-center">
+                                            <h2>Solution</h2>
+                                            <div class="projectList text-center">
+                                                <div class="imgWrp">
+                                                    <img class="mx-auto"
+                                                    src=" {{ asset('assets-new/solution/'.$solution->file)}}" width="100%"
                                                     height="128px">
+                                                </div>
+                                                
+                                                <p class="redText" title='{{  $solution->name }}' style="color:#00A14C">{{ $solution->name }}</p>
                                             </div>
-                                            
-                                            <p class="redText" title='{{  $problem->name }}' style="color:red">{{ $problem->name }}</p>
-                                        </div>
-                                        <div class="projectList">
-                                            <p class="date" >{{ date('d/m/Y', strtotime($problem->created_at))}}</p>
-                                            <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                            <div class="projectList">
+                                                <p class="date">{{ date('d/m/Y', strtotime($solution->created_at))}}</p>
+                                                <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="line-border"></div>
-                                <div class="blockProblem col-sm-3">
-                                    <div class="projectBlock text-center">
-                                        <h2>Solution</h2>
-                                        <div class="projectList text-center">
-                                            <div class="imgWrp">
-                                                <img class="mx-auto"
-                                                src=" {{ asset('assets-new/solution/'.$solution->file)}}" width="100%"
-                                                height="128px">
-                                            </div>
-                                            
-                                            <p class="redText" title='{{  $solution->name }}' style="color:#00A14C">{{ $solution->name }}</p>
-                                        </div>
-                                        <div class="projectList">
-                                            <p class="date">{{ date('d/m/Y', strtotime($solution->created_at))}}</p>
-                                            <ul class="space">&nbsp;&nbsp;&nbsp;&nbsp;</ul>
-                                        </div>
-                                    </div>
-                                </div>
+                            </div>
+                        </div>
+                        <div class="questionWrap">
+                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
+                                tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
+                                nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+                                Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
+                            
+
+                            <h2>Validation Question</h2>
+                            <br>
+                                <form id="validation_form">
+                                            <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                                            <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
+                                            <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
+                                            <input type="hidden" name="project_id" value="{{ $project_id }}">
+                                            <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
+                                            <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
+                                            <input type="hidden" name="name" id="name" value="People_in_Project"> 
+                                            <ul class="validate_que">
+                                                <h5>Have you separated the problem from yourself?</h5>
+                                                <li><label><input  type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, I have separated the problem from myself</label></li>
+                                                <li><label><input  type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>No, I haven't separated the problem from myself</label></li>
+                                                <br>
+                                                <h5>Have you separated the problem from the people?</h5>
+                                                <li><label><input  type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} value="1" {{ (!$VerificationPermission) ? 'disabled':'' }} >Yes, I have separated the problem from the people</label></li>
+                                                <li><label><input  type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}  value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>No, I haven’t separated the problem from the people</label></li>
+                                            </ul>
+                                            @if($VerificationPermission)
+                                    <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
+                                    @endif
+                                </form>
+                            
                         </div>
                     </div>
-                    <div class="questionWrap">
-                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
-                            tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
-                            nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
-                            Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
-                        
-
-                        <h2>Validation Question</h2>
-                        <br>
-                            <form id="validation_form">
-                                        <input type="hidden" name="id" value="{{ @$verification->id }}"> 
-                                        <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}"> 
-                                        <input type="hidden" name="problem_id" id="problem_id" value="{{ $problem_id }}">
-                                        <input type="hidden" name="project_id" value="{{ $project_id }}">
-                                        <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
-                                        <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
-                                        <input type="hidden" name="name" id="name" value="People_in_Project"> 
-                                        <ul class="validate_que">
-                                            <h5>Have you separated the problem from yourself?</h5>
-                                            <li><label><input  type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 1) ? 'checked' : '' }} value="1" {{ (!$VerificationPermission) ? 'disabled':'' }}>Yes, I have separated the problem from myself</label></li>
-                                            <li><label><input  type="radio" name="validation_1" {{ (@$verification->validations->validation_1 == 2) ? 'checked' : '' }} value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>No, I haven't separated the problem from myself</label></li>
-                                            <br>
-                                            <h5>Have you separated the problem from the people?</h5>
-                                            <li><label><input  type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 1) ? 'checked' : '' }} value="1" {{ (!$VerificationPermission) ? 'disabled':'' }} >Yes, I have separated the problem from the people</label></li>
-                                            <li><label><input  type="radio" name="validation_2" {{ (@$verification->validations->validation_2 == 2) ? 'checked' : '' }}  value="2" {{ (!$VerificationPermission) ? 'disabled':'' }}>No, I haven’t separated the problem from the people</label></li>
-                                        </ul>
-                                        @if($VerificationPermission)
-                                <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
-                                @endif
-                            </form>
-                        
-                    </div>
-                </div>
-                <!-- End -->
-                @else
-                @if($VerificationPermission)
-                    <div class="col-sm-4">
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
-                    </div>
-                @endif
-                @endif
-                @endif
+                    <!-- End -->
+                    @else
+                    @if($VerificationPermission)
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#commonSolutionModal" id="">+ Identify</button>
+                        </div>
+                    @endif
+                    @endif
+                    @endif
                 
+            </div>
+            <div class="row pt-5">
+                @include('adult.quiz.quiz-component' , [$project->id , $pageId , $pageType])
             </div>
         </div>
     </div>

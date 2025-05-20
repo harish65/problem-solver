@@ -70,7 +70,7 @@ class QuizController extends BaseController
             if($quiz->save()){
                 return redirect()->route('quiz', ['id' => Crypt::encrypt($projectID)])->with('success', 'Quiz added successfully.');
             }
-    } catch (\Exception $e) { echo $e->getMessage();die;
+    } catch (\Exception $e) { 
         return back()->with('error', 'An unexpected error occurred.');
     }
        
@@ -83,7 +83,61 @@ class QuizController extends BaseController
         return view('quiz.edit' , ['quiz'=>$quiz , 'quizTypes' => $quizTypes]);
     }
 
-    
+    public function getQuiz(Request $request)
+    {
+
+        try {
+            $userId = (isset($request->user_id))?Crypt::decrypt($request->user_id):null;
+            $projectId = null;
+            $pageType = $request->page_type ?? null;
+            $pageId = $request->page_id ?? null;
+
+            if ($request->project_id) {
+                $projectId = Crypt::decrypt($request->project_id);
+            }
+
+            if(isset($userId)){
+                $quiz = Quiz::where([
+                'project_id' => $projectId,
+                'page_id' => $pageId,
+                'page_type' => $pageType,
+                'user_id' => Auth::user()->id,
+            ])->first();
+            }else{            
+                $quiz = Quiz::where(['project_id'=>$projectId , 'page_id'=>$pageId , 'page_type'=> $pageType])->first();
+            }
+
+            if(isset($quiz)){
+
+                $userQuiz = DB::table('quiz_data')
+                    ->where([
+                        'id' => $userId,
+                        'quiz_id' => $quiz->id,
+                    ])
+                    ->first();
+
+                $isPermitted = Quiz::isProjectQuizEditable($projectId);
+                $isProjectOwner = $request->is_owner??false;
+                $submitted = $request->submitted ?? false;
+                $is_permitted = $request->is_permitted ?? false;
+                $questionIndex =0;
+
+                return response()->json([
+                    'success' => true,
+                    'html' => view('quiz.components.quiz', compact(
+                        'quiz', 'userQuiz', 'isPermitted', 'isProjectOwner', 'submitted', 'questionIndex', 'userId'
+                    ))->render()
+                ]);
+            }else{
+                return response()->json(['success' => false, 'error' => 'Quiz not found.'], 404);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'Failed to load quiz.'], 500);
+        }
+    }
+
+
     public function update(Request $request, $id)
     {
         try {
@@ -135,7 +189,6 @@ class QuizController extends BaseController
 
     public function saveQuizData(Request $request){
                 try {
-                    // echo '<pre>';print_r($request->all());die;
                     $validator = Validator::make($request->all(),[
                         'quiz_data' => 'required|array',
                         'project_id' => 'required|integer',

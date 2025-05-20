@@ -27,7 +27,9 @@
         </p>
         
     </div>
-    
+     <div class="row pt-5">
+            @include('adult.quiz.quiz-component' , [$project->id , $pageId , $pageType])
+        </div>
                 <?php
                     $parameters = ['project_id' => $project_id , 'problem_id'=> $problem_id , 'solution_id' => $solution_id];
                     $parameter =  Crypt::encrypt($parameters); 

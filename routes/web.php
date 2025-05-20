@@ -14,6 +14,7 @@ use App\Http\Controllers\Adult\ProblemController as AdultProblemController;
 use App\Http\Controllers\Adult\SolutionController as AdultSolutionController;
 use App\Http\Controllers\Adult\RelationshipController as AdultRelationshipController;
 use App\Http\Controllers\Adult\ProjectShareController as ProjectShareController;
+use App\Http\Controllers\QuizController;
 
 /*
 |--------------------------------------------------------------------------
@@ -316,3 +317,5 @@ Route::post("/update-quiz/{id}", [\App\Http\Controllers\QuizController::class, '
 Route::delete("/delete-quiz/{id}", [\App\Http\Controllers\QuizController::class, 'destroy'])-> name("delete-quiz");
 
 Route::post("add-quiz-data", [\App\Http\Controllers\QuizController::class, 'saveQuizData'])-> name("add-quiz-data");
+Route::post('/get-quiz', [QuizController::class, 'getQuiz'])->name('get-quiz');
+

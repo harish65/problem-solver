@@ -160,10 +160,11 @@ class VerificationController extends BaseController
                     ->where($customers_condition)
                     ->get();
         //project shared
-                
+        $pageType = 'verification';
+        $pageId = $type;
+
         switch ($type) {
             case 1:
-                  
                 $transitionPhrase = DB::table('verification_type_texts')->where('verification_type_id' , 1)->first();
                 return view("adult.verification.view.vocabulary-content", [
                     "types" => $types,
@@ -176,7 +177,10 @@ class VerificationController extends BaseController
                     "solution_id" => $solution_id,
                     "Solution_function" => $Solution_function,
                     "verificationTypeText" => $verifiationTypeText,
-                    "entity" => $entity,'transitionPhrase' => $transitionPhrase
+                    "entity" => $entity,'transitionPhrase' => $transitionPhrase,
+                    "pageId" => $pageId,
+                    "pageType" => $pageType,
+                    "project" => $project,
                     
                 ]);
                 break;
@@ -194,7 +198,10 @@ class VerificationController extends BaseController
                     "solution_id" => $solution_id,
                     "Solution_function" => $Solution_function,
                     "verificationTypeText" => $verifiationTypeText,
-                    "entity" => $entity,'transitionPhrase' => $transitionPhrase
+                    "entity" => $entity,'transitionPhrase' => $transitionPhrase,
+                    "pageId" => $pageId,
+                    "pageType" => $pageType,
+                    "project" => $project,
                 ]);
                 break;
             case 3:
@@ -219,7 +226,10 @@ class VerificationController extends BaseController
                         "verifiationTypeText",
                         "entity",
                         "solutionTypes",
-                        "beforeAfter"
+                        "beforeAfter",
+                        "project",
+                        "pageType" ,
+                        "pageId"
                     )
                 );
                 break;
@@ -252,7 +262,10 @@ class VerificationController extends BaseController
                         "solution_id",
                         "Solution_function",
                         "verifiationTypeText",
-                        "entity" , "custommers" , "steps"
+                        "entity" , "custommers" , "steps",
+                        "project",
+                        "pageType" ,
+                        "pageId"
                     )
                 );
                 break;
@@ -273,7 +286,10 @@ class VerificationController extends BaseController
                         "Solution_function",
                         "verifiationTypeText",
                         "entity",
-                        "timeVerifications"
+                        "timeVerifications",
+                        "project",
+                        "pageType" ,
+                        "pageId"
                     )
                 );
                 break;
@@ -302,7 +318,10 @@ class VerificationController extends BaseController
                         "Solution_function",
                         "verifiationTypeText",
                         "entity",
-                        "allVarifications" , 'pastAndPresentTime'
+                        "allVarifications" , 'pastAndPresentTime',
+                        "project",
+                        "pageType" ,
+                        "pageId"
                     )
                 );
                 break;
@@ -342,7 +361,10 @@ class VerificationController extends BaseController
                         "givenSet",
                         "entities",
                         "entitiesAvailable",                        
-                        "allVarifications" , "content" , 'principle_identifications'
+                        "allVarifications" , "content" , 'principle_identifications',
+                        "project",
+                        "pageType" ,
+                        "pageId"
                     )
                 );
                 break;
@@ -375,7 +397,10 @@ class VerificationController extends BaseController
                         "solution_id",
                         "Solution_function",
                         "verifiationTypeText",
-                        "custommers","transitionPhrase","solutionTimeLocationOne"
+                        "custommers","transitionPhrase","solutionTimeLocationOne",
+                        "project",
+                        "pageType" ,
+                        "pageId"
                     )
                 );
                 break;
@@ -409,7 +434,10 @@ class VerificationController extends BaseController
                         "solution_id",
                         "Solution_function",
                         "verifiationTypeText",
-                        "custommers" , "transitionPhrase", "solutionTimeLocationTwo"
+                        "custommers" , "transitionPhrase", "solutionTimeLocationTwo",
+                        "project",
+                        "pageType" ,
+                        "pageId"
                     )
                 );
                 break;
@@ -427,7 +455,10 @@ class VerificationController extends BaseController
                         "solution_id",
                         "Solution_function",
                         "verifiationTypeText",
-                        "custommers"
+                        "custommers",
+                        "project",
+                        "pageType" ,
+                        "pageId"
                     )
                 );
                 break;
@@ -466,7 +497,10 @@ class VerificationController extends BaseController
                         "solution_id",
                         "Solution_function",
                         "verifiationTypeText",
-                        "custommers" , "communications"
+                        "custommers" , "communications",
+                        "project",
+                        "pageType" ,
+                        "pageId"
                     )
                 );
                 break;
@@ -508,7 +542,10 @@ class VerificationController extends BaseController
                         "solution_id",
                         "Solution_function",
                         "verifiationTypeText",
-                        "users" , "custommers"
+                        "users" , "custommers",
+                        "project",
+                        "pageType" ,
+                        "pageId"
                     )
                 );
                 break;
@@ -539,7 +576,10 @@ class VerificationController extends BaseController
                         "solution_id",
                         "Solution_function",
                         "verifiationTypeText",
-                        "entities"
+                        "entities",
+                        "project",
+                        "pageType" ,
+                        "pageId"
                     )
                 );
                 break;
@@ -579,7 +619,10 @@ class VerificationController extends BaseController
                         "verifiationTypeText",
                         "allVarifications",
                         "custommers" , 
-                        "content"
+                        "content",
+                        "project",
+                        "pageType" ,
+                        "pageId"
                     )
                 );
                 break;
@@ -618,7 +661,10 @@ class VerificationController extends BaseController
                         "verifiationTypeText",
                         "allVarifications",
                         "custommers",
-                        'problemDevelopment'
+                        'problemDevelopment',
+                        "project",
+                        "pageType" ,
+                        "pageId"
                     )
                 );
                 break;
@@ -667,7 +713,10 @@ class VerificationController extends BaseController
                             "allVarifications",
                             "custommers",
                             'userID',
-                            'errorcorrection','problemDevelopment'
+                            'errorcorrection','problemDevelopment',
+                            "project",
+                            "pageType" ,
+                            "pageId"
                         )
                     );
                     break;
@@ -713,7 +762,10 @@ class VerificationController extends BaseController
                                 "allVarifications",
                                 // "users",
                                 // 'errorcorrection','problemDevelopment',
-                                'functionAud'
+                                'functionAud',
+                                "project",
+                                "pageType" ,
+                                "pageId"
                             )
                         );
                         break;
@@ -763,7 +815,10 @@ class VerificationController extends BaseController
                                     "verifiationTypeText",
                                     "allVarifications",
                                     "custommers",
-                                    'functionAud','people', 'functionApplied'
+                                    'functionAud','people', 'functionApplied',
+                                    "project",
+                                    "pageType" ,
+                                    "pageId"
                                 )
                             );
                             break;
@@ -808,7 +863,10 @@ class VerificationController extends BaseController
                                         "Solution_function",
                                         "verifiationTypeText",
                                         "allVarifications",
-                                        "custommers","people" , 'functionApplied'
+                                        "custommers","people" , 'functionApplied',
+                                        "project",
+                                        "pageType" ,
+                                        "pageId"
                                         
                                     )
                                 );
@@ -850,7 +908,10 @@ class VerificationController extends BaseController
                                             "solution_id",
                                             "Solution_function",
                                             "verifiationTypeText",
-                                            "problemPart" , "countPartionAproach"
+                                            "problemPart" , "countPartionAproach",
+                                            "project",
+                                            "pageType" ,
+                                            "pageId"
                                             
                                             
                                         )
@@ -890,7 +951,10 @@ class VerificationController extends BaseController
                                                 "solution",
                                                 "solution_id",
                                                 "Solution_function",
-                                                "verifiationTypeText","voiceApproach"
+                                                "verifiationTypeText","voiceApproach",
+                                                "project",
+                                                "pageType" ,
+                                                "pageId"
                                                
                                                 
                                                 
@@ -934,8 +998,10 @@ class VerificationController extends BaseController
                                                     "solution_id",
                                                     "Solution_function",
                                                     "verifiationTypeText",
-                                                    "allVarifications","problemreplaced"
-                                                    
+                                                    "allVarifications","problemreplaced",
+                                                    "project",
+                                                    "pageType" ,
+                                                    "pageId"
                                                     
                                                 )
                                             );
@@ -987,7 +1053,10 @@ class VerificationController extends BaseController
                                                         "solution",
                                                         "solution_id",
                                                         "Solution_function",
-                                                        "verifiationTypeText","entities","resources", "entity_used"
+                                                        "verifiationTypeText","entities","resources", "entity_used",
+                                                        "project",
+                                                        "pageType" ,
+                                                        "pageId"
                                                         
                                                     )
                                                 );
@@ -1044,7 +1113,10 @@ class VerificationController extends BaseController
                                                             "Solution_function",
                                                             "verifiationTypeText",
                                                             "allVarifications","entities" ,"entitiestbl","custommers" , "entity_used",
-                                                            "principle_identifications"
+                                                            "principle_identifications",
+                                                            "project",
+                                                            "pageType" ,
+                                                            "pageId"
                                                             
                                                             
                                                         )
@@ -1090,7 +1162,10 @@ class VerificationController extends BaseController
                                                                     "solution",
                                                                     "solution_id",
                                                                     "Solution_function",
-                                                                    "verifiationTypeText","entiesBehind"
+                                                                    "verifiationTypeText","entiesBehind",
+                                                                    "project",
+                                                                    "pageType" ,
+                                                                    "pageId"
                                                                 )
                                                             );
                                                             break;
@@ -1112,7 +1187,10 @@ class VerificationController extends BaseController
                                                                         "solution",
                                                                         "solution_id",
                                                                         "Solution_function",
-                                                                        "verifiationTypeText","principle_identifications" , 'mother_nature'
+                                                                        "verifiationTypeText","principle_identifications" , 'mother_nature',
+                                                                        "project",
+                                                                        "pageType" ,
+                                                                        "pageId"
                                                                     )
                                                                 );
                                                                 break;
@@ -1133,7 +1211,11 @@ class VerificationController extends BaseController
                                                                             "solution",
                                                                             "solution_id",
                                                                             "Solution_function",
-                                                                            "verifiationTypeText",'mevsyou','custommers','user_id'
+                                                                            "verifiationTypeText",'mevsyou','custommers','user_id',
+                                                                            "project",
+                                                                            "pageType" ,
+                                                                            "pageId"
+
                                                                         )
                                                                     );
                                                                     break;
@@ -1153,7 +1235,10 @@ class VerificationController extends BaseController
                                                                                 "solution_id",
                                                                                 "Solution_function",
                                                                                 "verifiationTypeText",
-                                                                                "custommers","taking_ad"
+                                                                                "custommers","taking_ad",
+                                                                                "project",
+                                                                                "pageType" ,
+                                                                                "pageId"
                                                                                 
                                                                                 
                                                                             )
@@ -1177,7 +1262,10 @@ class VerificationController extends BaseController
                                                                                 "solution_id",
                                                                                 "Solution_function",
                                                                                 "verifiationTypeText",
-                                                                                "users" , "custommers"
+                                                                                "users" , "custommers",
+                                                                                "project",
+                                                                                "pageType" ,
+                                                                                "pageId"
                                                                                
                                                                                 
                                                                                 
@@ -1202,7 +1290,10 @@ class VerificationController extends BaseController
                                                                                 "solution_id",
                                                                                 "Solution_function",
                                                                                 "verifiationTypeText",
-                                                                                "problrmAtLocatios" , 'custommers'
+                                                                                "problrmAtLocatios" , 'custommers',
+                                                                                "project",
+                                                                                "pageType" ,
+                                                                                "pageId"
                                                                                 
                                                                                 
                                                                             )
@@ -1225,7 +1316,10 @@ class VerificationController extends BaseController
                                                                                 "solution_id",
                                                                                 "Solution_function",
                                                                                 "verifiationTypeText",
-                                                                                "function_at_location" , "custommers"
+                                                                                "function_at_location" , "custommers",
+                                                                                "project",
+                                                                                "pageType" ,
+                                                                                "pageId"
                                                                                 
                                                                                 
                                                                             )

@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Problem;
 use Illuminate\Support\Facades\Crypt;
 use App\Http\Controllers\BaseController as BaseController;
-use Auth;
-use DB;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ProblemController extends BaseController
 {
@@ -47,9 +47,12 @@ class ProblemController extends BaseController
             if(is_null($problem) && $problem_id !== null){
                 $problem = DB::table('problems')->where('id' , $problem_id)->first();   
             }
+
+            $pageId = 1001;
+            $pageType = 'problem';
     //    echo '<pre>';print_r($problem);exit;
     //    
-        return view ('adult.problem.problem',compact('problem','cat','projectID' , 'project' ,'problem_id' , 'selectedSingleProblem'));
+        return view ('adult.problem.problem',compact('problem','cat','projectID' , 'project' ,'problem_id' , 'selectedSingleProblem', 'pageType', 'pageId'));
         
     }
 

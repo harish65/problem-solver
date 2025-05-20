@@ -55,7 +55,7 @@ class Quiz extends Model
         return false;
     }
 
-    public static function getQuisUsers($project_id)
+    public static function getQuisUsers($project_id, $quiz_id)
     {
         return DB::table('quiz_data')
             ->join('users', 'quiz_data.user_id', '=', 'users.id') // Join quiz_data with users
@@ -67,6 +67,7 @@ class Quiz extends Model
                 'quiz_data.*',
             )
             ->where('quiz_data.project_id', $project_id) // Filter by project
+            ->where('quiz_data.quiz_id', $quiz_id) // Filter by project
             ->get();
     }
 }

@@ -61,7 +61,7 @@ Route::middleware('auth:api')->group( function () {
     Route::post("addVocabularyEntity", [\App\Http\Controllers\Adult\VerificationController::class, 'addVocabularyEntity'])-> name("addVocabularyEntity");
     Route::post("deleteVocabulary", [\App\Http\Controllers\Adult\VerificationController::class, 'deleteVocabulary'])-> name("deleteVocabulary");
     //Identify Vocab Verification
-    Route::post("store-voucab-verification", [\App\Http\Controllers\Adult\ApiVerificationController::class, 'AddverificationVocablary'])->name("store-voucab-verification");
+    Route::post("store-voucab-verification", [\App\Http\Controllers\API\ApiVerificationController::class, 'AddverificationVocablary'])->name("store-voucab-verification");
     //Voucab ,
     Route::post("store-verification", [\App\Http\Controllers\API\ApiVerificationController::class, 'store'])-> name("store-verification");
     //Verification Entity Routes
