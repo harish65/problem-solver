@@ -134,7 +134,7 @@
 
         
         <div class="modal-header">
-          <h4 class="modal-title">Add new proaaject</h4>
+          <h4 class="modal-title">Add new project</h4>
           
         </div>
         

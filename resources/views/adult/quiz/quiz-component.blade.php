@@ -12,33 +12,40 @@
     $questionIndex = 0;
 @endphp 
     {{-- <div class="alert alert-primary" role="alert">No Quiz available for this page!</div> --}}
-@if($project->user_id == Auth::user()->id)
-    <div class="row mb-4">
-        <div class="col-12 d-flex">
-            <h3 class="mb-0">Quiz Users</h3>
-            <div class="col-auto">
-                @php 
-                    $users = \App\Models\Quiz::getQuisUsers($project->id, $quiz->id);
-                @endphp
-                <select class="form-select form-select-lg mb-3" id="view_quiz_users" >
-                    <option selected="true" disabled="disabled">Please Select...</option>
-                    @foreach ($users as $user)
-                        <option value="{{ Crypt::encrypt($user->id) }}" {{ ($user->id === $quiz?->user_id) ?  'selected':''}}>{{ $user->user_name }}</option>
-                    @endforeach
-                </select>
+
+    @if(isset($quiz->id) && !empty($quiz->id))
+        <div class="row mb-4">
+            <div class="col-12 d-flex">
+                <h3 class="mb-0">Quiz Users</h3>
+                <div class="col-auto">
+                    @php 
+                        $users = \App\Models\Quiz::getQuisUsers($project->id, $quiz->id);
+                    @endphp
+                    <select class="form-select form-select-lg mb-3" id="view_quiz_users" >
+                        <option selected="true" disabled="disabled">Please Select...</option>
+                        @foreach ($users as $user)
+                            <option value="{{ Crypt::encrypt($user->id) }}" {{ ($user->id === $quiz?->user_id) ?  'selected':''}}>{{ $user->user_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
         </div>
-    </div>
-@endif
-<div id="quizContent" class="mb-5">
-    <div class="alert alert-info" role="alert">
-        @if(isset($users) && is_null($users) && ($project->user_id == Auth::user()->id))
-            Users didn't Submitted the Quiz
-        @elseif(isset($users))
-            No user selected
-        @endif
-    </div>
-</div>
+        
+        <div id="quizContent" class="mb-5">
+            <div class="alert alert-info" role="alert">
+                @if(isset($users) && is_null($users) && ($project->user_id == Auth::user()->id))
+                    Users didn't Submitted the Quiz
+                @elseif(isset($users))
+                    No user selected
+                @endif
+            </div>
+        </div>
+       
+    @endif
+    
+
+
+
 
 
 @push('sub_scripts')

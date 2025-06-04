@@ -67,7 +67,7 @@
         </div>
         @if(($can_edit != null && $can_edit->editable_solution_func) || ($project->user_id == Auth::user()->id && $project->shared == 0))
         <div class=" col-sm-3 mb-3">
-            <button type="button" class="btn btn-success" id="saveValidations" onclick='saveValidations()'>Save Validations</button>
+            <button type="button" class="btn btn-success" id="" onclick='saveValidations()'>Save Validations</button>
         </div>
         
         @endif
