@@ -64,15 +64,13 @@ $types      = \App\Models\VerificationType::all();
         <div id="quizContentArea">
           @include('quiz.components.mcq')
           <div class="text-end mb-3">
-  <button type="button" class="btn btn-outline-success" id="addQuestionBtn">
-    <i class="fa fa-plus-circle"></i> Add Question
-  </button>
+  
 </div>
 
         </div>
         <!-- Submit Button -->
         <div class="text-end mt-4">
-          <button type="submit" class="btn btn-success"  id="btnSave">
+          <button type="submit" class="btn btn-success"  id="btnSave" disabled>
             <i class="bi bi-plus-circle me-1"></i> Submit Quiz
           </button>
         </div>
@@ -118,16 +116,16 @@ function createQuestionBlock(index) {
 
       <div class="mb-3">
         <label class="form-label">Question Title</label>
-        <input type="text" class="form-control question-title" name="quiz_data[mcq][question_${index}]" placeholder="Enter question" />
+        <input type="text" class="form-control question-title" name="quiz_data[mcq][question_${index}]" placeholder="Enter question" required/>
       </div>
 
       <div class="options mb-3">
         ${[1,2,3,4].map(i => `
           <div class="input-group mb-2 option-input">
             <div class="input-group-text">
-              <input type="radio" name="quiz_data[mcq][correct-${index}]" value="${i - 1}" />
+              <input type="radio" name="quiz_data[mcq][correct-${index}]" value="${i - 1}" required/>
             </div>
-            <input type="text" class="form-control option-text" name="quiz_data[mcq][${index}_mcq_${i}]" placeholder="Option ${i}" />
+            <input type="text" class="form-control option-text" name="quiz_data[mcq][${index}_mcq_${i}]" placeholder="Option ${i}" required/>
           </div>
         `).join('')}
         <button type="button" class="btn btn-sm btn-outline-primary add-option">+ Add Option</button>
@@ -185,14 +183,60 @@ $(document).ready(function () {
     
     const block = createQuestionBlock(maxQuestions - 1);
     $("#quizForm").append(block);
+    $('#btnSave').prop('disabled', true);
+    $("#nextBtnMcq").trigger('click');
+
   });
   $("#nextBtnMcq").click(function () {
+
+
+    const block = $(`.question-block[data-index="${currentQuestionIndex}"]`);
+    
+    const questionInput = block.find('.question-title');
+    if (!questionInput.val().trim()) {
+        questionInput.focus();
+        questionInput[0].setCustomValidity("Please enter the question title.");
+        questionInput[0].reportValidity();
+        return;
+    } else {
+        questionInput[0].setCustomValidity("");
+    }
+
+    const options = block.find('.option-text');
+    let validOptions = 0;
+    let emptyOption = false;
+    options.each(function () {
+        if ($(this).val().trim() !== '') {
+            validOptions++;
+        } else {
+            emptyOption = true;
+        }
+    });
+
+    if (validOptions < 4 || emptyOption) {
+        alert('Please enter valid options and make sure none are empty.');
+        return;
+    }
+
+    const selectedRadio = block.find(`input[type="radio"]:checked`).length;
+    if (selectedRadio === 0) {
+        alert('Please select the correct answer.');
+        return;
+    }
+
+
+
     saveCurrentQuestion(currentQuestionIndex);
     if (currentQuestionIndex < maxQuestions - 1) {
       currentQuestionIndex++;
       showQuestion(currentQuestionIndex);
       restoreQuestion(currentQuestionIndex);
     }
+    if (currentQuestionIndex === maxQuestions - 1) {
+            $('#btnSave').prop('disabled', false);
+        } else {
+            $('#btnSave').prop('disabled', true);
+        }
   });
 
   $("#prevBtnMcq").click(function () {
@@ -202,6 +246,11 @@ $(document).ready(function () {
       showQuestion(currentQuestionIndex);
       restoreQuestion(currentQuestionIndex);
     }
+    if (currentQuestionIndex === maxQuestions - 1) {
+            $('#btnSave').prop('disabled', false);
+        } else {
+            $('#btnSave').prop('disabled', true);
+        }
   });
 
   $(document).on('click', '.add-option', function () {

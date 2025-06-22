@@ -156,6 +156,7 @@
     function showQuestion(index) {
         $('.question-block_student').removeClass('active');
         $(`.question-block_student[data-index="${index}"]`).addClass('active');
+        
     }
 
     function updateQuestionIndex(index){
