@@ -49,7 +49,7 @@
                                                         @if($isPermitted)
                                                             <div class="input-group-text">
                                                                 <input type="radio" name="quiz_data[mcq][correct-{{ $questionIndex }}]"
-                                                                    value="{{ $i - 1 }}" {{ $isProjectOwner && $isChecked ? 'checked' : '' }}>
+                                                                    value="{{ $i - 1 }}" {{ $isProjectOwner && $isChecked ? 'checked' : '' }} required>
                                                             </div>
                                                             <input type="text" name="quiz_data[mcq][{{ $questionIndex }}_mcq_{{ $i }}]" readonly
                                                                 class="form-control" value="{{ $quizData[$optKey] ?? '' }}"

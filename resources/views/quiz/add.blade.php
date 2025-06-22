@@ -63,6 +63,12 @@ $types      = \App\Models\VerificationType::all();
         </div>
         <div id="quizContentArea">
           @include('quiz.components.mcq')
+          <div class="text-end mb-3">
+  <button type="button" class="btn btn-outline-success" id="addQuestionBtn">
+    <i class="fa fa-plus-circle"></i> Add Question
+  </button>
+</div>
+
         </div>
         <!-- Submit Button -->
         <div class="text-end mt-4">
@@ -101,7 +107,7 @@ $types      = \App\Models\VerificationType::all();
     });
 </script>
 <script>
-let maxQuestions = 5;
+let maxQuestions = 1;
 let currentQuestionIndex = 0;
 let questions = [];
 
@@ -136,6 +142,7 @@ function showQuestion(index) {
   $(`.question-block[data-index="${index}"]`).addClass("active");
 }
 
+
 function saveCurrentQuestion(index) {
   
   const block = $(`.question-block[data-index="${index}"]`);
@@ -147,6 +154,7 @@ function saveCurrentQuestion(index) {
   });
   const answer = block.find(`input[type="radio"]:checked`).val();
   questions[index] = { question, options, answer };
+  console.log(questions);
 }
 
 function restoreQuestion(index) {
@@ -161,10 +169,10 @@ function restoreQuestion(index) {
 }
 
 function init() { 
-  for (let i = 0; i < maxQuestions; i++) {
-    const block = createQuestionBlock(i);
+  // for (let i = 0; i < maxQuestions; i++) {
+    const block = createQuestionBlock(0);
     $("#quizForm").append(block);
-  }
+  // }
   showQuestion(currentQuestionIndex);
   restoreQuestion(currentQuestionIndex);
 }
@@ -172,6 +180,12 @@ function init() {
 $(document).ready(function () {
   init();
 
+  $('#addQuestionBtn').click(function () {
+    maxQuestions++;
+    
+    const block = createQuestionBlock(maxQuestions - 1);
+    $("#quizForm").append(block);
+  });
   $("#nextBtnMcq").click(function () {
     saveCurrentQuestion(currentQuestionIndex);
     if (currentQuestionIndex < maxQuestions - 1) {
