@@ -57,7 +57,6 @@ class QuizController extends BaseController
             if($checkQuisExist){
                 return back()->with('error', 'Quiz already exists for this page.');
             }
-           
             $quiz =  new Quiz();
             $quiz->user_id = Auth::user()->id;
             $quiz->project_id = $projectID;
@@ -92,6 +91,7 @@ class QuizController extends BaseController
             $pageType = $request->page_type ?? null;
             $pageId = $request->page_id ?? null;
 
+
             if ($request->project_id) {
                 $projectId = Crypt::decrypt($request->project_id);
             }
@@ -109,18 +109,25 @@ class QuizController extends BaseController
 
             if(isset($quiz)){
 
-                $userQuiz = DB::table('quiz_data')
-                    ->where([
-                        'id' => $userId,
-                        'quiz_id' => $quiz->id,
-                    ])
-                    ->first();
-
+                $alreadySubmitted = false;
                 $isPermitted = Quiz::isProjectQuizEditable($projectId);
                 $isProjectOwner = $request->is_owner??false;
                 $submitted = $request->submitted ?? false;
                 $is_permitted = $request->is_permitted ?? false;
                 $questionIndex =0;
+                $editUserId = null;
+                if(!isset($userId) && !$isProjectOwner){
+                    $editUserId = Auth::user()->id;
+                    
+                }
+
+                $userQuiz = DB::table('quiz_data')
+                    ->where([
+                        'user_id' => $editUserId?$editUserId:$userId,
+                        'quiz_id' => $quiz->id,
+                    ])
+                    ->first();
+
 
                 return response()->json([
                     'success' => true,
@@ -133,7 +140,7 @@ class QuizController extends BaseController
             }
 
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => 'Failed to load quiz.'], 500);
+            return response()->json(['success' => false, 'error' => 'Failed to load quiz.' . $e->getMessage()], 500);
         }
     }
 
@@ -187,30 +194,52 @@ class QuizController extends BaseController
     }
 
 
-    public function saveQuizData(Request $request){
-                try {
-                    $validator = Validator::make($request->all(),[
-                        'quiz_data' => 'required|array',
-                        'project_id' => 'required|integer',
-                    ]);
-                if ($validator->fails()) {                        
-                        return back()->with('errors', $validator->errors());
-                    }
-                    $insert = DB::table("quiz_data")->updateOrInsert(
-                        ["id" => $request->id],
-                        [
-                            "user_id"=> Auth::user()->id,
-                            "quiz_id" => $request->quiz_id,
-                            "project_id" => $request->project_id,
-                            "quiz_data" => json_encode($request->quiz_data),
-                            "created_at" => now()
-                        ]
-                    );
-                    return redirect()->back()->with('success', 'Quiz saved successfully.');
-                    
-            } catch (\Exception $e) { echo $e->getMessage();die;
-                return back()->with('error', 'An unexpected error occurred.');
+    public function saveQuizData(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(),[
+                'quiz_data' => 'required|array',
+                'project_id' => 'required|integer',
+            ]);
+        if ($validator->fails()) {                        
+            return back()->with('errors', $validator->errors());
+        }
+
+        $quizData = $request->input('quiz_data.exptoexp', []);
+        if(isset($quizData)){
+            foreach ($quizData as $key => $item) {
+                $answer = trim(strip_tags($item['exptoexp_answer'] ?? ''));
+                if (empty($answer)) {
+                    return back()->withErrors([
+                        "quiz_data.exptoexp.{$key}.exptoexp_answer" => "Answer for Question " . ($key + 1) . " is required."
+                    ])->withInput();
+                }
             }
+        }
+
+
+        $quizData = $request->input('quiz_data.exp', null);
+        if (isset($quizData) && (!isset($quizData['answer']) || trim(strip_tags($quizData['answer'])) === '')) {
+            return back()->withErrors([
+                "quiz_data.exp.answer" => "Answer for Question is required."
+            ])->withInput();
+        }
+
+        $insert = DB::table("quiz_data")->updateOrInsert(
+            ["id" => $request->id],
+            [
+                "user_id"=> Auth::user()->id,
+                "quiz_id" => $request->quiz_id,
+                "project_id" => $request->project_id,
+                "quiz_data" => json_encode($request->quiz_data),
+                "created_at" => now()
+            ]
+        );
+        return redirect()->back()->with('success', 'Quiz saved successfully.');
+        
+        } catch (\Exception $e) { echo $e->getMessage();die;
+            return back()->with('error', 'An unexpected error occurred.');
+        }
     }
     
 }

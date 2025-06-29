@@ -21,6 +21,7 @@
 <div class="card p-3 quizformborder d-none" id="qtype3">
     <label class="form-label">Explanation And Explanation</label>
     <div id="multiEditorContainer"></div>
+            <button type="button" id="addEditorBtn" class="btn btn-primary mb-3">Add More</button>
 </div>
 
 

@@ -316,6 +316,6 @@ Route::get("/edit-quiz/{id}", [\App\Http\Controllers\QuizController::class, 'edi
 Route::post("/update-quiz/{id}", [\App\Http\Controllers\QuizController::class, 'update'])-> name("update-quiz");
 Route::delete("/delete-quiz/{id}", [\App\Http\Controllers\QuizController::class, 'destroy'])-> name("delete-quiz");
 
-Route::post("add-quiz-data", [\App\Http\Controllers\QuizController::class, 'saveQuizData'])-> name("add-quiz-data");
+Route::post("/add-quiz-data", [\App\Http\Controllers\QuizController::class, 'saveQuizData'])-> name("add-quiz-data");
 Route::post('/get-quiz', [QuizController::class, 'getQuiz'])->name('get-quiz');
 

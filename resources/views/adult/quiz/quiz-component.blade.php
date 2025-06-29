@@ -23,7 +23,7 @@
                 <select class="form-select form-select-lg mb-3" id="view_quiz_users" >
                     <option selected="true" disabled="disabled">Please Select...</option>
                     @foreach ($users as $user)
-                        <option value="{{ Crypt::encrypt($user->id) }}" {{ ($user->id === $quiz?->user_id) ?  'selected':''}}>{{ $user->user_name }}</option>
+                        <option value="{{ Crypt::encrypt($user->user_id) }}" {{ ($user->id === $quiz?->user_id) ?  'selected':''}}>{{ $user->user_name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -69,38 +69,42 @@
 
     }
 
-function loadQuizContent(userId, projectId, submitted, isProjectOwner, isPermitted) {
-   fetch("{{ route('get-quiz') }}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-        },
-        body: JSON.stringify({ user_id: userId, project_id: projectId, submitted: submitted, is_owner: isProjectOwner, is_permitted: isPermitted, page_type: pageType, page_id: pageId })
-    })
-    .then(response => response.json())  
-    .then(data => {
-        if (data.success) {
-            document.getElementById('quizContent').innerHTML = data.html;
-            if(!submitted && quizAvailable)
-                updateQuestionIndex(0);
-            // Init all 5 TinyMCE editors
-            tinymce.init({
-                selector: '#quiz_data_exp',
-                height: 250,
-                menubar: false,
-                plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat'
-            });
-        } else {
-            document.getElementById('quizContent').innerHTML =`<div class="alert alert-danger" role="alert">${data.error}</div>`;
-        }
-    })
-    .catch(error => {
-            document.getElementById('quizContent').innerHTML =`<div class="alert alert-danger" role="alert">${error}</div>`;
+    function loadQuizContent(userId, projectId, submitted, isProjectOwner, isPermitted) {
+    fetch("{{ route('get-quiz') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({ user_id: userId, project_id: projectId, submitted: submitted, is_owner: isProjectOwner, is_permitted: isPermitted, page_type: pageType, page_id: pageId })
+        })
+        .then(response => response.json())  
+        .then(data => {
+            if (data.success) {
+                document.getElementById('quizContent').innerHTML = data.html;
+                if(!submitted && quizAvailable)
+                    updateQuestionIndex(0);
+                // Init all 5 TinyMCE editors
+                tinymce.init({
+                    selector: 'textarea',
+                    height: 250,
+                    menubar: false,
+                    plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+                    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat'
+                });
+            } else {
+                document.getElementById('quizContent').innerHTML =`<div class="alert alert-danger" role="alert">${data.error}</div>`;
+            }
+        })
+        .catch(error => {
+                document.getElementById('quizContent').innerHTML =`<div class="alert alert-danger" role="alert">${error}</div>`;
 
-    });
-}
+        });
+    }
+
+
+              
+                
     
 </script>
 @endpush('sub_scripts')
