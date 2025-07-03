@@ -152,10 +152,12 @@
       
 @yield('scripts')
 <script>
+    
     let currentQuestionIndex = 0;
     function showQuestion(index) {
         $('.question-block_student').removeClass('active');
         $(`.question-block_student[data-index="${index}"]`).addClass('active');
+        
     }
 
     function updateQuestionIndex(index){
@@ -194,16 +196,32 @@
                 $(this).removeClass('border border-danger');
             }
         });
+
+        $('textarea[id^="quiz_data_exptoexp"]').each(function () {
+            const id = $(this).attr('id');
+            const editor = tinymce.get(id);
+
+            if (editor) {
+                const content = editor.getContent({ format: 'text' }).trim();
+
+                if (content === '') {
+                    toastr.error(`Please write reply for question ${parseInt(id.replace('quiz_data_exptoexp', '')) + 1}`);
+                    editor.focus();
+                    isValid = false;
+                    return false; // breaks .each() loop
+                }
+            }
+        });
+        
         return isValid;
     }
-    $('#submitBtnMcq').on('click', function (e) {
-        e.preventDefault(); // Prevent default form submission
+    $(document).on('submit', '#quizForm1', function (e) {
+        e.preventDefault();
         if (!validateQuestions()) {
             toastr.error("Please answer all questions before submitting.");
             return;
         }
-        // Optional: Submit form via AJAX or let native form submission handle it
-        $('#quizForm1').submit(); // Adjust if your form has a different structure
+        this.submit();
     });
 </script>
 @stack('sub_scripts')

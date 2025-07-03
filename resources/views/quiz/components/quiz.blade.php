@@ -1,5 +1,6 @@
 <div class="mb-5">
-    @if($quiz && !$submitted)
+    {{-- @if($quiz && !$submitted) --}}
+    @if($quiz && $isPermitted)
         @if($quiz->quiz_type == 1)
             @php
                 if(!isset($userId)){
@@ -9,7 +10,6 @@
                 }else{
                     $quizData = [];
                 }
-
             @endphp
             @if(isset($quizData))
                 <form id="quizForm1" method="post" action="{{ route('add-quiz-data') }}" enctype="multipart/form-data">
@@ -43,17 +43,23 @@
                                                     class="form-control" value="{{ $quizData["question_{$qIdx}"] ?? '' }}">
                                             </div>
                                             <div class="options">
-                                                @for($i = 1; $i <= 4; $i++) @php $optKey="{$qIdx}_mcq_{$i}" ;
-                                                    $isChecked=isset($correctAnswer) && $correctAnswer==$i - 1; @endphp 
+                                                @for($i = 1; $i <= 4; $i++) 
+                                                    @php 
+                                                        $optKey="{$qIdx}_mcq_{$i}" ;
+                                                        $isChecked=isset($correctAnswer) && $correctAnswer==$i - 1; 
+                                                    @endphp 
                                                     <div class="input-group mb-2">
                                                         @if($isPermitted)
-                                                            <div class="input-group-text">
-                                                                <input type="radio" name="quiz_data[mcq][correct-{{ $questionIndex }}]"
-                                                                    value="{{ $i - 1 }}" {{ $isProjectOwner && $isChecked ? 'checked' : '' }}>
-                                                            </div>
-                                                            <input type="text" name="quiz_data[mcq][{{ $questionIndex }}_mcq_{{ $i }}]" readonly
-                                                                class="form-control" value="{{ $quizData[$optKey] ?? '' }}"
-                                                                placeholder="Option {{ $i }}">
+                                                            @if(isset($userQuiz))
+                                                                <input type="hidden" name="id" value="{{ $userQuiz->id }}">
+                                                            @endif
+                                                                <div class="input-group-text">
+                                                                    <input type="radio" name="quiz_data[mcq][correct-{{ $questionIndex }}]"
+                                                                        value="{{ $i - 1 }}" {{ $isProjectOwner && $isChecked ? 'checked' : '' }} >
+                                                                </div>
+                                                                <input type="text" name="quiz_data[mcq][{{ $questionIndex }}_mcq_{{ $i }}]" readonly
+                                                                    class="form-control" value="{{ $quizData[$optKey] ?? '' }}"
+                                                                    placeholder="Option {{ $i }}">
                                                         @else
                                                             <div
                                                                 class="input-group-text {{ $isChecked ? 'border border-success bg-success' : '' }}">
@@ -90,7 +96,8 @@
 
         @elseif($quiz->quiz_type == 2)
             @php
-                if(!isset($userId)){
+
+                if(!isset($userId) && !isset($userQuiz)){
                     $quizData = json_decode($quiz->quiz_data, true)['exp'] ?? [];
                 }else if(isset($userQuiz)){
                     $quizData = json_decode($userQuiz->quiz_data, true)['exp'] ?? [];
@@ -112,12 +119,27 @@
                             <input type="hidden" name="is_owner" value="0">
                         @endif
                         
-                        <div class="jumbotron">{!! $quizData !!}</div>
                         @if($isProjectOwner)
-                        <h5>Reply</h5>
-                            <div class="jumbotron bg-light"> {!! $quizData !!}</div>
-                        @elseif(!$isProjectOwner)
-                        <textarea class="form-control" id="quiz_data_exp" name="quiz_data[exp]"></textarea>
+                            <div class="h4 text-danger">{!! $quizData['question'] !!}</div>
+                            <div class="jumbotron">{!! $quizData['answer'] !!}</div>
+                            
+                        @elseif(!$isProjectOwner && !isset($userQuiz))
+
+                            <div class="jumbotron">{!! $quizData !!}</div>
+                            <input type="hidden" name="quiz_data[exp][question]" value="{{ $quizData }}">
+                            <textarea class="form-control" id="quiz_data_exp" name="quiz_data[exp][answer]" ></textarea>
+                            <div class="text-end mt-4">
+                                <button type="submit" class="btn btn-success" id="submitBtnMcq">
+                                    <i class="bi bi-plus-circle me-1"></i> Submit Quiz
+                                </button>
+                            </div>
+                        @elseif(!$isProjectOwner && isset($userQuiz))
+                            <div class="jumbotron">{!! $quizData['question'] !!}</div>
+                            <input type="hidden" name="id" value="{{ $userQuiz->id }}">
+                            <input type="hidden" name="quiz_data[exp][question]" value="{{ $quizData['question'] }}">
+                            <textarea class="form-control" id="quiz_data_exp" name="quiz_data[exp][answer]" >
+                                {{ $quizData['answer'] }}
+                            </textarea>
                             <div class="text-end mt-4">
                                 <button type="submit" class="btn btn-success" id="submitBtnMcq">
                                     <i class="bi bi-plus-circle me-1"></i> Submit Quiz
@@ -130,12 +152,62 @@
 
           
         @elseif($quiz->quiz_type == 3)
+            @php
+                if(!isset($userId) && !isset($userQuiz)){
+                    $quizData = json_decode($quiz->quiz_data, true)['exptoexp'] ?? [];
+                }else if(isset($userQuiz)){
+                    $quizData = json_decode($userQuiz->quiz_data, true)['exptoexp'] ?? [];
+                }else{
+                    $quizData = [];
+                }
+
+            @endphp
             <div class="card p-3 quizformborder" id="qtype3">
-                <label class="form-label">Explanation And Explanation</label>
-                <div id="multiEditorContainer"></div>
+                <label class="form-label mb-5">Explanation And Explanation</label>
+                
+                <form id="quizForm1" name="quizForm1" method="post" action="{{ route('add-quiz-data') }}" enctype="multipart/form-data">
+                        @csrf
+
+                        @if(!$isProjectOwner)
+                            <input type="hidden" name="quiz_id" value="{{ $quiz->id }}">
+                            <input type="hidden" name="project_id" value="{{ $quiz->project_id }}">
+                            <input type="hidden" name="is_owner" value="0">
+                        @endif
+
+                        @foreach($quizData as $key => $value)
+
+                            @if($isProjectOwner)
+                                <div class="h4 text-danger">{!! $value['exptoexp_question'] !!}</div>
+                                <div class="jumbotron">{!! $value['exptoexp_answer'] !!}</div>
+                            @elseif(!$isProjectOwner && !isset($userQuiz))
+                                <div class="h4">{!! $value !!}</div>
+                                <input type="hidden" name="quiz_data[exptoexp][{{$key}}][exptoexp_question]" value="{{$value }}">
+                                <textarea class="form-control" id="quiz_data_exptoexp{{$key}}" name="quiz_data[exptoexp][{{$key}}][exptoexp_answer]" ></textarea>
+                            @elseif(!$isProjectOwner && isset($userQuiz))
+                            <input type="hidden" name="id" value="{{ $userQuiz->id }}">
+                                <div class="h4">{!! $value['exptoexp_question'] !!}</div>
+                                <input type="hidden" name="quiz_data[exptoexp][{{$key}}][exptoexp_question]" value="{{$value['exptoexp_question'] }}">
+                                <textarea class="form-control" id="quiz_data_exptoexp{{$key}}" name="quiz_data[exptoexp][{{$key}}][exptoexp_answer]" >
+                                    {{$value['exptoexp_answer'] }}
+                                </textarea>
+                            @endif
+                        <hr class="mt-5 mb-5" />
+
+                        @endforeach
+                        @if(!$isProjectOwner)
+                            <div class="text-end mt-4">
+                                <button type="submit" class="btn btn-success" id="submitBtnMcq">
+                                    <i class="bi bi-plus-circle me-1"></i> Submit Quiz
+                                </button>
+                            </div>
+                        @endif
+                    </form>
             </div>
+
+            
+            
         @endif
-    @elseif($quiz && $submitted)
+    @elseif($quiz && !$isPermitted)
         <div class="alert alert-success" role="alert">The Quiz is submitted!</div>
     @endif
 </div>

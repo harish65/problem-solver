@@ -7,6 +7,7 @@
 
         <div class="d-flex justify-content-between mt-3">
             <button type="button" id="prevBtnMcq" class="btn btn-outline-secondary">Previous</button>
+            <button type="button" class="btn btn-primary" id="addQuestionBtn"><i class="fa fa-plus-circle"></i> Add Question </button>
             <button type="button" id="nextBtnMcq" class="btn btn-outline-primary">Next</button>
         </div>
 </div>
@@ -20,6 +21,7 @@
 <div class="card p-3 quizformborder d-none" id="qtype3">
     <label class="form-label">Explanation And Explanation</label>
     <div id="multiEditorContainer"></div>
+            <button type="button" id="addEditorBtn" class="btn btn-primary mb-3">Add More</button>
 </div>
 
 
