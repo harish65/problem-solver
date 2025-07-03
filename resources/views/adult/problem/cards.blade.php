@@ -97,7 +97,7 @@
         </div>
         @if(($can_edit != null && $can_edit->editable_problem) || $project->user_id == Auth::user()->id)
         <div class="row col-sm-3 mt-5 {{ ($problem->user_id == Auth::user()->id) ? '':'d-none' }} ">
-            <button type="button" class="btn btn-success" id="saveValidations" onclick='saveValidations()'>Save Validations</button>
+            <button type="button" class="btn btn-success"  onclick='saveValidations()'>Save Validations</button>
         </div>
         @endif
     </div>

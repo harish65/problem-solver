@@ -71,6 +71,7 @@
                 
     </div>
     <!-- Shared project role -->
+    
     <div class="row pt-5">
         <h5>Validation Questions</h5>
         <p>Have you performed analysis to identify the problem correctly?</p>
@@ -94,11 +95,12 @@
                 </div>
                 @if(($can_edit != null && $can_edit->editable_problem) || $project->user_id == Auth::user()->id)
                 <div class="row col-sm-3 mt-5 {{ ($problem->user_id == Auth::user()->id) ? '':'d-none' }} ">
-                    <button type="button" class="btn btn-success" id="saveValidations" onclick='saveValidations()'>Save Validations</button>
+                    <button type="button" class="btn btn-success"  onclick='saveValidations()' >Save Validations</button>
                 </div>
                 @endif
         </div>
     </div>
+    
     @else
     <!-- Check if project has shared project only read only mode with all users -->
         

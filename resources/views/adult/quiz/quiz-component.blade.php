@@ -12,6 +12,7 @@
     $questionIndex = 0;
 @endphp 
     {{-- <div class="alert alert-primary" role="alert">No Quiz available for this page!</div> --}}
+
 @if($project->user_id == Auth::user()->id)
     <div class="row mb-4">
         <div class="col-12 d-flex">
@@ -26,19 +27,25 @@
                         <option value="{{ Crypt::encrypt($user->user_id) }}" {{ ($user->id === $quiz?->user_id) ?  'selected':''}}>{{ $user->user_name }}</option>
                     @endforeach
                 </select>
+
             </div>
         </div>
-    </div>
-@endif
-<div id="quizContent" class="mb-5">
-    <div class="alert alert-info" role="alert">
-        @if(isset($users) && is_null($users) && ($project->user_id == Auth::user()->id))
-            Users didn't Submitted the Quiz
-        @elseif(isset($users))
-            No user selected
-        @endif
-    </div>
-</div>
+        
+        <div id="quizContent" class="mb-5">
+            <div class="alert alert-info" role="alert">
+                @if(isset($users) && is_null($users) && ($project->user_id == Auth::user()->id))
+                    Users didn't Submitted the Quiz
+                @elseif(isset($users))
+                    No user selected
+                @endif
+            </div>
+        </div>
+       
+    @endif
+    
+
+
+
 
 
 @push('sub_scripts')

@@ -44,7 +44,7 @@
                 @if($disabled == '')
                 <div class=" col-sm-3 mb-3">
 
-                    <button type="button" class="btn btn-success"  id="saveValidations" onclick='saveValidations()'>Save Validations</button>
+                    <button type="button" class="btn btn-success" onclick='saveValidations()' >Save Validations</button>
                 </div>
                 @endif
     </div>
