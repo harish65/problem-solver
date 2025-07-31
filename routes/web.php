@@ -1,24 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Adult\ProjectController as AdultProjectController;
-use App\Http\Controllers\Adult\VerificationController as AdultVerificationController;
-use App\Http\Controllers\Adult\VerificationTypeController as AdultVerificationTypeController;
-use App\Http\Controllers\Adult\VerificationTypeTextController as AdultVerificationTypeTextController;
-use App\Http\Controllers\Adult\SolutionFunctionController as AdultSolutionFunctionController;
-use App\Http\Controllers\Adult\SolutionTypeController as AdultSolutionTypeController;
-use App\Http\Controllers\Adult\SolutionFuntionTypeController as AdultSolutionFuntionTypeController;
-use App\Http\Controllers\Adult\UserController as AdultUserController;
-use App\Http\Controllers\Adult\LoginController as AdultLoginController;
-use App\Http\Controllers\Adult\ProblemController as AdultProblemController;
-use App\Http\Controllers\Adult\SolutionController as AdultSolutionController;
-use App\Http\Controllers\Adult\RelationshipController as AdultRelationshipController;
-use App\Http\Controllers\Adult\ProjectShareController as ProjectShareController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\ResultController;
-use Facade\FlareClient\Report;
-use App\Http\Controllers\Adult\ReportController as ReportController;
-use App\Http\Controllers\Adult\ReportController as ReportController;
+use App\Http\Controllers\Adult\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -316,13 +301,9 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
     Route::get('/ProjectUsers/{id?}', [ReportController::class, 'ProjectUsers'])->name('getProjectUsers');
     Route::get('/getReport', [ReportController::class, 'GetReport'])->name('getReport');
     // Route::get('/report', [ReportController::class, 'index'])->name('report');
-});
-    Route::get('/report/{id?}', [ReportController::class, 'index'])->name('report');
-    Route::get('/ProjectUsers/{id?}', [ReportController::class, 'ProjectUsers'])->name('getProjectUsers');
-    Route::get('/getReport', [ReportController::class, 'GetReport'])->name('getReport');
-    // Route::get('/report', [ReportController::class, 'index'])->name('report');
         Route::get("/result/{id?}", [ResultController::class, 'index'])->name("report");
-});  
+});
+
     
 
 Route::get("/quiz/{id}", [\App\Http\Controllers\QuizController::class, 'index'])->name("quiz");

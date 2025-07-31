@@ -53,6 +53,11 @@
                                         
                                         <a href="{{ route('quiz' , Crypt::encrypt($item->id)) }}" title="Quiz"><i class="fa fa-question fa-lg"></i></a>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('adult.report',$parameter) }}"  title="Report"> 
+                                            <i class="fa fa-list-alt"></i>
+                                        </a>
+                                    </li>
                                      <li>
                                         <?php 
                                             $projectCompleted = \App\Models\Project::checkForReport($item->id);
