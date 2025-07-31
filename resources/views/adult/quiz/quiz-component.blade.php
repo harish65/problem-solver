@@ -31,7 +31,12 @@
             </div>
         </div>
         
-        <div id="quizContent" class="mb-5">
+       
+       
+    @endif
+    
+
+ <div id="quizContent" class="mb-5">
             <div class="alert alert-info" role="alert">
                 @if(isset($users) && is_null($users) && ($project->user_id == Auth::user()->id))
                     Users didn't Submitted the Quiz
@@ -40,11 +45,6 @@
                 @endif
             </div>
         </div>
-       
-    @endif
-    
-
-
 
 
 

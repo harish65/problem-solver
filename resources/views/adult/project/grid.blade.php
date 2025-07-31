@@ -53,6 +53,11 @@
                                         
                                         <a href="{{ route('quiz' , Crypt::encrypt($item->id)) }}" title="Quiz"><i class="fa fa-question fa-lg"></i></a>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('adult.report',$parameter) }}"  title="Report"> 
+                                            <i class="fa fa-list-alt"></i>
+                                        </a>
+                                    </li>
                                     
                                     @else
                                         <li><img src="{{ url('/') }}/assets-new/images/editIcon.png" alt="" /></li>
@@ -62,6 +67,7 @@
                                     @endif
                                 </ul>
                                 <button type="button" class=" btn btn-light btn-block">{{  ($item->shared == 1) ? 'Shared': 'Not Shared' }}</button>
+                            
                             </div>
                         </div>
                     </div>

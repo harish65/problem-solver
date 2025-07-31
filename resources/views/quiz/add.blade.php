@@ -284,7 +284,6 @@ console.log(currentQuestionIndex);
   $('#addEditorBtn').on('click', function () {
     const id = `editor_exp_${maxQuestions}`;
 
-                <label for="${id}" class="form-label">Question ${i}</label>
     $('#multiEditorContainer').append(`
       <div class="mb-4">
         <label for="${id}" class="form-label">Question ${maxQuestions}</label>
