@@ -301,7 +301,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
     Route::get('/ProjectUsers/{id?}', [ReportController::class, 'ProjectUsers'])->name('getProjectUsers');
     Route::get('/getReport', [ReportController::class, 'GetReport'])->name('getReport');
     // Route::get('/report', [ReportController::class, 'index'])->name('report');
-        Route::get("/result/{id?}", [ResultController::class, 'index'])->name("report");
+        Route::match(['get', 'post'],"/result/{id?}", [ResultController::class, 'index'])->name("report");
 });
 
     

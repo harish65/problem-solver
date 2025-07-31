@@ -12,7 +12,18 @@ class ResultController extends Controller
     public function index($id = null, Request $request){
         
         $params = Crypt::decrypt($id);
-        $userId = 6;
+
+
+
+        $users = DB::table('project_shared')->join('users', 'project_shared.shared_with', '=', 'users.id')->where('project_id', $params['project_id'])->select('users.id', 'name')->get();
+        $userQuiz = null;
+        $problem = null;
+        $project = null;
+        $userId = null;
+
+        // dd($request->all());
+        if(isset($request->id)){
+            $userId = (int)(Crypt::decrypt($request->id));
             if(is_array($params)){
                 $projectID = $params['project_id']; 
                 $problem_id  = $params['problem_id'];
@@ -21,9 +32,9 @@ class ResultController extends Controller
                             ->select('projects.*')
                             ->orderBy("projects.id", "desc")
                             ->where('projects.id' ,$projectID)
-                            ->where(function($query){
+                            ->where(function($query) use ($userId){
                                     $query->orWhere('projects.user_id' , Auth::user()->id);
-                                    $query->orWhere('project_shared.shared_with', '=', Auth::user()->id);
+                                    $query->orWhere('project_shared.shared_with', '=', $userId);
                             })
                         ->orderBy('projects.id', 'desc')
                         ->first();
@@ -41,9 +52,11 @@ class ResultController extends Controller
                     ->get();
 
                     $problem = DB::table('problems')->where(['project_id' => $projectID , 'user_id'=> $userId])->orderBy('id', 'desc')->first();
-                    // dd($userQuiz->first());
 
+                    // dd($projectID, $userId,  $userQuiz, $project);
             }
-        return view('adult.result.index', compact('project', 'problem_id', 'projectID', 'userQuiz', 'problem'));
+}
+
+        return view('adult.result.index', compact('project', 'userQuiz', 'problem', 'users', 'userId'));
     }
 }
