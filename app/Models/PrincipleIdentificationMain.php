@@ -15,7 +15,7 @@ class PrincipleIdentificationMain extends Model
 
     public static function getApplicable($project_id , $principle_type , $principle_identification_id){
            return DB::table('principle_identification_drived_principle')
-                            ->where('user_id' , Auth::user()->id)   
+                            ->where('user_id' , 3)   
                             ->where('project_id' , $project_id)
                             ->where('principle_type' , $principle_type)
                             ->where('principle_identification_id',$principle_identification_id)

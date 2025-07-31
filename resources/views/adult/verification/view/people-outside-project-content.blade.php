@@ -146,9 +146,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                     @endif
 
 
-                    <div class="row pt-5">
-                    @include('adult.quiz.quiz-component' , [$project->id , $pageId , $pageType])
-                </div>
+                   
         </div>
         
     </div>

@@ -4,6 +4,7 @@
 @php
     $quizData = json_decode($quiz->quiz_data, true)['mcq'] ?? [];     
     $questionIndex = 0;
+   
 @endphp
 <form id="quizForm" method="post" action="{{ route('add-quiz-data') }}" enctype="multipart/form-data">
             @csrf
@@ -60,7 +61,7 @@
             @if(!$isProjectOwner && !$submitted)
                 <div class="text-end mt-4">
                     <button type="submit" class="btn btn-success" id="submitBtnMcq">
-                        <i class="bi bi-plus-circle me-1"></i> Submit Quiz
+                        <i class="bi bi-plus-circle me-1"></i> Submit Quiz 21
                     </button>
                 </div>
             @endif

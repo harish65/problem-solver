@@ -374,7 +374,7 @@ class VerificationController extends BaseController
                     $verification = Verification::where(
                         "verification_type_id",
                         "=",
-                        5
+                        8
                     )->first();
                     if (isset($verification->validations)) {
                         $verification->validations = json_decode(
@@ -410,7 +410,7 @@ class VerificationController extends BaseController
                     $verification = Verification::where(
                         "verification_type_id",
                         "=",
-                        5
+                        9
                     )->first();
                     if (isset($verification->validations)) {
                         $verification->validations = json_decode(
@@ -468,7 +468,7 @@ class VerificationController extends BaseController
                     $verification = Verification::where(
                         "verification_type_id",
                         "=",
-                        5
+                        11
                     )->first();
                     if (isset($verification->validations)) {
                         $verification->validations = json_decode(
@@ -483,7 +483,7 @@ class VerificationController extends BaseController
                         ->where('people_communication_flow.project_id' , $project_id)
                         ->where('people_communication_flow.problem_id' , $problem_id)
                         ->get();
-                
+                // dd($communications);
                 return view(
                     "adult.verification.view.people-communication-content",
                     compact(
@@ -1123,7 +1123,7 @@ class VerificationController extends BaseController
                                                     );
                                                     break;
                                                     case 25:
-                                   
+                                                        
                                                         $allVarifications = DB::table(
                                                             "principle_identification"
                                                         )->get();
@@ -1142,7 +1142,8 @@ class VerificationController extends BaseController
                                                                 "solution_id",
                                                                 "Solution_function",
                                                                 "verifiationTypeText",
-                                                                "allVarifications","custommers","functionOfPeople"
+                                                                "allVarifications","custommers","functionOfPeople","project" ,"pageType" ,
+                                                            "pageId"
                                                                 
                                                                 
                                                             )
@@ -1339,7 +1340,9 @@ class VerificationController extends BaseController
                                                                             "solution",
                                                                             "solution_id",
                                                                             "Solution_function",
-                                                                            "verifiationTypeText"
+                                                                            "verifiationTypeText",
+                                                                            "pageId",
+                                                                            "pageType"
                                                                         )
                                                                     );
         }
@@ -2187,7 +2190,7 @@ class VerificationController extends BaseController
             $input = $request->all();
            
             $verification = Verification::find($input["id"]);
-           
+        //    echo '<pre>';print_r($input);die;
             // unset($input["id"]);
             // unset($input["id"]);
             if (!$verification) {
@@ -2200,20 +2203,22 @@ class VerificationController extends BaseController
                 $verification->user_id = Auth::user()->id;
                 $verification->name = $input["name"];
             }else{
-                
+                $verification->name = $input["name"];
                 $verification = Verification::Find($input["id"]);
             
             }
             
             $verification->validations = json_encode($input);
-            
+           
             $verification->save();
+            // dd($verification->save());
             $success["verification"] = $verification;
             return $this->sendResponse(
                 $success,
                 "Validation created successfully."
             );
         } catch (Exception $e) {
+            echo $e->getMessage();die;
             return $this->sendError("Validation Error.", [
                 "error" => $e->getMessage(),
             ]);
@@ -2250,6 +2255,7 @@ class VerificationController extends BaseController
 
                 ]
             );
+        //    dd($insert);
             $success["entity"] = $insert;
             return $this->sendResponse(
                 $success,
@@ -2430,7 +2436,8 @@ class VerificationController extends BaseController
 
     public function feedbackIdentification(Request $request){
         $params = $request->all();
-       
+        $pageId = 16;
+        $pageType = 'verification';
        
         if ($request->is('api/*')) {
             
@@ -2478,7 +2485,7 @@ class VerificationController extends BaseController
             return $this->sendResponse($success, "true");
         }else{
            
-            return view("adult.verification.view.feed-back-identification" , compact("problemDevelopment" , "feedBack" ,'problem_id' , 'project_id' ,'params', 'project'));
+            return view("adult.verification.view.feed-back-identification" , compact("problemDevelopment" , "feedBack" ,'problem_id' , 'project_id' ,'params', 'project','pageId' ,'pageType'));
         }
         
     }
@@ -2547,7 +2554,8 @@ class VerificationController extends BaseController
     public function errorCorrection(Request $request){
         
         
-        
+        $pageId = 16;
+        $pageType = 'verification';
         $params = $request->all();
     
         if ($request->is('api/*')) { 
@@ -2628,8 +2636,8 @@ class VerificationController extends BaseController
             $success["token"] = $request->header("Authorization");
             return $this->sendResponse($success, "true");
         }else{
-            
-            return view("adult.verification.view.error-corection" ,  compact("problemDevelopment" ,"compensators" , "feedBack" , "errorcorrections" , "errors" , "compensator" ,'params' ,'project_id' , 'project'));
+                
+            return view("adult.verification.view.error-corection" ,  compact("problemDevelopment" ,"compensators" , "feedBack" , "errorcorrections" , "errors" , "compensator" ,'params' ,'project_id' , 'project' ,'pageId' ,'pageType'));
         }
 
 
@@ -3273,7 +3281,8 @@ class VerificationController extends BaseController
     }
     public function MeVsYouNextPage($id){
         $params = Crypt::decrypt($id); 
-        
+        $pageId = 28;
+        $pageType = 'verification';
         $problem = Problem::where("id", "=", $params['problem_id'])->first();
         $verificationType = VerificationType::where("id","=",28)->first();
         $user_id = $params['user_id'];
@@ -3289,12 +3298,13 @@ class VerificationController extends BaseController
             "=",
             $params['problem_id']
         )->first();
+        $project = Project::where("id", "=", $problem->project_id)->first();
         return view('adult.verification.view.me_vs_you_next' , 
                     ['mevsyou' => $mevsyounext , 'problem_id'=>$params['problem_id'] , 'problem'=>$problem,
                     'project_id' => $params['project_id'] , 
                     'types'=>$types,
                     'Solution_function'=>$Solution_function , 
-                    'solution'=>$solution , 'solution_id'=>$solution->id , 'custommers'=>$custommers ,'parameter'=>$id, 'verificationType'=>$verificationType]);
+                    'solution'=>$solution , 'solution_id'=>$solution->id , 'custommers'=>$custommers ,'parameter'=>$id, 'verificationType'=>$verificationType , 'pageId'=>$pageId , 'pageType'=>$pageType , 'project'=>$project]);
     }
     public function MeVsYouNextPageStore(Request $request){
         try {
@@ -3456,6 +3466,8 @@ class VerificationController extends BaseController
                     "problem_id" => $data["problem_id"],
                     "project_id" => $data["project_id"],
                     "solution_id" => $data["solution_id"],
+                    "problem_location" => $data["problem_location"],
+                    "solution_function_location" => $data["solution_function_location"],
                     "user_id" => Auth::user()->id, 
                     "file" => $file,
                     'type' => $type,

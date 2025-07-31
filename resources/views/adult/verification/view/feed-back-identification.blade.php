@@ -68,9 +68,7 @@ $can_edit = \App\Models\Project::SharedProject($project_id, Auth::user()->id);
                         </tbody>
                     </table>
                 </div>
-                <div class="row pt-5">
-                    @include('adult.quiz.quiz-component' , [$project->id , $pageId , $pageType])
-                </div>
+                
             </div>
     </div>
 </div>

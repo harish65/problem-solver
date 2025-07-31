@@ -239,17 +239,5 @@ class QuizController extends BaseController
             return back()->with('error', 'An unexpected error occurred.');
         }
     }
-    public function updateRemarks(Request $request)
-    {
-        try {
-            // dd($request->all());
-            DB::table('quiz_data')->where('id', $request->quiz_id)->update([
-                'remarks' => $request->remarks
-            ]);
-            return redirect()->back()->with('success', 'Remarks updated successfully.');
-        } catch (\Exception $e) {
-            return back()->with('error', 'An unexpected error occurred.');
-        }
-    }
     
 }

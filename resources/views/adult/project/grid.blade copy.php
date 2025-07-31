@@ -70,7 +70,6 @@
                                     @endif
                                 </ul>
                                 <button type="button" class=" btn btn-light btn-block">{{  ($item->shared == 1) ? 'Shared': 'Not Shared' }}</button>
-                            
                             </div>
                         </div>
                     </div>

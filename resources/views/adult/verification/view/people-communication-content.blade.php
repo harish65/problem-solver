@@ -124,7 +124,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                             <input type="hidden" name="project_id" value="{{ $project_id }}">
                             <input type="hidden" name="solution_id" id="solution_id" value="{{ $solution_id }}">
                             <input type="hidden" name="solution_fun_id" id="solution_fun_id" value="{{ $Solution_function->id }}">
-                            <input type="hidden" name="name" id="name" value="People_in_Project">     
+                            <input type="hidden" name="name" id="name" value="People_and_communication_flow">     
                         <h5>Have you separated the people in the project from their communication?</h5>
                         <ul class="validate_que" style="list-style:none;">
                             
@@ -150,9 +150,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                 <!-- End -->
                 
             </div>
-            <div class="row pt-5">
-                @include('adult.quiz.quiz-component' , [$project->id , $pageId , $pageType])
-            </div>
+         
         </div>
     </div>
     <!-- Content Section End -->
@@ -262,7 +260,7 @@ $('.dashboard').click(function(){
 
    $(document).on('click','#btnSave',function(e){
        e.preventDefault();
-       tinyMCE.triggerSave(true, true);
+    //    tinyMCE.triggerSave(true, true);
        var fd = new FormData($('#comm_form')[0]);
        $.ajaxSetup({
         headers: {
@@ -291,7 +289,7 @@ $('.dashboard').click(function(){
              if(response.success == false)
              {
                  $('#btnSave').attr('disabled',false);
-                 $('#btnSave').html('Login');
+                 $('#btnSave').html('Submit');
                  var errors = response.data;
                  $.each( errors, function( key, value ) {
                      toastr.error(value)
@@ -308,7 +306,7 @@ $('.dashboard').click(function(){
 
 $('.communicate').on('click',function(){
     $('#person_1 , #person_2 , #title_').val('')
-    tinyMCE.activeEditor.setContent('');
+    // tinyMCE.activeEditor.setContent('');
     $('#exampleModal').modal('toggle')
     
 
@@ -319,7 +317,7 @@ $('.communicate').on('click',function(){
         $('#title_').val($(this).data('title')).attr('disabled' , false)
         $('#id').val($(this).data('id'))
         $('#btnSave').show();
-        tinyMCE.activeEditor.setContent($(this).data('comment'));
+        // tinyMCE.activeEditor.setContent($(this).data('comment'));
         
        $('#exampleModal').modal('toggle');
     })
@@ -328,8 +326,8 @@ $('.communicate').on('click',function(){
         $('#person_2').val($(this).data('person_two')).attr('disabled' , true)
         $('#title_').val($(this).data('title')).attr('disabled' , true)
         $('#id').val($(this).data('id'))
-        tinyMCE.activeEditor.setContent($(this).data('comment'));
-        tinymce.activeEditor.getBody().setAttribute('contenteditable', false);
+        // tinyMCE.activeEditor.setContent($(this).data('comment'));
+        // tinymce.activeEditor.getBody().setAttribute('contenteditable', false);
         
         $('#btnSave').hide();
        $('#exampleModal').modal('toggle');
@@ -371,12 +369,12 @@ $(document).on('click','.delete_',function(e){
   
 </script>
 <script>
-    tinymce.init({
-      selector: 'textarea',
-      plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-      toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-      height : "300"
-    });
+    // tinymce.init({
+    //   selector: 'textarea',
+    //   plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+    //   toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+    //   height : "300"
+    // });
 
 
     var showMessage = "{{$showMessage}}"

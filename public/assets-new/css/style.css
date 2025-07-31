@@ -909,3 +909,7 @@ background-color: #198754;
 
 .question-block_student { display: none; }
 .question-block_student.active { display: block; }
+
+.result{
+	font-family: Arial, Helvetica, sans-serif;
+}
