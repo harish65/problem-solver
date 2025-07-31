@@ -198,9 +198,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                 <?php $showMsg = true ?>
                 @endif
             </div>
-            <div class="row pt-5">
-                    @include('adult.quiz.quiz-component' , [$project->id , $pageId , $pageType])
-                </div>
+            
         </div>
     </div>
     <!-- Content Section End -->
@@ -232,8 +230,17 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                <input type="text" class="form-control" value="{{ $problem->name}}" disabled>
             </div>
             <div class="form-group">
+                <label for="pl">Problem Location</label>
+               <input type="text" id="pl" class="form-control" name="problem_location" value="">
+            </div>
+           
+            <div class="form-group">
                 <label for="feedback">Solution Function</label>
                 <input type="text" class="form-control" value="{{ $Solution_function->name}}" disabled>
+            </div>
+             <div class="form-group">
+                <label for="sl">Solution Function Location</label>
+                <input type="text" id='sl' class="form-control" value="" name="solution_function_location">
             </div>
           </form>
         </div> 

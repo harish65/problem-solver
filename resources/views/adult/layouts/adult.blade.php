@@ -143,17 +143,13 @@
         toastr.warning("{{ session('warning') }}");
     @endif
     
-    @if ($errors->any())
-        @foreach ($errors->all() as $error)
-            toastr.error("{{ $error }}");
-        @endforeach
-    @endif
+  
 </script>
       
 @yield('scripts')
 <script>
     
-    let currentQuestionIndex = 0;
+    let currentQuestionIndx = 0;
     function showQuestion(index) {
         $('.question-block_student').removeClass('active');
         $(`.question-block_student[data-index="${index}"]`).addClass('active');
@@ -161,28 +157,28 @@
     }
 
     function updateQuestionIndex(index){
-        currentQuestionIndex = 0;
+        currentQuestionIndx = 0;
     }
 
     $(document).ready(function () {
-        showQuestion(currentQuestionIndex);
+        showQuestion(currentQuestionIndx);
         $(document).on('click', '#nextBtnMcq', function () {
-            console.log(currentQuestionIndex);
+           
             let total = $('.question-block_student').length;
-            if (currentQuestionIndex < total - 1) {
-                currentQuestionIndex++;
-                showQuestion(currentQuestionIndex);
+            if (currentQuestionIndx < total - 1) {
+                currentQuestionIndx++;
+                showQuestion(currentQuestionIndx);
             }
         });
 
         $(document).on('click', '#prevBtnMcq', function () {
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                showQuestion(currentQuestionIndex);
+            if (currentQuestionIndx > 0) {
+                currentQuestionIndx--;
+                showQuestion(currentQuestionIndx);
             }
         });
 
-        showQuestion(currentQuestionIndex);
+        showQuestion(currentQuestionIndx);
     });
 
     function validateQuestions() {

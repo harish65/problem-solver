@@ -10,6 +10,7 @@
                 }else{
                     $quizData = [];
                 }
+               
             @endphp
             @if(isset($quizData))
                 <form id="quizForm1" method="post" action="{{ route('add-quiz-data') }}" enctype="multipart/form-data">
@@ -87,7 +88,7 @@
                     @if(!$isProjectOwner)
                         <div class="text-end mt-4">
                             <button type="submit" class="btn btn-success" id="submitBtnMcq">
-                                <i class="bi bi-plus-circle me-1"></i> Submit Quiz
+                                <i class="bi bi-plus-circle me-1"></i> Submit Quiz 
                             </button>
                         </div>
                     @endif

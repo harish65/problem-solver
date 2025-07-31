@@ -45,12 +45,7 @@
                         name="optradio_firts" {{ (($can_edit != null && $can_edit->editable_solution_func) || ($project->user_id == Auth::user()->id && $project->shared == 0)) ? '':'disabled' }}>Yes, the solution function enables the replacement of the problem
                 </label>
             </div>
-            <div class="form-check">
-                <label class="form-check-label">
-                    <input type="radio" class="form-check-input validation" value="3" data-id="{{ $solFunctions->id }}" {{ ($solFunctions->validation_first == '3') ? 'checked' : '' }}
-                        name="optradio_firts" {{ (($can_edit != null && $can_edit->editable_solution_func) || ($project->user_id == Auth::user()->id && $project->shared == 0)) ? '':'disabled' }}>Yes, the solution function enables the substitution of the problem
-                </label>
-            </div>
+            
             
 
         </div>

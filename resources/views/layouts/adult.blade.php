@@ -140,7 +140,7 @@
 			</div>
 		</div>
 	</div>
-
+	
 	<div class="left-side-bar">
 		<div class="brand-logo">
 			<a href="{{ url("home") }}">

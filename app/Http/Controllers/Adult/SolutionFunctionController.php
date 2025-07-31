@@ -63,7 +63,7 @@ class SolutionFunctionController extends BaseController
         } else {
             $solutionFunctionId = $params;
             $solFunctions = $query->where('solution_functions.id', '=', $solutionFunctionId)->first();
-            // echo '<pre>';print_r($solFunctions);die;
+            
             if (!isset($solFunctions->solution_id)) {
                 return Redirect::back()->withErrors(['msg' => 'Solution Function must have solution identified.', 'error' => 'Solution not identified']);
             }

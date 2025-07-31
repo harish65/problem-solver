@@ -28,17 +28,16 @@ $problems = \App\Models\Problem::GetAllProblemsOfProject($project->id);
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit
         </p>
     </div>
-
-
     <div class="row pt-5">
         @include('adult.quiz.quiz-component' , [$project->id , $pageId , $pageType])
     </div>
-    @if($project->shared == 1 && $can_edit != null && $can_edit->editable_project == 1)
-    @include('adult.problem.Editable_mode' , [$problem , $project , $can_edit])
-    @else
-    @include('adult.problem.Readonly_mode' , [$problem , $project , $can_edit])
-    @endif
+        @if($project->shared == 1 && $can_edit != null && $can_edit->editable_project == 1)
+            @include('adult.problem.Editable_mode' , [$problem , $project , $can_edit])
+        @else
+            @include('adult.problem.Readonly_mode' , [$problem , $project , $can_edit])
+        @endif
 </div>
+
 @include('adult.problem.modal.add-problem',[$projectID])
 @endsection
 @section('css')

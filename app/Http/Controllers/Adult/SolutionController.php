@@ -181,7 +181,7 @@ class SolutionController extends BaseController
     }
 
     public function updateValidation(Request $request){
-        echo '<pre>';print_r($request->all());die;
+        // echo '<pre>';print_r($request->all());die;
         $column = ($request->input('name') == 'optradio_firts')   ? 'validation_first' : 'validation_second';
         $update = DB::table('solutions')->where("id",'=' ,$request->input('data'))-> update([
             $column => $request->input('value')

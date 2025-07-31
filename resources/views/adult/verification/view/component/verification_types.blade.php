@@ -2,12 +2,6 @@
     $categories   =  \App\Models\VerificationType::verificationTypeCategories(); 
     $projectUsers  = \App\Models\Project::getUsers($project_id);
     $project = \App\Models\Project::find($project_id);
-
-    // echo '<pre>';print_r($types);
-    // echo '<pre>';print_r($project->sharedUsers);die;
-
-
-
     ?>
 <div class="col-md-6">
     <div class="d-flex align-items-center">
@@ -60,6 +54,10 @@ $can_edit = \App\Models\ProjectShared::where('project_id' ,$project_id)->where('
         </div>
     </div>
     @endif
+<div class="col-md-12 mt-5">
+    
+    @include('adult.quiz.quiz-component' , [$project->id , $pageId , $pageType])
+</div>
    
 
     

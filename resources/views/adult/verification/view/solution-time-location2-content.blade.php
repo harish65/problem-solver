@@ -161,6 +161,11 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                         <br>
                         <form id="validation_form">
                                 <input type="hidden" name="id" value="{{ @$verification->id }}"> 
+                                <input type="hidden" name="verification_type_id" value="{{ @$verificationType->id }}">        
+                                    <input type="hidden" name="problem_id" value="{{ @$problem->id }}">        
+                                    <input type="hidden" name="solution_id" value="{{ @$solution->id }}">        
+                                    <input type="hidden" name="solution_fun_id" value="{{ @$Solution_function->id }}">        
+                                    <input type="hidden" name="name" value="solution_time_location_2">      
                         <h5>Do you start solving the problem with people?</h5>
                         <ul class="validate_que" style="list-style:none;">
                             
@@ -195,9 +200,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
 
 
             </div>
-            <div class="row pt-5">
-                @include('adult.quiz.quiz-component' , [$project->id , $pageId , $pageType])
-            </div>
+            
         </div>
     </div>
     <!-- Content Section End -->

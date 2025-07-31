@@ -15,9 +15,6 @@ use App\Http\Controllers\Adult\SolutionController as AdultSolutionController;
 use App\Http\Controllers\Adult\RelationshipController as AdultRelationshipController;
 use App\Http\Controllers\Adult\ProjectShareController as ProjectShareController;
 use App\Http\Controllers\QuizController;
-use App\Http\Controllers\ResultController;
-use Facade\FlareClient\Report;
-use App\Http\Controllers\Adult\ReportController as ReportController;
 use App\Http\Controllers\Adult\ReportController as ReportController;
 
 /*
@@ -316,10 +313,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
     Route::get('/ProjectUsers/{id?}', [ReportController::class, 'ProjectUsers'])->name('getProjectUsers');
     Route::get('/getReport', [ReportController::class, 'GetReport'])->name('getReport');
     // Route::get('/report', [ReportController::class, 'index'])->name('report');
-        Route::get("/result/{id?}", [ResultController::class, 'index'])->name("report");
-});  
-    
-
+});
 Route::get("/quiz/{id}", [\App\Http\Controllers\QuizController::class, 'index'])->name("quiz");
 Route::get("/add-quiz/{id}", [\App\Http\Controllers\QuizController::class, 'addQuiz'])-> name("add-quiz");
 Route::post("/store-quiz", [\App\Http\Controllers\QuizController::class, 'store'])-> name("store-quiz");
@@ -330,9 +324,5 @@ Route::delete("/delete-quiz/{id}", [\App\Http\Controllers\QuizController::class,
 Route::post("/add-quiz-data", [\App\Http\Controllers\QuizController::class, 'saveQuizData'])-> name("add-quiz-data");
 Route::post('/get-quiz', [QuizController::class, 'getQuiz'])->name('get-quiz');
 // RReport Routes
-
-Route::post('/quiz-update-remarks', [QuizController::class, 'updateRemarks'])->name('quiz-update-remarks');
-
-
 
 
