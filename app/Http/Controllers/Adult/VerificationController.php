@@ -2320,7 +2320,7 @@ class VerificationController extends BaseController
                     "verification_type_id" => 15,
                     "error_name" => $data["error_name"],
                     "error_date" =>  date('Y-m-d H:i:s',strtotime($data["error_date"])),
-                    "problem_date" => date('Y-m-d H:i:s',strtotime($data["problem_date"])),
+                    "problem_date" => date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $data["problem_date"]))),
                     "problem_name" => $data["problem_name"],
                 ]
             );
