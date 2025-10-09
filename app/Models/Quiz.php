@@ -70,4 +70,11 @@ class Quiz extends Model
             ->where('quiz_data.quiz_id', $quiz_id) // Filter by project
             ->get();
     }
+
+    public static function getQuizRemarks($quiz_id  , $project_id){
+            return DB::table('quiz_data')->where(['quiz_id'=>$quiz_id ,  'project_id'=>$project_id])->pluck('remarks')->first();
+    }
+
+
+
 }

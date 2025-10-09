@@ -5,22 +5,26 @@
                 
             @php 
                 $projectShared = \App\Models\Project::SharedProject($item->id,Auth::user()->id);
-               
+
             @endphp
                 @if(!empty($projectShared) && $projectShared->shared_with == Auth::user()->id && $projectShared->stop_sharing == 1)
                         @continue;
+
+
+                        
                 @endif
+                <?php 
+                                  
+                                    
+                                    $parameters = ($item->problem_id) ? ['project_id' => $item->id,'problem_id'=> $item->problem_id] : ['project_id' => $item->id,'problem_id'=> null];
+                                    $parameter =  Crypt::encrypt($parameters);
+                                       
+                                ?>
                 @if(($item->user_id == Auth::user()->id) || !empty($projectShared))
                     <div class="col">
                         <div class="projectBlock text-center">
                             <h2>{{ $item->name }}</h2>
-                                <?php 
-                                    
-                                    
-                                    $parameters = ($item->problem_id) ? ['project_id' => $item->id,'problem_id'=> $item->problem_id] : ['project_id' => $item->id,'problem_id'=> null];
-                                    $parameter =  Crypt::encrypt($parameters);
-                                    
-                                ?>
+                                
                               
                             <a href="{{ route('adult.problem',$parameter) }}" data-params="{{ $parameter }}"
                                 class="project-grid">
@@ -53,20 +57,37 @@
                                         
                                         <a href="{{ route('quiz' , Crypt::encrypt($item->id)) }}" title="Quiz"><i class="fa fa-question fa-lg"></i></a>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('adult.result',$parameter) }}"  title="Result"> 
+                                            <i class="fa fa-list-alt"></i>
+                                        </a>
+                                    </li>
                                      <li>
+                                        
                                         <?php 
                                             $projectCompleted = \App\Models\Project::checkForReport($item->id);
                                         ?>
-                                        @if($projectCompleted)
-                                        <a href="{{ route('adult.report' , Crypt::encrypt($item->id)) }}" title="Report"><i class="fa fa-file fa-lg"></i></a>
-                                        @endif
+                                       
+                                        <a href="JavaScript:Void(0)" class="project-report" data-item="{{ Crypt::encrypt($item->id) }}" data-item_name="{{ $item->name }}" title="Report"><i class="fa fa-file fa-lg"></i></a>
+                                        {{--<a href="{{ route('adult.report' , Crypt::encrypt($item->id)) }}" title="Report"><i class="fa fa-file fa-lg"></i></a>--}}
+                                        
                                     </li>
                                     
                                     @else
-                                        <li><img src="{{ url('/') }}/assets-new/images/editIcon.png" alt="" /></li>
-                                        <li><img src="{{ url('/') }}/assets-new/images/deleteIcon.png" alt="" /></li>
-                                        <li><img src="{{ url('/') }}/assets-new/images/uploadIcon.png" alt="" /></li>
-                                        <li><i class="fa fa-question"></i></li>
+                                    
+                                    <li>
+                                        <a href="{{ url('adult/getReport') }}?name={{ urlencode($item->name) }}&project_id={{ Crypt::encrypt($item->id) }}&user_id={{ Auth::user()->id }}"  target="_blank" title="Report">
+                                            <i class="fa fa-file fa-lg"></i>
+                                            </a>
+                                    </li>
+                                   <li>
+                                        <a href="{{ route('adult.result' , ['id' => Crypt::encrypt(auth()->id()) ,'shared'=>true , 'parameter'=>$parameter]) }}"  title="Result"> 
+                                            <i class="fa fa-list-alt"></i>
+                                        </a>
+                                    </li>
+                                     
+
+
                                     @endif
                                 </ul>
                                 <button type="button" class=" btn btn-light btn-block">{{  ($item->shared == 1) ? 'Shared': 'Not Shared' }}</button>

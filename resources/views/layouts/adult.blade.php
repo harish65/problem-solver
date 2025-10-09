@@ -230,6 +230,7 @@
 
 	{{-- DROPIFY --}}
 	<script src = https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js></script>
+	
 
 	{{-- SWEETALERT --}}
 	<script src="assets/src/plugins/sweetalert2/sweetalert2.all.js"></script>
@@ -259,5 +260,6 @@
 			})
 		</script>
 	@endif
+	
 </body>
 </html>

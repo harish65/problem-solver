@@ -1,7 +1,8 @@
 
 
 <div class="row border border-success mt-5 border-4 bg-white  shadow-lg p-3 mb-5 bg-white rounded">
-    <h1>Project Report</h1>
+    <h1>Project : {{ $project_name }}</h1>
+     @if($data['shared_project_data']['editable_problem'])
       <section>
          <div><strong>User Name:</strong> {{ strtoupper($data['user']['name'])}}</div>
          <p><strong>Project Name:</strong> {{ $data['project']}}</p>
@@ -13,37 +14,41 @@
           <div class="answer ml-20"><span class="no"><i class="fa-solid fa-check"></i> No</span>,  I have not performed analysis to identify the problem correctly</div>
          @endif
       </section>
+      @endif
 	             
       <section>
          <div>
-            <p><strong>Solution:</strong> <span class="success">{{ $data['solution']['name'] }}</span></p>
-            <p class="ml-20"><strong>Does the solution of the actual problem replace the actual problem?</strong></p>
-             @if($data['solution']['validation_first'] == 0)
-            <div class="answer  ml-20"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, the solution of the actual problem replaces the actual problem</div>
-            @else
-            <div class="answer  ml-20"><span class="no"><i class="fa-solid fa-check"></i> No</span>, the solution of the actual problem does not replace the actual problem</div>
-            @endif
-            <p class="ml-20"><strong>Does the (solution name pull from the database) solve the (problem name pull from the database)?</strong></p>
-             @if($data['solution']['validation_second'] == 0)
-                <div class="answer  ml-20"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, the solution of the actual problem replaces the actual problem</div>
-            @else
-                <div class="answer  ml-20"><span class="no"><i class="fa-solid fa-check"></i> No</span>, (solution name form database) does not solve (problem name from database)</div>
-            @endif
-
-
-            <p class=""><strong>Solution Function:</strong> <span class="success">{{ $data['solution_function']['name']  }}</span></p>
-
-            <p class="ml-20"><strong>Does the solution function enable the replacement of the problem?</strong></p>
-             @if($data['solution']['validation_first'] == 1)
-            <div class="answer  ml-20"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, the solution function enables the replacement of the problem </div>
-            @else
-             <div class="answer  ml-20"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>,  the solution function enables the replacement of the problem </div>
+            @if($data['shared_project_data']['editable_solution'])
+               <p><strong>Solution:</strong> <span class="success">{{ $data['solution']['name'] }}</span></p>
+               <p class="ml-20"><strong>Does the solution of the actual problem replace the actual problem?</strong></p>
+               @if($data['solution']['validation_first'] == 0)
+               <div class="answer  ml-20"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, the solution of the actual problem replaces the actual problem</div>
+               @else
+               <div class="answer  ml-20"><span class="no"><i class="fa-solid fa-check"></i> No</span>, the solution of the actual problem does not replace the actual problem</div>
+               @endif
+               <p class="ml-20"><strong>Does the (solution name pull from the database) solve the (problem name pull from the database)?</strong></p>
+               @if($data['solution']['validation_second'] == 0)
+                  <div class="answer  ml-20"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, the solution of the actual problem replaces the actual problem</div>
+               @else
+                  <div class="answer  ml-20"><span class="no"><i class="fa-solid fa-check"></i> No</span>, (solution name form database) does not solve (problem name from database)</div>
+               @endif
             @endif
 
-            <p class="ml-20"><strong>Does the solution function enable the solving of the ProblemName?</strong></p>
-             @if($data['solution_function']['validation_second'] == 0)
-                <div class="answer  ml-20"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, the solution of the actual problem replaces the actual problem</div>
-           
+         @if($data['shared_project_data']['editable_solution_func'])
+               <p class=""><strong>Solution Function:</strong> <span class="success">{{ $data['solution_function']['name']  }}</span></p>
+
+               <p class="ml-20"><strong>Does the solution function enable the replacement of the problem?</strong></p>
+               @if($data['solution']['validation_first'] == 1)
+               <div class="answer  ml-20"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, the solution function enables the replacement of the problem </div>
+               @else
+               <div class="answer  ml-20"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>,  the solution function enables the replacement of the problem </div>
+               @endif
+
+               <p class="ml-20"><strong>Does the solution function enable the solving of the ProblemName?</strong></p>
+               @if($data['solution_function']['validation_second'] == 0)
+                  <div class="answer  ml-20"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, the solution of the actual problem replaces the actual problem</div>
+            
+               @endif
             @endif
 
 
@@ -69,7 +74,16 @@
          </table>
       </section>
 
+      <?php 
+            $beforeAndAfterVal = $data['verification'][3]['validations'] ?? [];
 
+            
+         ?>
+   @if(!empty($beforeAndAfterVal))
+   <?php
+            $validation1 = $beforeAndAfterVal['validation_1'] ?? null;
+            $validation2 = $beforeAndAfterVal['validation_2'] ?? null;
+   ?>
       <section class="verification-section">   <!-- Section Before Problem Existed After Problem Solved Verification -->
          <h2>Verification</h2>
          <h3>Before Problem Existed After Problem Solved Verification</h3>
@@ -87,12 +101,7 @@
                </tr>
             </tbody>
          </table>
-         <?php 
-            $beforeAndAfterVal = $data['verification'][3]['validations'] ?? [];
-
-            $validation1 = $beforeAndAfterVal['validation_1'] ?? null;
-            $validation2 = $beforeAndAfterVal['validation_2'] ?? null;
-         ?>
+         
          <p><strong>The problem existed before, is the problem solved after?</strong></p>
          @if($validation1 == 1)
             <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, the problem existed before and after the problem is solved</div>
@@ -106,11 +115,18 @@
             <div class="answer"><span class="no"><i class="fa-solid fa-xmark"></i> No</span>, the problem still exists after function execution</div>
          @endif
       </section>
+      @endif
       <!-- Entity Available  -->
       @include('adult.reports.component.entity_available',$data)
       <!-- End of Entity Available  -->
 
       <!-- Voucab Verification -->
+       
+       <?php 
+            $vocabVal = $voucab['validations'] ?? [];
+            
+            ?>
+            @if(!empty($vocabVal))
       <section>
          <?php
             $voucab = $data['verification'][1] ?? []; 
@@ -135,7 +151,7 @@
             </tbody>
          </table>
          <?php 
-            $vocabVal = $voucab['validations'] ?? [];
+           
             $validation1 = $vocabVal['validation_1'] ?? null;
             $validation2 = $vocabVal['validation_2'] ?? null;
             $validation3 = $vocabVal['validation_3'] ?? null;  
@@ -164,12 +180,15 @@
             @endif
       </section>
       <!-- End of Voucab Verification -->
-      <section>
-         <?php
+       @endif
+        <?php
             $info = $data['verification'][2] ?? []; 
             $info_validation1 = $info['validations']['validation_1'] ?? null;
            
          ?>
+         @if(!empty($info['validations']))
+      <section>
+        
          <h2>Problem &amp; Solution Information Verification</h2>
          <table>
             <thead>
@@ -202,11 +221,8 @@
          <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>, the identified information does not match the given information</div>
          @endif
       </section>
+      @endif
       <!-- Separtaion step -->
-      <section>
-         <h2>Problem, Solution, and People Separation Verification</h2>
-         <p><strong>Problem:</strong> <span class="danger">{{ $data['problem']['name'] }}</span></p>
-         <p><strong>Solution:</strong> <span class="success">{{ $data['solution']['name'] }}</span></p>
          <?php 
                $separtionStep = $data['verification'][4]['sepration_step'] ?? [];
                $separtionStepValidation = $data['verification'][4]['validations'] ?? [];
@@ -215,27 +231,36 @@
                $validation_sep2 = $separtionStepValidation['validation_2'] ?? null;
                
          ?>
-         <p><strong>People:</strong> Michael, John, Janet</p>
-         <p class="ml-20"><strong>Have you separated the problem from yourself?</strong></p>
-         @if($validation_sep1 == 1)
-         <div class="answer ml-20"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I have separated the problem from myself</div>
-         @else
-         <div class="answer ml-20"><span class="no"><i class="fa-solid fa-check"></i> No</span>, I haven't separated the problem from myself</div>
+         @if(!empty($validation_sep1) && !empty($validation_sep2))
+            <section>
+               <h2>Problem, Solution, and People Separation Verification</h2>
+               <p><strong>Problem:</strong> <span class="danger">{{ $data['problem']['name'] }}</span></p>
+               <p><strong>Solution:</strong> <span class="success">{{ $data['solution']['name'] }}</span></p>
+               
+               <p><strong>People:</strong> Michael, John, Janet</p>
+               <p class="ml-20"><strong>Have you separated the problem from yourself?</strong></p>
+               @if($validation_sep1 == 1)
+               <div class="answer ml-20"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I have separated the problem from myself</div>
+               @else
+               <div class="answer ml-20"><span class="no"><i class="fa-solid fa-check"></i> No</span>, I haven't separated the problem from myself</div>
+               @endif
+               <p class="ml-20"><strong>Have you separated the problem from the people?</strong></p>
+               @if($validation_sep2 == 1)
+               <div class="answer ml-20"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I have separated the problem from the people</div>
+               @else
+               <div class="answer ml-20"><span class="no"><i class="fa-solid fa-check"></i> No</span>, I haven’t separated the problem from the people</div>   
+               @endif
+            </section>
          @endif
-         <p class="ml-20"><strong>Have you separated the problem from the people?</strong></p>
-         @if($validation_sep2 == 1)
-         <div class="answer ml-20"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I have separated the problem from the people</div>
-         @else
-         <div class="answer ml-20"><span class="no"><i class="fa-solid fa-check"></i> No</span>, I haven’t separated the problem from the people</div>   
-         @endif
-      </section>
       <!-- Time Verification -->
-      <section>
-         <?php
+        <?php
          $TimeVerification = $data['verification'][5]['TimeVerification'] ?? [];
          $timeValidation  =  $data['verification'][5]['validations'] ?? [];
         
          ?>
+          @if(!empty($timeValidation))
+      <section>
+        
          <h2>Problem &amp; Solution Existence Related to Time Verification</h2>
          <table>
             <thead>
@@ -246,64 +271,67 @@
             </thead>
             <tbody>
                @foreach ($TimeVerification as $time)
-               
                    <tr>
                         <td>{{ date('m/d/Y' , strtotime($time['date'])) }}</td>
                         <td><span class="yes">{!! ($time['solution_hold']) ? '<i class="fa-solid fa-check"></i> Yes</span>' : 'No' !!}</td>
                   </tr>
                @endforeach
-              
-               
             </tbody>
          </table>
          <p><strong>Does the solution of the problem hold related to time?</strong></p>
-         @if($timeValidation['validation_1'] == 1)
+         @if(isset($timeValidation['validation_1'])  && $timeValidation['validation_1'] == 1)
          <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, the solution of the problem holds related to time</div>
          @else
          <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> NO</span>, the solution of the problem does not hold related to time</div>
          @endif
       </section>
+      @endif
        <!-- Past Time to Present Time -->
-      <section>
-          <?php
+        <?php
          $PastAndPresentTime = $data['verification'][6]['PastAndPresentTime'] ?? [];
          $PastAndPresentTimeValidation  =  $data['verification'][6]['validations'] ?? [];
         
          ?>
-         <h2>Past Time to Present Time Problem Existence Verification</h2>
-         <table>
-            <thead>
-               <tr>
-                  <th>Date</th>
-                  <th>Problem</th>
-               </tr>
-            </thead>
-            <tbody>
-               
-               @foreach ($PastAndPresentTime as $time)
-                   <tr>
-                        <td>{{ date('m/d/Y' , strtotime($time['time'])) }}</td>
-                        <td><span class="danger">{{ $data['problem']['name']}}</span></td>
+         @if(!empty($PastAndPresentTimeValidation))
+         <section>
+            
+            <h2>Past Time to Present Time Problem Existence Verification</h2>
+            <table>
+               <thead>
+                  <tr>
+                     <th>Date</th>
+                     <th>Problem</th>
                   </tr>
-               @endforeach
-            </tbody>
-         </table>
-         <p><strong>Does the problem exist from past to present?</strong></p>
-         @if($PastAndPresentTimeValidation['validation_1'] == 1)
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, the problem has existed from the past to present</div>
-         @else
-         <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>, the problem has not existed from the past to present</div>
+               </thead>
+               <tbody>
+                  
+                  @foreach ($PastAndPresentTime as $time)
+                     <tr>
+                           <td>{{ date('m/d/Y' , strtotime($time['time'])) }}</td>
+                           <td><span class="danger">{{ $data['problem']['name']}}</span></td>
+                     </tr>
+                  @endforeach
+               </tbody>
+            </table>
+            <p><strong>Does the problem exist from past to present?</strong></p>
+            @if($PastAndPresentTimeValidation['validation_1'] == 1)
+            <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, the problem has existed from the past to present</div>
+            @else
+            <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>, the problem has not existed from the past to present</div>
+            @endif
+         </section>
          @endif
-      </section>
       <!-- Principle Identification Verification -->
-      <section>
-         <?php
+       <?php
          $allVarifications = $data['verification'][14]['allVarifications'] ?? []; 
 
          // echo '<pre>';print_r($allVarifications);die;
          $content = $data['verification'][14]['content'] ?? [];
         $principle_Validation  =  $data['verification'][14]['validations'] ?? [];
          ?>
+         @if(!empty($principle_Validation))
+      <section>
+         
          <h2>Principle Identification Verification</h2>
          <table>
             <thead>
@@ -316,31 +344,31 @@
             <tbody>
                
                @foreach($allVarifications as $key=> $value)
-                                                @php
-                                                    
-                                                $applicable = \App\Models\PrincipleIdentificationMain::getApplicable($project_id , @$content->principle_type ,  $value->id);
-                                                
+                     @php
+                           
+                     $applicable = \App\Models\PrincipleIdentificationMain::getApplicable($project_id , @$content->principle_type ,  $value->id);
+                     
 
-                                                @endphp
-                                                
-                                                @if(isset($content->principle_type) &&  $content->principle_type == 0 && ($value->id == 4 || $value->id == 5 || $value->id == 10) ) 
-                                                <tr>
-                                                    <td>{{ ++$key }}</td>
-                                                    <td>{{ $value->text }}</td>
-                                                    <td>{!! ($applicable == 1) ? '<i class="fa-solid fa-check"></i>Yes':'No' !!}</td>
-                                                    
-                                                </tr>
-                                                @else
-                                                <tr> 
-                                                    @if($value->id != 4 && $value->id != 5 && $value->id != 10)
-                                                        <td>{{ ++$key }}</td>
-                                                        <td>{{ $value->text }}</td>
-                                                        <td>{!! ($applicable == 1) ? '<i class="fa-solid fa-check"></i>Yes':'No'  !!}</td>
-                                                        
-                                                    @endif
-                                                </tr>
-                                                @endif
-                                        @endforeach
+                     @endphp
+                     
+                     @if(isset($content->principle_type) &&  $content->principle_type == 0 && ($value->id == 4 || $value->id == 5 || $value->id == 10) ) 
+                     <tr>
+                           <td>{{ ++$key }}</td>
+                           <td>{{ $value->text }}</td>
+                           <td>{!! ($applicable == 1) ? '<i class="fa-solid fa-check"></i>Yes':'No' !!}</td>
+                           
+                     </tr>
+                     @else
+                     <tr> 
+                           @if($value->id != 4 && $value->id != 5 && $value->id != 10)
+                              <td>{{ ++$key }}</td>
+                              <td>{{ $value->text }}</td>
+                              <td>{!! ($applicable == 1) ? '<i class="fa-solid fa-check"></i>Yes':'No'  !!}</td>
+                              
+                           @endif
+                     </tr>
+                     @endif
+               @endforeach
                                         
             </tbody>
          </table>
@@ -357,51 +385,9 @@
          <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>, people don’t use principles to solve the problem</div>
          @endif
       </section>
+      @endif
       
-      {{-- <section>
-         <?php
 
-         $people = $data['verification'][18]['people'] ?? [];
-         $people_validation = $data['verification'][18]['validations'] ?? [];
-            // echo '<pre>';print_r($people_validation);die;
-         ?>
-         <h2>People &amp; Function Identification</h2>
-         <table>
-            <thead>
-               <tr>
-                  <th>Person Name</th>
-                  <th>Function</th>
-               </tr>
-            </thead>
-            <tbody>
-               
-                @foreach($people as $value)
-                        @if($value->name != '')
-                            <tr>
-                                    <td>{{ $value->name }}</td>
-                                    <td>{{ $data['solution_function']['name'] }}</td>
-                            </tr>
-                       @endif
-                       @endforeach    
-            </tbody>
-         </table>
-         <p><strong>Do I target the right function?</strong></p>
-         @if($people_validation['validation_1'] == 1)
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>,  I target the right function</div>
-         @else
-         <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> Yes</span>, I don’t target the right function.</div>
-         @endif
-         <p><strong>Do I understand that I can only look at functions that belong to me when trying to solve a problem?</strong></p>
-         @if($people_validation['validation_2'] == 1)
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>,  I understand that I can only look at functions that belong to me when trying to solve a problem</div>
-         @else
-         <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>, I don’t understand that I can only look at functions that belong to me when trying to solve a problem</div>
-         @endif
-      </section> --}}
-
-
-      <section>
-         <h2>People in Project Verification</h2>
          <?php 
          $custommers = $data['verification'][10]['custommers'] ?? [];
          $custommers_validations = $data['verification'][10]['validations'] ?? [];
@@ -410,51 +396,58 @@
          $custommers_validations2 = $custommers_validations['validation_2'] ?? null;
          $custommers_validations3 = $custommers_validations['validation_3'] ?? null;
          ?>
-         <table>
-            <thead>
-               <tr>
-                  <th>Person Name</th>
-                  <th>Person Title</th>
-               </tr>
-            </thead>
-            <tbody>
-               @foreach ($custommers as $user)
-               <tr>
-                  <td> {{ $user['name'] }}</td>
-                  <td>{{ $user['type'] }}</td>
-               </tr>
-               @endforeach
-            </tbody>
-         </table>
+         @if(!empty($custommers_validations))
+            <section>
+               <h2>People in Project Verification</h2>
+               
+               <table>
+                  <thead>
+                     <tr>
+                        <th>Person Name</th>
+                        <th>Person Title</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     @foreach ($custommers as $user)
+                     <tr>
+                        <td> {{ $user['name'] }}</td>
+                        <td>{{ $user['type'] }}</td>
+                     </tr>
+                     @endforeach
+                  </tbody>
+               </table>
 
-         <p><strong>Are you part of that project?</strong></p>
-         @if($custommers_validations1 == 1)
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I am part of that project</div>
-         @else
-         <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,I am not part of that project</div>
+               <p><strong>Are you part of that project?</strong></p>
+               @if($custommers_validations1 == 1)
+               <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I am part of that project</div>
+               @else
+               <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,I am not part of that project</div>
+               @endif
+               <p><strong>Do you have a function in that project?</strong></p>
+               @if($custommers_validations2 == 1)
+               
+               <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>,  I do have a function in that project</div>
+               @else
+               <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,I do not have a function in that project</div>
+               @endif
+               <p><strong>Do you involve in that project?</strong></p>
+               @if($custommers_validations3 == 1)
+               
+               <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I involve in that project</div>
+               @else
+               <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,I don’t involve in that project</div>
+               @endif
+            
+            </section>
          @endif
-         <p><strong>Do you have a function in that project?</strong></p>
-         @if($custommers_validations2 == 1)
-         
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>,  I do have a function in that project</div>
-         @else
-         <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,I do not have a function in that project</div>
-         @endif
-         <p><strong>Do you involve in that project?</strong></p>
-         @if($custommers_validations3 == 1)
-         
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I involve in that project</div>
-         @else
-         <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,I don’t involve in that project</div>
-          @endif
-        
-      </section>
-      <section>
          <?php
          $communications = $data['verification'][11]['communications'] ?? [];
          $communication_validation = $data['verification'][11]['validations'] ?? [];
           
          ?>
+         @if(!empty($communication_validation))
+      <section>
+         
          <h2>People and Communication Separation Verification</h2>
          <table>
             <thead>
@@ -488,12 +481,15 @@
          <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,   I don’t understand that separation of people and communication is important in a project</div>
          @endif
       </section>
-      <section>
-         <?php
+      @endif
+      <?php
          $communicationsFlow = $data['verification'][12]['users'] ?? [];
          $communicationFlow_validation = $data['verification'][12]['validations'] ?? [];
             // echo '<pre>';print_r($communicationsFlow);die;
          ?>
+      @if(!empty($communicationFlow_validation))
+      <section>
+         
          <h2>Communication Flow of People in Project Verification</h2>
          <table>
             <thead>
@@ -523,13 +519,17 @@
          <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,  I do not communicate with others to solve the problem</div>
          @endif
       </section>
-      <section>
-         
+      @endif
          <?php
          $visibilityEntity = $data['verification'][26]['entiesBehind'] ?? [];
          $visibilityEntity_validation = $data['verification'][26]['validations'] ?? [];
-            // echo '<pre>';print_r($visibilityEntity);die;
+            
          ?>
+
+         @if(!empty($visibilityEntity_validation))
+      <section>
+         
+         
 
          <h2>Visibility and Entity Behind Verification</h2>
          <table>
@@ -568,12 +568,15 @@
          <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I do not understand that the solution of a problem is given for that problem and does not include any outside entity that is not needed to solve that problem</div>
          @endif
       </section>
-      <section>
+         @endif
          <?php
          $partitionApproach = $data['verification'][13]['partition_approach'] ?? [];    
          $partitionApproach_validation = $data['verification'][13]['validations'] ?? [];
-            // echo '<pre>';print_r($partitionApproach);die;   
+              
             ?>
+            @if(!empty($partitionApproach_validation))
+      <section>
+         
          <h2>Partition Approach Verification</h2>
          
          <table>
@@ -598,11 +601,14 @@
          <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,  I haven’t not replaced each part of the problem to specific part of the solution</div>
          @endif
       </section>
-      <section>
-         <?php
+      @endif
+      <?php
          $people = $data['verification'][18]['people'] ?? [];
          $people_validation = $data['verification'][18]['validations'] ?? [];
          ?>
+       @if(!empty($people_validation))
+      <section>
+         
          <h2>Function Substitution and People Verification</h2>
          <table>
             <thead>
@@ -635,12 +641,15 @@
          <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>, I don’t understand that I can only look at functions that belong to me when trying to solve a problem</div>
          @endif
       </section>
-      <h2>Problem Development Step Verification</h2>
-      <section>
-         <?php
+      @endif
+      <?php
          // echo '<pre>';print_r($data['verification'][16]['problemDevelopment']);die;
          $problemDevelopment = $data['verification'][16]['problemDevelopment'];
          ?>
+   @if(!empty($problemDevelopment))
+      <h2>Problem Development Step Verification</h2>
+      <section>
+         
          <h2>Error Identification</h2>
          <table>
             <thead>
@@ -663,6 +672,8 @@
          <p></p>
          <div class="answer"><span class="yes"></div>
       </section>
+      @endif
+      @if(!empty($problemDevelopment))
       <section>
          
          <h2>Compensator Identification</h2>
@@ -688,11 +699,14 @@
          <p></p>
          <div class="answer"></div>
       </section>
-      <section>
+       @endif
          <?php
          //echo '<pre>';print_r($data['verification'][16]['feedBack']);die;
          $feedBack = $data['verification'][16]['feedBack'];
          ?>
+      @if(!empty($feedBack))
+      <section>
+         
          <h2>Feedback Identification</h2>
          <table>
             <thead>
@@ -720,10 +734,14 @@
          <p></p>
          <div class="answer"></div>
       </section>
-      <section>
-         <?php
+      @endif
+      <?php
          $errorcorrections = $data['verification'][16]['errorcorrection']['errorcorrections'];
+        
          ?>
+   @if($errorcorrections->count() > 0)
+      <section>
+         
          <h2>Error Correction or Feedback Applied</h2>
          <table>
             <thead>
@@ -778,62 +796,69 @@
          <p></p>
          <div class="answer"></div>
       </section>
-      <section>
-         <h2>Resource Management Consideration Verification</h2>
-        <p><strong>Problem:</strong> <span class="danger">{{ $data['problem']['name']}}</span></p>
-        <p><strong>Solution:</strong> <span class="success">{{ $data['solution']['name']}}</span></p>
-         <h3>Entity Usage</h3>
-         <?php
+      @endif
+      <?php
           $entity_used = $data['verification'][24]['entities'];
           $entity_used_validations = $data['verification'][24]['validations'];
            
           ?>
-         <table>
-                                    <thead>
-                                        <th>Entity</th>
-                                        <th>Actual Entity</th>
-                                        <th>Entity Fucntion</th>
-                                        
-                                    </thead>
-                                    <tbody>
+      @if(!empty($entity_used_validations))
+         <section>
+         <h2>Resource Management Consideration Verification</h2>
+         <p><strong>Problem:</strong> <span class="danger">{{ $data['problem']['name']}}</span></p>
+         <p><strong>Solution:</strong> <span class="success">{{ $data['solution']['name']}}</span></p>
+            <h3>Entity Usage</h3>
+            
+            <table>
+                                       <thead>
+                                          <th>Entity</th>
+                                          <th>Actual Entity</th>
+                                          <th>Entity Fucntion</th>
+                                          
+                                       </thead>
+                                       <tbody>
 
-                                    @foreach($entity_used as $entity)
-                                        <tr>
-                                            <td>{{ $entity->entity}}</td>
-                                            <td>{{ $entity->actual_entity}}</td>
-                                            <td>
-                                                {{ $data['solution_function']['name']}}
-                                            </td>
-                                            
+                                       @foreach($entity_used as $entity)
+                                          <tr>
+                                             <td>{{ $entity->entity}}</td>
+                                             <td>{{ $entity->actual_entity}}</td>
+                                             <td>
+                                                   {{ $data['solution_function']['name']}}
+                                             </td>
+                                             
 
-                                        </tr>
-                                    @endforeach    
-                                    </tbody>
-                                </table>
-         <p>Have you used the entities to solve the underlying problem?</p>
-         @if($entity_used_validations['validation_1'] == 1)
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I have used the entities to solve the problem</div>
-         @else
-          <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,  I haven’t used the entities to solve the problem.</div>
-          @endif
-         <p>Do the entities that are used can be substituted for the problem?</p>
+                                          </tr>
+                                       @endforeach    
+                                       </tbody>
+                                 </table>
+            <p>Have you used the entities to solve the underlying problem?</p>
+            @if($entity_used_validations['validation_1'] == 1)
+            <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I have used the entities to solve the problem</div>
+            @else
+            <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,  I haven’t used the entities to solve the problem.</div>
+            @endif
+            <p>Do the entities that are used can be substituted for the problem?</p>
 
-         @if($entity_used_validations['validation_2'] == 1)
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, the entities that are used can be substituted for the problem</div>
-          @else
-         <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>, the entities that are used cannot be substituted for the problem.</div>
-         @endif
-      </section>
+            @if($entity_used_validations['validation_2'] == 1)
+            <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, the entities that are used can be substituted for the problem</div>
+            @else
+            <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>, the entities that are used cannot be substituted for the problem.</div>
+            @endif
+         </section>
+      @endif
+      <?php
+            $principleUsage = $data['verification'][27]['principle_identification_usage'];
+            $principle_identification = $data['verification'][27]['principle_identification'];
+            
+         ?>
+      @if(!empty($principleUsage) && !empty($principleUsage))
       <section>
          <h2>Mother Nature Existence Verification</h2>
         <p><strong>Problem:</strong> <span class="danger">{{ $data['problem']['name']}}</span></p>
         <p><strong>Solution:</strong> <span class="success">{{ $data['solution']['name']}}</span></p>
          <p><strong>Solution Function:</strong> {{ $data['solution_function']['name'] }}</p>
          <h3>Principle Usage</h3>
-         <?php
-            $principleUsage = $data['verification'][27]['principle_identification_usage'];
-            $principle_identification = $data['verification'][27]['principle_identification']
-         ?>
+         
          <table>
                   <thead>
                   <th>Principle Count 12</th>
@@ -871,58 +896,64 @@
                   </tbody>
                </table>
       </section>
-      <section>
-         <h2>Solution Time Location 1 Verification</h2>
+       @endif
          <?php 
          $custommers = $data['verification'][8]['custommers'];
          $sol_loc_one_validation = $data['verification'][8]['validations'];
-         
          ?>
-        <table class="">
-                  <thead>
-                     <th>Problem</th>
-                     <th>Date</th>
-                     <th>Solution Function</th>
-                     <th>Date</th>
-                     <th>People</th>
-                  </thead>
-                  <tbody>
-                     <tr>
-                           <td>{{  $data['problem']['name'] }}</td>
-                           <td>{{  date('d/m/Y', strtotime($data['problem']['created_at']))}}
-                           </td>
-                           <td>{{ $data['solution_function']['name'] }}</td>
-                           <td>{{ date('d/m/Y', strtotime($data['solution_function']['created_at']))}}</td>
-                           <td>
-                                 <ul>
-                                    @foreach($custommers as $user)
-                                       <li>{{ $user->name }}</li>
-                                    @endforeach
-                                 </ul>
-                           </td>
-                     </tr>
-                  </tbody>
-               </table>
-         <p>Have you separated the problem from yourself?</p>
-         @if($sol_loc_one_validation['validation_1'] == 1)
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I have separated the problem from myself</div>
-         @else
-         <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,  I haven’t separated the problem from myself</div>
-         @endif
 
-         <p>Have you separated the problem from the people?</p>
-          @if($sol_loc_one_validation['validation_2'] == 1)
-            <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I have separated the problem from the people</div>
-          @else
-            <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,  I haven’t separated the problem from the people</div>
-         @endif
-      </section>
-      <section>
-         <h2>Solution Time Location 2 Verification</h2>
-         <?php
+      @if(!empty($sol_loc_one_validation))
+            <section>
+               <h2>Solution Time Location 1 Verification</h2>
+               
+            <table class="">
+                        <thead>
+                           <th>Problem</th>
+                           <th>Date</th>
+                           <th>Solution Function</th>
+                           <th>Date</th>
+                           <th>People</th>
+                        </thead>
+                        <tbody>
+                           <tr>
+                                 <td>{{  $data['problem']['name'] }}</td>
+                                 <td>{{  date('d/m/Y', strtotime($data['problem']['created_at']))}}
+                                 </td>
+                                 <td>{{ $data['solution_function']['name'] }}</td>
+                                 <td>{{ date('d/m/Y', strtotime($data['solution_function']['created_at']))}}</td>
+                                 <td>
+                                       <ul>
+                                          @foreach($custommers as $user)
+                                             <li>{{ $user->name }}</li>
+                                          @endforeach
+                                       </ul>
+                                 </td>
+                           </tr>
+                        </tbody>
+                     </table>
+               <p>Have you separated the problem from yourself?</p>
+               @if($sol_loc_one_validation['validation_1'] == 1)
+               <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I have separated the problem from myself</div>
+               @else
+               <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,  I haven’t separated the problem from myself</div>
+               @endif
+
+               <p>Have you separated the problem from the people?</p>
+               @if($sol_loc_one_validation['validation_2'] == 1)
+                  <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I have separated the problem from the people</div>
+               @else
+                  <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,  I haven’t separated the problem from the people</div>
+               @endif
+            </section>
+      @endif
+       <?php
          $custommers = $data['verification'][8]['custommers'];
          $sol_loc_two_validation = $data['verification'][9]['validations'];
          ?>
+@if(!empty($sol_loc_two_validation))
+      <section>
+         <h2>Solution Time Location 2 Verification</h2>
+        
          <table>
             <thead>
                      <th>Problem</th>
@@ -962,22 +993,25 @@
             <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,  I don’t finish solving the problem with the same people</div>
          @endif
       </section>
-      <section>
-         <?php
-          $functionAud = $data['verification'][17]['functionAud'];
-        
-         ?>
-         <h2>Function Adjustment</h2>
-         <p><strong>Improper Function:</strong> <span class="danger">{{ $functionAud->function_name }}</span></p>
-         <p><strong>Problem Name:</strong> <span class="danger"> {{ $functionAud->problem_name }}</span></p>
+@endif
+ <?php  $functionAud = $data['verification'][17]['functionAud']; ?>
+      @if(!empty($functionAud))
+         <section>
          
+            <h2>Function Adjustment</h2>
+            <p><strong>Improper Function:</strong> <span class="danger">{{ $functionAud->function_name }}</span></p>
+            <p><strong>Problem Name:</strong> <span class="danger"> {{ $functionAud->problem_name }}</span></p>
+            
 
-      </section>
-      <section>
-          <?php
+         </section>
+      @endif
+<?php
           $problemreplaced_valid = $data['verification'][22]['validations'];
-         // echo '<pre>';print_r($problemreplaced);die;
+         
           ?>
+      @if(!empty($problemreplaced_valid))
+      <section>
+          
          
          <h2>Replace Problem By Problem</h2>
          <p><strong>Problem:</strong> <span class="danger">{{  $data['problem']['name'] }}</span></p>
@@ -989,12 +1023,15 @@
          <div class="answer"><span class="yes">No</span>, I do not understand that a problem needs to be solved</div>
          @endif
       </section>
-      <section>
-         <h2>Function Belong to People Verification</h2>
-         <?php
+      @endif
+      <?php
           $people = $data['verification'][19]['people'];
           $function_people_valid = $data['verification'][19]['validations'];
          ?>
+      @if(!empty($function_people_valid))
+      <section>
+         <h2>Function Belong to People Verification</h2>
+         
          <table>
                     <thead>
                         <th>Person Name</th>
@@ -1026,15 +1063,20 @@
                   <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,  I don’t understand that I can only look at functions that belong to me when trying to solve a problem</div>
                @endif
       </section>
+      @endif
+       <?php 
+               $problemPart  = $data['verification'][20]['problemPart'] ?? [];
+               $problemPart_valid  = $data['verification'][20]['validations'];
+               if(!empty($problemPart)){
+               $solutionParts = \App\Models\AverageApproach::getSolutionParts($problemPart->project_id, $problemPart->id , $data['userID']);
+               }
+               
+         ?>
+      @if(!empty($problemPart_valid))
       <section>
          <h2>Averaging Approach Verification</h2>
          <h3>Part of Problem / Solution   </h3>
-         <?php 
-               $problemPart  = $data['verification'][20]['problemPart'] ?? [];
-               $problemPart_valid  = $data['verification'][20]['validations'];
-               $solutionParts = \App\Models\AverageApproach::getSolutionParts($problemPart->project_id, $problemPart->id , $data['userID']);
-               
-         ?>
+        
 
          <table>
             <thead>
@@ -1066,40 +1108,46 @@
                   <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,  each part of the problem is not substituted by a part of the solution</div>
                @endif
       </section>
-      <section>
-         <h2>Passive Voice Approach Verification</h2>
-         <?php
+      @endif
+       <?php
          $passive_voice_valid  = $data['verification'][21]['validations'];
          ?>
-         <table>
-            <thead>
-               <tr>
-                  <th>Problem</th>
-                  <th>Need</th>
-                  <th>Solution</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>{{  $data['problem']['name'] }}</td>
-                  <td>Needs to be</td>
-                  <td>{{  $data['solution']['name'] }}</td>
-               </tr>
-             
-            </tbody>
-         </table>
-         <p><strong>Do you understand that a problem needs to be solved?</strong></p>
-          @if($passive_voice_valid['validation_1'] == 1)
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I understand that a problem needs to be solved</div>
-         @else
-         <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>, I understand that a problem needs to be solved</div>
-         @endif
-      </section>
-      <section>
-         <h2>Me Vs. You Approach Verification</h2>
-          <?php
+      @if(!empty($passive_voice_valid))
+            <section>
+               <h2>Passive Voice Approach Verification</h2>
+            
+               <table>
+                  <thead>
+                     <tr>
+                        <th>Problem</th>
+                        <th>Need</th>
+                        <th>Solution</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td>{{  $data['problem']['name'] }}</td>
+                        <td>Needs to be</td>
+                        <td>{{  $data['solution']['name'] }}</td>
+                     </tr>
+                  
+                  </tbody>
+               </table>
+               <p><strong>Do you understand that a problem needs to be solved?</strong></p>
+               @if($passive_voice_valid['validation_1'] == 1)
+               <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I understand that a problem needs to be solved</div>
+               @else
+               <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>, I understand that a problem needs to be solved</div>
+               @endif
+            </section>
+      @endif
+<?php
          $me_vs_you_valid  = $data['verification'][28]['validations'];
          ?>
+          @if(!empty($me_vs_you_valid))
+      <section>
+         <h2>Me Vs. You Approach Verification</h2>
+          
          <table>
             <thead>
                <tr>
@@ -1131,13 +1179,15 @@
                   <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,   I do not understand the solution of a problem is I work with and I don’t go against</div>
                @endif
       </section>
-     
-      <section>
-         <h2>Problem at Location Verification</h2>
-         <?php
+     @endif
+     <?php
          $problemLocation = $data['verification'][31]['problrmAtLocatios'];
          $problemLocationvalidations = $data['verification'][31]['validations'];
          ?>
+      @if(!empty($problemLocationvalidations))
+      <section>
+         <h2>Problem at Location Verification</h2>
+         
          <table>
             <thead>
                <tr>
@@ -1148,12 +1198,12 @@
                </tr>
             </thead>
             <tbody>
-              <tr>
+            <tr>
                   <td>{{  $data['problem']['name'] }}</td>
                   <td>{{ $problemLocation->problem_location }}</td>
                   <td>{{ $data['solution_function']['name'] }}</td>
                   <td>{{ $problemLocation->solution_function_location }}</td>
-              </tr>
+            </tr>
             </tbody>
          </table>
          <p>Is the problem solved at the location it is identified?</p>
@@ -1170,917 +1220,8 @@
                   <div class="answer"><span class="no"><i class="fa-solid fa-check"></i> No</span>,the solution function of the problem is not executed at the problem’s location</div>
                @endif
       </section>
-      <section class="realtionship-section">
-         <h2>Relationship</h2>
-         <h3>Communication and People Relationship</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Person Name</th>
-                  <th>Communication</th>
-                  <th>People Communication</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Michael</td>
-                  <td>Michael Communication</td>
-                  <td>Jon talks to Michael about changing the oil, where John provides Michael with the service order to execute</td>
-               </tr>
-               <tr>
-                  <td>John</td>
-                  <td>John Communication</td>
-                  <td>John talks to Janet and gets the order where John writes the order about the oil change from Janet</td>
-               </tr>
-               <tr>
-                  <td>Janet</td>
-                  <td>Janet Communication</td>
-                  <td>Janet talks to John about the oil change schedule by placing the order to change the oil</td>
-               </tr>
-            </tbody>
-         </table>
-         <p><strong>Do you understand that the communication of a person is separate from that person and there is a relationship between the communication of a person and the person himself/herself?</strong></p>
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I do understand that the communication of a person is separate from that person and there is a relationship between the communication of a person and the person himself/herself</div>
-      </section>
-      <section>
-         <h2>Communication and Principle Relationship</h2>
-         <h3>People Communication</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Person Name</th>
-                  <th>Communication</th>
-                  <th>People Communication</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Michael</td>
-                  <td>Michael Communication</td>
-                  <td>Jon talks to Michael about changing the oil, where John provides Michael with the service order to execute</td>
-               </tr>
-               <tr>
-                  <td>John</td>
-                  <td>John Communication</td>
-                  <td>John talks to Janet and gets the order where John writes the order about the oil change from Janet</td>
-               </tr>
-               <tr>
-                  <td>Janet</td>
-                  <td>Janet Communication</td>
-                  <td>Janet talks to John about the oil change schedule by placing the order to change the oil</td>
-               </tr>
-            </tbody>
-         </table>
-         <h3>Principle</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Principle Count</th>
-                  <th>Actual Principle</th>
-                  <th>Usage</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>1</td>
-                  <td>The Given Set of Communication Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>2</td>
-                  <td>The Given Set of Information Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>3</td>
-                  <td>The Given Set of Instrumentation Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>4</td>
-                  <td>The Given Set of Education Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>5</td>
-                  <td>The Given Set of Power Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>6</td>
-                  <td>The Given Set of Marketing Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>7</td>
-                  <td>The Given Set of Exchange Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>8</td>
-                  <td>The Given Set of Gaming Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>9</td>
-                  <td>The Given Set of Work Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>10</td>
-                  <td>The Given Set of Reproduction Principle</td>
-                  <td>No</td>
-               </tr>
-            </tbody>
-         </table>
-         <p><strong>Do you understand the relationship between communication and principle in a project?</strong></p>
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I do understand the relationship between communication and principle in a project</div>
-      </section>
-      <section>
-         <h2>Communication and Solution Function Relationship</h2>
-         <h3>People Communication</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Person Name</th>
-                  <th>Communication</th>
-                  <th>People Communication</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Michael</td>
-                  <td>Michael Communication</td>
-                  <td>Jon talks to Michael about changing the oil, where John provides Michael with the service order to execute</td>
-               </tr>
-               <tr>
-                  <td>John</td>
-                  <td>John Communication</td>
-                  <td>John talks to Janet and gets the order where John writes the order about the oil change from Janet</td>
-               </tr>
-               <tr>
-                  <td>Janet</td>
-                  <td>Janet Communication</td>
-                  <td>Janet talks to John about the oil change schedule by placing the order to change the oil</td>
-               </tr>
-            </tbody>
-         </table>
-         <h3>Problem, Solution, and Solution Function</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Problem</th>
-                  <th>Solution</th>
-                  <th>Solution Function</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Dirty Oil</td>
-                  <td>New Oil</td>
-                  <td>Change Oil</td>
-               </tr>
-            </tbody>
-         </table>
-         <p><strong>Do you understand that the communication of a person is separate from that person and there is a relationship between the communication of a person and the solution function of a problem?</strong></p>
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I do understand that the communication of a person is separate from that person and there is a relationship between the communication of a person and the solution function of a problem</div>
-      </section>
-      <section>
-         <h2>Communication and Solution Relationship</h2>
-         <h3>People Communication</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Person Name</th>
-                  <th>Communication</th>
-                  <th>People Communication</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Michael</td>
-                  <td>Michael Communication</td>
-                  <td>Jon talks to Michael about changing the oil, where John provides Michael with the service order to execute</td>
-               </tr>
-               <tr>
-                  <td>John</td>
-                  <td>John Communication</td>
-                  <td>John talks to Janet and gets the order where John writes the order about the oil change from Janet</td>
-               </tr>
-               <tr>
-                  <td>Janet</td>
-                  <td>Janet Communication</td>
-                  <td>Janet talks to John about the oil change schedule by placing the order to change the oil</td>
-               </tr>
-            </tbody>
-         </table>
-         <h3>Problem, Solution, and Solution Function</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Problem</th>
-                  <th>Solution</th>
-                  <th>Solution Function</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Dirty Oil</td>
-                  <td>New Oil</td>
-                  <td>Change Oil</td>
-               </tr>
-            </tbody>
-         </table>
-         <p><strong>Do you understand that the communication of a person is separate from that person and there is a relationship between the communication of a person and the solution of a problem?</strong></p>
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I do understand that the communication of a person is separate from that person and there is a relationship between the communication of a person and the solution of a problem</div>
-      </section>
-      <section>
-         <h2>Entity Usage and Principle Relationship</h2>
-         <h3>Entity Usage</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Entity Count</th>
-                  <th>Entity Name</th>
-                  <th>Actual Entity</th>
-                  <th>Usage</th>
-                  <th>Require</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>1</td>
-                  <td>Oil</td>
-                  <td>5 quarts of oil in the counter</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>2</td>
-                  <td>Oil Filter</td>
-                  <td>1 oil filter in the hood of the car</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-               </tr>
-            </tbody>
-         </table>
-         <h3>Principle</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Principle Count</th>
-                  <th>Actual Principle</th>
-                  <th>Usage</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>1</td>
-                  <td>The Given Set of Communication Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>2</td>
-                  <td>The Given Set of Information Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>3</td>
-                  <td>The Given Set of Instrumentation Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>4</td>
-                  <td>The Given Set of Education Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>5</td>
-                  <td>The Given Set of Power Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>6</td>
-                  <td>The Given Set of Marketing Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>7</td>
-                  <td>The Given Set of Exchange Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>8</td>
-                  <td>The Given Set of Gaming Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>9</td>
-                  <td>The Given Set of Work Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>10</td>
-                  <td>The Given Set of Reproduction Principle</td>
-                  <td>No</td>
-               </tr>
-            </tbody>
-         </table>
-         <p><strong>Do you understand the relationship between the principle and entities or physical entities usage in project to solve a problem?</strong></p>
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I do understand the relationship between the principle and entities or physical entities usage in project to solve a problem</div>
-      </section>
-      <section>
-         <h2>Information and Principle Relationship</h2>
-         <h3>Information Identified</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Information Identified</th>
-                  <th>Information Given</th>
-                  <th>Entity Point To</th>
-                  <th>Matched</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Checked oil using dipstick oil color indicator</td>
-                  <td>Oil change light indicator in the dash turned yellow</td>
-                  <td>Oil Status</td>
-                  <td>Yes</td>
-               </tr>
-            </tbody>
-         </table>
-         <h3>Principle</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Principle Count</th>
-                  <th>Actual Principle</th>
-                  <th>Usage</th>
-               </tr>
-            </thead>
-            <tbody>
-               <!-- Repeat from above -->
-               <tr>
-                  <td>1</td>
-                  <td>The Given Set of Communication Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>2</td>
-                  <td>The Given Set of Information Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>3</td>
-                  <td>The Given Set of Instrumentation Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>4</td>
-                  <td>The Given Set of Education Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>5</td>
-                  <td>The Given Set of Power Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>6</td>
-                  <td>The Given Set of Marketing Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>7</td>
-                  <td>The Given Set of Exchange Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>8</td>
-                  <td>The Given Set of Gaming Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>9</td>
-                  <td>The Given Set of Work Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>10</td>
-                  <td>The Given Set of Reproduction Principle</td>
-                  <td>No</td>
-               </tr>
-            </tbody>
-         </table>
-         <p><strong>Do you understand the relationship between information and principle in a project?</strong></p>
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I do understand the relationship between information and principle in a project</div>
-      </section>
-      <section>
-         <h2>Information and Solution Relationship</h2>
-         <h3>Information Identified</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Information Identified</th>
-                  <th>Information Given</th>
-                  <th>Entity Point To</th>
-                  <th>Matched</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Checked oil using dipstick oil color indicator</td>
-                  <td>Oil change light indicator in the dash turned yellow</td>
-                  <td>Oil Status</td>
-                  <td>Yes</td>
-               </tr>
-            </tbody>
-         </table>
-         <h3>Problem, Solution, and Solution Function</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Problem</th>
-                  <th>Solution</th>
-                  <th>Solution Function</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Dirty Oil</td>
-                  <td>New Oil</td>
-                  <td>Change Oil</td>
-               </tr>
-            </tbody>
-         </table>
-         <p><strong>Do you understand that the solution of a problem is given and there is a relationship between that solution and information to solve that problem?</strong></p>
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I do understand that the solution of a problem is given and there is a relationship between that solution and information to solve that problem</div>
-      </section>
-      <section>
-         <h2>People and Solution Function Relationship</h2>
-         <h3>People and Function</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Person Name</th>
-                  <th>Function</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Michael</td>
-                  <td>Change Oil</td>
-               </tr>
-               <tr>
-                  <td>John</td>
-                  <td>Execute Order</td>
-               </tr>
-               <tr>
-                  <td>Janet</td>
-                  <td>Place Order</td>
-               </tr>
-            </tbody>
-         </table>
-         <h3>Problem, Solution, and Solution Function</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Problem</th>
-                  <th>Solution</th>
-                  <th>Solution Function</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Dirty Oil</td>
-                  <td>New Oil</td>
-                  <td>Change Oil</td>
-               </tr>
-            </tbody>
-         </table>
-         <p><strong>Do you understand that the function to solve a problem is separate from people who are working to solve that problem and there is a relationship between the function of the people and the people themselves?</strong></p>
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I do understand that the function to solve a problem is separate from people who are working to solve that problem and there is a relationship between the function of the people and the people themselves</div>
-      </section>
-      <section>
-         <h2>Principle and People Relationship</h2>
-         <h3>Principle</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Principle Count</th>
-                  <th>Actual Principle</th>
-                  <th>Usage</th>
-               </tr>
-            </thead>
-            <tbody>
-               <!-- Same as earlier -->
-               <tr>
-                  <td>1</td>
-                  <td>The Given Set of Communication Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>2</td>
-                  <td>The Given Set of Information Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>3</td>
-                  <td>The Given Set of Instrumentation Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>4</td>
-                  <td>The Given Set of Education Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>5</td>
-                  <td>The Given Set of Power Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>6</td>
-                  <td>The Given Set of Marketing Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>7</td>
-                  <td>The Given Set of Exchange Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>8</td>
-                  <td>The Given Set of Gaming Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>9</td>
-                  <td>The Given Set of Work Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>10</td>
-                  <td>The Given Set of Reproduction Principle</td>
-                  <td>No</td>
-               </tr>
-            </tbody>
-         </table>
-         <h3>People and Function</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Person Name</th>
-                  <th>Function</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Michael</td>
-                  <td>Change Oil</td>
-               </tr>
-               <tr>
-                  <td>John</td>
-                  <td>Execute Order</td>
-               </tr>
-               <tr>
-                  <td>Janet</td>
-                  <td>Place Order</td>
-               </tr>
-            </tbody>
-         </table>
-         <p><strong>Do you understand the relationship between principle and people?</strong></p>
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I do understand the relationship between principle and people</div>
-      </section>
-      <section>
-         <h2>Principle and Function Relationship</h2>
-         <h3>Principle</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Principle Count</th>
-                  <th>Actual Principle</th>
-                  <th>Usage</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>1</td>
-                  <td>The Given Set of Communication Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>2</td>
-                  <td>The Given Set of Information Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>3</td>
-                  <td>The Given Set of Instrumentation Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>4</td>
-                  <td>The Given Set of Education Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>5</td>
-                  <td>The Given Set of Power Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>6</td>
-                  <td>The Given Set of Marketing Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>7</td>
-                  <td>The Given Set of Exchange Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>8</td>
-                  <td>The Given Set of Gaming Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>9</td>
-                  <td>The Given Set of Work Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>10</td>
-                  <td>The Given Set of Reproduction Principle</td>
-                  <td>No</td>
-               </tr>
-            </tbody>
-         </table>
-         <h3>People and Function</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Person Name</th>
-                  <th>Function</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Michael</td>
-                  <td>Change Oil</td>
-               </tr>
-               <tr>
-                  <td>John</td>
-                  <td>Execute Order</td>
-               </tr>
-               <tr>
-                  <td>Janet</td>
-                  <td>Place Order</td>
-               </tr>
-            </tbody>
-         </table>
-         <p><strong>Do you understand the relationship between the principle and the solution function of a problem?</strong></p>
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I do understand the relationship between the principle and the solution function of a problem</div>
-      </section>
-      <section>
-         <h2>Principle and Solution Relationship</h2>
-         <h3>Principle</h3>
-         <!-- Repeat table from above -->
-         <table>
-            <thead>
-               <tr>
-                  <th>Principle Count</th>
-                  <th>Actual Principle</th>
-                  <th>Usage</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>1</td>
-                  <td>The Given Set of Communication Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>2</td>
-                  <td>The Given Set of Information Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>3</td>
-                  <td>The Given Set of Instrumentation Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>4</td>
-                  <td>The Given Set of Education Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>5</td>
-                  <td>The Given Set of Power Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>6</td>
-                  <td>The Given Set of Marketing Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>7</td>
-                  <td>The Given Set of Exchange Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>8</td>
-                  <td>The Given Set of Gaming Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>9</td>
-                  <td>The Given Set of Work Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>10</td>
-                  <td>The Given Set of Reproduction Principle</td>
-                  <td>No</td>
-               </tr>
-            </tbody>
-         </table>
-         <h3>Problem, Solution, and Solution Function</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Problem</th>
-                  <th>Solution</th>
-                  <th>Solution Function</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Dirty Oil</td>
-                  <td>New Oil</td>
-                  <td>Change Oil</td>
-               </tr>
-            </tbody>
-         </table>
-         <p><strong>Is the solution of the problem related to the principle?</strong></p>
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, the solution of the problem is related to the principle</div>
-         <p><strong>Do you understand the solution and principle relationship?</strong></p>
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I do understand the solution and principle relationship</div>
-      </section>
-      <section>
-         <h2>Resource Management and Solution Relationship</h2>
-         <h3>Problem, Solution, and Solution Function</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Problem</th>
-                  <th>Solution</th>
-                  <th>Solution Function</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Dirty Oil</td>
-                  <td>New Oil</td>
-                  <td>Change Oil</td>
-               </tr>
-            </tbody>
-         </table>
-         <h3>Entity Usage</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Entity Count</th>
-                  <th>Entity Name</th>
-                  <th>Actual Entity</th>
-                  <th>Usage</th>
-                  <th>Require</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>1</td>
-                  <td>Oil</td>
-                  <td>5 quarts of oil in the counter</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>2</td>
-                  <td>Oil Filter</td>
-                  <td>1 oil filter in the hood of the car</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-               </tr>
-            </tbody>
-         </table>
-         <p><strong>Do you understand that in order to use resources or physical entities to solve a problem, the solution of that problem must require the usage of those entities?</strong></p>
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I do understand that in order to use resources or physical entities to solve a problem, the solution of that problem must require the usage of those entities</div>
-      </section>
-      <section>
-         <h2>Vocabulary and Principle Relationship</h2>
-         <h3>Word and Entity Identification</h3>
-         <table>
-            <thead>
-               <tr>
-                  <th>Word</th>
-                  <th>Actual Entity</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>Oil</td>
-                  <td>Mobile 1, 5 quarts on the counter</td>
-               </tr>
-               <tr>
-                  <td>Filter</td>
-                  <td>Mobile 1 filter on top of the car in the bay</td>
-               </tr>
-               <tr>
-                  <td>Mechanic</td>
-                  <td>Michael, the mechanic who works on the car</td>
-               </tr>
-               <tr>
-                  <td>Manager</td>
-                  <td>John, the manager at the front desk</td>
-               </tr>
-               <tr>
-                  <td>Money</td>
-                  <td>Money handed to John</td>
-               </tr>
-               <tr>
-                  <td>Car</td>
-                  <td>The 2003 Honda Civic</td>
-               </tr>
-            </tbody>
-         </table>
-         <h3>Principle</h3>
-         <!-- Repeat table -->
-         <table>
-            <thead>
-               <tr>
-                  <th>Principle Count</th>
-                  <th>Actual Principle</th>
-                  <th>Usage</th>
-               </tr>
-            </thead>
-            <tbody>
-               <tr>
-                  <td>1</td>
-                  <td>The Given Set of Communication Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>2</td>
-                  <td>The Given Set of Information Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>3</td>
-                  <td>The Given Set of Instrumentation Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>4</td>
-                  <td>The Given Set of Education Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>5</td>
-                  <td>The Given Set of Power Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>6</td>
-                  <td>The Given Set of Marketing Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>7</td>
-                  <td>The Given Set of Exchange Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>8</td>
-                  <td>The Given Set of Gaming Principle</td>
-                  <td>No</td>
-               </tr>
-               <tr>
-                  <td>9</td>
-                  <td>The Given Set of Work Principle</td>
-                  <td>Yes</td>
-               </tr>
-               <tr>
-                  <td>10</td>
-                  <td>The Given Set of Reproduction Principle</td>
-                  <td>No</td>
-               </tr>
-            </tbody>
-         </table>
-         <p><strong>Do you understand the relationship between the vocabulary of people who are working in the project and the principle that give them ideas to solve the underlying problem?</strong></p>
-         <div class="answer"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I do understand the relationship between the vocabulary of people who are working in the project and the principle that give them ideas to solve the underlying problem</div>
-      </section>
+      @endif
+      @if($data['shared_project_data']['editable_relationship'] == 1)
+      @include('adult.reports.component.relationship-report')
+      @endif
    </div> 
