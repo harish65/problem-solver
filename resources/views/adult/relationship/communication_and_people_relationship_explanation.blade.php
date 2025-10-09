@@ -5,8 +5,10 @@
 <div class='relationshipPage'>
     
         <?php 
+        
             $parameters = ['problem_id'=> $problem_id , 'project_id' => $project_id];                            
             $parameter =  Crypt::encrypt($parameters);
+           
         ?>
         <a id="problem_nav" href="{{ route('adult.problem',@$parameter) }}"></a>
         <a id="solution_nav" href="{{ route('adult.solution',@$parameter) }}"></a>
@@ -47,7 +49,7 @@
                         <!-- principleRelation End -->
                     
 
-
+                      
                     @include('adult.relationship.common.validation')
                 
             </div>

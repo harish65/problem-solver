@@ -58,10 +58,9 @@
 @endsection 
 @section('scripts')
 <script>
-    $('#rel_types').on('change', function () {
-        var id = $(this).val();
-        window.location.href = "{{ route('adult.rel',$parameter) }}" + '/' + id;
- })
+    
+
+
  var showMessage = "{{$showMessage}}"
     var text_ = '{{ $relationship->error_msg}}'
     if (showMessage) {

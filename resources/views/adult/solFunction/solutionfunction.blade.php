@@ -332,5 +332,41 @@ $('.dashboard').click(function(){
        
     });
     
+$(document).ready(function () {
+                let currentStep = 0;
+                let totalSteps = $(".quiz-step").length;
+
+                function showStep(step) {
+                    $(".quiz-step").hide();
+                    $(".quiz-step[data-step='" + step + "']").show();
+
+                    // Re-init TinyMCE for visible textarea
+                    tinymce.remove(".tinymce-editor");
+                    tinymce.init({
+                        selector: ".tinymce-editor",
+                        menubar: false,
+                        height: 200
+                    });
+                }
+
+                // Next button
+                $(document).on("click", ".nextBtn", function () { 
+                    // if (currentStep < totalSteps - 1) {
+                        currentStep++;
+                        showStep(currentStep);
+                    // }
+                });
+
+                // Previous button
+                $(document).on("click", ".prevBtn", function () {
+                    if (currentStep > 0) {
+                        currentStep--;
+                        showStep(currentStep);
+                    }
+                });
+
+                // Load first step
+                showStep(currentStep);
+            });
  </script>
 @endsection

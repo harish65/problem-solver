@@ -288,7 +288,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
 
         //RelationShip Controller
 
-        Route::get("rel/{id?}/{type?}", [\App\Http\Controllers\Adult\RelationshipController::class, 'index'])->name("rel");
+        Route::get("rel/{id?}/{type?}/{user_id?}", [\App\Http\Controllers\Adult\RelationshipController::class, 'index'])->name("rel");
         Route::post("save-rel-validations", [\App\Http\Controllers\Adult\RelationshipController::class, 'SaveValidations'])->name("save-rel-validations");
         //Share project Routs
         Route::post("share-project", [\App\Http\Controllers\Adult\ProjectController::class, 'shareProject'])->name("share-project");
@@ -299,9 +299,10 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
     });  
     Route::get('/report/{id?}', [ReportController::class, 'index'])->name('report');
     Route::get('/ProjectUsers/{id?}', [ReportController::class, 'ProjectUsers'])->name('getProjectUsers');
-    Route::get('/getReport', [ReportController::class, 'GetReport'])->name('getReport');
-    // Route::get('/report', [ReportController::class, 'index'])->name('report');
-        Route::match(['get', 'post'],"/result/{id?}", [ResultController::class, 'index'])->name("report");
+    Route::match(['get', 'post'],'/getReport', [ReportController::class, 'GetReport'])->name('getReport');
+   
+        Route::match(['get', 'post'],"/result/{id?}", [ResultController::class, 'index'])->name("result");
+       Route::post('/report/export-pdf', [ReportController::class, 'ExportPdf'])->name('report.export.pdf');
 });
 
     
@@ -318,6 +319,7 @@ Route::post('/get-quiz', [QuizController::class, 'getQuiz'])->name('get-quiz');
 // RReport Routes
 
 Route::post('/quiz-update-remarks', [QuizController::class, 'updateRemarks'])->name('quiz-update-remarks');
+
 
 
 

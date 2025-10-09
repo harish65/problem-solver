@@ -40,6 +40,7 @@
   @include('adult.project.table', [$project])      
       
   @include('adult.project.modal.add-project')
+  @include('adult.project.modal.report-modal')
   
 @endsection
 
@@ -192,21 +193,77 @@ $('input[type=radio]').on('change', function(){
 })
 
 
-
-$(function () {
-            $('[data-toggle="tooltip"]').tooltip({
-                'placement' : 'right'
-            })
-    })
+$(document).on('click', '.project-report', function (e) {
+    e.preventDefault(); 
+    // Get data from clicked link
+    var projectId = $(this).data('item');
+    var project_name = $(this).data('item_name');
+    $('#p_name').val(project_name);
+    $('#projectID').val(projectId);
 
     
+  $.ajaxSetup({
+       headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               }
+       });
+       
+       $.ajax({
+           url: "{{route('adult.getProjectUsers')}}/" + projectId,
+           type: 'GET',
+           beforeSend: function(){
+             $('#btnUpdate').attr('disabled',true);
+             $('#btnUpdate').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+           },
+           error: function (xhr, status, error) {
+               $('#btnUpdate').attr('disabled',false);
+               $('#btnUpdate').html('Save changes');
+               $.each(xhr.responseJSON.data, function (key, item) {
+                   toastr.error(item);
+               });
+           },
+           success: function (response){
+             if(response.success == false)
+             {
+                 $('#btnUpdate').attr('disabled',false);
+                 $('#btnUpdate').html('Save changes');
+                 var errors = response.data;
+                 $.each( errors, function( key, value ) {
+                     toastr.error(value)
+                 });
+             } else {
+                let select = $('#userSelect');
+                    select.empty().append('<option selected="true" disabled="disabled">Select User..</option>');
+                           data = response;
+                    data.forEach(function(user) {
+                        select.append(`<option value="${user.id}">${user.name}</option>`);
+                    });
+                   
+              }
+           }
+       });
+    // Show modal
+    $('#reportmodal').modal('show');
+});
 
-
-
-
-      
 </script>
 <script>
+$('#getReport').on('click' , function(e){
+  e.preventDefault();  
+     if(!$('#userSelect').val() || !$('#p_name').val() || !$('#projectID').val()){
+
+      return toastr.error('There is an issue to load report');toastr.error('There is an issue to load report');
+      window.location.href = '/adult/dashboard';
+      return;
+     }
+    
+    let baseAction = $('#project-report-modal').attr('action');
+    let newAction = `${baseAction}?name=${encodeURIComponent($('#p_name').val())}&project_id=${encodeURIComponent($('#projectID').val())}&user_id=${encodeURIComponent($('#userSelect').val())}`;
+    $('#project-report-modal').attr('action', newAction);
+
+    $('#project-report-modal').submit();
+})
+
 
 </script>
 @endsection

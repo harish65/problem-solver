@@ -78,4 +78,10 @@ class Relationship extends Model
         ];
     }
 
+
+    public static function getValidationAns($project_id , $problem_id , $user_id , $type){
+        return DB::table('rel_validations')->where(['relationship_id'=>$type , 'problem_id'=>$problem_id, 'project_id'=>$project_id , 'user_id' => $user_id])->pluck('ans')->first();
+
+    }
+
 }

@@ -1,8 +1,9 @@
 <div class="mb-5">
-    {{-- @if($quiz && !$submitted) --}}
+    
     @if($quiz && $isPermitted)
         @if($quiz->quiz_type == 1)
             @php
+            
                 if(!isset($userId)){
                     $quizData = json_decode($quiz->quiz_data, true)['mcq'] ?? [];
                 }else if(isset($userQuiz)){
@@ -13,6 +14,7 @@
                
             @endphp
             @if(isset($quizData))
+            
                 <form id="quizForm1" method="post" action="{{ route('add-quiz-data') }}" enctype="multipart/form-data">
                     @csrf
 
@@ -176,31 +178,49 @@
                         @endif
 
                         @foreach($quizData as $key => $value)
+                            <div class="quiz-step" data-step="{{ $key }}" style="display: {{ $key == 0 ? 'block' : 'none' }};">
+                                    @if($isProjectOwner)
+                                        <div class="h4 text-danger">{!! $value['exptoexp_question'] !!}</div>
+                                        <div class="jumbotron">{!! $value['exptoexp_answer'] !!}</div>
+                                    @elseif(!$isProjectOwner && !isset($userQuiz))
+                                        <div class="h4">{!! $value !!}</div>
+                                        <input type="hidden" name="quiz_data[exptoexp][{{$key}}][exptoexp_question]" value="{{$value }}">
+                                        <textarea class="form-control" id="quiz_data_exptoexp{{$key}}" name="quiz_data[exptoexp][{{$key}}][exptoexp_answer]" ></textarea>
+                                    @elseif(!$isProjectOwner && isset($userQuiz))
+                                    <input type="hidden" name="id" value="{{ $userQuiz->id }}">
+                                        <div class="h4">{!! $value['exptoexp_question'] !!}</div>
+                                        <input type="hidden" name="quiz_data[exptoexp][{{$key}}][exptoexp_question]" value="{{$value['exptoexp_question'] }}">
+                                        <textarea class="form-control" id="quiz_data_exptoexp{{$key}}" name="quiz_data[exptoexp][{{$key}}][exptoexp_answer]" >
+                                            {{$value['exptoexp_answer'] }}
+                                        </textarea>
+                                    @endif
+                                <hr class="mt-5 mb-5" />
 
-                            @if($isProjectOwner)
-                                <div class="h4 text-danger">{!! $value['exptoexp_question'] !!}</div>
-                                <div class="jumbotron">{!! $value['exptoexp_answer'] !!}</div>
-                            @elseif(!$isProjectOwner && !isset($userQuiz))
-                                <div class="h4">{!! $value !!}</div>
-                                <input type="hidden" name="quiz_data[exptoexp][{{$key}}][exptoexp_question]" value="{{$value }}">
-                                <textarea class="form-control" id="quiz_data_exptoexp{{$key}}" name="quiz_data[exptoexp][{{$key}}][exptoexp_answer]" ></textarea>
-                            @elseif(!$isProjectOwner && isset($userQuiz))
-                            <input type="hidden" name="id" value="{{ $userQuiz->id }}">
-                                <div class="h4">{!! $value['exptoexp_question'] !!}</div>
-                                <input type="hidden" name="quiz_data[exptoexp][{{$key}}][exptoexp_question]" value="{{$value['exptoexp_question'] }}">
-                                <textarea class="form-control" id="quiz_data_exptoexp{{$key}}" name="quiz_data[exptoexp][{{$key}}][exptoexp_answer]" >
-                                    {{$value['exptoexp_answer'] }}
-                                </textarea>
-                            @endif
-                        <hr class="mt-5 mb-5" />
+                                <div class="d-flex justify-content-between mt-4">
+                                    @if($key > 0)
+                                        <button type="button" class="btn btn-secondary prevBtn">Previous</button>
+                                    @endif
 
+                                    @if($key < count($quizData) - 1)
+                                        <button type="button" class="btn btn-primary nextBtn">Next</button>
+                                    @else
+                                        @if(!$isProjectOwner)
+                                            <button type="submit" class="btn btn-success" id="submitBtnMcq">
+                                                <i class="bi bi-plus-circle me-1"></i> Submit Quiz
+                                            </button>
+                                        @endif
+                                    @endif
+                            </div>
+                        </div>
                         @endforeach
                         @if(!$isProjectOwner)
-                            <div class="text-end mt-4">
+
+                            
+                            <!-- <div class="text-end mt-4">
                                 <button type="submit" class="btn btn-success" id="submitBtnMcq">
                                     <i class="bi bi-plus-circle me-1"></i> Submit Quiz
                                 </button>
-                            </div>
+                            </div> -->
                         @endif
                     </form>
             </div>
@@ -212,3 +232,63 @@
         <div class="alert alert-success" role="alert">The Quiz is submitted!</div>
     @endif
 </div>
+                <?php
+
+                ?>
+ @if($isProjectOwner)
+    <h4 class="font-weight-bold">
+                    Instructor Remark 
+                    <button class="btn btn-sm btn-primary" 
+                        data-toggle="modal" 
+                        data-target="#remarksModal"
+                        data-id="{{ $quiz->id }}"
+                        data-remarks="{{ $quiz->remarks }}">
+                        Update Remarks
+                    </button>
+
+                </h4>
+                
+               
+
+
+    <!-- Modal -->
+            <div class="modal fade bd-example-modal-lg" id="remarksModal" tabindex="-1" role="dialog" aria-labelledby="remarksModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <form method="POST" action="{{ route('quiz-update-remarks') }}">
+                    @csrf
+                    <input type="hidden" name="quiz_id" id="quizId" value="{{ $quiz->id }}">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="remarksModalLabel">Update Remarks</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                        <div class="form-group">
+                            <label for="remarks">Remarks</label>
+                            <textarea class="form-control" name="remarks" id="remarks" rows="3" ></textarea>
+                        </div>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        @endif
+                
+ <div>
+    @if(!$isProjectOwner)
+ <h4>Instructor Remark </h4>
+ @endif
+ 
+ 
+ <p>{{ strip_tags(\App\Models\Quiz::getQuizRemarks($quiz->id , $projectId)) }}</p></div>
+        <script>
+            
+            
+        </script>
+        

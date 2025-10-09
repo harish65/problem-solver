@@ -10,23 +10,34 @@ use Illuminate\Support\Facades\DB;
 class ResultController extends Controller
 {
     public function index($id = null, Request $request){
+        if(isset($request->shared) && $request->shared == true){
+            $params = Crypt::decrypt($request->parameter);
+            $projectID = $params['project_id']; 
+            $problem_id  = $params['problem_id'];
+        }else{
+            $params = Crypt::decrypt($id);
+            $projectID = $params['project_id']; 
+            $problem_id  = $params['problem_id'];
+        }
+
+        //dd($params['project_id'] , $params['problem_id']);
         
-        $params = Crypt::decrypt($id);
-
-
-
-        $users = DB::table('project_shared')->join('users', 'project_shared.shared_with', '=', 'users.id')->where('project_id', $params['project_id'])->select('users.id', 'name')->get();
+            $users = null;
+          
+        if(!empty($params['project_id'])){
+                $users = DB::table('project_shared')->join('users', 'project_shared.shared_with', '=', 'users.id')->where('project_id', $params['project_id'])->select('users.id', 'name')->get();
+        }
+        
         $userQuiz = null;
         $problem = null;
         $project = null;
         $userId = null;
 
         // dd($request->all());
-        if(isset($request->id)){
+        if(isset($request->id)){ 
             $userId = (int)(Crypt::decrypt($request->id));
             if(is_array($params)){
-                $projectID = $params['project_id']; 
-                $problem_id  = $params['problem_id'];
+                
                 $project = DB::table('projects')
                             ->leftjoin('project_shared', 'projects.id', '=', 'project_shared.project_id')
                             ->select('projects.*')
@@ -38,10 +49,11 @@ class ResultController extends Controller
                             })
                         ->orderBy('projects.id', 'desc')
                         ->first();
-
-                if(is_null($project) || isset($project->user_id) && $project->user_id != Auth::user()->id){
-                    return abort(404);
-                }
+                            // die;
+                // if(is_null($project) || isset($project->user_id)){
+                //     return abort(404);
+                // }
+                
                 $userQuiz = DB::table('quiz_data')
                     ->join('quizzes', 'quiz_data.quiz_id', '=', 'quizzes.id')
                     ->where([
@@ -55,7 +67,7 @@ class ResultController extends Controller
 
                     // dd($projectID, $userId,  $userQuiz, $project);
             }
-}
+        }
 
         return view('adult.result.index', compact('project', 'userQuiz', 'problem', 'users', 'userId'));
     }

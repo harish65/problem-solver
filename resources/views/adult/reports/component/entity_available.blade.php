@@ -3,8 +3,9 @@ $entitiesAvailable = $data['verification'][7]['entitiesAvailable'] ?? [];
 
 $givenSet = $data['verification'][7]['givenSet'] ?? null;
 $allVarifications = $data['verification'][7]['allVarifications'] ?? [];
-$validation = $data['verification'][7]['validations']['validation_1'] 
+$validation = $data['verification'][7]['validations']['validation_1'] ?? []; 
 ?>
+@if(!empty($validation))
 <section>
     <h2>Entity Available &amp; Entity Given Verification</h2>
 
@@ -87,3 +88,4 @@ $validation = $data['verification'][7]['validations']['validation_1']
     @endif
 @endif
 </section>
+@endif

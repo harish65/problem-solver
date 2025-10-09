@@ -1,54 +1,10 @@
-@extends('adult.layouts.adult')
-@section('title', 'Adult | Solution Types')
-@section('content')
-
-<div class="container mt-5 min-vh-100">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project Report PDF</title>
     
-    <div class="row relationshipPage mainTitle">
-        {{--<div class="col-md-5">
-            <div class="d-flex align-items-center">
-                <h3>Projects</h3>
-                    <select class="form-control form-select ml-1" id="projects">
-                        <option selected="true" disabled="disabled">Select Project..</option>
-                            @foreach($projects as $project)
-                                <option  value='{{ Crypt::encrypt($project->id) }}'>{{ $project->name }}</option>
-                            @endforeach
-                    </select>
-            </div>
-        </div>--}}
-           {{--<div class="col-md-5">
-            <div class="d-flex align-items-center">
-                <h3>Users</h3>
-                <select class="form-control form-select ml-1" id="userSelect">
-                    <option selected="true" disabled="disabled">Select User..</option>
-                </select>
-            </div>
-        </div>--}}
-        {{--<div class="col-md-2">
-            <div class="mt-1">
-                <button class="btn btn-success" id="getReport">View Report</button>
-            </div>
-        </div>--}}
-    </div>
-    <form method="POST" action="{{ route('adult.report.export.pdf') }}">
-        @csrf
-        <input type="hidden" name="user_id" value="{{ request('user_id') }}">
-        <input type="hidden" name="project_id" value="{{ request('project_id') }}">
-        <input type="hidden" name="name" value="{{ request('name') }}">
-        <button type="submit" class="btn btn-success">Export PDF</button>
-    </form>
-    
-<div class="mb-5" id="report_content">
-
-@include('adult.reports.component.report')
-
-</div> 
-</div>
-
-@section('css')
-<link href="https://site-assets.fontawesome.com/releases/v6.7.2/css/all.css" rel="stylesheet">
-<style>
-         
+    <style>
+         body { font-family: DejaVu Sans, sans-serif; font-size: 12px; }
          h1, h2, h3 {
          color: #212529;
          margin: 0 0 10px;
@@ -147,6 +103,8 @@
             font-family: 'Inter-Regular';
          }
       </style>
-@endsection
-         
-@endsection
+</head>
+<body>
+    @include('adult.reports.component.report')
+</body>
+</html>

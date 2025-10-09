@@ -8,6 +8,7 @@ use DB;
 use Auth;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Project;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\{
     Verification,
     VerificationType,
@@ -36,19 +37,73 @@ class ReportController extends Controller
 
 
      public function GetReport(Request $request){
+     //     dd($request->all());
+               $request->validate([
+                    'user_id'    => 'required|exists:users,id',
+                    'project_id' => 'required',
+               ], [
+                    'user_id.required'    => 'Please select a user.',
+                    'user_id.exists'      => 'The selected user does not exist.',
+                    'project_id.required' => 'Please select a project.',
+               ]);
+
+          $projects = Project::from('projects as pr')
+                         ->select('pr.name', 'pr.id')
+                         ->join('entity_usage as eu', 'eu.project_id', '=', 'pr.id')
+                         ->where('pr.user_id', Auth::user()->id)
+                         ->get();
+                         
           $data = ReportController::projectData($request);
-          // echo '<pre>';print_r($data);die;
+               
           $project_id = $request->project_id ? Crypt::decrypt($request->project_id) : null;
-          return response()->json([
-                    'success' => true,
-                    'html' => view('adult.reports.component.report' , compact('data','project_id'))->render()
-                ]);
+          $project_name = $request->name;
+   
+          return view('adult.reports.project_report' , compact('data','project_id' ,'projects' , 'project_name'));
           
      }
-        
+
+     public function ExportPdf(Request $request)
+               {
+                    try{
+                         ini_set('memory_limit', '512M');
+                         ini_set('max_execution_time', 300);
+                         // same logic to fetch data as GetReport
+                    $projects = Project::from('projects as pr')
+                         ->select('pr.name', 'pr.id')
+                         ->join('entity_usage as eu', 'eu.project_id', '=', 'pr.id')
+                         ->where('pr.user_id', Auth::user()->id)
+                         ->get();
+
+                    $data = ReportController::projectData($request);
+
+                    $project_id   = $request->project_id ? Crypt::decrypt($request->project_id) : null;
+                    $project_name = $request->name;
+
+                    // load the same blade but for pdf
+                    $pdf = Pdf::loadView('adult.reports.report_pdf', compact('data', 'project_id', 'projects', 'project_name'));
+                        $fileName = str_replace(' ', '_', $project_name) . '_report.pdf'; 
+                    return $pdf->download($fileName);
+                    } catch (Exception $e) {
+                        
+                         // log the error for debugging
+                         Log::error('PDF export failed: ' . $e->getMessage(), [
+                              'trace' => $e->getTraceAsString(),
+                              'user_id' => Auth::id(),
+                              'request' => $request->all(),
+                         ]);
+
+                         // redirect back with error message
+                         return back()->with('error', 'Something went wrong while generating the PDF. Please try again.');
+                    }
+                    
+                    // or to preview in browser:
+                    // return $pdf->stream('project-report.pdf');
+               }
+                    
 
 
      public static function projectData($request){
+          // echo '<pre>';print_r($request->all());die;
           $data                    = [];
           $projectId               = $request->project_id ? Crypt::decrypt($request->project_id) : null; 
           $userID                  = $request->user_id;
@@ -61,10 +116,10 @@ class ReportController extends Controller
           $data['solution_function']         = $project->solutionFunctionForUser($userID)->select('name' , 'validation_first','validation_second' ,'created_at')->first()->toArray();
           $userID                            = $request->user_id;
           $data['user']                      = $project->projectUser($userID);
-          $data ['verification']   =           ReportController::getVerificationPayload($projectId  , $data['problem']['id'] , $userID);
+          $data ['verification']   =           ReportController::getVerificationPayload($data['problem']['id'] ,$projectId  ,  $userID);
           $data['userID']          = $userID;
-     //  echo '<pre>';print_r($data['user']);die;
-          
+          $data['shared_project_data']  = \App\Models\ProjectShared::where('project_id', $projectId)->where('shared_with', $userID)->first();
+          // echo '<pre>';print_r($data['shared_project_data']);die;
           return $data;
            
              
@@ -77,34 +132,29 @@ class ReportController extends Controller
                     $handlers = [
                          1 => fn () =>  
                                               ['voucab'=>\App\Models\VerificationEntity::where("verTypeId","=",1)->where(['project_id'=> $project_id , 'problem_id'=>$problem_id])->get()->toArray()],
-                              // Verification::where(["problem_id" => $problem_id , "user_id" => $userID])
-                              //       ->where("verification_type_id", "=", 1)
-                              //       ->where("problem_id", "=", $problem_id)->get()->toArray(),
-
+                              
                          2 => fn () =>  
                                              ['info'=>\App\Models\VerificationEntity::where("verTypeId","=",2)->where(['project_id'=> $project_id , 'problem_id'=>$problem_id])->get()->toArray()],
-                                        // Verification::where(["problem_id" => $problem_id , "user_id" => $userID])
-                                        //                ->where("verification_type_id", "=", 2)
-                                        //                     ->where("problem_id", "=", $problem_id)->first()->toArray(),
+                                        
 
-                         3 => fn () => \App\Models\BeforeAndAfter::where('problem_id', $problem_id)
+                         3 => fn () => optional(\App\Models\BeforeAndAfter::where('problem_id', $problem_id)
                                                   ->where('project_id', $project_id)
                                                   ->where('user_id', $userID)
-                                                  ->first()->toArray(),
+                                                  ->first())->toArray() ?? [],
 
                          4 => fn () => 
                                 ['sepration_step'=>\App\Models\Customer::select('name')->where('user_id', $userID)
                                                                  ->where('project_id', $project_id)
-                                                                 ->get()->toArray()],
+                                                                 ->get()->toArray() ?? []],
 
                          5 => fn () => ['TimeVerification'=>TimeVerification::where('user_id', $userID)
                                                        ->where('project_id', $project_id)
-                                                       ->get()->toArray()],
+                                                       ->get()->toArray() ?? []],
 
                          6 => fn () =>  ['PastAndPresentTime'=>PastAndPresentTime::where('problem_id', $problem_id)
                                                                       ->where('project_id', $project_id)
                                                                       ->where('user_id', $userID)
-                                                                      ->get()->toArray()],
+                                                                      ->get()->toArray() ?? [] ],
                          
 
                          7 => fn () => [
@@ -140,7 +190,7 @@ class ReportController extends Controller
                               'solutionTimeLocationTwo' => DB::table('solution_time_locations')->where("type", 2)->where("project_id", $project_id)->where('user_id' , $userID)->first()
                          ],
                          10 => fn () => [
-                              'custommers' => \App\Models\Customer::where("project_id", $project_id)->where('user_id' , $userID)->get()->toArray(),
+                              'custommers' => \App\Models\Customer::where("project_id", $project_id)->where('user_id' , $userID)->get()->toArray() ?? [],
                          ],
                          
                          11 => fn () => [
@@ -149,7 +199,7 @@ class ReportController extends Controller
                                                             ->where('people_communication_flow.user_id' , $userID)
                                                             ->where('people_communication_flow.project_id' , $project_id)
                                                             ->where('people_communication_flow.problem_id' , $problem_id)
-                                                            ->get()->toArray()
+                                                            ->get()->toArray() ?? []
                          ],
 
                          12 => fn() => [
@@ -163,7 +213,7 @@ class ReportController extends Controller
                          ],
 
                          13 => fn() => [
-                              'partition_approach' => \App\Models\PartitionAproach::where('user_id' , $userID)->where('project_id' , $project_id)->get()->toArray()
+                              'partition_approach' => \App\Models\PartitionAproach::where('user_id' , $userID)->where('project_id' , $project_id)->get()->toArray() ?? []
                          ],
                          14 => fn() => [
                               'allVarifications' => DB::table('principle_identification')->get(),
@@ -178,12 +228,12 @@ class ReportController extends Controller
                               'problemDevelopment' => 	\App\Models\ProblemDevelopment::select('problem_development.*' , 'error_correction.compensator' ,'error_correction.compensator_date' , 'error_correction.id as error_correction_id' )
                                                   ->leftJoin('error_correction', 'problem_development.id', '=', 'error_correction.error_id')
                                                   ->where('problem_development.project_id' , $project_id)->where('problem_development.user_id' , $userID)
-                                                  ->get()->toArray(),
+                                                  ->get()->toArray() ?? [],
                               'feedBack' => \App\Models\FeedbackIdentification::select('feedback_identifications.*' , 'problem_development.error_name' )
                                              ->leftJoin('problem_development', 'feedback_identifications.error_id', '=', 'problem_development.id')
                                              ->where('feedback_identifications.user_id' , $userID)
                                              ->where('feedback_identifications.project_id' , $project_id)
-                                             ->get()->toArray(),
+                                             ->get()->toArray() ?? [],
                               'errorcorrection' => ReportController::getErrorCorrection($userID , $project_id)
                          ],
                          17 => fn() => [
@@ -193,7 +243,7 @@ class ReportController extends Controller
                               'people' => db::table('function_belong_to_people')->select('function_belong_to_people.*' , 'customers.name' )
                                         ->leftJoin('customers', 'function_belong_to_people.customer_id', '=', 'customers.id')
                                         ->where('function_belong_to_people.problem_id' , $problem_id)
-                                        ->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , $userID)->get()->toArray(),
+                                        ->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , $userID)->get()->toArray() ?? [],
                             'functionAud'        => DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $userID)->first(),
                             'functionApplied'    => DB::table('function_sub_people')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $userID)->where('verification_type' , 18)->first()
                             
@@ -365,5 +415,7 @@ class ReportController extends Controller
      }
 
 
+
+     
 
 }

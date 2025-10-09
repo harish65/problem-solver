@@ -82,8 +82,7 @@ class QuizController extends BaseController
         return view('quiz.edit' , ['quiz'=>$quiz , 'quizTypes' => $quizTypes]);
     }
 
-    public function getQuiz(Request $request)
-    {
+    public function getQuiz(Request $request){
 
         try {
             $userId = (isset($request->user_id))?Crypt::decrypt($request->user_id):null;
@@ -98,10 +97,10 @@ class QuizController extends BaseController
 
             if(isset($userId)){
                 $quiz = Quiz::where([
-                'project_id' => $projectId,
-                'page_id' => $pageId,
-                'page_type' => $pageType,
-                'user_id' => Auth::user()->id,
+                    'project_id' => $projectId,
+                    'page_id' => $pageId,
+                    'page_type' => $pageType,
+                    'user_id' => Auth::user()->id,
             ])->first();
             }else{            
                 $quiz = Quiz::where(['project_id'=>$projectId , 'page_id'=>$pageId , 'page_type'=> $pageType])->first();
@@ -127,10 +126,11 @@ class QuizController extends BaseController
                         'quiz_id' => $quiz->id,
                     ])
                     ->first();
+                
                 return response()->json([
                     'success' => true,
                     'html' => view('quiz.components.quiz', compact(
-                        'quiz', 'userQuiz', 'isPermitted', 'isProjectOwner', 'submitted', 'questionIndex', 'userId'
+                        'quiz', 'userQuiz', 'isPermitted', 'isProjectOwner', 'submitted', 'questionIndex', 'userId','projectId'
                     ))->render()
                 ]);
             }else{
@@ -174,7 +174,7 @@ class QuizController extends BaseController
             
     
         }catch(Exception $e) {
-            echo $e->getMessage();die;
+            $e->getMessage();
             return back()->with('error', 'An unexpected error occurred.');
         }
     }
@@ -242,8 +242,8 @@ class QuizController extends BaseController
     public function updateRemarks(Request $request)
     {
         try {
-            // dd($request->all());
-            DB::table('quiz_data')->where('id', $request->quiz_id)->update([
+           
+            DB::table('quiz_data')->where('quiz_id', $request->quiz_id)->update([
                 'remarks' => $request->remarks
             ]);
             return redirect()->back()->with('success', 'Remarks updated successfully.');
