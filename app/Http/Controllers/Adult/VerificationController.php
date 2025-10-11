@@ -2621,12 +2621,17 @@ class VerificationController extends BaseController
             }
                 
         }        
-
-       
-        
         $errorcorrections = db::table('error_correction_type')->where('user_id' , $user_id)->where('project_id' , $project_id)->get(); 
-        
         if ($request->is('api/*')) {
+            foreach($errorcorrections as $errorcorrection){
+                $errors = json_decode($errorcorrection->error);
+                $errors_ =  DB::table('problem_development')->select('error_name')->whereIn('id' , $errors)->get();
+                $errorcorrection->error = $errors_->toJson();    
+                $comp = json_decode($errorcorrection->compensator);
+                $compensators_ = DB::table('error_correction')->select('compensator')->whereIn('id' , $comp)->get();
+                $errorcorrection->compensator = $compensators_->toJson();  
+            }
+            // echo '<pre>';print_r($errorcorrections);die;
             $success["problemDevelopment"] = $problemDevelopment;
             $success["compensators"] = $compensators;
             $success["feedBack"] = $feedBack;
@@ -2635,15 +2640,10 @@ class VerificationController extends BaseController
             $success["project"] = $project;
             $success["errors"] = $errors;
             $success["token"] = $request->header("Authorization");
-            // echo '<pre>';print_r($success);die;
             return $this->sendResponse($success, "true");
-        }else{
-                
+        }else{                
             return view("adult.verification.view.error-corection" ,  compact("problemDevelopment" ,"compensators" , "feedBack" , "errorcorrections" , "errors" , "compensator" ,'params' ,'project_id' , 'project' ,'pageId' ,'pageType'));
         }
-
-
-        
     }
 
 
