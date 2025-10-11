@@ -2557,7 +2557,7 @@ class VerificationController extends BaseController
         $pageId = 16;
         $pageType = 'verification';
         $params = $request->all();
-    
+        // dd($request->all());
         if ($request->is('api/*')) { 
            
             $user_id  = $params['user_id'];
@@ -2622,9 +2622,9 @@ class VerificationController extends BaseController
                 
         }        
 
-        // echo '<pre>';print_r($errors);die;
+       
         
-        $errorcorrections = db::table('error_correction_type')->where('user_id' , $user_id)->where('project_id' , $project_id)->get();
+        $errorcorrections = db::table('error_correction_type')->where('user_id' , $user_id)->where('project_id' , $project_id)->get(); 
         
         if ($request->is('api/*')) {
             $success["problemDevelopment"] = $problemDevelopment;
@@ -2633,7 +2633,9 @@ class VerificationController extends BaseController
             $success["errorcorrections"] = $errorcorrections;
             $success["project_id"] = $project_id;
             $success["project"] = $project;
+            $success["errors"] = $errors;
             $success["token"] = $request->header("Authorization");
+            // echo '<pre>';print_r($success);die;
             return $this->sendResponse($success, "true");
         }else{
                 
