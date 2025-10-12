@@ -2647,7 +2647,8 @@ class VerificationController extends BaseController
     }
 
 
-    public function storeErrorCorrection(Request $request){       
+    public function storeErrorCorrection(Request $request){     
+        
         
         $validator = Validator::make($request->all(), [
             "error" => "required",
@@ -2655,6 +2656,7 @@ class VerificationController extends BaseController
             "compensator" => "required",
           
         ]);
+        
         if ($validator->fails()) {
             return $this->sendError("Validation Error.", $validator->errors());
         }
@@ -2664,18 +2666,20 @@ class VerificationController extends BaseController
             $data =  $request->all();
             $error = null;
             $compensator = null;
-            if(is_array($data['error']) && !$request->is('api/*')){
-                $error =  json_encode($data['error']);          
-            }else{
-                $exlode = explode(',' ,$data['error']);
-                $error = json_encode($exlode);
-            }
-            if(is_array($data['compensator']) && !$request->is('api/*')){
-                $compensator =  json_encode($data['compensator']);          
-            }else{
-                $exlode = explode(',' ,$data['compensator']);
-                $compensator = json_encode($exlode);
-            }
+            $error =  json_encode($data['error']);
+            $compensator =  json_encode($data['compensator']); 
+            // if(is_array($data['error']) && !$request->is('api/*')){
+            //     $error =  json_encode($data['error']);        
+            // }else{
+               
+            // }
+            // if(is_array($data['compensator']) && !$request->is('api/*')){
+            //     $compensator =  json_encode($data['compensator']);          
+            // }else{
+            //     $exlode = explode(',' ,$data['compensator']);
+            //     $compensator = json_encode($exlode);
+            // }
+            // echo '<pre>';print_r($request->all());die; 
            
             $insert = DB::table(
                 "error_correction_type"
