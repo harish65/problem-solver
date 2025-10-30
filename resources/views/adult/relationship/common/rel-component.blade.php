@@ -1,6 +1,6 @@
 <?php
 $projectUsers  = \App\Models\Project::getUsers($project_id);
-$problem  = \App\models\Problem::where('id' , $problem_id)->first();
+$problem  = \App\Models\Problem::where('id' , $problem_id)->first();
 ?>
 <div class="container">
         <div class="mainTitle">
