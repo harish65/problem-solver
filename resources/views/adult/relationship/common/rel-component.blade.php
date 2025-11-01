@@ -69,12 +69,13 @@ $problem  = \App\Models\Problem::where('id' , $problem_id)->first();
         window.location.href = "{{ route("adult.rel",$parameter) }}" + '/' + relid + '/' + re_id;
     });
     </script> 
-   
+    
     <script>
-        var showMessage = "{{$showMessage}}";
-        var text_ = "{{ $relationship->error_msg}}";
-        var title_ = "{{ $relationship->name }}"
-        if(!showMessage){
+        var showMessage = "{{$showMessage ?? ''}}";
+        var text_ = "{{ @$relationship->error_msg }}";
+        var title_ = "{{ @$relationship->name ?? '' }}"
+        if(!showMessage && text_ != ''){
+
             swal({
                 title: title_,
                 text: text_,
@@ -92,7 +93,7 @@ $problem  = \App\Models\Problem::where('id' , $problem_id)->first();
                         _token: "{{ csrf_token() }}",  
                         project_id: '{{$project_id}}',  
                         user_id: "{{ $user_id }}",     
-                        rel_id: '{{$relationship->id}}',      
+                        rel_id: '{{@$relationship->id}}',      
                         applied: true   
                     },
                     success: function (response) {
