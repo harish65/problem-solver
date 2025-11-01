@@ -73,7 +73,7 @@ $problem  = \App\Models\Problem::where('id' , $problem_id)->first();
     <script>
         var showMessage = "{{$showMessage ?? ''}}";
         var text_ = "{{ @$relationship->error_msg }}";
-        var title_ = "{{ @$relationship->name ?? '' }}"
+        var title_ = "{{@$relationship->name}}"
         if(!showMessage && text_ != ''){
 
             swal({
