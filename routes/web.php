@@ -290,6 +290,7 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
 
         Route::get("rel/{id?}/{type?}/{user_id?}", [\App\Http\Controllers\Adult\RelationshipController::class, 'index'])->name("rel");
         Route::post("save-rel-validations", [\App\Http\Controllers\Adult\RelationshipController::class, 'SaveValidations'])->name("save-rel-validations");
+        Route::post("relationshipApplied", [\App\Http\Controllers\Adult\RelationshipController::class, 'relationshipApplied'])->name("relationshipApplied");
         //Share project Routs
         Route::post("share-project", [\App\Http\Controllers\Adult\ProjectController::class, 'shareProject'])->name("share-project");
         Route::post("stop-share-project", [\App\Http\Controllers\Adult\ProjectController::class, 'StopshareProject'])->name("stop-share-project");

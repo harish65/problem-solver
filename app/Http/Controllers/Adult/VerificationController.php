@@ -894,7 +894,7 @@ class VerificationController extends BaseController
                                     
                                     $problemPart = DB::table("average_approaches") ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $problem->user_id)->first();
                                     $countPartionAproach = DB::table("partition_approach") ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $problem->user_id)->get()->count();
-                                        
+                                    
                                     return view(
                                         "adult.verification.view.average-aparoach-calculation",
                                         compact(
@@ -2647,7 +2647,7 @@ class VerificationController extends BaseController
     }
 
 
-    public function storeErrorCorrection(Request $request){     
+     public function storeErrorCorrection(Request $request){     
         
         
         $validator = Validator::make($request->all(), [
@@ -2661,25 +2661,25 @@ class VerificationController extends BaseController
             return $this->sendError("Validation Error.", $validator->errors());
         }
 
-       
+      
         try {
             $data =  $request->all();
             $error = null;
             $compensator = null;
-            $error =  json_encode($data['error']);
-            $compensator =  json_encode($data['compensator']); 
-            // if(is_array($data['error']) && !$request->is('api/*')){
-            //     $error =  json_encode($data['error']);        
-            // }else{
-               
-            // }
-            // if(is_array($data['compensator']) && !$request->is('api/*')){
-            //     $compensator =  json_encode($data['compensator']);          
-            // }else{
-            //     $exlode = explode(',' ,$data['compensator']);
-            //     $compensator = json_encode($exlode);
-            // }
-            // echo '<pre>';print_r($request->all());die; 
+            
+            
+            //  echo '<pre>';print_r($error);die;
+            if(is_array($data['error']) && !$request->is('api/*')){
+                $error =  json_encode($data['error']);        
+            }else{
+              $error =  $data['error'];
+            }
+            if(is_array($data['compensator']) && !$request->is('api/*')){
+                $compensator =  json_encode($data['compensator']);          
+            }else{
+                $compensator =  $data['compensator']; 
+            }
+            // echo '<pre>';print_r($error);die; 
            
             $insert = DB::table(
                 "error_correction_type"
@@ -2701,11 +2701,77 @@ class VerificationController extends BaseController
                 "Record created successfully."
             );
         }catch(Exception $e){
-            return $this->sendError("Validation Error.", [
+            
+            return $this->sendError("Exception->", [
                 "error" => $e->getMessage(),
             ]);
         }
     }
+
+    
+
+
+
+    // public function storeErrorCorrection(Request $request){     
+        
+        
+    //     $validator = Validator::make($request->all(), [
+    //         "error" => "required",
+    //         "feedback" => "required",
+    //         "compensator" => "required",
+          
+    //     ]);
+        
+    //     if ($validator->fails()) {
+    //         return $this->sendError("Validation Error.", $validator->errors());
+    //     }
+
+       
+    //     try {
+    //         $data =  $request->all();
+    //         $error = null;
+    //         $compensator = null;
+    //         $error =  json_encode($data['error']);
+    //         $compensator =  json_encode($data['compensator']); 
+    //         //  echo '<pre>';print_r($data['error']);die;
+    //         // if(is_array($data['error']) && !$request->is('api/*')){
+    //         //     $error =  json_encode($data['error']);        
+    //         // }else{
+               
+    //         // }
+    //         // if(is_array($data['compensator']) && !$request->is('api/*')){
+    //         //     $compensator =  json_encode($data['compensator']);          
+    //         // }else{
+    //         //     $exlode = explode(',' ,$data['compensator']);
+    //         //     $compensator = json_encode($exlode);
+    //         // }
+    //         //; 
+           
+    //         $insert = DB::table(
+    //             "error_correction_type"
+    //         )->updateOrInsert(
+    //             ["id" => @$request->id],
+    //             [
+    //                 "error" => $error,
+    //                 "compensator" => $compensator,
+    //                 "feedback" => $data["feedback"],
+    //                 "feedback_applied" => $data["feedback_applied"],
+    //                 "user_id" => Auth::user()->id,
+    //                 "project_id" => $data["project_id"] 
+    //             ]
+    //         );
+    //         $success["success"] = true;
+    //         $success["data"] = $insert;
+    //         return $this->sendResponse(
+    //             $success,
+    //             "Record created successfully."
+    //         );
+    //     }catch(Exception $e){
+    //         return $this->sendError("Validation Error.", [
+    //             "error" => $e->getMessage(),
+    //         ]);
+    //     }
+    // }
 
     public function deleteErrorCorrection(Request $request){
         try {            

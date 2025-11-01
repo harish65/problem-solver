@@ -84,4 +84,12 @@ class Relationship extends Model
 
     }
 
+    public static function appliedRelationship($type , $projectId , $user_id){
+        return DB::table('relationship_applied')
+        ->where('project_id', $projectId)
+        ->where('user_id', $user_id)
+        ->where('rel_id', $type)  
+        ->exists(); 
+    }
+
 }

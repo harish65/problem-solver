@@ -9,10 +9,10 @@
 
     $editable = false;
     $config = config('relationship.'.$relationship->id);
-    if($can_edit != null && $can_edit->editable_project == 1){
+    if(($can_edit != null && $can_edit->editable_project == 1) || $can_edit == null && Auth::user()->id == $project->user_id){
         $editable = true;
     }
-
+    
 @endphp
 
 <!-- Validation form Start-->
@@ -20,6 +20,7 @@
     <form method='post' name='rel_val_form' id="rel_val_form">
         @php
         $ans = json_decode(@$validations->ans); 
+        
         @endphp
         <input type="hidden" name="project_id" value="{{ $problem_id }}">
         <input type="hidden" name="problem_id" value="{{ $project_id }}">

@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Relationship')
 @section('content')
-@php $showMessage = false @endphp
+<?php $showMessage =  \App\Models\Relationship::appliedRelationship($relationship->id,$project_id,$user_id); ?>
 <div class='relationshipPage'>
     
         <?php 
@@ -17,64 +17,56 @@
         <a id="rel" href="{{ route('adult.rel',@$parameter) }}"></a>
         @include('adult.relationship.common.rel-component')
     <!-- Content Section Start -->
-    <div class="relationshipContent">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <h1>{{ $relationship->name }}</h1>
-                    <div class="relationImage text-center">
-                        <img src="{{ asset('rel/' . $relationship->image)}}" alt="relationImage" />
-                    </div>
-                    <p>{{ $relationship->text }}</p>
-                </div>
-                
-                        <!-- principleRelation start -->
-                        <div class="principleRelation">                    
-                                @if($custommers->count() > 0 && $communications->count() > 0)
-                                    <div class="d-flex">
-                                        @include('adult.relationship.common.people')
-                                        @include('adult.relationship.common.upside')
-                                    </div>  
-                                
-                                
-                                    <div class="d-flex">
-                                        @include('adult.relationship.common.communication')
-                                        @include('adult.relationship.common.downside')
-                                    </div>                        
-                                @else
-                                @php $showMessage = true @endphp
-                                @endif
-                                
+     @if($showMessage)
+        <div class="relationshipContent">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h1>{{ $relationship->name }}</h1>
+                        <div class="relationImage text-center">
+                            <img src="{{ asset('rel/' . $relationship->image)}}" alt="relationImage" />
                         </div>
-                        <!-- principleRelation End -->
+                        <p>{{ $relationship->text }}</p>
+                    </div>
                     
+                            <!-- principleRelation start -->
+                            <div class="principleRelation">                    
+                                    @if($custommers->count() > 0 && $communications->count() > 0)
+                                        <div class="d-flex">
+                                            @include('adult.relationship.common.people')
+                                            @include('adult.relationship.common.upside')
+                                        </div>  
+                                    
+                                    
+                                        <div class="d-flex">
+                                            @include('adult.relationship.common.communication')
+                                            @include('adult.relationship.common.downside')
+                                        </div>                        
+                                    
+                                    @endif
+                                    
+                            </div>
+                            <!-- principleRelation End -->
+                        
 
-                      
-                    @include('adult.relationship.common.validation')
-                
+                        
+                        @include('adult.relationship.common.validation')
+                    
+                </div>
             </div>
         </div>
-    </div>
-
-
+        @else
+         <div class="relationshipContent">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                <button type="button" id="applyRel" class="btn btn-success">Apply Relationship +</button>
+                </div>
+            </div>
+        </div>
+        </div>
+        @endif
 @endsection 
-@section('scripts')
-<script>
-    $('#rel_types').on('change', function () {
-        var id = $(this).val();
-        window.location.href = "{{ route('adult.rel',$parameter) }}" + '/' + id;
-    })
- var showMessage = "{{$showMessage}}"
-    var text_ = '{{ $relationship->error_msg}}'
-    if (showMessage) {
-       
-        swal({
-            title: "Communication and Principle Relationship",
-            text: text_,
-            type: "Error",
-            showCancelButton: true,
-            confirmButtonColor: '#00A14C',
-        });
-    }
-</script> 
-@endsection
+
+
+

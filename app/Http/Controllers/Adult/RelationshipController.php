@@ -48,8 +48,11 @@ class RelationshipController extends BaseController
             $result = array_keys(array_intersect($relationshipsArray, $filteredKeys));
             $relationships =  Relationship::whereIn('id' , $result)->get();
             $user_id            =  Problem::where('id' , $params['problem_id'])->pluck('user_id')->first();
-        }else{
+        }elseif(Auth::user()->id == $project->user_id){
+           
             $can_edit = Project::SharedProject($params['project_id'] , Auth::user()->id);
+            
+           
             if(is_null($user_id)){
                 $user_id            =  $project->user_id;
             }
@@ -64,10 +67,11 @@ class RelationshipController extends BaseController
 
         
         $condition          = ['problem_id'=> $params['problem_id'] , 'project_id'=>$params['project_id'] ,'user_id' => $user_id];
-        $validations        =  DB::table('rel_validations')->where($condition)->where('id' , $type)->first();
-           
+        $validations        =  DB::table('rel_validations')->where($condition)->where('relationship_id' , $type)->first();
+        
+        //    dd($validations);
       
-
+        
        
         switch($type){
             case 1: 
@@ -288,7 +292,32 @@ class RelationshipController extends BaseController
         }
     }
 
+    public function relationshipApplied(Request $request){
+         $validated = $request->validate([
+                    'project_id' => 'required|integer|exists:projects,id',
+                    'rel_id'     => 'required|integer',
+                    'user_id'    => 'required|integer|exists:users,id',
+                   
+        ]);
+        $relationship = DB::table("relationship_applied")->updateOrInsert(
+            [
+                'project_id' => $validated['project_id'],
+                'rel_id'     => $validated['rel_id'],
+                'user_id'    => $validated['user_id'],
+                'created_at' => now(),
+                'updated_at' => now(),
 
+            ],
+            [
+                'applied'    => $validated['applied'] ?? true,
+            ]
+        );
+        return response()->json([
+            'success' => true,
+            'message' => 'Relationship status saved successfully.',
+            'data'    => $relationship,
+        ], 200);
+    }
 
 
 }

@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Relationship')
 @section('content')
-@php $showMessage = false @endphp
+<?php $showMessage =  \App\Models\Relationship::appliedRelationship($relationship->id,$project_id,$user_id); ?>
 <div class='relationshipPage'>
     
         <?php 
@@ -15,6 +15,7 @@
         <a id="rel" href="{{ route('adult.rel',@$parameter) }}"></a>
         @include('adult.relationship.common.rel-component')
     <!-- Content Section Start -->
+     @if($showMessage)
     <div class="relationshipContent">
         <div class="container">
             <div class="row">
@@ -48,7 +49,17 @@
             </div>
         </div>
     </div>
-
+@else
+         <div class="relationshipContent">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                <button type="button" id="applyRel" class="btn btn-success">Apply Relationship +</button>
+                </div>
+            </div>
+        </div>
+        </div>
+        @endif
 
 @endsection 
 @section('scripts')

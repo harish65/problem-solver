@@ -1,6 +1,7 @@
 <?php
 $projectUsers  = \App\Models\Project::getUsers($project_id);
 $problem  = \App\Models\Problem::where('id' , $problem_id)->first();
+
 ?>
 <div class="container">
         <div class="mainTitle">
@@ -58,16 +59,66 @@ $problem  = \App\Models\Problem::where('id' , $problem_id)->first();
             </div>
         </div>
     </div>
+    
 @section('scripts')
 <script>
-    $('#rel_types').on('change', function () {
-        var id = $(this).val();
-        window.location.href = "{{ route('adult.rel',$parameter) }}" + '/' + id;
- })
+
     $('#verification_users').on('change', function () { 
         var relid = $('#rel_types').val();
         var re_id = $(this).val();
         window.location.href = "{{ route("adult.rel",$parameter) }}" + '/' + relid + '/' + re_id;
     });
     </script> 
+   
+    <script>
+        var showMessage = "{{$showMessage}}";
+        var text_ = "{{ $relationship->error_msg}}";
+        var title_ = "{{ $relationship->name }}"
+        if(!showMessage){
+            swal({
+                title: title_,
+                text: text_,
+                type: "Error",
+                showCancelButton: true,
+                confirmButtonColor: '#00A14C',
+            });
+        }
+    
+                $('#applyRel').click(function(){
+                $.ajax({
+                    url: "{{ route('adult.relationshipApplied') }}", 
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",  
+                        project_id: '{{$project_id}}',  
+                        user_id: "{{ $user_id }}",     
+                        rel_id: '{{$relationship->id}}',      
+                        applied: true   
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            swal("Success", "Relationship applied!", "success");
+                            window.location.reload();
+                        } else {
+                            swal("Error", "There was an issue creating the entry.", "error");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        swal("Error", "Request failed. Please try again.", "error");
+                    }
+                });
+                })
+    
+    
+    $('#rel_types').on('change', function () {
+        var id = $(this).val();
+        
+        
+        window.location.href = "{{ route('adult.rel', $parameter) }}" + '/' + id;
+    });
+
+
+    
+</script>
+
 @endsection
