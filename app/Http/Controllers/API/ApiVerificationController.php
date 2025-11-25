@@ -322,7 +322,7 @@ switch ($type) {
                 $customers = DB::table("customers")
                     ->where("project_id", "=", $project_id)
                     ->get();
-                $content =  DB::table('principle_identification_main')->where('project_id' , $project_id)->where('problem_id' , $problem_id)->where('user_id' , Auth::user()->id)->first();
+                $content =  DB::table('principle_identification_main')->where('project_id' , $project_id)->where('problem_id' , $problem_id)->where('user_id' , $problem->user_id)->first();
                 $success =  [
                     "project_id" => $project_id,
                     "problem" => $problem,
