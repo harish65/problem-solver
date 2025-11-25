@@ -280,6 +280,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                         <input type="hidden" name="id" value="{{ @$content->id}}">
                         <input type="hidden" name="problem_id" id="problem_id" value="{{ Crypt::decrypt($problem_id) }}">
                         <input type="hidden" name="project_id" value="{{ Crypt::decrypt($project_id) }}">
+                        <input type="hidden" name="user_id" value="{{ @$problem->user_id }}">
                         <div class="form-group">
                             <select class="form-control" name="principle_type">
                                 <option {{ (@$content->principle_type == 0) ? 'selected':'' }} value='0'>THE GIVEN SET</option>
