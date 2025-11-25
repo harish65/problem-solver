@@ -1878,7 +1878,7 @@ class VerificationController extends BaseController
             }
             
             $data = $request->all();
-            $verification->user_id = Auth::user()->id;
+            $verification->user_id = $data['user_id'];
             $verification->project_id = $data["project_id"];
             $verification->problem_id = $data["problem_id"];
             $verification->principle_type = $data["principle_type"];
