@@ -217,8 +217,12 @@ class ProjectController extends BaseController
         }
     }
      public function shareProjectGet($project_id  , Request $request){
-        
-        $projectId = Crypt::decrypt($project_id);       
+         if ($request->is('api/*')) {
+                $project_id = $project_id;
+         }else{
+                $projectId = Crypt::decrypt($project_id);     
+         }  
+         
       
         $verificationTypes = DB::table('verification_types')->get();    
         $projectUsers = $this->getUsersForProjectSharing($projectId);
