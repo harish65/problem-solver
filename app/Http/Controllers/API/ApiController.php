@@ -591,8 +591,9 @@ public function storeSolutionFunction(Request $request){
                 ->groupBy('projects.id', 'projects.name', 'projects.user_id', 'projects.shared', 'projects.created_at', 'projects.updated_at')
                 ->orderBy('projects.id', 'desc')
                 ->get();
-
+                
                 $success['projects'] = $project;
+                $success['user'] = Auth::user();
                 $success['token'] = $request->header('Authorization');
                 return $this->sendResponse($success,'Reviewer Response');
                     
