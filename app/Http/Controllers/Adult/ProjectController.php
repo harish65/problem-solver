@@ -226,7 +226,7 @@ class ProjectController extends BaseController
          }  
          
       
-        $verificationTypes = DB::table('verification_types')->get();    
+        $verificationTypes = DB::table('verification_types')->select('id' , 'name')->get();    
         $projectUsers = $this->getUsersForProjectSharing($projectId);
         
         // if($projectUsers->count() == 0 ){
