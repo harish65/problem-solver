@@ -217,8 +217,10 @@ class ProjectController extends BaseController
         }
     }
      public function shareProjectGet($project_id  , Request $request){
+        
          if ($request->is('api/*')) {
-                $project_id = $project_id;
+            
+                $projectId = $project_id;
          }else{
                 $projectId = Crypt::decrypt($project_id);     
          }  
