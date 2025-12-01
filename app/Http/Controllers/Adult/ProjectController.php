@@ -237,7 +237,7 @@ class ProjectController extends BaseController
                     ->where('project_shared.project_id', $projectId)
                     ->select('users.name', 'users.email' , 'project_shared.*')
                     ->get();
-      $relationshopTypes = \App\Models\Relationship::all();
+      $relationshopTypes = \App\Models\Relationship::select('id', 'name')->get();
         if ($request->is('api/*')) {
                 $success['project_id'] = $project_id;
                 $success['verificationTypes'] = $verificationTypes;
