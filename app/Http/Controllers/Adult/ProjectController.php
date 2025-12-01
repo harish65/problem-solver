@@ -237,13 +237,14 @@ class ProjectController extends BaseController
                     ->where('project_shared.project_id', $projectId)
                     ->select('users.name', 'users.email' , 'project_shared.*')
                     ->get();
-      
+      $relationshopTypes = \App\Models\Relationship::all();
         if ($request->is('api/*')) {
                 $success['project_id'] = $project_id;
                 $success['verificationTypes'] = $verificationTypes;
                 $success['projectUsers'] = $projectUsers;
                 $success['token'] = $request->header('Authorization');
                 $success['allreadyShared'] = $allreadySharedUsers;
+                $success['relationshipTypes'] = $relationshopTypes;
                 return $this->sendResponse($success,'Reviewer Response');
         }else{
             return view('adult.project.shareproject', ["project_id" => $project_id , 'verificationTypes' => $verificationTypes , 'projectUsers'=>$projectUsers , 'allreadySharedUsers'=>$allreadySharedUsers]);
