@@ -275,7 +275,11 @@ class ProjectController extends BaseController
                 return $this->sendError("Validation Error.", $validator->errors());
             }   
             
-            $project_id = Crypt::decrypt($request->project_id);
+            if($request->is('api/*')){
+                $project_id = $request->project_id;
+            }else{
+                $project_id = Crypt::decrypt($request->project_id);
+            }
             // check user if exist
             $user = User::where('id' , $request->user_id)->first();
         
