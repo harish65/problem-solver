@@ -29,7 +29,11 @@ class Problem extends Model
     {
         return $this->belongsTo(Project::class);
     }
-
+    //get problem category details
+    public function problemCategories()
+    {
+       return $this->belongsToMany(ProblemCategory::class, 'problems', 'id', 'category_id');
+    }
 
     public static function GetAllProblemsOfProject($id){
         return DB::table('problems')->where('project_id' , $id)->get();

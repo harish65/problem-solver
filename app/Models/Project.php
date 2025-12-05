@@ -26,11 +26,21 @@ class Project extends Model
     }
 
     public function sharedUsers(){
-        return $this->hasMany(ProjectShared::class, 'project_id');
+        return $this->hasMany(ProjectShared::class, 'project_id' , 'id');
+    }
+    public function sharedUsersProject()
+    {
+        return $this->belongsToMany(User::class, 'project_shared', 'project_id', 'shared_with');
     }
     public function projectUsers()
     {
-        // return $this->hasMany(User::class ,'id' , 'user_id');
+        return $this->hasMany(User::class ,'id' , 'user_id');
+    }
+    
+    //creaet raltion with shared project table has many
+    public function sharedProjects()
+    {
+        return $this->hasMany(ProjectShared::class, 'project_id', 'id');
     }
 
     public function problemsWithUsers($userid){

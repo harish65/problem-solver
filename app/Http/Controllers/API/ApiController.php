@@ -11,6 +11,7 @@ use DB;
 use Validator;
 use App\Models\User;
 use App\Models\Problem;
+use App\Models\Project;
 use App\Models\Solution;
 use App\Models\SolutionType;
 use App\Models\SolutionFunction;
@@ -202,15 +203,19 @@ class ApiController extends BaseController
             return $this->sendError("Validation Error.", $validator->errors());
         }       
         $cat = DB::table("problem_categories")->get();
-        $problem = DB::table("problems")
-            ->where("id", "=", $request->id)
+        $problem = Problem::where("id", "=", $request->id)
             ->first();
+        $project = Project::with(['sharedUsers:id,project_id,editable_problem,shared_with','sharedUsersProject:id,name,email'])
+            ->where("projects.id", "=", $request->project_id)
+            ->get();    
+      
 
         if ($problem) {
             $success["token"] = $request->header("Authorization");
             $success["problem"] = $problem;
             $success["cat"] = $cat;
             $success["project_id"] = $request->project_id;
+            $success["sharedProjectData"] = $project;
             return $this->sendResponse($success, "true");
         } else {
             $success["token"] = $request->header("Authorization");

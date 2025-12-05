@@ -77,6 +77,8 @@ class ProjectController extends BaseController
                        
                         return view('adult.project.index', ["project" => $project , 'verificationTypes' => $verificationTypes]);
                     }
+
+
     }
 
     
