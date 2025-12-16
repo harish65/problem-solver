@@ -195,7 +195,7 @@ class ApiController extends BaseController
     //Problem API's
     public function getProblem(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+           $validator = Validator::make($request->all(), [
             "id" => "required",
             "project_id" => "required",
         ]);
@@ -203,19 +203,15 @@ class ApiController extends BaseController
             return $this->sendError("Validation Error.", $validator->errors());
         }       
         $cat = DB::table("problem_categories")->get();
-        $problem = Problem::where("id", "=", $request->id)
+        $problem = DB::table("problems")
+            ->where("id", "=", $request->id)
             ->first();
-        $project = Project::with(['sharedUsers:id,project_id,editable_problem,shared_with','sharedUsersProject:id,name,email'])
-            ->where("projects.id", "=", $request->project_id)
-            ->get();    
-      
 
         if ($problem) {
             $success["token"] = $request->header("Authorization");
             $success["problem"] = $problem;
             $success["cat"] = $cat;
             $success["project_id"] = $request->project_id;
-            $success["sharedProjectData"] = $project;
             return $this->sendResponse($success, "true");
         } else {
             $success["token"] = $request->header("Authorization");
