@@ -195,27 +195,38 @@ class ApiController extends BaseController
     //Problem API's
     public function getProblem(Request $request)
     {
-           $validator = Validator::make($request->all(), [
-            "id" => "required",
-            "project_id" => "required",
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError("Validation Error.", $validator->errors());
-        }       
+        $sharedProjectData = null;    
+        if($request->shared == 1){
+            $sharedProjectData = Project::query()
+                    ->join('project_shared', 'projects.id', '=', 'project_shared.project_id')
+                    ->join('users', 'users.id', '=', 'project_shared.shared_with')
+                    ->where('projects.id', $request->project_id)
+                    ->select(
+                        'projects.*',
+                        'users.id',
+                        'users.name',
+                        'project_shared.editable_project',
+                        'project_shared.editable_problem',
+                    )
+                    ->get();
+        }
         $cat = DB::table("problem_categories")->get();
         $problem = DB::table("problems")
             ->where("id", "=", $request->id)
             ->first();
+
 
         if ($problem) {
             $success["token"] = $request->header("Authorization");
             $success["problem"] = $problem;
             $success["cat"] = $cat;
             $success["project_id"] = $request->project_id;
+            $success['sharedProjectData'] = $sharedProjectData;
             return $this->sendResponse($success, "true");
         } else {
             $success["token"] = $request->header("Authorization");
             $success["problem"] = null;
+             $success['sharedProjectData'] = $sharedProjectData;
             return $this->sendResponse($success, "true");
         }
     }
@@ -553,10 +564,7 @@ public function storeSolutionFunction(Request $request){
             // Include the authenticated user in the users array
            
                 
-                $users = array_merge($sharedUsers, [Auth::user()->id]);
-           
-            
-
+            $users = array_merge($sharedUsers, [Auth::user()->id]);
             $project = DB::table('projects')
                 ->leftJoin('project_shared', 'projects.id', '=', 'project_shared.project_id') 
                 ->leftJoin('problems', function ($join) use ($users) {  // Use 'use' to pass $users
