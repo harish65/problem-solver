@@ -138,6 +138,7 @@ Route::middleware('auth:api')->group( function () {
         Route::post("stop-share-project", [\App\Http\Controllers\Adult\ProjectController::class, 'StopshareProject'])->name("stop-share-project");
         Route::get("share-project/{id}", [\App\Http\Controllers\Adult\ProjectController::class, 'shareProjectGet'])->name("project-share");
         Route::get("/permissions/{user_id}/{project_id}", [\App\Http\Controllers\Adult\ProjectController::class, 'viewPermissions'])->name("project_permissions");
+        Route::get("/getPagePermissions", [\App\Http\Controllers\API\ApiController::class, 'getPageSharedData'])->name("getPagePermissions");
 
 });
 

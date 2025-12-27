@@ -609,6 +609,40 @@ public function storeSolutionFunction(Request $request){
     }
 
 
+    public function getPageSharedData(Request $request){
+        try {
+            $data = $request->all();
+            $projectUsers = null;
+            if (!isset($data['slug'], $data['project_id'], $data['user_id'])) {
+                return $this->sendError("Error.", ['message' => 'Missing required fields: slug, project_id, or user_id']);
+            }
+            //get project is shared and $request has page slug field
+            $result  = DB::table('project_shared')->select($data['slug'] , 'editable_project')->where(['project_id' => $data['project_id'] , 'shared_with'=> $data['user_id']])->first();
+            if(!$result){
+            $projectUsers  = DB::table('project_shared')
+                            ->join('users', 'project_shared.shared_with', '=', 'users.id') 
+                            ->select('project_shared.shared_with', 'users.id as user_id', 'users.name as user_name') 
+                            ->where(['project_shared.project_id' => $data['project_id']])
+                            ->get();
+            
+            }
+            
+            // Prepare successful response
+            $success['result'] = $result;
+            $success['users'] = $projectUsers;
+            $success['token'] = $request->header('Authorization');
+            $success['code'] = 200;
+    
+            return $this->sendResponse($success, 'Success', 200);
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->sendError("Error.", ["error" => $e->getMessage(), 'message' => 'Project id is not exist']);
+        } catch (\Exception $e) {
+            return $this->sendError("Error.", ["error" => $e->getMessage(), 'message' => 'An unexpected error occurred']);
+        }
+    }
+
+
     
     
 
