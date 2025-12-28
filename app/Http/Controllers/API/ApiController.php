@@ -224,6 +224,7 @@ class ApiController extends BaseController
             $success['sharedProjectData'] = $sharedProjectData;
             return $this->sendResponse($success, "true");
         } else {
+            $success["cat"] = $cat;
             $success["token"] = $request->header("Authorization");
             $success["problem"] = null;
              $success['sharedProjectData'] = $sharedProjectData;
