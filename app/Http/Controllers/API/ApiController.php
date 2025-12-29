@@ -194,40 +194,33 @@ class ApiController extends BaseController
 
     //Problem API's
     public function getProblem(Request $request)
-    {
-        $sharedProjectData = null;    
-        if($request->shared == 1){
-            $sharedProjectData = Project::query()
-                    ->join('project_shared', 'projects.id', '=', 'project_shared.project_id')
-                    ->join('users', 'users.id', '=', 'project_shared.shared_with')
-                    ->where('projects.id', $request->project_id)
-                    ->select(
-                        'projects.*',
-                        'users.id',
-                        'users.name',
-                        'project_shared.editable_project',
-                        'project_shared.editable_problem',
-                    )
-                    ->get();
-        }
+    { 
+        $project =  Project::where('id', $request->project_id)->first();
         $cat = DB::table("problem_categories")->get();
-        $problem = DB::table("problems")
-            ->where("id", "=", $request->id)
-            ->first();
+        $query = DB::table('problems')
+                        ->where('id','=', $request->input('id'))
+                        ->where('project_id','=', $request->project_id);
+                        
+                        if($request->input('user_id') && $request->input('user_id') != null){
+                            $query= $query->where('user_id','=', $request->input('user_id'));
+                        }
+                        if($project->shared == 0){
+                                $query= $query->where('user_id','=', Auth::user()->id);
+                        }
 
+                    $problem = $query->first();
 
         if ($problem) {
             $success["token"] = $request->header("Authorization");
             $success["problem"] = $problem;
             $success["cat"] = $cat;
-            $success["project_id"] = $request->project_id;
-            $success['sharedProjectData'] = $sharedProjectData;
+            $success["project_id"] = $request->project_id;           
             return $this->sendResponse($success, "true");
         } else {
             $success["cat"] = $cat;
             $success["token"] = $request->header("Authorization");
             $success["problem"] = null;
-             $success['sharedProjectData'] = $sharedProjectData;
+             
             return $this->sendResponse($success, "true");
         }
     }
@@ -236,13 +229,17 @@ class ApiController extends BaseController
     // /Solution API's//////////////
 
     public function getSolution(Request $request){
-      
-        $solution = DB::table('solutions')
+        
+        $query = DB::table('solutions')
                     ->join('problems' , 'solutions.problem_id' , 'problems.id')
                     ->join('solution_types' , 'solutions.solution_type_id' , 'solution_types.id')                    
                     ->select('solutions.*' , 'solution_types.output_slug','problems.name as problem_name', 'problems.project_id','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at')
-                    ->where('solutions.problem_id','=' ,$request->input('problem_id'))
-                    ->first();   
+                    ->where('solutions.problem_id','=' ,$request->input('problem_id'));
+                    
+        if($request->input('user_id') && $request->input('user_id') != null){
+            $query= $query->where('solutions.user_id','=', $request->input('user_id'));
+        }
+        $solution = $query->first();
 
         if ($solution) {
             $solutionTypes = DB::table('solution_types')->get();
@@ -421,15 +418,19 @@ public function getSolutionFunction(Request $request){
             $solution = DB::table('solutions')->where('id','=', $request->solution_id)->first();
             $problem = DB::table('problems')->where('id','=', $request->problem_id)->first();
             if(isset($solution->id) && isset($problem->id)){ 
-                $solFunctions = DB::table('solution_functions')
+                $query = DB::table('solution_functions')
                         ->join('problems' , 'solution_functions.problem_id' , 'problems.id')
                         ->join('solutions' , 'solution_functions.solution_id' , 'solutions.id')
                         ->join('solution_function_types' , 'solution_functions.solution_function_type_id' , 'solution_function_types.id')
                         ->select('solution_functions.*' , 'solution_function_types.first_arr', 'solution_function_types.second_arr','solutions.name as solution_name','solutions.file as solution_file','solutions.created_at as solution_created','solutions.type as solution_type',
                                                         'problems.name as problem_name','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at')
                         ->where('solution_functions.problem_id','=' ,$request->problem_id )
-                        ->where('solution_functions.solution_id','=' ,$request->solution_id )
-                        ->first();
+                        ->where('solution_functions.solution_id','=' ,$request->solution_id );
+                        
+                        if($request->input('user_id') && $request->input('user_id') != null){
+                            $query= $query->where('solution_functions.user_id','=', $request->input('user_id'));
+                        }
+                        $solFunctions = $query->first();
                         $success['solFunctions'] =  $solFunctions;
                         $success['problem_id'] = $request->problem_id;
                         $success['solution_id'] = $request->solution_id;
