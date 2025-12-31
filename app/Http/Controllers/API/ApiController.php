@@ -197,14 +197,18 @@ class ApiController extends BaseController
     { 
         $project =  Project::where('id', $request->project_id)->first();
         $cat = DB::table("problem_categories")->get();
-        $query = DB::table('problems')
-                        ->where('id','=', $request->input('id'))
-                        ->where('project_id','=', $request->project_id);
+        $query = DB::table('problems');
+
+            if(!empty($request->input('id'))){
+                $query  = $query->where('id','=', $request->input('id'));
+            }
+            
+                        $query  = $query->where('project_id','=', $request->project_id);
                         
                         if($request->input('user_id') && $request->input('user_id') != null){
                             $query= $query->where('user_id','=', $request->input('user_id'));
                         }
-                        if($project->shared == 0){
+                        if(isset($project->shared) && $project->shared == 0){
                                 $query= $query->where('user_id','=', Auth::user()->id);
                         }
 
