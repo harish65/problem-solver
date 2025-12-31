@@ -300,6 +300,7 @@ class ProjectController extends BaseController
             // $checkVerificatonDependancy = $this->VerificationDependancy($request , $project_id);
             
         // if($update){
+        
 
             // $editable_project = (isset($request->editable_project) && $request->editable_project == 1) ? '1' : '0';
                 $insertRecord =  DB::table('project_shared')->insert([

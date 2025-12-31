@@ -237,12 +237,17 @@ class ApiController extends BaseController
         $query = DB::table('solutions')
                     ->join('problems' , 'solutions.problem_id' , 'problems.id')
                     ->join('solution_types' , 'solutions.solution_type_id' , 'solution_types.id')                    
-                    ->select('solutions.*' , 'solution_types.output_slug','problems.name as problem_name', 'problems.project_id','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at')
-                    ->where('solutions.problem_id','=' ,$request->input('problem_id'));
+                    ->select('solutions.*' , 'solution_types.output_slug','problems.name as problem_name', 'problems.project_id','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at');
+                    if(!empty($request->input('problem_id'))){
+                            $query = $query->where('solutions.problem_id','=' ,$request->input('problem_id'));
+                    }
                     
         if($request->input('user_id') && $request->input('user_id') != null){
             $query= $query->where('solutions.user_id','=', $request->input('user_id'));
         }
+        if(!empty($request->input('project_id'))){
+                            $query = $query->where('solutions.project_id','=' ,$request->input('project_id'));
+                    }
         $solution = $query->first();
 
         if ($solution) {
