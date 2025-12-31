@@ -425,23 +425,28 @@ public function getSolutionFunction(Request $request){
 
         if($request->solution_id){
             $solution = DB::table('solutions')->where('id','=', $request->solution_id)->first();
-            $problem = DB::table('problems')->where('id','=', $request->problem_id)->first();
-            if(isset($solution->id) && isset($problem->id)){ 
+            $problem = DB::table('problems')->where('id','=', $solution->problem_id)->first();
+            if(isset($solution->id) && $problem->id){ 
                 $query = DB::table('solution_functions')
                         ->join('problems' , 'solution_functions.problem_id' , 'problems.id')
                         ->join('solutions' , 'solution_functions.solution_id' , 'solutions.id')
                         ->join('solution_function_types' , 'solution_functions.solution_function_type_id' , 'solution_function_types.id')
                         ->select('solution_functions.*' , 'solution_function_types.first_arr', 'solution_function_types.second_arr','solutions.name as solution_name','solutions.file as solution_file','solutions.created_at as solution_created','solutions.type as solution_type',
-                                                        'problems.name as problem_name','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at')
-                        ->where('solution_functions.problem_id','=' ,$request->problem_id )
-                        ->where('solution_functions.solution_id','=' ,$request->solution_id );
+                                                        'problems.name as problem_name','problems.file as problem_file','problems.project_id','problems.type as problem_type','problems.created_at as problem_created_at');
+                        // ->where('solution_functions.problem_id','=' ,$request->problem_id )
+                        if($request->solution_id && $request->solution_id != null){
+                                    $query= $query->where('solution_functions.solution_id','=' ,$request->solution_id );
+                        }
                         
                         if($request->input('user_id') && $request->input('user_id') != null){
                             $query= $query->where('solution_functions.user_id','=', $request->input('user_id'));
                         }
+                        if(!empty($request->input('project_id'))){
+                            $query = $query->where('solution_functions.project_id','=' ,$request->input('project_id'));
+                        }
                         $solFunctions = $query->first();
                         $success['solFunctions'] =  $solFunctions;
-                        $success['problem_id'] = $request->problem_id;
+                        $success['problem_id'] = $solFunctions->problem_id;
                         $success['solution_id'] = $request->solution_id;
                         $success["token"] = $request->header("Authorization");
                         return $this->sendResponse($success, 'true');                  
