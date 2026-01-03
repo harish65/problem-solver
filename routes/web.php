@@ -291,13 +291,14 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::get("rel/{id?}/{type?}/{user_id?}", [\App\Http\Controllers\Adult\RelationshipController::class, 'index'])->name("rel");
         Route::post("save-rel-validations", [\App\Http\Controllers\Adult\RelationshipController::class, 'SaveValidations'])->name("save-rel-validations");
         Route::post("relationshipApplied", [\App\Http\Controllers\Adult\RelationshipController::class, 'relationshipApplied'])->name("relationshipApplied");
+        Route::get("getVerificationRelations/", [\App\Http\Controllers\Adult\RelationshipController::class, 'getVerificationRelations'])->name("getVerificationRelations");
         //Share project Routs
         Route::post("share-project", [\App\Http\Controllers\Adult\ProjectController::class, 'shareProject'])->name("share-project");
         Route::post("stop-share-project", [\App\Http\Controllers\Adult\ProjectController::class, 'StopshareProject'])->name("stop-share-project");
         Route::get("/share-project/{id}", [\App\Http\Controllers\Adult\ProjectController::class, 'shareProjectGet'])->name("project-share");
         Route::get("/permissions/{user_id}/{project_id}", [\App\Http\Controllers\Adult\ProjectController::class, 'viewPermissions'])->name("project_permissions");
 
-    });  
+    });     
     Route::get('/report/{id?}', [ReportController::class, 'index'])->name('report');
     Route::get('/ProjectUsers/{id?}', [ReportController::class, 'ProjectUsers'])->name('getProjectUsers');
     Route::match(['get', 'post'],'/getReport', [ReportController::class, 'GetReport'])->name('getReport');

@@ -1,4 +1,4 @@
-
+@if(!is_null($Solution_function))
 <div class="blockProblem">
     <div class="projectBlock text-center">
         <h2>Solution Function</h2>
@@ -11,3 +11,4 @@
         </div>
     </div>
 </div>
+@endif

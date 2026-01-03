@@ -43,6 +43,7 @@ class VerificationController extends BaseController
         if ($problem_id == "" && $project_id  != '') {
             $problem_id = Problem::where("project_id", "=", $project_id)->where('user_id' , Auth::user()->id)->pluck('id')->first();
         }
+        
             
         $verificationType = null;
         $verifiationTypeText = null;
@@ -59,6 +60,7 @@ class VerificationController extends BaseController
         // if($project->shared == 1 && $project->user_id == Auth::user()->id && $problem->user_id == Auth::user()->id){
         //    die; 
         // }
+        
 
         $verificationTypeSlug =  null;
         $verificationsArray =  Verification::verificationsArray();
@@ -109,10 +111,11 @@ class VerificationController extends BaseController
         if (!isset($Solution_function->id)) {
             $verificationType = VerificationType::where("id","=",$type)->first();
             
-
+            $pageType = 'verification';
+            $pageId = $type;
             return view(
                 "adult.verification.index",
-                compact('types' , 'problem_id' , 'problem_id','project_id' , 'verificationType'));
+                compact('types' , 'problem_id' , 'problem_id','project_id' , 'verificationType' , 'pageId' , 'pageType'));
         }      
         
         //get Verification
@@ -1327,7 +1330,7 @@ class VerificationController extends BaseController
                                                                         );
                                                                     break;
                                                                     default: 
-                                                                       
+                                                                      
                                                                     return view(
                                                                         "adult.verification.index",
                                                                         compact(
@@ -1878,7 +1881,7 @@ class VerificationController extends BaseController
             }
             
             $data = $request->all();
-            $verification->user_id = $data['user_id'];
+            $verification->user_id = Auth::user()->id;
             $verification->project_id = $data["project_id"];
             $verification->problem_id = $data["problem_id"];
             $verification->principle_type = $data["principle_type"];

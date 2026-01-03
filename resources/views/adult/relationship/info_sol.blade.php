@@ -19,13 +19,7 @@
     <div class="relationshipContent">
         <div class="container">
             <div class="row">
-                <div class="col-sm-12">
-                    <h1>{{ $relationship->name }}</h1>
-                    <div class="relationImage text-center">
-                        <img src="{{ asset('rel/' . $relationship->image)}}" alt="relationImage" />
-                    </div>
-                    <p>{{ $relationship->text }}</p>
-                </div>
+               
                 
                         <!-- principleRelation start -->
                         <div class="principleRelation">                    
@@ -50,14 +44,51 @@
         </div>
     </div>
 @else
-         <div class="relationshipContent">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                <button type="button" id="applyRel" class="btn btn-success">Apply Relationship +</button>
+        @include('adult.relationship.common.apply_relationship_button')
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title">Apply Relationship</h5>
+                            <button type="button" class="btn-close" data-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                            <div class="card p-3">
+                                                @if($verification->file == 1)
+                                                    <img class="mx-auto" src="{{ asset('assets-new/verification/voucablary/default-001.jpg')}}" width="100%" height="250px">
+                                                @else
+                                                    <img class="mx-auto" src="{{ asset('assets-new/verification/voucablary/default-002.jpg')}}" width="100%" height="250px">
+                                                @endif
+                                                <label class="form-label fw-bold mt-3">Information : </label>
+                                                <input type="text" class="form-control" disabled value="{{ date('d/m/Y' , strtotime($verification->created_at)) }}">
+                                               
+                                            </div>
+                                        
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Solution :</label>
+                                        <input class="form-control" type="text" id="communication" value="{{ 'Solution : ' . $Solution->name }}" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Solution Created At:</label>
+                                        <input class="form-control" type="text" id="communication" value="{{ 'Created : ' . date('d/m/Y', strtotime($Solution->created_at)) }}"  readonly>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-success text-white">
+                            <button class="btn btn-secondary border-2" data-dismiss="modal">Close</button>
+                            <button class="btn btn-success" id="applyRel">Yes, Apply</button>
+                        </div>
+                        </div>
                 </div>
             </div>
-        </div>
         </div>
         @endif
 

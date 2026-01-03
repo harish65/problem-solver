@@ -46,7 +46,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                                         <h2>Problem</h2>
                                        <div class="problem-list">
                                         <ul class="text-center p-2">
-                                                @foreach(@$solutionParts as $key => $   )
+                                                @foreach(@$solutionParts as $key => $part)
                                                     <li class="form-control btn btn-success">
                                                         <span>{{ __('Part ') . ++$key}}</span>
                                                     </li>

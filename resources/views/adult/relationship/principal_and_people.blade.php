@@ -19,19 +19,13 @@
     <div class="relationshipContent">
         <div class="container">
             <div class="row">
-                <div class="col-sm-12">
-                    <h1>{{ $relationship->name }}</h1>
-                    <div class="relationImage text-center">
-                        <img src="{{ asset('rel/' . $relationship->image)}}" alt="relationImage" />
-                    </div>
-                    <p>{{ $relationship->text }}</p>
-                </div>
+                
                         @if($relationship->id == 9)
                         <!-- principleRelation start -->
                             <div class="principleRelation">                    
-                            @if($principal)
+                                    @if($principal)
                                         <div class="d-flex">
-                                        @include('adult.relationship.common.people')
+                                            @include('adult.relationship.common.people')
                                             @include('adult.relationship.common.upside')
                                         </div>  
                                         <div class="d-flex">
@@ -49,9 +43,9 @@
                          @if($relationship->id == 10)
                         <!-- principleRelation start -->
                             <div class="principleRelation">                    
-                            @if($principal)
+                                    @if($principal)
                                         <div class="d-flex">
-                                        @include('adult.relationship.common.solution_func')
+                                            @include('adult.relationship.common.solution_func')
                                             @include('adult.relationship.common.upside')
                                         </div>  
                                         <div class="d-flex">
@@ -68,7 +62,7 @@
                          @if($relationship->id == 11)
                         <!-- principleRelation start -->
                             <div class="principleRelation">                    
-                            @if($principal)
+                                    @if($principal)
                                         <div class="d-flex">
                                         @include('adult.relationship.common.solution')
                                             @include('adult.relationship.common.upside')
@@ -89,7 +83,7 @@
                             <div class="principleRelation">                    
                             @if($principal && $words->count() > 0)
                                         <div class="d-flex">
-                                        @include('adult.relationship.common.principal')
+                                            @include('adult.relationship.common.principal')
                                             @include('adult.relationship.common.upside')
                                         </div>  
                                         <div class="d-flex">
@@ -149,16 +143,122 @@
             </div>
         </div>
     </div>
-@else
-         <div class="relationshipContent">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                <button type="button" id="applyRel" class="btn btn-success">Apply Relationship +</button>
+        @else
+         @include('adult.relationship.common.apply_relationship_button')
+         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title">Apply Relationship</h5>
+                            <button type="button" class="btn-close" data-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-12">
+
+                                @if($relationship->id == 9)
+                                    <div class="mb-3 d-flex justify-content-center">
+                                        @include('adult.relationship.common.people')
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Principle Type : </label>
+                                        <input type="text" class="form-control" disabled value="{{$principal->principle_type == 0 ? 'THE GIVEN SET' : 'DERIVED PRINCIPLE'}}">
+                                    </div>
+                                    @elseif($relationship->id == 10)
+                                    <div class="card p-3 mb-3">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Solution Function :</label>
+                                            <input class="form-control" type="text" id="communication" value="{{ 'Solution Function : ' . $Solution_function->name }}"  readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Solution Function Created At:</label>
+                                            <input class="form-control" type="text" id="communication" value="{{ 'Created : ' . date('d/m/Y', strtotime($Solution_function->created_at)) }}"  readonly>
+                                        </div>
+
+                                        <div class="mb-3">
+                                   
+                                        <label class="form-label fw-bold">Principle Type : </label>
+                                        <input type="text" class="form-control" disabled value="{{$principal->principle_type == 0 ? 'THE GIVEN SET' : 'DERIVED PRINCIPLE'}}">
+                                        </div>
+                                    </div>
+                                    @elseif($relationship->id == 11)
+                                    <div class="card p-3 mb-3">
+                                        <div class="mb-3">
+                                                <label class="form-label fw-bold">Solution :</label>
+                                                <input class="form-control" type="text" id="communication" value="{{ 'Solution : ' . $Solution->name }}" readonly>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Solution Created At:</label>
+                                                <input class="form-control" type="text" id="communication" value="{{ 'Created : ' . date('d/m/Y', strtotime($Solution->created_at)) }}"  readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                        <label class="form-label fw-bold">Principle Type : </label>
+                                        <input type="text" class="form-control" disabled value="{{$principal->principle_type == 0 ? 'THE GIVEN SET' : 'DERIVED PRINCIPLE'}}">
+                                        </div>
+                                    </div>
+                                    @elseif($relationship->id == 12)
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Principle Type : </label>
+                                        <input type="text" class="form-control" disabled value="{{$principal->principle_type == 0 ? 'THE GIVEN SET' : 'DERIVED PRINCIPLE'}}">
+                                        </div>
+                                        <div class="mb-3">
+                                           
+
+                                            @foreach($words as $word)
+                                            <label class="form-label fw-bold">Vacabulary</label>
+                                            <input type="text" class="form-control" disabled value="{{ $word->verification_key}}">
+                                            @endforeach
+                                               
+                                            
+                                        
+                                    </div>
+                                    @elseif($relationship->id == 13)
+                                    <div class="card p-3 mb-3">
+                                        <div class="mb-3">
+                                                <label class="form-label fw-bold">Solution :</label>
+                                                <input class="form-control" type="text" id="communication" value="{{ 'Solution : ' . $Solution->name }}" readonly>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Solution Created At:</label>
+                                                <input class="form-control" type="text" id="communication" value="{{ 'Created : ' . date('d/m/Y', strtotime($Solution->created_at)) }}"  readonly>
+                                        </div>
+                                        <div class="mb-3 d-flex justify-content-center">
+                                        @include('adult.relationship.common.entity_usage')
+                                        </div>
+                                    </div>
+
+                                    @elseif($relationship->id == 14)
+                                    <div class="card p-3 mb-3">
+                                    <div class="mb-3">
+                                            <label class="form-label fw-bold">Solution Function :</label>
+                                            <input class="form-control" type="text" id="communication" value="{{ 'Solution Function : ' . $Solution_function->name }}"  readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Solution Function Created At:</label>
+                                            <input class="form-control" type="text" id="communication" value="{{ 'Created : ' . date('d/m/Y', strtotime($Solution_function->created_at)) }}"  readonly>
+                                        </div>
+                                        <div class="mb-3 d-flex justify-content-center">
+                                        @include('adult.relationship.common.people')
+                                        </div>
+                                    </div>
+                                    @endif
+                                
+                                
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-success text-white">
+                            <button class="btn btn-secondary border-2" data-dismiss="modal">Close</button>
+                            <button class="btn btn-success" id="applyRel">Yes, Apply</button>
+                        </div>
+                        </div>
                 </div>
             </div>
         </div>
-        </div>
+
+
         @endif
 
 @endsection 

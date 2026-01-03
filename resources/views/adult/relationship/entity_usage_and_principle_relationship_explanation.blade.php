@@ -19,13 +19,7 @@
     <div class="relationshipContent">
         <div class="container">
             <div class="row">
-                <div class="col-sm-12">
-                    <h1>{{ $relationship->name }}</h1>
-                    <div class="relationImage text-center">
-                        <img src="{{ asset('rel/' . $relationship->image)}}" alt="relationImage" />
-                    </div>
-                    <p>{{ $relationship->text }}</p>
-                </div>
+                
                 
                         <!-- principleRelation start -->
                         <div class="principleRelation">                    
@@ -50,14 +44,43 @@
         </div>
     </div>
 @else
-         <div class="relationshipContent">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                <button type="button" id="applyRel" class="btn btn-success">Apply Relationship +</button>
+        @include('adult.relationship.common.apply_relationship_button')
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title">Apply Relationship</h5>
+                            <button type="button" class="btn-close" data-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                   
+                                        <label class="form-label fw-bold">Principle Type : </label>
+                                        <input type="text" class="form-control" disabled value="{{$principal->principle_type == 0 ? 'THE GIVEN SET' : 'DERIVED PRINCIPLE'}}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold"></label>
+                                        <div class="d-flex justify-content-center">
+                                        @include('adult.relationship.common.entity_usage')
+                                        </div>
+                                        
+                                    </div>
+                                        
+
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-success text-white">
+                            <button class="btn btn-secondary border-2" data-dismiss="modal">Close</button>
+                            <button class="btn btn-success" id="applyRel">Yes, Apply</button>
+                        </div>
+                        </div>
                 </div>
             </div>
-        </div>
         </div>
         @endif
 

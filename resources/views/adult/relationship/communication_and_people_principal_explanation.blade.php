@@ -19,13 +19,7 @@
     <div class="relationshipContent">
         <div class="container">
             <div class="row">
-                <div class="col-sm-12">
-                    <h1>{{ $relationship->name }}</h1>
-                        <div class="relationImage text-center">
-                            <img src="{{ asset('rel/' . $relationship->image)}}" alt="relationImage" />
-                        </div>
-                    <p>{{ $relationship->text }}</p>
-                </div>
+                
                 
                         <!-- principleRelation start -->
                         @if(isset($principal)) 
@@ -55,35 +49,77 @@
         </div>
     </div>
     @else
-         <div class="relationshipContent">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                <button type="button" id="applyRel" class="btn btn-success">Apply Relationship +</button>
-                </div>
-            </div>
-        </div>
-        </div>
+        @include('adult.relationship.common.apply_relationship_button')
         @endif
 
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
 
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Apply Relationship</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                <div class="container-fluid">
+
+
+                    <div class="row">
+                      
+                            <div class="col-12 mb-2">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">
+                                        Communication
+                                    </label>
+                                    <select class="form-select"   style="height:auto;">
+                                        @foreach($custommers as $user)
+                                        <option>{{ $user->name }} : Communication</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                       
+                        @if (isset($principal))
+                
+                        @if ($principal->principle_type == 1)
+                        
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">
+                                    Principal : THE GIVEN SET
+                                </label>
+                                <ol class="form-control bg-light" style="height:auto; padding-left:10%;">
+                                    @foreach ($drived_principle as $item)
+                                            <li>{{ strip_tags($item->content) }}</li>
+                                    @endforeach
+                                </ol>
+                            </div>
+                        </div>
+                        @else
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">
+                                    Principal : DERIVED PRINCIPLE
+                                </label>
+                                <ol class="form-control bg-light" style="height:auto; padding-left:10%;">
+                                    @foreach ($drived_principle as $item)
+                                        <li>{{ strip_tags($item->content) }}</li>
+                                    @endforeach
+                                    </ol>
+                            </div>
+                        </div>
+                            @endif
+                        @endif
+                    </div>
+                </div>
+                </div>
+                <div class="modal-footer bg-success text-white">
+                    <button class="btn btn-secondary border-2" data-dismiss="modal">Close</button>
+                    <button class="btn btn-success" id="applyRel">Yes, Apply</button>
+                </div>
+                </div>
+        </div>
+    </div>
 @endsection 
-@section('scripts')
-<script>
-    
 
-
- var showMessage = "{{$showMessage}}"
-    var text_ = '{{ $relationship->error_msg}}'
-    if (showMessage) {
-       
-        swal({
-            title: "Communication and Principle Relationship Explanation",
-            text: text_,
-            type: "Error",
-            showCancelButton: true,
-            confirmButtonColor: '#00A14C',
-        });
-    }
-</script> 
-@endsection

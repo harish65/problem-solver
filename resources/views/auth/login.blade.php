@@ -14,8 +14,9 @@
                   <input type="email" class="form-control" id="email" placeholder="Enter user name or email" name="email" autocomplete="off">
                 </div>
                 <div class="form-group">
-                  <input type="password" class="form-control" placeholder="Password" name="password" required autocomplete="new-password" autocomplete="off">
-                  <button class="eye">
+                  <input type="password" class="form-control" placeholder="Password" name="password" id="password" required autocomplete="new-password" autocomplete="off">
+                  <button type="button" class="eye" id="togglePassword">
+                  
                     <img src="{{ URL::to('/') }}/assets-new/images/eye.png" alt=""/>
                   </button>
                   <p class="text-right"><a href="{{ route('password.request') }}" class="forget">Forget password</a></p>
@@ -87,6 +88,18 @@
             }
         });
     });
+    $(document).ready(function() {
+    $('#togglePassword').click(function(e) {
+        e.preventDefault();
+        var passwordField = $('#password');
+        var type = passwordField.attr('type') === 'password' ? 'text' : 'password';
+        passwordField.attr('type', type);
+
+        // Toggle the eye icon
+        var icon = $(this).find('i');
+        icon.toggleClass('fa-eye fa-eye-slash');
+    });
+});
 </script>
 @endsection
 

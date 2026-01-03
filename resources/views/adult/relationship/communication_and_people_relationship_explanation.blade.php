@@ -21,13 +21,7 @@
         <div class="relationshipContent">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-12">
-                        <h1>{{ $relationship->name }}</h1>
-                        <div class="relationImage text-center">
-                            <img src="{{ asset('rel/' . $relationship->image)}}" alt="relationImage" />
-                        </div>
-                        <p>{{ $relationship->text }}</p>
-                    </div>
+                    
                     
                             <!-- principleRelation start -->
                             <div class="principleRelation">                    
@@ -47,26 +41,67 @@
                                     
                             </div>
                             <!-- principleRelation End -->
-                        
-
-                        
                         @include('adult.relationship.common.validation')
                     
                 </div>
             </div>
         </div>
         @else
-         <div class="relationshipContent">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                <button type="button" id="applyRel" class="btn btn-success">Apply Relationship +</button>
+         @include('adult.relationship.common.apply_relationship_button')
+        @endif
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header  bg-success text-white">
+                        <h5 class="modal-title">Apply Relationship</h5>
+                        <button type="button" class="btn-close" data-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <!-- Person 1 (Editable) -->
+                        <div class="form-group mt-2">
+                            <label>From Person (Person 1)</label>
+                            <select id="person_1" class="form-select">
+                                <option value="">Please select</option>
+                                @foreach ($custommers as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}:  {{$user->type}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div id="communication_detail" style="display: none;">
+                                <!-- Person 2 (Readonly) -->
+                                <div class="form-group mt-2">
+                                    <label>To Person (Person 2)</label>
+                                    <input type="text" id="to_person" class="form-control" readonly>
+                                </div>
+
+                                <div class="form-group mt-2">
+                                    <label>Subject</label>
+                                    <input type="text" id="subject" class="form-control" readonly>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label>Date</label>
+                                    <input type="text" id="date_created" class="form-control" readonly>
+                                </div>
+                                <div class="form-group mt-3">
+                                    <label>Message</label>
+                                    <textarea id="msg" class="form-control" rows="4" readonly></textarea>
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer  bg-success text-white">
+                        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button class="btn btn-success" id="applyRel">Yes, Apply</button>
+                    </div>
+
                 </div>
             </div>
         </div>
-        </div>
-        @endif
-@endsection 
 
+@endsection
 
 

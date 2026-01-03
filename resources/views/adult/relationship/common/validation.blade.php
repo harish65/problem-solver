@@ -9,7 +9,7 @@
 
     $editable = false;
     $config = config('relationship.'.$relationship->id);
-    if(($can_edit != null && $can_edit->editable_project == 1) || $can_edit == null && Auth::user()->id == $project->user_id){
+    if((!is_null($can_edit) && $can_edit->$slug == 1 ) || (Auth::user()->id == $project->user_id && $project->shared == 0)){
         $editable = true;
     }
     
