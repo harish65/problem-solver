@@ -90,7 +90,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                                 Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
                             <div class="row">
                             </div>
-
+                            @if($voiceApproach && $voiceApproach->added == 1)
                             <h2>Validation Question</h2>
                             <br>
                             <form id="validation_form">
@@ -115,6 +115,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                                 <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
                                 @endif
                             </form>
+                            @endif
                         </div>
                 </div>
                 <!-- End -->

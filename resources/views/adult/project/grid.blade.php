@@ -49,8 +49,13 @@
                                                 src="{{ url('/') }}/assets-new/images/deleteIcon.png" alt="" /></a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('adult.project-share' , Crypt::encrypt($item->id)) }}" title="Share"><img
+                                        @if($item->problem_user_id == $item->user_id)
+                                        <a href="#" title="Share"><img
                                                 src="{{ url('/') }}/assets-new/images/uploadIcon.png" alt="" /></a>
+                                            @else
+                                            <a href="{{ route('adult.project-share' , Crypt::encrypt($item->id)) }}" title="Share"><img
+                                            src="{{ url('/') }}/assets-new/images/uploadIcon.png" alt="" /></a>
+                                            @endif
                                     </li>
 
                                     <li>

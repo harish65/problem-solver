@@ -96,7 +96,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                                 @endif
                             </div>
                         </div>
-                        
+                        @if($pastAndPresentTime->count() > 0)
                         <h2>Validation Question</h2>
                         <br>
                         <form id="validation_form">
@@ -117,6 +117,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
                         @endif
                         </form>
+                        @endif
                     </div>
                 </div>
                 <!-- End -->

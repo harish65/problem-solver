@@ -56,16 +56,20 @@ class ApiVerificationController extends BaseController
         $problem_id = $data["problem_id"];
         $project_id = $data["project_id"];
         $type = $data["verification_type_id"];
-        $problem = Problem::where("project_id", "=", $project_id)->where('user_id' , Auth::user()->id)->first();
-        $Solution_function = SolutionFunction::where("problem_id",$problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
-        $solution = Solution::where("problem_id", "=", $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
+        
+        // Check if $request has user_id, else use Auth::user()->id
+        $user_id = $request->has('user_id') ? $request->user_id : Auth::user()->id;
+        
+        $problem = Problem::where("project_id", "=", $project_id)->where('user_id' , $user_id)->first();
+        $Solution_function = SolutionFunction::where("problem_id",$problem_id)->where('project_id' , $project_id)->where('user_id' , $user_id)->first();
+        $solution = Solution::where("problem_id", "=", $problem_id)->where('project_id' , $project_id)->where('user_id' , $user_id)->first();
         $verifiationTypeText = VerificationTypeText::where( "verification_type_id",$type)->get();
         $entity = VerificationEntity::where("verTypeId","=",$type)->where('project_id', $project_id)->get();
         $validation_data = Verification::
                                 select('id','validations')
                                 ->where("problem_id", "=", $problem_id)    
                                 ->where("verification_type_id", "=", $type)
-                                ->where("user_id", Auth::user()->id)
+                                ->where("user_id", $user_id)
                                 // ->pluck("validations")
                                 ->first();    
         
@@ -74,7 +78,7 @@ switch ($type) {
                
             $verification = Verification::where("problem_id", "=", $problem_id)
                     ->where("verification_type_id", "=", $type)
-                    ->where("user_id", Auth::user()->id)
+                    ->where("user_id", $user_id)
                     ->first();    
                 $transitionPhrase = DB::table('verification_type_texts')->where('verification_type_id' , 1)->first();
                  $success = [
@@ -91,7 +95,7 @@ switch ($type) {
             case 2:
                 $verification = Verification::where("problem_id", "=", $problem_id)
                     ->where("verification_type_id", "=", $type)
-                    ->where("user_id", Auth::user()->id)
+                    ->where("user_id", $user_id)
                     ->first();    
                 $transitionPhrase = DB::table('verification_type_texts')->where('verification_type_id' , 2)->first();
                 $success =  [
@@ -109,7 +113,7 @@ switch ($type) {
                 $beforeAfter =  DB::table('before_and_after')
                                 ->where('problem_id' , $problem->id)
                                 ->where('project_id' , $project_id)
-                                ->where('user_id' , Auth::user()->id)
+                                ->where('user_id' , $user_id)
                                 ->first();
                 
                 $success =  [
@@ -123,7 +127,7 @@ switch ($type) {
                     return $this->sendResponse($success, "true");
                 break;
             case 4:
-                $steps = DB::table('sepration_steps')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
+                $steps = DB::table('sepration_steps')->where('user_id' , $user_id)->where('project_id' , $project_id)->first();
                 $custommers = DB::table("customers")->where("project_id", "=", $project_id)->get();
                 $success =  [
                         "project_id" => $project_id,
@@ -137,7 +141,7 @@ switch ($type) {
                     return $this->sendResponse($success, "true");
                 break;
             case 5:
-                $timeVerifications =  TimeVerification::where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->get();
+                $timeVerifications =  TimeVerification::where('user_id' , $user_id)->where('project_id' , $project_id)->get();
                 $success =  [
                     "project_id" => $project_id,
                     "problem" => $problem,
@@ -158,7 +162,7 @@ switch ($type) {
 
                 $pastAndPresentTime = PastAndPresentTime::where('problem_id' , $problem_id)
                                                         ->where('project_id' , $project_id)
-                                                        ->where('user_id' , Auth::user()->id)->get();
+                                                        ->where('user_id' , $user_id)->get();
                 $success =  [
                     "project_id" => $project_id,
                     "problem" => $problem,
@@ -173,22 +177,22 @@ switch ($type) {
             case 7:
                
                 $givenSet = DB::table("principle_identification_main")
-                                    ->where("user_id", Auth::user()->id)
+                                    ->where("user_id", $user_id)
                                     ->where("project_id", $project_id)
                                     ->first();
                    
                 $entitiesAvailable = DB::table("entity_available")
                                         ->where("type", "=", 0)
-                                        ->where("user_id" , Auth::user()->id)
+                                        ->where("user_id" , $user_id)
                                         ->where('project_id' , $project_id)
                                         ->get();
                 $entities = DB::table("entities")->get();
                 $principle_identification = DB::table("principle_identification")->get();
 
-                $content =     DB::table("principle_identification_drived_principle")->where("project_id", $project_id)->where('user_id' , Auth::user()->id)->first();
+                $content =     DB::table("principle_identification_drived_principle")->where("project_id", $project_id)->where('user_id' , $user_id)->first();
                 $principle_identifications = DB::table(
                     "principle_identification_main"
-                )->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
+                )->where('user_id' , $user_id)->where('project_id' , $project_id)->first();
 
                 $success =  [
                     "project_id" => $project_id,
@@ -211,7 +215,7 @@ switch ($type) {
                     ->get();
                 
                 $transitionPhrase = DB::table('verification_type_texts')->where('verification_type_id' , 8)->first();
-                $solutionTimeLocationOne = DB::table('solution_time_locations')->where("type", 1)->where("project_id", $project_id)->where('user_id' , Auth::user()->id)->first();
+                $solutionTimeLocationOne = DB::table('solution_time_locations')->where("type", 1)->where("project_id", $project_id)->where('user_id' , $user_id)->first();
                 $success =  [
                     "project_id" => $project_id,
                     "problem" => $problem,
@@ -231,7 +235,7 @@ switch ($type) {
                     ->get();
                
                 $transitionPhrase = DB::table('verification_type_texts')->where('verification_type_id' , 9)->first();
-                $solutionTimeLocationTwo = DB::table('solution_time_locations')->where("type", 2)->where("project_id", $project_id)->where('user_id' , Auth::user()->id)->first();;
+                $solutionTimeLocationTwo = DB::table('solution_time_locations')->where("type", 2)->where("project_id", $project_id)->where('user_id' , $user_id)->first();;
                 $success =  [
                     "project_id" => $project_id,
                     "problem" => $problem,
@@ -266,7 +270,7 @@ switch ($type) {
                 $communications = DB::table('people_communication_flow')
                         ->select('people_communication_flow.*' , 'customers.name AS customer_name' )
                         ->leftJoin('customers', 'people_communication_flow.customer_id', '=', 'customers.id')
-                        ->where('people_communication_flow.user_id' , Auth::user()->id)
+                        ->where('people_communication_flow.user_id' , $user_id)
                         ->where('people_communication_flow.project_id' , $project_id)
                         ->where('people_communication_flow.problem_id' , $problem_id)
                         ->get();
@@ -304,7 +308,7 @@ switch ($type) {
                         return $this->sendResponse($success, "true");        
                 break;
             case 13:
-                $entities = DB::table("partition_approach")->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->get();
+                $entities = DB::table("partition_approach")->where('user_id' , $user_id)->where('project_id' , $project_id)->get();
                 $success =  [
                     "project_id" => $project_id,
                     "problem" => $problem,
@@ -343,7 +347,7 @@ switch ($type) {
                 $customers = DB::table("customers")
                     ->where("project_id", "=", $project_id)
                     ->first();
-                $problemDevelopment = DB::table('problem_development')->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->get();
+                $problemDevelopment = DB::table('problem_development')->where('project_id' , $project_id)->where('user_id' , $user_id)->get();
 
                 $success =  [
                     "project_id" => $project_id,
@@ -356,11 +360,11 @@ switch ($type) {
                 return $this->sendResponse($success, "true");    
                 break;
                 case 16:
-                    $errorcorrection = DB::table('error_correction')->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->get();
+                    $errorcorrection = DB::table('error_correction')->where('project_id' , $project_id)->where('user_id' , $user_id)->get();
                     $problemDevelopment = db::table('problem_development')
                                         ->select('problem_development.*' , 'error_correction.compensator' ,'error_correction.compensator_date' , 'error_correction.id as error_correction_id' )
                                         ->leftJoin('error_correction', 'problem_development.id', '=', 'error_correction.error_id')
-                                        ->where('problem_development.project_id' , $project_id)->where('problem_development.user_id' , Auth::user()->id)
+                                        ->where('problem_development.project_id' , $project_id)->where('problem_development.user_id' , $user_id)
                                         ->get();
                           
                         $success =  [
@@ -375,7 +379,7 @@ switch ($type) {
                     break;
 
                     case 17:
-                        $functionAud  = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
+                        $functionAud  = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $user_id)->first();
                             
                         $success =  [
                             "project_id" => $project_id,
@@ -390,13 +394,13 @@ switch ($type) {
                             $people = db::table('function_belong_to_people')->select('function_belong_to_people.*' , 'customers.name' )
                                         ->leftJoin('customers', 'function_belong_to_people.customer_id', '=', 'customers.id')
                                         ->where('function_belong_to_people.problem_id' , $problem_id)
-                                        ->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , Auth::user()->id)->get();
+                                        ->where('function_belong_to_people.project_id' , $project_id)->where('function_belong_to_people.user_id' , $user_id)->get();
                            
                             $custommers = DB::table("customers")
                                         ->where("project_id", "=", $project_id)
                                         ->get();
-                            $functionAud  = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
-                            $functionApplied  = DB::table('function_sub_people')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->where('verification_type' , $type)->first();
+                            $functionAud  = DB::table('function_adjustments')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $user_id)->first();
+                            $functionApplied  = DB::table('function_sub_people')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $user_id)->where('verification_type' , $type)->first();
                             $success =  [
                                 "project_id" => $project_id,
                                 "problem" => $problem,
@@ -409,7 +413,7 @@ switch ($type) {
                             return $this->sendResponse($success, "true"); 
                             break;
                             case 19:                         
-                                $functionApplied  = DB::table('function_sub_people')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->where('verification_type' , 19)->first();
+                                $functionApplied  = DB::table('function_sub_people')->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $user_id)->where('verification_type' , 19)->first();
                                 $custommers = DB::table("customers")
                                         ->where("project_id", "=", $project_id)
                                         ->get();
@@ -426,8 +430,8 @@ switch ($type) {
                                 return $this->sendResponse($success, "true");                                
                                 break;
                                 case 20:
-                                    $problemPart = DB::table("average_approaches") ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
-                                    $countPartionAproach = DB::table("partition_approach") ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->get()->count();
+                                    $problemPart = DB::table("average_approaches") ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $user_id)->first();
+                                    $countPartionAproach = DB::table("partition_approach") ->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $user_id)->get()->count();
                                     $success =  [
                                         "project_id" => $project_id,
                                         "problem" => $problem,
@@ -440,7 +444,7 @@ switch ($type) {
                                     break;
                                     case 21:
                                        
-                                        $voiceApproach = DB::table("passive_voice")->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
+                                        $voiceApproach = DB::table("passive_voice")->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $user_id)->first();
                                         $success =  [
                                             "project_id" => $project_id,
                                             "problem" => $problem,
@@ -451,7 +455,7 @@ switch ($type) {
                                         return $this->sendResponse($success, "true"); 
                                         break;
                                         case 22:
-                                            $problemreplaced = DB::table("replace_problem_by_problem")->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , Auth::user()->id)->first();
+                                            $problemreplaced = DB::table("replace_problem_by_problem")->where('problem_id' , $problem_id)->where('project_id' , $project_id)->where('user_id' , $user_id)->first();
                                             $success =  [
                                                 "project_id" => $project_id,
                                                 "problem" => $problem,
@@ -464,16 +468,16 @@ switch ($type) {
                                             case 23:
                                                 $entities = DB::table("entity_available")
                                                             ->where("type", "=", 0)
-                                                            ->where("user_id", "=", Auth::user()->id)
+                                                            ->where("user_id", "=", $user_id)
                                                             ->where("project_id", $project_id)
                                                         ->get();
 
                                                 $resources = DB::table("resource_management")
-                                                            ->where("user_id", "=", Auth::user()->id)
+                                                            ->where("user_id", "=", $user_id)
                                                             ->where("project_id", $project_id)
                                                         ->first();
                                                 $entity_used = DB::table("entity_usage")
-                                                        ->where("user_id", "=", Auth::user()->id)
+                                                        ->where("user_id", "=", $user_id)
                                                         ->where("project_id", $project_id)
                                                         ->first();
                                                     $success =  [
@@ -494,19 +498,19 @@ switch ($type) {
                                                                         ->get();
                                                     $entitiesAvail = DB::table("entity_available")
                                                         ->where("type", "=", 0)
-                                                        ->where("user_id", "=", Auth::user()->id)
+                                                        ->where("user_id", "=", $user_id)
                                                         ->where("project_id", $project_id)
                                                     ->get();
                                                     $entitiestbl = DB::table("entities")->get();
                                                     
                                                     $entity_used = DB::table("entity_usage")
-                                                        ->where("user_id", "=", Auth::user()->id)
+                                                        ->where("user_id", "=", $user_id)
                                                         ->where("project_id", $project_id)
                                                     ->first();
 
                                                     $principle_identifications = DB::table(
                                                         "principle_identification_main"
-                                                    )->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
+                                                    )->where('user_id' , $user_id)->where('project_id' , $project_id)->first();
                                                     $success =  [
                                                             "project_id" => $project_id,
                                                             "problem" => $problem,
@@ -522,7 +526,7 @@ switch ($type) {
                                                     break;
                                                     case 25:
                                                         $custommers = DB::table("customers")->where("project_id", "=", $project_id)->get();
-                                                        $functionOfPeople = DB::table("function_of_people_explanations")->where("project_id", "=", $project_id)->where('user_id' , Auth::user()->id)->first();
+                                                        $functionOfPeople = DB::table("function_of_people_explanations")->where("project_id", "=", $project_id)->where('user_id' , $user_id)->first();
                                                         $success =  [
                                                             "project_id" => $project_id,
                                                             "problem" => $problem,
@@ -534,7 +538,7 @@ switch ($type) {
                                                     return $this->sendResponse($success, "true"); 
                                                     break;
                                                     case 26:
-                                                            $entiesBehind = DB::table('visibility_entity_behind_explanation')->where('user_id' , Auth::user()->id)->where('project_id',$project_id)->get();
+                                                            $entiesBehind = DB::table('visibility_entity_behind_explanation')->where('user_id' , $user_id)->where('project_id',$project_id)->get();
                                                             $success =  [
                                                                 "project_id" => $project_id,
                                                                 "problem" => $problem,
@@ -547,8 +551,8 @@ switch ($type) {
                                                             case 27:
                                                                 $principle_identifications = DB::table(
                                                                     "principle_identification_main"
-                                                                )->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
-                                                                $mother_nature = DB::table('mother_nature')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
+                                                                )->where('user_id' , $user_id)->where('project_id' , $project_id)->first();
+                                                                $mother_nature = DB::table('mother_nature')->where('user_id' , $user_id)->where('project_id' , $project_id)->first();
                                                                 $success =  [
                                                                     "project_id" => $project_id,
                                                                     "problem" => $problem,
@@ -560,7 +564,7 @@ switch ($type) {
                                                                 return $this->sendResponse($success, "true"); 
                                                                 break;
                                                                 case 28:
-                                                                    $mevsyou = DB::table('me_vs_you')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();                                                                 
+                                                                    $mevsyou = DB::table('me_vs_you')->where('user_id' , $user_id)->where('project_id' , $project_id)->first();                                                                 
                                                                     $custommers = DB::table("customers")->where("project_id", "=", $project_id)->get();
                                                                     $success =  [
                                                                         "project_id" => $project_id,
@@ -576,7 +580,7 @@ switch ($type) {
                                                                         $custommers = DB::table("customers")
                                                                                                 ->where("project_id", "=", $project_id)
                                                                                         ->get();
-                                                                        $taking_ad  = DB::table('taking_advantage')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
+                                                                        $taking_ad  = DB::table('taking_advantage')->where('user_id' , $user_id)->where('project_id' , $project_id)->first();
                                                                         $success =  [
                                                                             "project_id" => $project_id,
                                                                             "problem" => $problem,
@@ -603,7 +607,7 @@ switch ($type) {
                                                                         return $this->sendResponse($success, "true"); 
                                                                     break;
                                                                     case 31:
-                                                                        $problrmAtLocatios  = DB::table('problrm_at_location_explantion')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
+                                                                        $problrmAtLocatios  = DB::table('problrm_at_location_explantion')->where('user_id' , $user_id)->where('project_id' , $project_id)->first();
                                                                         $custommers = DB::table("customers")->where("project_id", "=", $project_id)->get();
                                                                         $success =  [
                                                                             "project_id" => $project_id,
@@ -617,7 +621,7 @@ switch ($type) {
                                                                     break;
 
                                                                     case 32:
-                                                                        $function_at_location  = DB::table('function_at_locations')->where('user_id' , Auth::user()->id)->where('project_id' , $project_id)->first();
+                                                                        $function_at_location  = DB::table('function_at_locations')->where('user_id' , $user_id)->where('project_id' , $project_id)->first();
                                                                         $custommers = DB::table("customers")
                                                                         ->where("project_id", "=", $project_id)->get();
                                                                         $success =  [

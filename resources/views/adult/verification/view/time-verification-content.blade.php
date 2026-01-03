@@ -87,6 +87,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                         </div>
                       
                         <?php  $lastDate =  date('Y,m,d' , strtotime($lastDate . '+ 1 day'));?>
+                         @if($timeVerifications->count() > 0)
                         <h2>Validation Question</h2>
                         <br>       
                         <input type="hidden" value="{{ $lastDate }}" id="last_date"> 
@@ -107,6 +108,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
                         @endif
                         </form>
+                        @endif
                     </div>
                 </div>
                 <!-- End -->

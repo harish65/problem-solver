@@ -100,9 +100,10 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                 </table>
                 @endif
             </div>
+            @if($custommers->count() > 0)
             <div class="questionWrap">
         
-        
+
                 <h2>Validation Question</h2>
                 <br>
                 <form id="validation_form">
@@ -144,6 +145,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                 </form>
                 
             </div>
+            @endif
             
         </div>
         

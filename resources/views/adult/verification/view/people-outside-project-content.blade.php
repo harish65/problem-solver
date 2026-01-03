@@ -110,6 +110,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                 </table>
                 @endif
             </div>
+             @if($users->count() > 0)
             <div class="questionWrap">
         
         
@@ -140,7 +141,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                 </form>
                 
             </div>
-
+            @endif
                     @else
                     <?php $showMsg =  true; ?>
                     @endif

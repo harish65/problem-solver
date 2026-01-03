@@ -54,6 +54,7 @@ class ProjectController extends BaseController
                         'projects.created_at',
                         'projects.updated_at',
                         DB::raw('COALESCE(FIRST_VALUE(problems.id) OVER (PARTITION BY projects.id ORDER BY problems.id DESC), NULL) as problem_id'),
+                        DB::raw('COALESCE(FIRST_VALUE(problems.user_id) OVER (PARTITION BY projects.user_id ORDER BY problems.user_id DESC), NULL) as problem_user_id'),
                         DB::raw('COALESCE(FIRST_VALUE(problems.name) OVER (PARTITION BY projects.id ORDER BY problems.id DESC), NULL) as problem'),
                         DB::raw('COALESCE(FIRST_VALUE(solutions.name) OVER (PARTITION BY projects.id ORDER BY solutions.id DESC), NULL) as solution_name'),
                         DB::raw('COALESCE(FIRST_VALUE(solutions.id) OVER (PARTITION BY projects.id ORDER BY solutions.id DESC), NULL) as solution_id')
@@ -65,8 +66,7 @@ class ProjectController extends BaseController
                     ->groupBy('projects.id', 'projects.name', 'projects.user_id', 'projects.shared', 'projects.created_at', 'projects.updated_at')
                     ->orderBy('projects.id', 'desc')
                     ->get();
-                    $verificationTypes = DB::table('verification_types')->get();    
-                    
+                    $verificationTypes = DB::table('verification_types')->get();
                     if ($request->is('api/*')) {
                             $success['projects'] = $project;
                             

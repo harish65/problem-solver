@@ -80,6 +80,7 @@ class RelationshipController extends BaseController
                     $principal = DB::table('principle_identification_main')->where($condition)->first();
                     $slug = 'communication_and_principle_relationship_explanation'; 
                     $communications  = $this->getCommunication($params ,$user_id);
+                    if($principal){
                     $drived_principle = DB::table('principle_identification_drived_principle as pd')
                                         ->leftJoin('principle_identification as pm', 'pd.principle_main_id', '=', 'pm.id')
                                         ->where($condition) 
@@ -87,6 +88,7 @@ class RelationshipController extends BaseController
                                         ->where('pd.applicable', 1)
                                         ->select('pd.*', 'pm.text as content')  
                                             ->get();
+                    }
                     // echo '<pre>'; print_r($drived_principle); exit;
                     $view = 'adult.relationship.communication_and_people_principal_explanation';
                     $veiwParams = ['problem_id'=>$params['problem_id'] , 
