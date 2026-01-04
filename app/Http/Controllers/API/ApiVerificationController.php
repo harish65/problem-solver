@@ -55,23 +55,32 @@ class ApiVerificationController extends BaseController
         $data = $request->all();
         $problem_id = $data["problem_id"];
         $project_id = $data["project_id"];
-        $type = $data["verification_type_id"];
-        
+        $type = isset($data["verification_type_id"]) ? $data["verification_type_id"] : null;
+        $validation_data =  null;
+        $problem = null;
+        $Solution_function = null;
+        $solution = null;
+        $verifiationTypeText = null;
+
+        if($type != null){
         // Check if $request has user_id, else use Auth::user()->id
-        $user_id = $request->has('user_id') ? $request->user_id : Auth::user()->id;
+            $user_id = $request->has('user_id') ? $request->user_id : Auth::user()->id;
+            
+            $problem = Problem::where("project_id", "=", $project_id)->where('user_id' , $user_id)->first();
+
+            $Solution_function = SolutionFunction::where("problem_id",$problem_id)->where('project_id' , $project_id)->where('user_id' , $user_id)->first();
+            $solution = Solution::where("problem_id", "=", $problem_id)->where('project_id' , $project_id)->where('user_id' , $user_id)->first();
         
-        $problem = Problem::where("project_id", "=", $project_id)->where('user_id' , $user_id)->first();
-        $Solution_function = SolutionFunction::where("problem_id",$problem_id)->where('project_id' , $project_id)->where('user_id' , $user_id)->first();
-        $solution = Solution::where("problem_id", "=", $problem_id)->where('project_id' , $project_id)->where('user_id' , $user_id)->first();
-        $verifiationTypeText = VerificationTypeText::where( "verification_type_id",$type)->get();
-        $entity = VerificationEntity::where("verTypeId","=",$type)->where('project_id', $project_id)->get();
-        $validation_data = Verification::
-                                select('id','validations')
-                                ->where("problem_id", "=", $problem_id)    
-                                ->where("verification_type_id", "=", $type)
-                                ->where("user_id", $user_id)
-                                // ->pluck("validations")
-                                ->first();    
+                $verifiationTypeText = VerificationTypeText::where( "verification_type_id",$type)->get();
+                $entity = VerificationEntity::where("verTypeId","=",$type)->where('project_id', $project_id)->get();
+                $validation_data = Verification::
+                                        select('id','validations')
+                                        ->where("problem_id", "=", $problem_id)    
+                                        ->where("verification_type_id", "=", $type)
+                                        ->where("user_id", $user_id)
+                                        // ->pluck("validations")
+                                        ->first(); 
+        }   
         
 switch ($type) {
             case 1:
