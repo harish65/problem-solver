@@ -654,14 +654,15 @@ public function storeSolutionFunction(Request $request){
             }
             //get project is shared and $request has page slug field
             $result  = DB::table('project_shared')->select($data['slug'] , 'editable_project')->where(['project_id' => $data['project_id'] , 'shared_with'=> $data['user_id']])->first();
-            if(!$result){
+            //if(!$result || ){
             $projectUsers  = DB::table('project_shared')
                             ->join('users', 'project_shared.shared_with', '=', 'users.id') 
                             ->select('project_shared.shared_with', 'users.id as user_id', 'users.name as user_name') 
                             ->where(['project_shared.project_id' => $data['project_id']])
                             ->get();
-            
-            }
+           // }
+
+
             
             // Prepare successful response
             $success['result'] = $result;
