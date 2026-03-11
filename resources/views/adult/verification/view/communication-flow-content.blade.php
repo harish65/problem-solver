@@ -169,8 +169,8 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                             <input type="text" name="subject" class="form-control" id="title_" placeholder="Subject" disabled>
                         </div> 
                         <div class="from-group mt-3">
-                                <label for="msg">Message</label>
-                                <textarea class="form-control " name="comment" id="msg"></textarea>
+                                <label for="comment">Message</label>
+                                <textarea class="form-control " name="comment" id="comment"></textarea>
                         </div>
                       
                  </form>
@@ -305,19 +305,25 @@ $('.dashboard').click(function(){
         $('#title_').val($(this).data('title'))
         $('#id').val($(this).data('id'))
         $('#communication_date').val($(this).data('com-date'))
-        tinyMCE.activeEditor.setContent($(this).data('comment'));
-        tinymce.activeEditor.getBody().setAttribute('contenteditable', false);
-       
+        $('#comment').val($(this).data('comment'))
+            // let comment = $(this).data('comment');
+
+            // let editor = tinymce.get('comment'); // textarea ID
+
+            // if (editor) {
+            //     editor.setContent(comment || '');
+            //     editor.getBody().setAttribute('contenteditable', false);
+            // }
         $('#exampleModal').modal('toggle');
    })
 </script>
 <script>
-    tinymce.init({
-      selector: 'textarea',
-      plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-      toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-      height : "300"
-    });
+    // tinymce.init({
+    //   selector: 'textarea',
+    //   plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+    //   toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+    //   height : "300"
+    // });
     var showMessage = "{{$showMessage}}"
     
     if(showMessage){

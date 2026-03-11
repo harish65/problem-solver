@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Relationship')
 @section('content')
-<?php $showMessage =  \App\Models\Relationship::appliedRelationship($relationship->id,$project_id,$user_id); ?>
+
 <div class='relationshipPage'>
     
         <?php 
@@ -15,37 +15,41 @@
         <a id="rel" href="{{ route('adult.rel',@$parameter) }}"></a>
         @include('adult.relationship.common.rel-component')
     <!-- Content Section Start -->
-      @if($showMessage)
-    <div class="relationshipContent">
-        <div class="container">
-            <div class="row">
-                
-                
-                        <!-- principleRelation start -->
-                        <div class="principleRelation">                    
-                                @if(!is_null($entitieUsage) > 0)
-                                    <div class="d-flex">
-                                        @include('adult.relationship.common.principal')
-                                        @include('adult.relationship.common.upside')
-                                    </div>  
-                                    <div class="d-flex">
-                                        @include('adult.relationship.common.entity_usage')
-                                        @include('adult.relationship.common.downside')
-                                    </div>                        
-                                @else
-                                @php $showMessage = true @endphp
-                                @endif
-                                
-                        </div>
-                        <!-- principleRelation End -->
-                    @include('adult.relationship.common.validation')
-                
+      @if(!$showMessage)
+        <div class="relationshipContent">
+            <div class="container">
+                <div class="row">
+                    
+                    @if($relationship_applied)
+                            <!-- principleRelation start -->
+                             @if(!is_null($entitieUsage) > 0 && !is_null($principal))
+                                <div class="principleRelation">                    
+                                        
+                                            <div class="d-flex">
+                                                @include('adult.relationship.common.principal')
+                                                @include('adult.relationship.common.upside')
+                                            </div>  
+                                            <div class="d-flex">
+                                                @include('adult.relationship.common.entity_usage')
+                                                @include('adult.relationship.common.downside')
+                                            </div>                        
+                                        
+                                        
+                                </div>
+                                @include('adult.relationship.common.validation')
+                            @endif
+                            <!-- principleRelation End -->
+                    @else
+                    @include('adult.relationship.common.apply_relationship_button')
+                    @endif
+                </div>
             </div>
         </div>
-    </div>
-@else
-        @include('adult.relationship.common.apply_relationship_button')
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        @else
+        @include('adult.relationship.common.display_message_button')
+            
+        @endif
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header bg-success text-white">
@@ -82,8 +86,6 @@
                 </div>
             </div>
         </div>
-        @endif
-
 @endsection 
 @section('scripts')
 <script>

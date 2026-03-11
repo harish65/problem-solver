@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Relationship')
 @section('content')
-<?php $showMessage =  \App\Models\Relationship::appliedRelationship($relationship->id,$project_id,$user_id); ?>
+
 <div class='relationshipPage'>
     
         <?php 
@@ -15,35 +15,32 @@
         <a id="relationship" href="{{ route('adult.rel',@$parameter) }}"></a>
         @include('adult.relationship.common.rel-component')
     <!-- Content Section Start -->
-      @if($showMessage)
+    @if(!$showMessage)
+    @if($relationship_applied)
     <div class="relationshipContent">
         <div class="container">
             <div class="row">
                 
-                        @if($relationship->id == 9)
+                        @if($relationship->id == 9 && $principal && $custommers->count() > 0)
                         <!-- principleRelation start -->
-                            <div class="principleRelation">                    
-                                    @if($principal)
-                                        <div class="d-flex">
-                                            @include('adult.relationship.common.people')
-                                            @include('adult.relationship.common.upside')
-                                        </div>  
-                                        <div class="d-flex">
-                                            @include('adult.relationship.common.principal')
-                                            @include('adult.relationship.common.downside')
-                                        </div>                        
-                                    @else
-                                    @php $showMessage = true @endphp
-                                    @endif
-                                    
+                        
+                            <div class="principleRelation"> 
+                                <div class="d-flex">
+                                    @include('adult.relationship.common.people')
+                                    @include('adult.relationship.common.upside')
+                                </div>  
+                                <div class="d-flex">
+                                    @include('adult.relationship.common.principal')
+                                    @include('adult.relationship.common.downside')
+                                </div> 
                             </div>
                         <!-- principleRelation End -->
                          @endif
 
-                         @if($relationship->id == 10)
+                         @if($relationship->id == 10 && $principal && $Solution_function)
                         <!-- principleRelation start -->
                             <div class="principleRelation">                    
-                                    @if($principal)
+                                    
                                         <div class="d-flex">
                                             @include('adult.relationship.common.solution_func')
                                             @include('adult.relationship.common.upside')
@@ -51,18 +48,14 @@
                                         <div class="d-flex">
                                             @include('adult.relationship.common.principal')
                                             @include('adult.relationship.common.downside')
-                                        </div>                        
-                                    @else
-                                    @php $showMessage = true @endphp
-                                    @endif
-                                    
+                                        </div>   
                             </div>
                         <!-- principleRelation End -->
                          @endif
-                         @if($relationship->id == 11)
+                         @if($relationship->id == 11 && $principal && $Solution)
                         <!-- principleRelation start -->
                             <div class="principleRelation">                    
-                                    @if($principal)
+                                   
                                         <div class="d-flex">
                                         @include('adult.relationship.common.solution')
                                             @include('adult.relationship.common.upside')
@@ -70,18 +63,14 @@
                                         <div class="d-flex">
                                             @include('adult.relationship.common.principal')
                                             @include('adult.relationship.common.downside')
-                                        </div>                        
-                                    @else
-                                    @php $showMessage = true @endphp
-                                    @endif
-                                    
+                                        </div> 
                             </div>
                         <!-- principleRelation End -->
                          @endif
-                         @if($relationship->id == 12)
+                         @if($relationship->id == 12 && $principal && $words->count() > 0)
                         <!-- principleRelation start -->
                             <div class="principleRelation">                    
-                            @if($principal && $words->count() > 0)
+                            
                                         <div class="d-flex">
                                             @include('adult.relationship.common.principal')
                                             @include('adult.relationship.common.upside')
@@ -89,18 +78,14 @@
                                         <div class="d-flex">
                                             @include('adult.relationship.common.voucab')
                                             @include('adult.relationship.common.downside')
-                                        </div>                        
-                            @else
-                            @php $showMessage = true @endphp
-                            @endif
-                                    
+                                        </div> 
                             </div>
                         <!-- principleRelation End -->
                          @endif
-                         @if($relationship->id == 13)
+                         @if($relationship->id == 13 && $entitieUsage && $Solution)
                         <!-- principleRelation start -->
                             <div class="principleRelation">                    
-                            @if($entitieUsage)
+                            
                                         <div class="d-flex">
                                         @include('adult.relationship.common.solution')
                                             @include('adult.relationship.common.upside')
@@ -108,19 +93,15 @@
                                         <div class="d-flex">
                                             @include('adult.relationship.common.entity_usage')
                                             @include('adult.relationship.common.downside')
-                                        </div>                        
-                                    @else
-                                    @php $showMessage = true @endphp
-                                    @endif
-                                    
+                                        </div>   
                             </div>
                         <!-- principleRelation End -->
                          @endif
 
-                         @if($relationship->id == 14)
+                         @if($relationship->id == 14 && $Solution_function && $custommers->count() > 0)
                         <!-- principleRelation start -->
                             <div class="principleRelation">                    
-                                    @if($custommers->count() > 0)
+                                    
                                         <div class="d-flex">
                                         @include('adult.relationship.common.people')
                                             @include('adult.relationship.common.upside')
@@ -128,24 +109,22 @@
                                         <div class="d-flex">
                                             @include('adult.relationship.common.solution_func')
                                             @include('adult.relationship.common.downside')
-                                        </div>                        
-                                    @else
-                                    @php $showMessage = true @endphp
-                                    @endif
-                                    
+                                        </div>  
                             </div>
                         <!-- principleRelation End -->
                          @endif
-
-
                     @include('adult.relationship.common.validation')
                 
             </div>
         </div>
     </div>
+    @else
+    @include('adult.relationship.common.apply_relationship_button')
+    @endif
         @else
-         @include('adult.relationship.common.apply_relationship_button')
-         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         @include('adult.relationship.common.display_message_button')
+        @endif
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header bg-success text-white">
@@ -257,10 +236,6 @@
                 </div>
             </div>
         </div>
-
-
-        @endif
-
 @endsection 
 @section('scripts')
 <script>

@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-success">Create Relationship +</button>
+                <button type="button" id="display_message" class="btn btn-success">Apply Relationship +</button>
             </div>
         </div>
     </div>

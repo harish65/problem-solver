@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Adult;
+
 use App\Http\Controllers\BaseController as BaseController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -20,20 +21,21 @@ use Exception;
 
 class RelationshipController extends BaseController
 {
-    public function index($data = null, $type = null , $user_id = null){     
-        
+    public function index($data = null, $type = null, $user_id = null)
+    {
+
         $params = Crypt::decrypt($data);
-       
-        if($params['problem_id'] == ''){
+
+        if ($params['problem_id'] == '') {
             return Redirect::back()->withErrors(['message' => 'Problem must be define or project must be selected']);
         }
-        
+
         $relationships = Relationship::all();
-        $filteredKeys= [];
+        $filteredKeys = [];
         $project = DB::table('projects')->where('projects.id', $params['project_id'])->first();
-        if($project->shared == 1 && $project->user_id != Auth::user()->id){
-            $can_edit = Project::SharedProject($params['project_id'] , Auth::user()->id);
-            
+        if ($project->shared == 1 && $project->user_id != Auth::user()->id) {
+            $can_edit = Project::SharedProject($params['project_id'], Auth::user()->id);
+
             foreach ($can_edit  as $key => $value) {
                 if ($value === '1') {
                     $filteredKeys[] = $key;
@@ -46,238 +48,420 @@ class RelationshipController extends BaseController
             }
             $relationshipsArray = Relationship::relationshipsArray();
             $result = array_keys(array_intersect($relationshipsArray, $filteredKeys));
-            $relationships =  Relationship::whereIn('id' , $result)->get();
-            $user_id            =  Problem::where('id' , $params['problem_id'])->pluck('user_id')->first();
-        }elseif(Auth::user()->id == $project->user_id){
-            $can_edit = Project::SharedProject($params['project_id'] , Auth::user()->id);
-            if(is_null($user_id)){
+            $relationships =  Relationship::whereIn('id', $result)->get();
+            $user_id            =  Problem::where('id', $params['problem_id'])->pluck('user_id')->first();
+        } elseif (Auth::user()->id == $project->user_id) {
+            $can_edit = Project::SharedProject($params['project_id'], Auth::user()->id);
+            if (is_null($user_id)) {
                 $user_id            =  $project->user_id;
             }
         }
         $view = null;
         $veiwParams = null;
-        $relationship    =  Relationship::where('id' , $type)->first();
-        $condition          = ['problem_id'=> $params['problem_id'] , 'project_id'=>$params['project_id'] ,'user_id' => $user_id];
-        $validations        =  DB::table('rel_validations')->where($condition)->where('relationship_id' , $type)->first();
-            
-        
-        switch($type){
-            case 1: 
+        $relationship    =  Relationship::where('id', $type)->first();
+        $condition          = ['problem_id' => $params['problem_id'], 'project_id' => $params['project_id'], 'user_id' => $user_id];
+        $validations        =  DB::table('rel_validations')->where($condition)->where('relationship_id', $type)->first();
+        $showMessage        = false;
+        if(isset($relationship)){
+        $relationship_applied =  \App\Models\Relationship::appliedRelationship($relationship->id, $params['project_id'], $user_id);}
+
+
+        switch ($type) {
+            case 1:
                 $custommers      =  DB::table("customers")->where("project_id", "=", $params['project_id'])->get();
-                $communications  =  $this->getCommunication($params ,$user_id);
-                  $slug = 'communication_and_people_relationship_explanation'; 
-                $veiwParams = ['problem_id'=>$params['problem_id'] , 
-                                'project_id'=> $params['project_id'],
-                                'relationships'=>$relationships , 
-                                'relationship'=>$relationship,
-                                'custommers'=>$custommers,
-                                'slug'=>$slug,
-                                'communications'=>$communications, 'validations'=>$validations ,'can_edit'=> $can_edit , 'project'=>$project , 'user_id'=>$user_id];
-                                return view('adult.relationship.communication_and_people_relationship_explanation' , $veiwParams);
+                $communications  =  $this->getCommunication($params, $user_id);
+
+                if ($custommers->isEmpty() || $communications->isEmpty()) {
+                    $showMessage = true;
+                }
+
+                $slug = 'communication_and_people_relationship_explanation';
+                $veiwParams = [
+                    'problem_id' => $params['problem_id'],
+                    'project_id' => $params['project_id'],
+                    'relationships' => $relationships,
+                    'relationship' => $relationship,
+                    'custommers' => $custommers,
+                    'slug' => $slug,
+                    'communications' => $communications,
+                    'validations' => $validations,
+                    'can_edit' => $can_edit,
+                    'project' => $project,
+                    'user_id' => $user_id,
+                    'showMessage' => $showMessage,
+                    'relationship_applied' => $relationship_applied
+                ];
+                return view('adult.relationship.communication_and_people_relationship_explanation', $veiwParams);
                 break;
-                case 2: 
-                    $custommers      =  DB::table("customers")->where("project_id", "=", $params['project_id'])->get();
-                    $principal = DB::table('principle_identification_main')->where($condition)->first();
-                    $slug = 'communication_and_principle_relationship_explanation'; 
-                    $communications  = $this->getCommunication($params ,$user_id);
-                    if($principal){
+            case 2:
+                $custommers      =  DB::table("customers")->where("project_id", "=", $params['project_id'])->get();
+                $principal = DB::table('principle_identification_main')->where($condition)->first();
+                
+                $slug = 'communication_and_principle_relationship_explanation';
+                $communications  = $this->getCommunication($params, $user_id);
+                if ($principal) {
                     $drived_principle = DB::table('principle_identification_drived_principle as pd')
-                                        ->leftJoin('principle_identification as pm', 'pd.principle_main_id', '=', 'pm.id')
-                                        ->where($condition) 
-                                        ->where('pd.principle_type', $principal->principle_type)
-                                        ->where('pd.applicable', 1)
-                                        ->select('pd.*', 'pm.text as content')  
-                                            ->get();
-                    }
-                    // echo '<pre>'; print_r($drived_principle); exit;
-                    $view = 'adult.relationship.communication_and_people_principal_explanation';
-                    $veiwParams = ['problem_id'=>$params['problem_id'] , 
-                                    'project_id'=> $params['project_id'],
-                                    'relationships'=>$relationships , 
-                                    'relationship'=>$relationship,
-                                    'drived_principle'=>$drived_principle,
-                                    'custommers'=>$custommers,
-                                    'slug'=>$slug,
-                                    'communications'=>$communications, 'validations'=>$validations,'principal'=>$principal,'can_edit'=> $can_edit , 'project'=>$project , 'user_id'=>$user_id];
-                        return view('adult.relationship.communication_and_people_principal_explanation' , $veiwParams);            
-                case 3: 
-                    $communications  =   $this->getCommunication($params ,$user_id);
-                    
-                    $Solution_function =  $Solution_function = SolutionFunction::where($condition)->first();
-                  
-                    $slug = 'communication_and_solution_function_relationship_explanation'; 
-                    $veiwParams = ['problem_id'=>$params['problem_id'] , 
-                                    'project_id'=> $params['project_id'],
-                                    'relationships'=>$relationships , 
-                                    'relationship'=>$relationship,
-                                    'slug'=>$slug,
-                                    'communications'=>$communications, 'validations'=>$validations , 'Solution_function'=>$Solution_function,'can_edit'=> $can_edit , 'project'=>$project , 'user_id'=>$user_id];
-                    return view('adult.relationship.communication_and_solution_function_relationship_explanation' , $veiwParams); 
-                case 4: 
-                    $communications  =  $this->getCommunication($params, $user_id);
-                    $Solution  = Solution::where($condition)->first();
-                    $slug = 'communication_and_solution_relationship_explanation'; 
-                    $veiwParams = ['problem_id'=>$params['problem_id'] , 
-                                    'project_id'=> $params['project_id'],
-                                    'relationships'=>$relationships , 
-                                    'relationship'=>$relationship,
-                                    'slug'=>$slug,
-                                    'communications'=>$communications, 'validations'=>$validations , 'Solution'=>$Solution,'can_edit'=> $can_edit , 'project'=>$project , 'user_id'=>$user_id];
-                    return view('adult.relationship.communication_and_solution_relationship_explanation' , $veiwParams); 
-                case 5: 
-                    $principal = DB::table('principle_identification_main')->where($condition)->first();                    
-                    $entitieUsage = DB::table("entity_usage")->where($condition)->first();                    
-                    $slug = 'entity_usage_and_principle_relationship_explanation'; 
-                    $view = '';
-                    $veiwParams = ['problem_id'=>$params['problem_id'] , 
-                                    'project_id'=> $params['project_id'],
-                                    'relationships'=>$relationships , 
-                                    'relationship'=>$relationship,
-                                    'slug'=>$slug,
-                                    'validations'=>$validations,'principal'=>$principal,'entitieUsage'=>$entitieUsage,'can_edit'=> $can_edit , 'project'=>$project , 'user_id'=>$user_id];
-                        return view('adult.relationship.entity_usage_and_principle_relationship_explanation' , $veiwParams); 
-                    case 6: 
-                    $Solution  = Solution::where($condition)->first();
-                    $entitieUsage = DB::table("entity_usage")->where($condition)->first();
-                    $slug = 'entity_usage_and_solution_relationship'; 
-                    $veiwParams = ['problem_id'=>$params['problem_id'] , 
-                                    'project_id'=> $params['project_id'],
-                                    'relationships'=>$relationships , 
-                                    'relationship'=>$relationship,
-                                    'slug'=>$slug,
-                                    'validations'=>$validations,'entitieUsage'=>$entitieUsage,'Solution'=>$Solution,'can_edit'=> $can_edit , 'project'=>$project , 'user_id'=>$user_id];
-                        return view('adult.relationship.entity_usage_solutionrelationship' , $veiwParams); 
-                    break;
-                    case 7: 
-                        $verification = Verification::where("problem_id", "=", $params['problem_id'])
-                                    ->where("verification_type_id", "=", 2)
-                                    ->first();
-                        $principal = DB::table('principle_identification_main')->where($condition)->first();
-                        $slug = 'information_and_principle_relationship_explanation'; 
-                        $veiwParams = ['problem_id'=>$params['problem_id'] , 
-                                        'project_id'=> $params['project_id'],
-                                        'relationships'=>$relationships , 
-                                        'relationship'=>$relationship,
-                                        'slug'=>$slug,
-                                        'validations'=>$validations,'principal'=>$principal,'verification'=>$verification,'can_edit'=> $can_edit , 'project'=>$project , 'user_id'=>$user_id];
-                        return view('adult.relationship.info_principal' , $veiwParams);
-                    break;
-                    case 8: 
-                        $verification = Verification::where("problem_id", "=", $params['problem_id'])
-                        ->where("verification_type_id", "=", 2)
-                        ->first();
-                        $Solution  = Solution::where($condition)->first();
-                        $slug = 'information_and_solution_relationship_explanation'; 
-                        $veiwParams = ['problem_id'=>$params['problem_id'] , 
-                                        'project_id'=> $params['project_id'],
-                                        'relationships'=>$relationships , 
-                                        'relationship'=>$relationship,
-                                        'slug'=>$slug,
-                                        'validations'=>$validations,'verification'=>$verification,'Solution'=>$Solution,'can_edit'=> $can_edit , 'project'=>$project , 'user_id'=>$user_id];
-                        return view('adult.relationship.info_sol' , $veiwParams);
-                    break;
-                    case 9: 
-                        $custommers      =  DB::table("customers")->where("project_id", "=", $params['project_id'])->get();
-                        $principal = DB::table('principle_identification_main')->where($condition)->first();
-                        $slug = 'principle_and_people_person_relationship_explanation'; 
-                        $veiwParams = ['problem_id'=>$params['problem_id'] , 
-                                        'project_id'=> $params['project_id'],
-                                        'relationships'=>$relationships , 
-                                        'relationship'=>$relationship,
-                                        'slug'=>$slug,
-                                        'validations'=>$validations,'principal'=>$principal,'custommers'=>$custommers,'can_edit'=> $can_edit , 'project'=>$project , 'user_id'=>$user_id];
-                        return view('adult.relationship.principal_and_people' , $veiwParams);
-                    break;
-                    case 10: 
-                        $Solution_function =  $Solution_function = SolutionFunction::where($condition)->first();
-                        $principal = DB::table('principle_identification_main')->where($condition)->first();
-                        $slug = 'principle_and_function_relationship_explanation'; 
-                        $veiwParams = ['problem_id'=>$params['problem_id'] , 
-                                        'project_id'=> $params['project_id'],
-                                        'relationships'=>$relationships , 
-                                        'relationship'=>$relationship,
-                                        'slug'=>$slug,
-                                        'validations'=>$validations,'principal'=>$principal,'Solution_function'=>$Solution_function,'can_edit'=> $can_edit , 'project'=>$project , 'user_id'=>$user_id];
-                        return view('adult.relationship.principal_and_people' , $veiwParams);
-                    break;
-                    case 11: 
-                        $Solution  = Solution::where($condition)->first();
-                        $principal = DB::table('principle_identification_main')->where($condition)->first();
-                        $slug = 'principle_and_solution_relationship_explanation'; 
-                        $veiwParams = ['problem_id'=>$params['problem_id'] , 
-                                        'project_id'=> $params['project_id'],
-                                        'relationships'=>$relationships , 
-                                        'relationship'=>$relationship,
-                                        'slug'=>$slug,
-                                        'validations'=>$validations,'principal'=>$principal,'Solution'=>$Solution,'can_edit'=> $can_edit , 'project'=>$project , 'user_id'=>$user_id];
-                                        return view('adult.relationship.principal_and_people' , $veiwParams);
-                    break;
-                    case 12: 
-                        //voucab
-                        $principal = DB::table('principle_identification_main')->where($condition)->first();
-                        $words = DB::table('verification_entities')->where(['problem_id'=> $params['problem_id'] , 'project_id'=>$params['project_id']])->get();
-                        $slug = 'vocabulary_and_principle_relationship_explanation'; 
-                        $veiwParams = ['problem_id'=>$params['problem_id'] , 
-                                        'project_id'=> $params['project_id'],
-                                        'relationships'=>$relationships , 
-                                        'relationship'=>$relationship,
-                                        'slug'=>$slug,
-                                        'validations'=>$validations,'principal'=>$principal , 'words'=>$words,'can_edit'=> $can_edit , 'project'=>$project , 'user_id'=>$user_id];
-                                        return view('adult.relationship.principal_and_people' , $veiwParams);
-                    break;
-                    case 13: 
-                        $entitieUsage = DB::table("entity_usage")->where($condition)->first();
-                        $Solution  = Solution::where($condition)->first();
-                        $slug = 'resource_management_and_solution_relationship_explanation';        
-                        $veiwParams = ['problem_id'=>$params['problem_id'] , 
-                                        'project_id'=> $params['project_id'],
-                                        'relationships'=>$relationships , 
-                                        'relationship'=>$relationship,
-                                        'slug'=>$slug,
-                                        'validations'=>$validations,'Solution'=>$Solution , 'entitieUsage'=>$entitieUsage,'can_edit'=> $can_edit , 'project'=>$project , 'user_id'=>$user_id];
-                                        return view('adult.relationship.principal_and_people' , $veiwParams);
-                    break;
-                    case 14: 
-                        $slug = 'people_and_solution_function_relationship_explanation'; 
-                        $Solution_function =  $Solution_function = SolutionFunction::where($condition)->first();
-                        $custommers      =  DB::table("customers")->where("project_id", "=", $params['project_id'])->get();
-                       
-                        $veiwParams = ['problem_id'=>$params['problem_id'] , 
-                                        'project_id'=> $params['project_id'],
-                                        'relationships'=>$relationships , 
-                                        'relationship'=>$relationship,
-                                        'slug'=>$slug,
-                                        'validations'=>$validations,'Solution_function'=>$Solution_function , 'custommers'=>$custommers,'can_edit'=> $can_edit , 'project'=>$project , 'user_id'=>$user_id];
-                                        return view('adult.relationship.principal_and_people' , $veiwParams);
-                    break;
-                default:
-                 $view = 'adult.relationship.index';
-                 $veiwParams = ['problem_id'=>$params['problem_id'] , 'project_id'=> $params['project_id'] ,'relationships'=>$relationships , 'project'=>$project , 'user_id'=>$user_id];
-                 
-        }
-        
-        return view($view,$veiwParams);
-    }
-
-
-    public function getCommunication($params , $user_id){
-        return DB::table('people_communication_flow')
-                        ->select('people_communication_flow.*' , 'customers.name AS customer_name' )
-                        ->leftJoin('customers', 'people_communication_flow.customer_id', '=', 'customers.id')
-                        ->where('people_communication_flow.user_id' , $user_id)
-                        ->where('people_communication_flow.project_id' , $params['project_id'])
-                        ->where('people_communication_flow.problem_id' , $params['problem_id'])
+                        ->leftJoin('principle_identification as pm', 'pd.principle_main_id', '=', 'pm.id')
+                        ->where($condition)
+                        ->where('pd.principle_type', $principal->principle_type)
+                        ->where('pd.applicable', 1)
+                        ->select('pd.*', 'pm.text as content')
                         ->get();
+                }
+                if (!$principal || $communications->isEmpty()) {
+                    $showMessage = true;
+                }
+
+                    
+                // echo '<pre>'; print_r($principal); exit;
+                $view = 'adult.relationship.communication_and_people_principal_explanation';
+                $veiwParams = [
+                    'problem_id' => $params['problem_id'],
+                    'project_id' => $params['project_id'],
+                    'relationships' => $relationships,
+                    'relationship' => $relationship,
+                    'drived_principle' => $drived_principle,
+                    'custommers' => $custommers,
+                    'slug' => $slug,
+                    'communications' => $communications,
+                    'validations' => $validations,
+                    'principal' => $principal,
+                    'can_edit' => $can_edit,
+                    'project' => $project,
+                    'user_id' => $user_id,
+                    'showMessage' => $showMessage,
+                    'relationship_applied' => $relationship_applied
+                ];
+                return view('adult.relationship.communication_and_people_principal_explanation', $veiwParams);
+            case 3:
+                $communications  =   $this->getCommunication($params, $user_id);
+
+                $Solution_function =  $Solution_function = SolutionFunction::where($condition)->first();
+                if ($communications->isEmpty() || is_null($Solution_function)) {
+                    $showMessage = true;
+                }
+                $slug = 'communication_and_solution_function_relationship_explanation';
+                $veiwParams = [
+                    'problem_id' => $params['problem_id'],
+                    'project_id' => $params['project_id'],
+                    'relationships' => $relationships,
+                    'relationship' => $relationship,
+                    'slug' => $slug,
+                    'communications' => $communications,
+                    'validations' => $validations,
+                    'Solution_function' => $Solution_function,
+                    'can_edit' => $can_edit,
+                    'project' => $project,
+                    'user_id' => $user_id,
+                    'showMessage' => $showMessage,
+                    'relationship_applied' => $relationship_applied
+                ];
+                return view('adult.relationship.communication_and_solution_function_relationship_explanation', $veiwParams);
+            case 4:
+                $communications  =  $this->getCommunication($params, $user_id);
+                $Solution  = Solution::where($condition)->first();
+                if ($communications->isEmpty() || is_null($Solution)) {
+                    $showMessage = true;
+                }
+                
+                $slug = 'communication_and_solution_relationship_explanation';
+                $veiwParams = [
+                    'problem_id' => $params['problem_id'],
+                    'project_id' => $params['project_id'],
+                    'relationships' => $relationships,
+                    'relationship' => $relationship,
+                    'slug' => $slug,
+                    'communications' => $communications,
+                    'validations' => $validations,
+                    'Solution' => $Solution,
+                    'can_edit' => $can_edit,
+                    'project' => $project,
+                    'user_id' => $user_id,
+                    'showMessage' => $showMessage,
+                    'relationship_applied' => $relationship_applied
+                ];
+                return view('adult.relationship.communication_and_solution_relationship_explanation', $veiwParams);
+            case 5:
+                $principal = DB::table('principle_identification_main')->where($condition)->first();
+                $entitieUsage = DB::table("entity_usage")->where($condition)->first();
+                if (!$principal || !$entitieUsage) {
+                    $showMessage = true;
+                }
+                
+                $slug = 'entity_usage_and_principle_relationship_explanation';
+                $view = '';
+                $veiwParams = [
+                    'problem_id' => $params['problem_id'],
+                    'project_id' => $params['project_id'],
+                    'relationships' => $relationships,
+                    'relationship' => $relationship,
+                    'slug' => $slug,
+                    'validations' => $validations,
+                    'principal' => $principal,
+                    'entitieUsage' => $entitieUsage,
+                    'can_edit' => $can_edit,
+                    'project' => $project,
+                    'user_id' => $user_id,
+                    'showMessage' => $showMessage,
+                    'relationship_applied' => $relationship_applied
+                ];
+                return view('adult.relationship.entity_usage_and_principle_relationship_explanation', $veiwParams);
+            case 6:
+                $Solution  = Solution::where($condition)->first();
+                $entitieUsage = DB::table("entity_usage")->where($condition)->first();
+                if (is_null($entitieUsage) || is_null($Solution)) {
+                    $showMessage = true;
+                }
+                $slug = 'entity_usage_and_solution_relationship';
+                $veiwParams = [
+                    'problem_id' => $params['problem_id'],
+                    'project_id' => $params['project_id'],
+                    'relationships' => $relationships,
+                    'relationship' => $relationship,
+                    'slug' => $slug,
+                    'validations' => $validations,
+                    'entitieUsage' => $entitieUsage,
+                    'Solution' => $Solution,
+                    'can_edit' => $can_edit,
+                    'project' => $project,
+                    'user_id' => $user_id,
+                    'showMessage' => $showMessage,
+                    'relationship_applied' => $relationship_applied
+
+                ];
+                return view('adult.relationship.entity_usage_solutionrelationship', $veiwParams);
+                break;
+            case 7:
+                $verification = Verification::where("problem_id", "=", $params['problem_id'])
+                    ->where("verification_type_id", "=", 2)
+                    ->first();
+                $principal = DB::table('principle_identification_main')->where($condition)->first();
+               
+                if (is_null($principal) || is_null($verification)) {
+                    $showMessage = true;
+                }
+                
+                $slug = 'information_and_principle_relationship_explanation';
+                $veiwParams = [
+                    'problem_id' => $params['problem_id'],
+                    'project_id' => $params['project_id'],
+                    'relationships' => $relationships,
+                    'relationship' => $relationship,
+                    'slug' => $slug,
+                    'validations' => $validations,
+                    'principal' => $principal,
+                    'verification' => $verification,
+                    'can_edit' => $can_edit,
+                    'project' => $project,
+                    'user_id' => $user_id,
+                    'showMessage' => $showMessage,
+                    'relationship_applied' => $relationship_applied
+                ];
+                return view('adult.relationship.info_principal', $veiwParams);
+                break;
+            case 8:
+                $verification = Verification::where("problem_id", "=", $params['problem_id'])
+                    ->where("verification_type_id", "=", 2)
+                    ->first();
+                $Solution  = Solution::where($condition)->first();
+                if (is_null($verification) || is_null($Solution)) {
+                    $showMessage = true;
+                }
+              
+                $slug = 'information_and_solution_relationship_explanation';
+                $veiwParams = [
+                    'problem_id' => $params['problem_id'],
+                    'project_id' => $params['project_id'],
+                    'relationships' => $relationships,
+                    'relationship' => $relationship,
+                    'slug' => $slug,
+                    'validations' => $validations,
+                    'verification' => $verification,
+                    'Solution' => $Solution,
+                    'can_edit' => $can_edit,
+                    'project' => $project,
+                    'user_id' => $user_id,
+                    'showMessage' => $showMessage,
+                    'relationship_applied' => $relationship_applied
+                ];
+                return view('adult.relationship.info_sol', $veiwParams);
+                break;
+            case 9:
+                $custommers      =  DB::table("customers")->where("project_id", "=", $params['project_id'])->get();
+                $principal = DB::table('principle_identification_main')->where($condition)->first();
+                $slug = 'principle_and_people_person_relationship_explanation';
+                if (is_null($principal) || $custommers->isEmpty()) {
+                    $showMessage = true;
+                }
+                $veiwParams = [
+                    'problem_id' => $params['problem_id'],
+                    'project_id' => $params['project_id'],
+                    'relationships' => $relationships,
+                    'relationship' => $relationship,
+                    'slug' => $slug,
+                    'validations' => $validations,
+                    'principal' => $principal,
+                    'custommers' => $custommers,
+                    'can_edit' => $can_edit,
+                    'project' => $project,
+                    'user_id' => $user_id,
+                    'showMessage' => $showMessage,
+                    'relationship_applied' => $relationship_applied
+                ];
+                return view('adult.relationship.principal_and_people', $veiwParams);
+                break;
+            case 10:
+                $Solution_function =  $Solution_function = SolutionFunction::where($condition)->first();
+                $principal = DB::table('principle_identification_main')->where($condition)->first();
+                $slug = 'principle_and_function_relationship_explanation';
+                if (!$principal || !$Solution_function) {
+                    $showMessage = true;
+                }
+                
+                $veiwParams = [
+                    'problem_id' => $params['problem_id'],
+                    'project_id' => $params['project_id'],
+                    'relationships' => $relationships,
+                    'relationship' => $relationship,
+                    'slug' => $slug,
+                    'validations' => $validations,
+                    'principal' => $principal,
+                    'Solution_function' => $Solution_function,
+                    'can_edit' => $can_edit,
+                    'project' => $project,
+                    'user_id' => $user_id,
+                    'showMessage' => $showMessage,
+                    'relationship_applied' => $relationship_applied
+                ];
+                return view('adult.relationship.principal_and_people', $veiwParams);
+                break;
+            case 11:
+                $Solution  = Solution::where($condition)->first();
+                $principal = DB::table('principle_identification_main')->where($condition)->first();
+                $slug = 'principle_and_solution_relationship_explanation';
+                if (!$principal || !$Solution) {
+                    $showMessage = true;
+                }
+                $veiwParams = [
+                    'problem_id' => $params['problem_id'],
+                    'project_id' => $params['project_id'],
+                    'relationships' => $relationships,
+                    'relationship' => $relationship,
+                    'slug' => $slug,
+                    'validations' => $validations,
+                    'principal' => $principal,
+                    'Solution' => $Solution,
+                    'can_edit' => $can_edit,
+                    'project' => $project,
+                    'user_id' => $user_id,
+                    'showMessage' => $showMessage,
+                    'relationship_applied' => $relationship_applied
+                ];
+                return view('adult.relationship.principal_and_people', $veiwParams);
+                break;
+            case 12:
+                //voucab
+                $principal = DB::table('principle_identification_main')->where($condition)->first();
+                $words = DB::table('verification_entities')->where(['problem_id' => $params['problem_id'], 'project_id' => $params['project_id']])->get();
+                $slug = 'vocabulary_and_principle_relationship_explanation';
+                if (!$principal || $words->count() == 0) {
+                    $showMessage = true;
+                }
+               
+                $veiwParams = [
+                    'problem_id' => $params['problem_id'],
+                    'project_id' => $params['project_id'],
+                    'relationships' => $relationships,
+                    'relationship' => $relationship,
+                    'slug' => $slug,
+                    'validations' => $validations,
+                    'principal' => $principal,
+                    'words' => $words,
+                    'can_edit' => $can_edit,
+                    'project' => $project,
+                    'user_id' => $user_id,
+                    'showMessage' => $showMessage,
+                    'relationship_applied' => $relationship_applied
+                ];
+                return view('adult.relationship.principal_and_people', $veiwParams);
+                break;
+            case 13:
+                $entitieUsage = DB::table("entity_usage")->where($condition)->first();
+                $Solution  = Solution::where($condition)->first();
+                $slug = 'resource_management_and_solution_relationship_explanation';
+                if (!$entitieUsage || !$Solution) {
+                    $showMessage = true;
+                }
+                $veiwParams = [
+                    'problem_id' => $params['problem_id'],
+                    'project_id' => $params['project_id'],
+                    'relationships' => $relationships,
+                    'relationship' => $relationship,
+                    'slug' => $slug,
+                    'validations' => $validations,
+                    'Solution' => $Solution,
+                    'entitieUsage' => $entitieUsage,
+                    'can_edit' => $can_edit,
+                    'project' => $project,
+                    'user_id' => $user_id,
+                    'showMessage' => $showMessage,
+                    'relationship_applied' => $relationship_applied
+                ];
+                return view('adult.relationship.principal_and_people', $veiwParams);
+                break;
+            case 14:
+                $slug = 'people_and_solution_function_relationship_explanation';
+                $Solution_function =  $Solution_function = SolutionFunction::where($condition)->first();
+                $custommers      =  DB::table("customers")->where("project_id", "=", $params['project_id'])->get();
+                if (!$Solution_function || $custommers->count() == 0) {
+                    $showMessage = true;
+                }
+                $veiwParams = [
+                    'problem_id' => $params['problem_id'],
+                    'project_id' => $params['project_id'],
+                    'relationships' => $relationships,
+                    'relationship' => $relationship,
+                    'slug' => $slug,
+                    'validations' => $validations,
+                    'Solution_function' => $Solution_function,
+                    'custommers' => $custommers,
+                    'can_edit' => $can_edit,
+                    'project' => $project,
+                    'user_id' => $user_id,
+                    'showMessage' => $showMessage,
+                    'relationship_applied' => $relationship_applied
+                ];
+                return view('adult.relationship.principal_and_people', $veiwParams);
+                break;
+            default:
+                $view = 'adult.relationship.index';
+                $veiwParams = ['problem_id' => $params['problem_id'], 'project_id' => $params['project_id'], 'relationships' => $relationships, 'project' => $project, 'user_id' => $user_id, 'showMessage' => $showMessage];
+        }
+
+        return view($view, $veiwParams);
     }
 
-    public function SaveValidations(Request $request){
+
+    public function getCommunication($params, $user_id)
+    {
+        return DB::table('people_communication_flow')
+            ->select('people_communication_flow.*', 'customers.name AS customer_name')
+            ->leftJoin('customers', 'people_communication_flow.customer_id', '=', 'customers.id')
+            ->where('people_communication_flow.user_id', $user_id)
+            ->where('people_communication_flow.project_id', $params['project_id'])
+            ->where('people_communication_flow.problem_id', $params['problem_id'])
+            ->get();
+    }
+
+    public function SaveValidations(Request $request)
+    {
         // dd($request->all());
         $validator = Validator::make($request->all(), [
             "problem_id" => "required",
             "project_id" => "required",
-            
+
         ]);
-        
+
         if ($validator->fails()) {
             return $this->sendError("Validation Error.", $validator->errors());
         }
@@ -287,7 +471,7 @@ class RelationshipController extends BaseController
                 ["id" => $request->id],
                 [
                     "relationship_id" => $request->relationship_id,
-                    "user_id"=> Auth::user()->id,
+                    "user_id" => Auth::user()->id,
                     "project_id" => $request->project_id,
                     "problem_id" => $request->problem_id,
                     "user_id"   => Auth::user()->id,
@@ -311,12 +495,13 @@ class RelationshipController extends BaseController
         }
     }
 
-    public function relationshipApplied(Request $request){
-         $validated = $request->validate([
-                    'project_id' => 'required|integer|exists:projects,id',
-                    'rel_id'     => 'required|integer',
-                    'user_id'    => 'required|integer|exists:users,id',
-                   
+    public function relationshipApplied(Request $request)
+    {
+        $validated = $request->validate([
+            'project_id' => 'required|integer|exists:projects,id',
+            'rel_id'     => 'required|integer',
+            'user_id'    => 'required|integer|exists:users,id',
+
         ]);
         $relationship = DB::table("relationship_applied")->updateOrInsert(
             [
@@ -339,20 +524,21 @@ class RelationshipController extends BaseController
     }
 
 
-    public function getVerificationRelations(Request $request){
-        try{
-           
-             $data = DB::table('people_communication_flow')
-                        ->select('people_communication_flow.*' , 'customers.name AS customer_name' )
-                        ->leftJoin('customers', 'people_communication_flow.customer_id', '=', 'customers.id')
-                        ->where(['people_communication_flow.customer_id' => $request->customer_id ,'people_communication_flow.user_id' => $request->user_id ,'people_communication_flow.project_id' => $request->project_id , 'people_communication_flow.problem_id' => $request->problem_id])
-                        ->first();
-                     
-                        
-                       if (!$data) {
-                            return response()->json(['status' => false]);
-                            }
-                            // echo "<pre>"; print_r($data); exit;
+    public function getVerificationRelations(Request $request)
+    {
+        try {
+
+            $data = DB::table('people_communication_flow')
+                ->select('people_communication_flow.*', 'customers.name AS customer_name')
+                ->leftJoin('customers', 'people_communication_flow.customer_id', '=', 'customers.id')
+                ->where(['people_communication_flow.customer_id' => $request->customer_id, 'people_communication_flow.user_id' => $request->user_id, 'people_communication_flow.project_id' => $request->project_id, 'people_communication_flow.problem_id' => $request->problem_id])
+                ->first();
+
+
+            if (!$data) {
+                return response()->json(['status' => false]);
+            }
+            // echo "<pre>"; print_r($data); exit;
             return response()->json([
                 'status' => true,
                 'data' => [
@@ -362,12 +548,8 @@ class RelationshipController extends BaseController
                     'date' => date('d/m/Y', strtotime($data->created_at))
                 ]
             ]);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return $this->sendError("Error.", ["error" => $e->getMessage()()]);
         }
-        
     }
-
-
-
 }

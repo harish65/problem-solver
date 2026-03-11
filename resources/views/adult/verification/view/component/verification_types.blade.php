@@ -30,7 +30,7 @@
 $can_edit = \App\Models\ProjectShared::where('project_id' ,$project_id)->where('shared_with',Auth::user()->id)->first();
 @endphp
 @if($project->user_id == Auth::user()->id)
-    @if(isset($problem))
+    @if(isset($problem) && $projectUsers->count() > 0)
     
     <div class="col-md-6">
         <div class="d-flex align-items-center">
@@ -44,7 +44,7 @@ $can_edit = \App\Models\ProjectShared::where('project_id' ,$project_id)->where('
         </div>
     </div>
     
-@endif
+    @endif
 @else
     <div class="col-md-6">
         <div class="d-flex align-items-center">

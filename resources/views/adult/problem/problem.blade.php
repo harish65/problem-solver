@@ -31,11 +31,11 @@ $problems = \App\Models\Problem::GetAllProblemsOfProject($project->id);
     <div class="row pt-5">
         @include('adult.quiz.quiz-component' , [$project->id , $pageId , $pageType])
     </div>
-        @if($project->shared == 1 && $can_edit != null && $can_edit->editable_project == 1)
-            @include('adult.problem.Editable_mode' , [$problem , $project , $can_edit])
-        @else
-            @include('adult.problem.Readonly_mode' , [$problem , $project , $can_edit])
-        @endif
+    @if($project->shared == 1 && $can_edit != null && $can_edit->editable_project == 1)
+    @include('adult.problem.Editable_mode' , [$problem , $project , $can_edit])
+    @else
+    @include('adult.problem.Readonly_mode' , [$problem , $project , $can_edit])
+    @endif
 </div>
 
 @include('adult.problem.modal.add-problem',[$projectID])
@@ -133,6 +133,7 @@ $problems = \App\Models\Problem::GetAllProblemsOfProject($project->id);
         if (r == false) {
             return false;
         }
+        $('.nav-link').attr('href', '');
         var id = $(this).attr('data-id')
         $.ajaxSetup({
             headers: {

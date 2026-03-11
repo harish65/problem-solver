@@ -140,6 +140,24 @@ Route::middleware('auth:api')->group( function () {
         Route::get("/permissions/{user_id}/{project_id}", [\App\Http\Controllers\Adult\ProjectController::class, 'viewPermissions'])->name("project_permissions");
         Route::get("/getPagePermissions", [\App\Http\Controllers\API\ApiController::class, 'getPageSharedData'])->name("getPagePermissions");
 
+        // quiz
+        Route::get('/quizzes/project/{projectID}', [\App\Http\Controllers\API\QuizApiController::class, 'index']);
+        Route::post('/quizzes', [\App\Http\Controllers\API\QuizApiController::class, 'store']);
+        Route::get('/quizzes/{id}', [\App\Http\Controllers\API\QuizApiController::class, 'show']);
+        Route::post('/quizzes/get-quiz', [\App\Http\Controllers\API\QuizApiController::class, 'getQuiz']);
+        Route::put('/quizzes/{id}', [\App\Http\Controllers\API\QuizApiController::class, 'update']);
+        Route::delete('/quizzes/{id}', [\App\Http\Controllers\API\QuizApiController::class, 'destroy']);
+        Route::get('/quizzes/project/{projectID}/all', [\App\Http\Controllers\API\QuizApiController::class, 'getQuizzes']);
+        
+        // Quiz data routes
+        Route::post('/quiz-data/save', [\App\Http\Controllers\API\QuizApiController::class, 'saveQuizData']);
+        Route::put('/quiz-data/remarks', [\App\Http\Controllers\API\QuizApiController::class, 'updateRemarks']);
+        
+        // Utility routes
+        Route::get('/quiz-types', [\App\Http\Controllers\API\QuizApiController::class, 'getQuizTypes']);
+        Route::get('/user/projects', [\App\Http\Controllers\API\QuizApiController::class, 'getUserProjects']);
+
+
 });
 
 

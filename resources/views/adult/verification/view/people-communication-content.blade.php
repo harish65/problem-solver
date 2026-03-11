@@ -115,6 +115,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                             tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
                             nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
                             Duis autem vel eum iriure dolor in hendrerit in vulputate velit</p>
+                       @if($communications->count() > 0)      
                         <h2>Validation Question</h2>
                         <br>
                         <form id="validation_form">
@@ -144,7 +145,7 @@ $VerificationPermission = \App\Models\Verification::CheckVerificationPermission(
                         <button type="button" class="btn btn-success" id="saveValidations">Save Validations</button>
                         @endif
                         </form>
-                        
+                        @endif
                     </div>
                 </div>
                 <!-- End -->

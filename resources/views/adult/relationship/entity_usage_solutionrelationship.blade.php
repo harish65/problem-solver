@@ -1,7 +1,7 @@
 @extends('adult.layouts.adult')
 @section('title', 'Adult | Relationship')
 @section('content')
-<?php $showMessage =  \App\Models\Relationship::appliedRelationship($relationship->id,$project_id,$user_id); ?>
+
 <div class='relationshipPage'>
     
         <?php 
@@ -15,36 +15,40 @@
         <a id="rel" href="{{ route('adult.rel',@$parameter) }}"></a>
         @include('adult.relationship.common.rel-component')
     <!-- Content Section Start -->
-     @if($showMessage)
+    @if(!$showMessage)
     <div class="relationshipContent">
         <div class="container">
             <div class="row">
                 
-                
+                @if($relationship_applied)
                         <!-- principleRelation start -->
-                        <div class="principleRelation">                    
-                                @if(!is_null($entitieUsage))
-                                    <div class="d-flex">
-                                    @include('adult.relationship.common.entity_usage')
-                                        @include('adult.relationship.common.upside')
-                                    </div>  
-                                    <div class="d-flex">
-                                        @include('adult.relationship.common.solution')
-                                        @include('adult.relationship.common.downside')
-                                    </div>                        
-                                @else
-                                @php $showMessage = true @endphp
-                                @endif
-                                
-                        </div>
+                        @if(!is_null($entitieUsage) && !is_null($Solution))
+                            <div class="principleRelation">                    
+                                    
+                                        <div class="d-flex">
+                                        @include('adult.relationship.common.entity_usage')
+                                            @include('adult.relationship.common.upside')
+                                        </div>  
+                                        <div class="d-flex">
+                                            @include('adult.relationship.common.solution')
+                                            @include('adult.relationship.common.downside')
+                                        </div>                        
+                                    
+                                    
+                            </div>
                         <!-- principleRelation End -->
-                    @include('adult.relationship.common.validation')
+                            @include('adult.relationship.common.validation')
+                        @endif                                
+                    @else
+                        @include('adult.relationship.common.apply_relationship_button')
+                    @endif
                 
             </div>
         </div>
     </div>
-@else
-            @include('adult.relationship.common.apply_relationship_button')
+    @else
+    @include('adult.relationship.common.display_message_button')
+    @endif
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -86,7 +90,7 @@
                 </div>
             </div>
         </div>
-        @endif
+        
 
 @endsection 
 @section('scripts')
