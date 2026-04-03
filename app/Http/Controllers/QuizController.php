@@ -145,6 +145,7 @@ class QuizController extends BaseController
 
     public function update(Request $request, $id)
     {
+       
         try {
             $validator = Validator::make($request->all(), [
             //    'quiz_type' => 'required',
@@ -194,6 +195,7 @@ class QuizController extends BaseController
 
     public function saveQuizData(Request $request)
     {
+        // echo "<pre>";print_r($request->all());echo "</pre>";exit;
         try {
             $validator = Validator::make($request->all(),[
                 'quiz_data' => 'required|array',

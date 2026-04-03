@@ -1,9 +1,12 @@
 @php
+
 $quiz = \App\Models\Quiz::getQuiz($project->id , $pageId , $pageType);
 $submitted = true;
 if(!$quiz){
 $quiz = \App\Models\Quiz::where(['project_id'=>$project->id , 'page_id'=>$pageId , 'page_type'=> $pageType])->first();
 $submitted = false;
+
+
 
 }
 
@@ -25,6 +28,7 @@ $questionIndex = 0;
                         <h5 class="mb-3">Quiz Users</h5>
                         @php
                             $users = \App\Models\Quiz::getQuisUsers($project->id, $quiz->id);
+                           
                         @endphp
                         <select class="form-select form-select-lg" id="view_quiz_users">
                             <option value="">Please Select...</option>
@@ -56,7 +60,7 @@ $questionIndex = 0;
     var pageId = '{{$pageId}}';
     var pageType = '{{$pageType}}';
     var quizAvailable = '{{isset($quiz)}}';
-    
+   
     @if($project -> user_id == Auth::user() -> id)
         
     document.getElementById('view_quiz_users').addEventListener('change', function() {

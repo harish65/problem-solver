@@ -24,6 +24,7 @@ class Quiz extends Model
         if ($page_type) {
             $query->where('quizzes.page_type', $page_type);
         }
+        
         return $query->first();
     }
 

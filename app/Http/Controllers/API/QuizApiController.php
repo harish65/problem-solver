@@ -19,11 +19,13 @@ class QuizApiController extends Controller
      */
     public function index(Request $request, $projectID)
     {
+        
         try {
-            $projectID = Crypt::decrypt($projectID);
+            
             $quizzes = DB::table('quizzes')
                 ->where('project_id', $projectID)
                 ->get();
+                
 
             return response()->json([
                 'success' => true,
@@ -45,11 +47,12 @@ class QuizApiController extends Controller
     public function store(Request $request)
     {
         try {
+            
             $validator = Validator::make($request->all(), [
                 'quiz_type' => 'required|integer',
-                'project_id' => 'required|string',
+                'project_id' => 'required|integer',
                 'page_id' => 'required|integer',
-                'page_type' => 'nullable|integer',
+                'page_type' => 'nullable|string',
                 'quiz_title' => 'required|string|max:255',
                 'quiz_data' => 'nullable|array',
             ]);
@@ -62,11 +65,11 @@ class QuizApiController extends Controller
                 ], 422);
             }
 
-            $projectID = Crypt::decrypt($request->project_id);
+            // $projectID = Crypt::decrypt($request->project_id);
 
             // Check if quiz already exists for this page
             $checkQuizExist = DB::table('quizzes')
-                ->where('project_id', $projectID)
+                ->where('project_id', $request->project_id)
                 ->where('page_id', $request->page_id)
                 ->first();
 
@@ -79,7 +82,7 @@ class QuizApiController extends Controller
 
             $quiz = new Quiz();
             $quiz->user_id = Auth::user()->id;
-            $quiz->project_id = $projectID;
+            $quiz->project_id = $request->project_id;
             $quiz->page_id = $request->page_id;
             $quiz->page_type = $request->page_type;
             $quiz->quiz_title = $request->quiz_title;
@@ -108,7 +111,7 @@ class QuizApiController extends Controller
     public function show($id)
     {
         try {
-            $id = Crypt::decrypt($id);
+            // $id = Crypt::decrypt($id);
             $quiz = DB::table('quizzes')
                 ->where('id', $id)
                 ->first();
@@ -242,6 +245,7 @@ class QuizApiController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // echo "<pre>";print_r($request->all());echo "</pre>";exit;
         try {
             $validator = Validator::make($request->all(), [
                 'page_id' => 'required|integer',
@@ -258,7 +262,7 @@ class QuizApiController extends Controller
                 ], 422);
             }
 
-            $id = Crypt::decrypt($id);
+            // $id = Crypt::decrypt($id);
 
             $quiz = DB::table('quizzes')->where('id', $id)->first();
             if (!$quiz) {
@@ -300,7 +304,7 @@ class QuizApiController extends Controller
     public function destroy($id)
     {
         try {
-            $id = Crypt::decrypt($id);
+            // $id = Crypt::decrypt($id);
 
             $quiz = DB::table('quizzes')->where('id', $id)->first();
             if (!$quiz) {
@@ -364,6 +368,7 @@ class QuizApiController extends Controller
      */
     public function saveQuizData(Request $request)
     {
+        // echo "<pre>";print_r($request->all());echo "</pre>";exit;
         try {
             $validator = Validator::make($request->all(), [
                 'quiz_data' => 'required|array',

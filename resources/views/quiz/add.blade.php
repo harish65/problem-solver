@@ -70,7 +70,7 @@ $types = \App\Models\VerificationType::all();
         </div>
         <!-- Submit Button -->
         <div class="text-end mt-4">
-          <button type="submit" class="btn btn-success" id="btnSave" disabled>
+          <button type="submit" class="btn btn-success" id="btnSave">
             <i class="bi bi-plus-circle me-1"></i> Submit Quiz
           </button>
         </div>
