@@ -29,7 +29,7 @@ class RelationshipController extends BaseController
         if ($params['problem_id'] == '') {
             return Redirect::back()->withErrors(['message' => 'Problem must be define or project must be selected']);
         }
-
+        
         $relationships = Relationship::all();
         $filteredKeys = [];
         $project = DB::table('projects')->where('projects.id', $params['project_id'])->first();
@@ -99,6 +99,7 @@ class RelationshipController extends BaseController
                 
                 $slug = 'communication_and_principle_relationship_explanation';
                 $communications  = $this->getCommunication($params, $user_id);
+                $drived_principle = null;
                 if ($principal) {
                     $drived_principle = DB::table('principle_identification_drived_principle as pd')
                         ->leftJoin('principle_identification as pm', 'pd.principle_main_id', '=', 'pm.id')
@@ -111,7 +112,7 @@ class RelationshipController extends BaseController
                 if (!$principal || $communications->isEmpty()) {
                     $showMessage = true;
                 }
-
+                
                     
                 // echo '<pre>'; print_r($principal); exit;
                 $view = 'adult.relationship.communication_and_people_principal_explanation';

@@ -124,6 +124,7 @@
         @else
          @include('adult.relationship.common.display_message_button')
         @endif
+        @if(isset($principal) && !is_null($principal))
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -236,6 +237,7 @@
                 </div>
             </div>
         </div>
+        @endif
 @endsection 
 @section('scripts')
 <script>
