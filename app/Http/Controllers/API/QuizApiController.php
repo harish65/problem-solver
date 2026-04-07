@@ -536,4 +536,55 @@ class QuizApiController extends Controller
             ], 500);
         }
     }
+
+    public function addQuiz()
+    {
+        // dd("test");
+        $categories = \App\Models\VerificationType::verificationTypeCategories();
+        $types = \App\Models\VerificationType::all();
+        $quizTypes  = DB::table('quiz_types')->get();
+        $data = [];
+
+        // Default Pages
+        $data[] = [
+            'group' => 'Default Pages',
+            'items' => [
+                ['id' => 1001, 'name' => 'Problem', 'page_type' => 'problem'],
+                ['id' => 1002, 'name' => 'Solution', 'page_type' => 'solution'],
+                ['id' => 1003, 'name' => 'Solution Function', 'page_type' => 'solution-function'],
+            ]
+        ];
+
+        // Dynamic Categories
+        foreach ($categories as $cat) {
+
+            $filteredTypes = $types->where('category', $cat->id);
+
+            if ($filteredTypes->isNotEmpty()) {
+
+                $items = [];
+
+                foreach ($filteredTypes as $type) {
+                    $items[] = [
+                        'id' => $type->id,
+                        'name' => $type->name,
+                        'page_type' => 'verification'
+                    ];
+                }
+
+                $data[] = [
+                    'group' => 'Verifications - ' . $cat->name,
+                    'items' => $items
+                ];
+            }
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Pages fetched successfully',
+            'data' => $data,
+            'quizTypes' => $quizTypes
+        ]);
+    }
+
 }
