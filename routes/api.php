@@ -148,6 +148,7 @@ Route::middleware('auth:api')->group( function () {
         Route::put('/quizzes/{id}', [\App\Http\Controllers\API\QuizApiController::class, 'update']);
         Route::delete('/quizzes/{id}', [\App\Http\Controllers\API\QuizApiController::class, 'destroy']);
         Route::get('/quizzes/project/{projectID}/all', [\App\Http\Controllers\API\QuizApiController::class, 'getQuizzes']);
+        Route::get('/add-quiz', [\App\Http\Controllers\API\QuizApiController::class, 'addQuiz']);
         
         // Quiz data routes
         Route::post('/quiz-data/save', [\App\Http\Controllers\API\QuizApiController::class, 'saveQuizData']);
