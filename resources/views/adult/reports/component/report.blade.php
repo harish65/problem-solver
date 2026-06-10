@@ -1,12 +1,12 @@
-
+@if(isset($data) && !empty($data))
 
 <div class="row border border-success mt-5 border-4 bg-white  shadow-lg p-3 mb-5 bg-white rounded">
     <h1>Project : {{ $project_name }}</h1>
      @if($data['shared_project_data']['editable_problem'])
       <section>
-         <div><strong>User Name:</strong> {{ strtoupper($data['user']['name'])}}</div>
+         <div><strong>User Name:</strong> {{ isset($data) && !empty($data['user']['name']) ? strtoupper($data['user']['name']) : '' }}</div>
          <p><strong>Project Name:</strong> {{ $data['project']}}</p>
-         <p><strong>Problem:</strong> <span class="danger">{{ $data['problem']['name']}}</span></p>
+         <p><strong>Problem:</strong> <span class="danger">{{ $data['problem']['name'] ?? ''}}</span></p>
          <p class="ml-20"><strong>Have you performed analysis to identify the problem correctly?</strong></p>
          @if($data['problem']['validation'] == 0)
          <div class="answer ml-20"><span class="yes"><i class="fa-solid fa-check"></i> Yes</span>, I have performed analysis to identify the problem correctly</div>
@@ -66,7 +66,7 @@
             </thead>
             <tbody>
                <tr>
-                  <td><span class="danger">{{ strtoupper($data['problem']['name'])}}</span></td>
+                  <td><span class="danger">{{ strtoupper($data['problem']['name'] ?? '')}}</span></td>
                   <td><span class="success">{{ strtoupper($data['solution']['name'])}}</span></td>
                   <td><span class="success">{{ strtoupper($data['solution_function']['name'])}}</span></td>
                </tr>
@@ -96,7 +96,7 @@
             </thead>
             <tbody>
                <tr>
-                  <td><span class="danger">{{ strtoupper($data['problem']['name']) }}</span></td>
+                  <td><span class="danger">{{ strtoupper($data['problem']['name'] ?? '') }}</span></td>
                   <td><span class="success">{{ strtoupper($data['solution']['name']) }}</span></td>
                </tr>
             </tbody>
@@ -234,7 +234,7 @@
          @if(!empty($validation_sep1) && !empty($validation_sep2))
             <section>
                <h2>Problem, Solution, and People Separation Verification</h2>
-               <p><strong>Problem:</strong> <span class="danger">{{ $data['problem']['name'] }}</span></p>
+               <p><strong>Problem:</strong> <span class="danger">{{ $data['problem']['name'] ?? '' }}</span></p>
                <p><strong>Solution:</strong> <span class="success">{{ $data['solution']['name'] }}</span></p>
                
                <p><strong>People:</strong> Michael, John, Janet</p>
@@ -308,7 +308,7 @@
                   @foreach ($PastAndPresentTime as $time)
                      <tr>
                            <td>{{ date('m/d/Y' , strtotime($time['time'])) }}</td>
-                           <td><span class="danger">{{ $data['problem']['name']}}</span></td>
+                           <td><span class="danger">{{ $data['problem']['name'] ?? ''}}</span></td>
                      </tr>
                   @endforeach
                </tbody>
@@ -805,7 +805,7 @@
       @if(!empty($entity_used_validations))
          <section>
          <h2>Resource Management Consideration Verification</h2>
-         <p><strong>Problem:</strong> <span class="danger">{{ $data['problem']['name']}}</span></p>
+         <p><strong>Problem:</strong> <span class="danger">{{ $data['problem']['name'] ?? ''}}</span></p>
          <p><strong>Solution:</strong> <span class="success">{{ $data['solution']['name']}}</span></p>
             <h3>Entity Usage</h3>
             
@@ -854,7 +854,7 @@
       @if(!empty($principleUsage) && !empty($principleUsage))
       <section>
          <h2>Mother Nature Existence Verification</h2>
-        <p><strong>Problem:</strong> <span class="danger">{{ $data['problem']['name']}}</span></p>
+        <p><strong>Problem:</strong> <span class="danger">{{ $data['problem']['name'] ?? ''}}</span></p>
         <p><strong>Solution:</strong> <span class="success">{{ $data['solution']['name']}}</span></p>
          <p><strong>Solution Function:</strong> {{ $data['solution_function']['name'] }}</p>
          <h3>Principle Usage</h3>
@@ -916,7 +916,7 @@
                         </thead>
                         <tbody>
                            <tr>
-                                 <td>{{  $data['problem']['name'] }}</td>
+                                 <td>{{  $data['problem']['name'] ?? '' }}</td>
                                  <td>{{  date('d/m/Y', strtotime($data['problem']['created_at']))}}
                                  </td>
                                  <td>{{ $data['solution_function']['name'] }}</td>
@@ -964,7 +964,7 @@
                   </thead>
                   <tbody>
                      <tr>
-                           <td>{{  $data['problem']['name'] }}</td>
+                           <td>{{  $data['problem']['name'] ?? '' }}</td>
                            <td>{{  date('d/m/Y', strtotime($data['problem']['created_at']))}}
                            </td>
                            <td>{{ $data['solution_function']['name'] }}</td>
@@ -1014,7 +1014,7 @@
           
          
          <h2>Replace Problem By Problem</h2>
-         <p><strong>Problem:</strong> <span class="danger">{{  $data['problem']['name'] }}</span></p>
+         <p><strong>Problem:</strong> <span class="danger">{{  $data['problem']['name'] ?? '' }}</span></p>
          <p><strong>Solution:</strong> <span class="success">{{ $data['solution']['name'] }}</span></p>
          <p>Does the solution of the problem is considered to be another problem?</p>
          @if($problemreplaced_valid['validation_1'] == 1)
@@ -1126,7 +1126,7 @@
                   </thead>
                   <tbody>
                      <tr>
-                        <td>{{  $data['problem']['name'] }}</td>
+                        <td>{{  $data['problem']['name'] ?? '' }}</td>
                         <td>Needs to be</td>
                         <td>{{  $data['solution']['name'] }}</td>
                      </tr>
@@ -1158,7 +1158,7 @@
             </thead>
             <tbody>
                <tr>
-                  <td>{{  $data['problem']['name'] }}</td>
+                  <td>{{  $data['problem']['name'] ?? '' }}</td>
                   <td>Needs</td>
                   <td>{{  $data['solution']['name'] }}</td>
                </tr>
@@ -1199,7 +1199,7 @@
             </thead>
             <tbody>
             <tr>
-                  <td>{{  $data['problem']['name'] }}</td>
+                  <td>{{  $data['problem']['name'] ?? '' }}</td>
                   <td>{{ $problemLocation->problem_location }}</td>
                   <td>{{ $data['solution_function']['name'] }}</td>
                   <td>{{ $problemLocation->solution_function_location }}</td>
@@ -1225,3 +1225,5 @@
       @include('adult.reports.component.relationship-report')
       @endif
    </div> 
+
+   @endif

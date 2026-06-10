@@ -55,6 +55,11 @@ class LoginController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());       
         }        
         if($user = User::where(['email' => $request->email])->first() ) { 
+           if (!$user->hasVerifiedEmail()) {
+                    Auth::logout();
+                    // return redirect()->back()->with(['error'=> 'Please verify your email first.']);
+                    return $this->sendError('Error.', ['error'=> 'Please verify your email first']);
+                }
               if($user->role != 1){  
                 if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){                    
                     $success['user'] =  $user;

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController as BaseController;
 use DB;
-
+use Auth;
 class RegisterController extends BaseController
 {
     /*
@@ -44,7 +44,9 @@ class RegisterController extends BaseController
         $this->middleware('guest');
     }
     public function showRegistrationForm() {
-        $roles = DB::table('roles')->get();
+        $roles = DB::table('roles')
+            ->where('id', '<>', 1)
+            ->get();    
         return view('auth.register' , compact('roles'));
     }
     /**
@@ -96,6 +98,8 @@ class RegisterController extends BaseController
                     'role' => ($request->role) ?  $request->role : '2',                   
                     'password' => Hash::make($request->password),
                 ]);
+                Auth::login($user);
+                $user->sendEmailVerificationNotification();
         if($user->id){
             $success['user'] =  $user;
             return $this->sendResponse($success, 'User register successfully.');

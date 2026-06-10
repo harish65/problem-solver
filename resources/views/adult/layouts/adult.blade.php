@@ -160,11 +160,12 @@
         currentQuestionIndx = 0;
     }
 
-    $(document).ready(function () {
+    $(document).ready(function () { 
         showQuestion(currentQuestionIndx);
-        $(document).on('click', '#nextBtnMcq', function () {
+        $(document).on('click', '#nextBtnMcq', function () { 
            
             let total = $('.question-block_student').length;
+           
             if (currentQuestionIndx < total - 1) {
                 currentQuestionIndx++;
                 showQuestion(currentQuestionIndx);

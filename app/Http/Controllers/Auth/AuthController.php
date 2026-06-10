@@ -18,6 +18,7 @@ class AuthController extends BaseController
     }
     public function register(Request $request)
     {   
+       
         $validator = Validator::make($request->all(), [
             'first_name'    => 'required',
             'last_name'     => 'required',
@@ -42,6 +43,7 @@ class AuthController extends BaseController
                     'role' => $request->role,                   
                     'password' => Hash::make($request->password),
                 ]);
+                event(new Registered($user));
         if($user->id){
             $success['user'] =  $user;
             return $this->sendResponse($success, 'User register successfully.');

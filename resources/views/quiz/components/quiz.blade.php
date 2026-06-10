@@ -178,7 +178,7 @@
                         @endif
 
                         @foreach($quizData as $key => $value)
-                            <div class="quiz-step" data-step="{{ $key }}" style="display: {{ $key == 0 ? 'block' : 'none' }};">
+                            <div class="question-block_student {{ $key == 0 ? 'active' : '' }}" data-index="{{ $key }}">
                                     @if($isProjectOwner)
                                         <div class="h4 text-danger">{!! $value['exptoexp_question'] !!}</div>
                                         <div class="jumbotron">{!! $value['exptoexp_answer'] !!}</div>
@@ -198,11 +198,11 @@
 
                                 <div class="d-flex justify-content-between mt-4">
                                     @if($key > 0)
-                                        <button type="button" class="btn btn-secondary prevBtn">Previous</button>
+                                        <button type="button" class="btn btn-secondary prevBtn" id="prevBtnMcq">Previous</button>
                                     @endif
 
                                     @if($key < count($quizData) - 1)
-                                        <button type="button" class="btn btn-primary nextBtn">Next</button>
+                                        <button type="button" class="btn btn-primary nextBtn" id="nextBtnMcq">Next</button>
                                     @else
                                         @if(!$isProjectOwner)
                                             <button type="submit" class="btn btn-success" id="submitBtnMcq">
@@ -287,8 +287,4 @@
  
  
  <p>{{ strip_tags(\App\Models\Quiz::getQuizRemarks($quiz->id , $projectId)) }}</p></div>
-        <script>
-            
-            
-        </script>
-        
+ 

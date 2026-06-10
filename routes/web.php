@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\Adult\ReportController;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +22,7 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 // Super Admin Routes Start
 Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
@@ -58,7 +60,7 @@ Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
 });
 
 Route::group(['as' => 'dashboard.', 'prefix' => 'dashboard'], function () {
-    Route::group(['middleware' => ['auth' , 'admin']], function () {
+    Route::group(['middleware' => ['auth' , 'admin' ,'verified']], function () {
         Route::get("/", [\App\Http\Controllers\Admin\ProjectController::class, 'index'])->name("index");
     });  
 });
@@ -154,7 +156,7 @@ Route::group(['as' => 'solutionfunction.', 'prefix' => 'solutionfunction'], func
 Route::get("home", [\App\Http\Controllers\Adult\ProjectController::class, 'index']) ->name("home");
 ///home
 Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
-    Route::group(['middleware' => ['auth' , 'adult']], function () {
+    Route::group(['middleware' => ['auth' , 'adult' ,'verified']], function () {
         //Route Project
         Route::post("/store", [\App\Http\Controllers\Adult\ProjectController::class, 'store'])-> name("store");
         Route::post("/delete", [\App\Http\Controllers\Adult\ProjectController::class, 'destroy'])-> name("delete");
@@ -187,13 +189,13 @@ Route::group(['as' => 'adult.', 'prefix' => 'adult'], function () {
         Route::post('/solution-func-validation', [\App\Http\Controllers\Adult\SolutionFunctionController::class, 'updateValidation'])->name('solution-func-validation');
 
         // Verification type  
-        Route::get("vfrindex", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'index'])->name("vfrindex");
-        Route::post("vfrstore", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'store'])->name("vfrstore");
-        Route::post("vfrdelete", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'delete'])->name("vfrdelete");
+        Route::get("vfrindex", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'index'])->middleware(['auth', 'admin'])->name("vfrindex");
+        Route::post("vfrstore", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'store'])->middleware(['auth', 'admin'])->name("vfrstore");
+        Route::post("vfrdelete", [\App\Http\Controllers\Adult\VerificationTypeController::class, 'delete'])->middleware(['auth', 'admin'])->name("vfrdelete");
         // Verification type text
-        Route::get("vrftindex", [\App\Http\Controllers\Adult\VerificationTypeTextController::class, 'index'])-> name("vrftindex");
-        Route::post("vrftstore", [\App\Http\Controllers\Adult\VerificationTypeTextController::class, 'store'])->name("vrftstore");
-        Route::post("vrftdelete", [\App\Http\Controllers\Adult\VerificationTypeTextController::class, 'delete'])->name("vrftdelete");
+        Route::get("vrftindex", [\App\Http\Controllers\Adult\VerificationTypeTextController::class, 'index'])->middleware(['auth', 'admin'])->name("vrftindex");
+        Route::post("vrftstore", [\App\Http\Controllers\Adult\VerificationTypeTextController::class, 'store'])->middleware(['auth', 'admin'])->name("vrftstore");
+        Route::post("vrftdelete", [\App\Http\Controllers\Adult\VerificationTypeTextController::class, 'delete'])->middleware(['auth', 'admin'])->name("vrftdelete");
         // Solution Type
         Route::get("stindex", [\App\Http\Controllers\Adult\SolutionTypeController::class, 'index'])-> name("stindex");
         Route::post("ststore", [\App\Http\Controllers\Adult\SolutionTypeController::class, 'store'])->name("ststore");
@@ -322,7 +324,10 @@ Route::post('/get-quiz', [QuizController::class, 'getQuiz'])->name('get-quiz');
 
 Route::post('/quiz-update-remarks', [QuizController::class, 'updateRemarks'])->name('quiz-update-remarks');
 
-
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/login');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 
 
 

@@ -40,16 +40,17 @@
             </div>
           </div>
           <div class="form-group">
-            <select class="form-control select" name="role" id="role">
+            <select class="form-control form-select" name="role" id="role">
               <option>Select Type</option>
               @foreach ($roles as $role)
+              
                 <option value="{{ $role->id}}">{{ $role->name}}</option>
               @endforeach
               
             </select>
           </div>
           <div class="form-group">
-            <input type="password" class="form-control password" id="pwd" placeholder="Password" name="password">
+            <input  class="form-control password" id="pwd" placeholder="Password"  name="password" autocomplete="off" type="password">
             <button class="eye">
               <img src="{{ URL::to('/') }}assets-new/images/eye.png" alt="" />
             </button>
@@ -61,7 +62,7 @@
             </button>
           </div>
           <div class="btns-wrap d-flex justify-content-center mt-5 mb-5">
-            <button type="button" class="btn btn-primary login-btn"><a href="{{ route('login') }}">Login</a></button>
+            <a href="{{ route('login') }}"><button type="button" class="btn btn-primary login-btn">Login</button></a>
             <button type="button" class="btn btn-primary login-btn reagister">Sign Up</button>
           </div>
         </form>

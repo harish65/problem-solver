@@ -66,14 +66,20 @@
               $('#btnSave').attr('disabled',true);
               $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
             },
-            error: function (xhr, status, error) {
+            error: function (xhr, status, error) { 
                 $('#btnSave').attr('disabled',false);
                 $('#btnSave').html('Submit');
-                $.each(xhr.responseJSON.data, function (key, item) {
-                    toastr.error(item);
-                });
+                if(xhr.responseJSON.data != undefined)
+                {
+                    $.each(xhr.responseJSON.data, function (key, item) {
+                        toastr.error(item);
+                    });
+                }else if(xhr.responseJSON.message){
+                    toastr.error(xhr.responseJSON.message);
+                }
             },
             success: function (response){
+              
               if(response.success == false)
               {
                   $('#btnSave').attr('disabled',false);

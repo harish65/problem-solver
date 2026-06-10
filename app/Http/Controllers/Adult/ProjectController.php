@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class ProjectController extends BaseController
 {
@@ -366,6 +367,19 @@ class ProjectController extends BaseController
 
                     
                 ]);
+                $project_name = DB::table('projects')->where('id' , $project_id)->value('name');
+                
+                $email_data = $this->shareEmailTemlate($user->name, $project_name);
+                
+                    // Email Send to shared user
+                    Mail::send([], [], function ($message) use ($user, $email_data) {
+
+                            $message->to($user->email)
+                                    ->subject('Project Shared With You');
+
+                            $message->setBody($email_data, 'text/html');
+                        });
+
 
             $success['type'] =  true;
             $success['token'] = $request->header('Authorization');
@@ -376,7 +390,94 @@ class ProjectController extends BaseController
                 return $this->sendError('Error.', ['error'=> $e->getMessage()]);
             }
     }
+     public function shareEmailTemlate($name, $project_name){
+       return $html = '
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Project Shared</title>
+            </head>
+            <body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;">
 
+                <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:30px 0;">
+                    <tr>
+                        <td align="center">
+
+                            <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;">
+
+                                <!-- Header -->
+                                <tr>
+                                    <td style="background:#00A14C;padding:20px;text-align:center;">
+                                        <h1 style="color:#ffffff;margin:0;font-size:24px;">
+                                            Project Notification
+                                        </h1>
+                                    </td>
+                                </tr>
+
+                                <!-- Body -->
+                                <tr>
+                                    <td style="padding:40px 30px;color:#333333;line-height:1.7;">
+
+                                        <h2 style="margin-top:0;color:#00A14C;">
+                                            Hello '.$name.',
+                                        </h2>
+
+                                        <p style="font-size:16px;">
+                                            Project 
+                                            <strong>'.$project_name.'</strong> 
+                                            is shared by 
+                                            <strong>'.Auth::user()->name.'</strong> with you.
+                                        </p>
+
+                                        <p style="font-size:16px;">
+                                            Please login at 
+                                            <a href="' . url('/login') . '" style="color:#00A14C;text-decoration:none;">
+                                                abc.com
+                                            </a>
+                                            to view project permission and complete this project.
+                                        </p>
+
+                                        <br>
+
+                                        <a href="' . url('/login') . '"
+                                        style="background:#00A14C;
+                                                color:#ffffff;
+                                                padding:12px 25px;
+                                                text-decoration:none;
+                                                border-radius:5px;
+                                                display:inline-block;
+                                                font-size:15px;">
+                                            Login Now
+                                        </a>
+
+                                        <br><br><br>
+
+                                        <p style="margin-bottom:0;">
+                                            Regards,<br>
+                                            <strong>SLP Solver Team</strong>
+                                        </p>
+
+                                    </td>
+                                </tr>
+
+                                <!-- Footer -->
+                                <tr>
+                                    <td style="background:#f1f1f1;padding:15px;text-align:center;font-size:13px;color:#777777;">
+                                        © '.date('Y').' SLP Solver. All rights reserved.
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                        </td>
+                    </tr>
+                </table>
+
+            </body>
+            </html>
+            ';
+     }
 
     public function viewPermissions($user_id , $project_id){
         $user_id = Crypt::decrypt($user_id);

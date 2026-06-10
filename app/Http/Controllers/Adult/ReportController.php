@@ -54,6 +54,10 @@ class ReportController extends Controller
                          ->get();
                          
           $data = ReportController::projectData($request);
+          
+          if(!$data || empty($data['project'])){
+                         return back()->with('error', 'Project report can not be created.Due to missing data.');
+                    }
                
           $project_id = $request->project_id ? Crypt::decrypt($request->project_id) : null;
           $project_name = $request->name;
@@ -75,6 +79,9 @@ class ReportController extends Controller
                          ->get();
 
                     $data = ReportController::projectData($request);
+                    if(!$data || empty($data['project'])){
+                         return back()->with('error', 'Project report can not be created.');
+                    }
 
                     $project_id   = $request->project_id ? Crypt::decrypt($request->project_id) : null;
                     $project_name = $request->name;
@@ -104,25 +111,110 @@ class ReportController extends Controller
 
      public static function projectData($request){
           // echo '<pre>';print_r($request->all());die;
-          $data                    = [];
-          $projectId               = $request->project_id ? Crypt::decrypt($request->project_id) : null; 
-          $userID                  = $request->user_id;
-          $project                 = Project::findOrFail($projectId);
-          $data['project']         = $project->name;
+        $data          = [];
 
-          $data['problem']         = $project->problemsForUser($userID)->select('name' , 'validation' , 'id' , 'created_at')->first()->toArray();
-               
-          $data['solution']        = $project->solutionForUser($userID)->select('name' , 'validation_first','validation_second' , 'created_at')->first()->toArray();
-          $data['solution_function']         = $project->solutionFunctionForUser($userID)->select('name' , 'validation_first','validation_second' ,'created_at')->first()->toArray();
-          $userID                            = $request->user_id;
-          $data['user']                      = $project->projectUser($userID);
-          $data ['verification']   =           ReportController::getVerificationPayload($data['problem']['id'] ,$projectId  ,  $userID);
-          $data['userID']          = $userID;
-          $data['shared_project_data']  = \App\Models\ProjectShared::where('project_id', $projectId)->where('shared_with', $userID)->first();
-          // echo '<pre>';print_r($data['shared_project_data']);die;
-          return $data;
-           
-             
+               $projectId     = $request->project_id 
+                                   ? Crypt::decrypt($request->project_id) 
+                                   : null;
+
+               $userID        = $request->user_id;
+
+               $project       = Project::findOrFail($projectId);
+
+               $data['project'] = $project->name;
+
+
+               /*
+               |--------------------------------------------------------------------------
+               | Problem
+               |--------------------------------------------------------------------------
+               */
+
+               $problem_data = $project->problemsForUser($userID)
+               ->select('name', 'validation', 'id', 'created_at')
+               ->first();
+
+               $data['problem'] = $problem_data
+               ? $problem_data->toArray()
+               : [];
+
+
+               /*
+               |--------------------------------------------------------------------------
+               | Solution
+               |--------------------------------------------------------------------------
+               */
+
+               $solution_data = $project->solutionForUser($userID)
+               ->select('name', 'validation_first', 'validation_second', 'created_at')
+               ->first();
+
+               $data['solution'] = $solution_data
+               ? $solution_data->toArray()
+               : [];
+
+
+               /*
+               |--------------------------------------------------------------------------
+               | Solution Function
+               |--------------------------------------------------------------------------
+               */
+
+               $solution_function_data = $project->solutionFunctionForUser($userID)
+               ->select('name', 'validation_first', 'validation_second', 'created_at')
+               ->first();
+
+               $data['solution_function'] = $solution_function_data
+               ? $solution_function_data->toArray()
+               : [];
+
+
+               /*
+               |--------------------------------------------------------------------------
+               | User
+               |--------------------------------------------------------------------------
+               */
+
+               $data['user'] = $project->projectUser($userID) ?? [];
+
+
+               /*
+               |--------------------------------------------------------------------------
+               | Verification
+               |--------------------------------------------------------------------------
+               */
+
+               $data['verification'] = !empty($data['problem']) && isset($data['problem']['id'])
+               ? ReportController::getVerificationPayload(
+                    $data['problem']['id'],
+                    $projectId,
+                    $userID
+               )
+               : [];
+
+
+               /*
+               |--------------------------------------------------------------------------
+               | User ID
+               |--------------------------------------------------------------------------
+               */
+
+               $data['userID'] = $userID;
+
+
+               /*
+               |--------------------------------------------------------------------------
+               | Shared Project Data
+               |--------------------------------------------------------------------------
+               */
+
+               $shared_project = \App\Models\ProjectShared::where('project_id', $projectId)
+               ->where('shared_with', $userID)
+               ->first();
+
+               $data['shared_project_data'] = $shared_project
+               ? $shared_project->toArray()
+               : [];   
 
      }
 
