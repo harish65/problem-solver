@@ -184,7 +184,7 @@ $types = \App\Models\VerificationType::all();
     console.log(block);
 
       $("#quizForm").append(block);
-      $('#btnSave').prop('disabled', true);
+      //$('#btnSave').prop('disabled', true);
       $("#nextBtnMcq").trigger('click');
 
     });
