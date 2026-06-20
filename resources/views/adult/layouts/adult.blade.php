@@ -184,36 +184,42 @@
 
     function validateQuestions() {
         let isValid = true;
-        $('.question-block_student').each(function (index) {
-            const selected = $(this).find(`input[type="radio"]:checked`).length;
-            if (!selected) {
-                isValid = false;
-                $(this).addClass('border border-danger');
-            } else {
-                $(this).removeClass('border border-danger');
-            }
-        });
-
-        $('textarea[id^="quiz_data_exptoexp"]').each(function () {
-            const id = $(this).attr('id');
-            const editor = tinymce.get(id);
-
-            if (editor) {
-                const content = editor.getContent({ format: 'text' }).trim();
-
-                if (content === '') {
-                    toastr.error(`Please write reply for question ${parseInt(id.replace('quiz_data_exptoexp', '')) + 1}`);
-                    editor.focus();
+        if($('#quiz_type').val() == 1){
+            $('.question-block_student').each(function (index) {
+                const selected = $(this).find(`input[type="radio"]:checked`).length;
+                if (!selected) {
                     isValid = false;
-                    return false; // breaks .each() loop
+                    $(this).addClass('border border-danger');
+                } else {
+                    $(this).removeClass('border border-danger');
                 }
-            }
-        });
-        
-        return isValid;
+            });
+            return isValid;
+        }
+        if($('#quiz_type').val() == 2 || $('#quiz_type').val() == 3){
+                $('textarea[id^="quiz_data_exptoexp"]').each(function () {
+                    const id = $(this).attr('id');
+
+                    const editor = tinymce.get(id);
+                    
+                    if (editor) {
+                        const content = editor.getContent({ format: 'text' }).trim();
+                       
+                        if (content === '') {
+                            toastr.error(`Please write reply for question ${parseInt(id.replace('quiz_data_exptoexp', '')) + 1}`);
+                            editor.focus();
+                            isValid = false;
+                            return false; // breaks .each() loop
+                        }
+                    }
+                });
+                
+                return isValid;
+        }
     }
     $(document).on('submit', '#quizForm1', function (e) {
         e.preventDefault();
+        
         if (!validateQuestions()) {
             toastr.error("Please answer all questions before submitting.");
             return;

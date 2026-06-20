@@ -23,7 +23,7 @@
                         <input type="hidden" name="project_id" value="{{ $quiz->project_id }}">
                         <input type="hidden" name="is_owner" value="0">
                     @endif
-
+                    <input type="hidden" name="quiz_type" id="quiz_type" value="{{ $quiz->quiz_type }}">
                     <div class="card p-3 quizformborder">
                         <div class="card p-3 quizformborder" id="qtype1">
                             <h5 class="text-center mb-3">Explanation and MCQ Questions</h5>
@@ -121,7 +121,7 @@
                             <input type="hidden" name="project_id" value="{{ $quiz->project_id }}">
                             <input type="hidden" name="is_owner" value="0">
                         @endif
-                        
+                        <input type="hidden" name="quiz_type" id="quiz_type" value="{{ $quiz->quiz_type }}">
                         @if($isProjectOwner)
                             <div class="h4 text-danger">{!! $quizData['question'] !!}</div>
                             <div class="jumbotron">{!! $quizData['answer'] !!}</div>
@@ -176,7 +176,7 @@
                             <input type="hidden" name="project_id" value="{{ $quiz->project_id }}">
                             <input type="hidden" name="is_owner" value="0">
                         @endif
-
+                        <input type="hidden" name="quiz_type" id="quiz_type" value="{{ $quiz->quiz_type }}">
                         @foreach($quizData as $key => $value)
                             <div class="question-block_student {{ $key == 0 ? 'active' : '' }}" data-index="{{ $key }}">
                                     @if($isProjectOwner)
